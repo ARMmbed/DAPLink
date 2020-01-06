@@ -25,6 +25,9 @@
 #include "stdbool.h"
 #include "stdint.h"
 
+//! @brief Get number of elements in the array.
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+
 #ifdef __cplusplus
 extern "C" {
 #endif

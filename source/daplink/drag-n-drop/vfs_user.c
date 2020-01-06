@@ -126,8 +126,6 @@ static void erase_target(void);
 
 static uint32_t expand_info(uint8_t *buf, uint32_t bufsize);
 
-#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
 void vfs_user_build_filesystem()
 {
     uint32_t file_size;
@@ -387,7 +385,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
     uint32_t * hexdumps = 0;
     uint8_t valid_hexdumps = 0;
     uint8_t index = 0;
-    
+
     if (sector_offset != 0) {
         return 0;
     }
@@ -425,7 +423,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
             pos += util_write_string(buf + pos, "\r\n");
         }
     }
-    
+
     return pos;
 }
 
