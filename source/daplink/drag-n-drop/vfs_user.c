@@ -3,7 +3,7 @@
  * @brief   Implementation of vfs_user.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -23,6 +23,7 @@
 #include "ctype.h"
 #include "string.h"
 
+#include "vfs_user.h"
 #include "vfs_manager.h"
 #include "macro.h"
 #include "error.h"
@@ -168,9 +169,28 @@ void vfs_user_build_filesystem()
     }
 }
 
+// Default file change hook.
+__WEAK bool vfs_user_file_change_handler_hook(const vfs_filename_t filename, vfs_file_change_t change,
+        vfs_file_t file, vfs_file_t new_file_data)
+{
+    return false;
+}
+
+// Default magic file hook.
+__WEAK bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
+{
+    return false;
+}
+
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
+    // Call file changed hook. If it returns true, then it handled the request and we have nothing
+    // more to do.
+    if (vfs_user_file_change_handler_hook(filename, change, file, new_file_data)) {
+        return;
+    }
+
     // Allow settings to be changed if automation mode is
     // enabled or if the user is holding the reset button
     bool btn_pressed = gpio_get_reset_btn();
@@ -183,73 +203,81 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         // Unused
     }
 
-    if (VFS_FILE_CREATED == change) {
+    else if (VFS_FILE_CREATED == change) {
+        bool do_remount = true; // Almost all magic files cause a remount.
         int32_t which_magic_file = -1;
 
-        // Compare the new file's name to our table of magic filenames.
-        for (int32_t i = 0; i < ARRAY_SIZE(s_magic_file_info); ++i) {
-            if (!memcmp(filename, s_magic_file_info[i].name, sizeof(vfs_filename_t))) {
-                which_magic_file = i;
+        // Let the hook examine the filename. If it returned false then look for the standard
+        // magic files.
+        if (!vfs_user_magic_file_hook(filename, &do_remount)) {
+            // Compare the new file's name to our table of magic filenames.
+            for (int32_t i = 0; i < ARRAY_SIZE(s_magic_file_info); ++i) {
+                if (!memcmp(filename, s_magic_file_info[i].name, sizeof(vfs_filename_t))) {
+                    which_magic_file = i;
+                }
+            }
+
+            // Check if we matched a magic filename and handle it.
+            if (which_magic_file != -1) {
+                switch (which_magic_file) {
+                    case kDAPLinkModeActionFile:
+                        if (daplink_is_interface()) {
+                            config_ram_set_hold_in_bl(true);
+                        } else {
+                            // Do nothing - bootloader will go to interface by default
+                        }
+                        break;
+                    case kTestAssertActionFile:
+                        // Test asserts
+                        util_assert(0);
+                        do_remount = false;
+                        break;
+                    case kRefreshActionFile:
+                        // Remount to update the drive
+                        break;
+                    case kEraseActionFile:
+                        erase_target();
+                        break;
+                    case kAutoResetConfigFile:
+                        config_set_auto_rst(true);
+                        break;
+                    case kHardResetConfigFile:
+                        config_set_auto_rst(false);
+                        break;
+                    case kAutomationOnConfigFile:
+                        config_set_automation_allowed(true);
+                        break;
+                    case kAutomationOffConfigFile:
+                        config_set_automation_allowed(false);
+                        break;
+                    case kOverflowOnConfigFile:
+                        config_set_overflow_detect(true);
+                        break;
+                    case kOverflowOffConfigFile:
+                        config_set_overflow_detect(false);
+                        break;
+                    case kMSDOnConfigFile:
+                        config_ram_set_disable_msd(false);
+                        break;
+                    case kMSDOffConfigFile:
+                        config_ram_set_disable_msd(true);
+                        break;
+                    default:
+                        util_assert(false);
+                }
+            }
+            else {
+                do_remount = false;
             }
         }
 
-        // Check if we matched a magic filename and handle it.
-        if (which_magic_file != -1) {
-            bool do_remount = true; // Almost all magic files cause a remount.
-
-            switch (which_magic_file) {
-                case kDAPLinkModeActionFile:
-                    if (daplink_is_interface()) {
-                        config_ram_set_hold_in_bl(true);
-                    } else {
-                        // Do nothing - bootloader will go to interface by default
-                    }
-                    break;
-                case kTestAssertActionFile:
-                    // Test asserts
-                    util_assert(0);
-                    do_remount = false;
-                    break;
-                case kRefreshActionFile:
-                    // Remount to update the drive
-                    break;
-                case kEraseActionFile:
-                    erase_target();
-                    break;
-                case kAutoResetConfigFile:
-                    config_set_auto_rst(true);
-                    break;
-                case kHardResetConfigFile:
-                    config_set_auto_rst(false);
-                    break;
-                case kAutomationOnConfigFile:
-                    config_set_automation_allowed(true);
-                    break;
-                case kAutomationOffConfigFile:
-                    config_set_automation_allowed(false);
-                    break;
-                case kOverflowOnConfigFile:
-                    config_set_overflow_detect(true);
-                    break;
-                case kOverflowOffConfigFile:
-                    config_set_overflow_detect(false);
-                    break;
-                case kMSDOnConfigFile:
-                    config_ram_set_disable_msd(false);
-                    break;
-                case kMSDOffConfigFile:
-                    config_ram_set_disable_msd(true);
-                    break;
-
-            }
-
-            if (do_remount) {
-                vfs_mngr_fs_remount();
-            }
+        // Remount if requested.
+        if (do_remount) {
+            vfs_mngr_fs_remount();
         }
     }
 
-    if (VFS_FILE_DELETED == change) {
+    else if (VFS_FILE_DELETED == change) {
         if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
             // Clear assert and remount to update the drive
             util_assert_clear();
