@@ -22,7 +22,7 @@
 #ifndef FLASHPRG_H
 #define FLASHPRG_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

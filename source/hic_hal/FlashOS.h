@@ -22,7 +22,7 @@
 #ifndef FLASHOS_H
 #define FLASHOS_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

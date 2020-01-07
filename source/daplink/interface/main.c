@@ -19,9 +19,8 @@
  * limitations under the License.
  */
 
-#include "string.h"
-#include "stdio.h"
-#include "stdint.h"
+#include <string.h>
+#include <stdio.h>
 
 #include "cmsis_os2.h"
 #include "rl_usb.h"

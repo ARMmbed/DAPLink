@@ -22,8 +22,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 //! @brief Get number of elements in the array.
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))

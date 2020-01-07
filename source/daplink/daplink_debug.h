@@ -22,10 +22,10 @@
 #ifndef DAPLINK_DEBUG_H
 #define DAPLINK_DEBUG_H
 
-#include "stdarg.h"
-#include "stdio.h"
-#include "string.h"
-#include "stdint.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "macro.h"

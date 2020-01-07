@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
+#include <string.h>
 #include "validation.h"
-#include "string.h"
 #include "target_config.h"
 #include "target_family.h"
 #include "target_board.h"

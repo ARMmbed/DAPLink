@@ -22,7 +22,7 @@
 #ifndef READ_UID_H
 #define READ_UID_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -22,8 +22,8 @@
 #ifndef CORTEX_M_H
 #define CORTEX_M_H
 
-#include "stdint.h"
-#include "stdbool.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #include "IO_Config.h"
 

@@ -22,8 +22,8 @@
 #ifndef DAPLINK_H
 #define DAPLINK_H
 
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #include "daplink_addr.h"
 #include "compiler.h"

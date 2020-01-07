@@ -22,7 +22,7 @@
 #ifndef VIRTUAL_FS_H
 #define VIRTUAL_FS_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

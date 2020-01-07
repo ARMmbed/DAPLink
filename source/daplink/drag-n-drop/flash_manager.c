@@ -19,9 +19,6 @@
  * limitations under the License.
  */
 
-#include "string.h"
-#include "stdbool.h"
-
 #include "flash_manager.h"
 #include "util.h"
 #include "macro.h"

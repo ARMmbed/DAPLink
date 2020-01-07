@@ -22,8 +22,8 @@
 #ifndef TARGET_CONFIG_H
 #define TARGET_CONFIG_H
 
-#include "stddef.h"
-#include "stdint.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #include "flash_blob.h"
 #include "macro.h"

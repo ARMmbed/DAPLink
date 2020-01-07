@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 #ifdef DRAG_N_DROP_SUPPORT
-#include "string.h"
+#include <string.h>
 
 #include "target_config.h"
 #include "gpio.h"

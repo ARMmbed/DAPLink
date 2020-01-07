@@ -22,7 +22,7 @@
 #ifndef FLASH_BLOB_H
 #define FLASH_BLOB_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

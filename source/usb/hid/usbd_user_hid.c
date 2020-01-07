@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 #include "rl_usb.h"
 #include "usb.h"
 #define __NO_USB_LIB_C

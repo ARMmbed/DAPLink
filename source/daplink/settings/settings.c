@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "settings.h"
 #include "target_config.h"

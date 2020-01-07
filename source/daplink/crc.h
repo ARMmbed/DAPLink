@@ -21,7 +21,7 @@
 #ifndef _crc_h
 #define _crc_h
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
