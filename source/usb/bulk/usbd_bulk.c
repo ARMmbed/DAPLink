@@ -24,7 +24,6 @@
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 #include "util.h"
-#include "macro.h"
 #include "DAP_queue.h"
 
 static U8 *ptrDataIn;

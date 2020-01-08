@@ -24,7 +24,6 @@
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 #include "util.h"
-#include "macro.h"
 
 BOOL USBD_MSC_MediaReady = __FALSE;
 BOOL USBD_MSC_ReadOnly = __FALSE;

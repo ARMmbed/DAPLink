@@ -21,7 +21,6 @@
 
 #include "flash_manager.h"
 #include "util.h"
-#include "macro.h"
 #include "error.h"
 
 // Set to 1 to enable debugging

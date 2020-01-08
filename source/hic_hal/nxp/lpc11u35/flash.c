@@ -22,7 +22,7 @@
 #include <string.h>
 #include "flash_hal.h"
 #include "iap.h"
-#include "macro.h"
+#include "util.h"
 #include "LPC11Uxx.h"
 
 // page buffer must be 4 byte algined and must reside in ram bank 1

@@ -35,9 +35,6 @@
 #define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
 
 
-#define MIN(a, b)     (((a) < (b)) ? (a) : (b))
-#define MAX(a, b)     (((a) > (b)) ? (a) : (b))
-
 #define I8   int8_t
 #define I16  int16_t
 #define I32  int32_t

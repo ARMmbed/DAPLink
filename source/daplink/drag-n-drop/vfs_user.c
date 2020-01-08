@@ -25,7 +25,6 @@
 
 #include "vfs_user.h"
 #include "vfs_manager.h"
-#include "macro.h"
 #include "error.h"
 #include "util.h"
 #include "settings.h"

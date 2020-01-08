@@ -23,7 +23,6 @@
 
 #include "flash_decoder.h"
 #include "util.h"
-#include "macro.h"
 #include "daplink.h"
 #include "flash_manager.h"
 #include "target_config.h"  // for target_device

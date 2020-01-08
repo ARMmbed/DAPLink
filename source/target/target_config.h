@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "flash_blob.h"
-#include "macro.h"
+#include "util.h"
 
 //! This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
