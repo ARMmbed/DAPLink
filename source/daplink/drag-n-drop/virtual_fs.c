@@ -348,10 +348,10 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     }
     if (total_sectors >= 0x10000) {
         mbr.total_logical_sectors = 0;
-        mbr.big_sectors_on_drive  = total_sectors;  
+        mbr.big_sectors_on_drive  = total_sectors;
     } else {
         mbr.total_logical_sectors = total_sectors;
-        mbr.big_sectors_on_drive  = 0;  
+        mbr.big_sectors_on_drive  = 0;
     }
     // FAT table will likely be larger than needed, but this is allowed by the
     // fat specification
@@ -612,7 +612,7 @@ static uint32_t read_dir(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
         util_assert(0);
         return 0;
     }
-   
+
     // Zero buffer data is VFS_SECTOR_SIZE max
     memset(data, 0, VFS_SECTOR_SIZE);
 

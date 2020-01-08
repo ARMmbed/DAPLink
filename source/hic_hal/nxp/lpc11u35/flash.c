@@ -48,7 +48,7 @@ uint32_t EraseChip(void)
 uint32_t EraseSector(uint32_t adr)
 {
     uint32_t num = get_sector_num(adr);
-    
+
     iap_lock();
 
     iap_op.cmd = 50;        // Prepare Sector for Erase

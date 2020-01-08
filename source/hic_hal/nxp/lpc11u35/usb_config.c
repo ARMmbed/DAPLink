@@ -1,6 +1,6 @@
 /**
  * @file    usb_config.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -398,7 +398,7 @@
 #define USBD_BULK_STRDESC            L"CMSIS-DAP v2"
 
 /* USB Device Calculations ---------------------------------------------------*/
-                                  
+
 #define USBD_IF_NUM_MAX             (USBD_BULK_ENABLE+USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
 #define USBD_MULTI_IF               (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE|USBD_BULK_ENABLE))
 // #define MAX(x, y)                   (((x) < (y)) ? (y) : (x))
@@ -548,7 +548,7 @@
 #define USBD_MAX_PACKET_CALC2     ((USBD_MAX_PACKET_CALC0 > USBD_MAX_PACKET_CALC1    ) ? (USBD_MAX_PACKET_CALC0) : (USBD_MAX_PACKET_CALC1    ))
 #define USBD_MAX_PACKET_CALC3     ((USBD_BULK_MAX_PACKET > USBD_CDC_ACM_MAX_PACKET1 ) ? (USBD_BULK_MAX_PACKET) : (USBD_CDC_ACM_MAX_PACKET1 ))
 #define USBD_MAX_PACKET           ((USBD_MAX_PACKET_CALC3 > USBD_MAX_PACKET_CALC2    ) ? (USBD_MAX_PACKET_CALC3) : (USBD_MAX_PACKET_CALC2    ))
- 
+
 
 /*------------------------------------------------------------------------------
  *      USB Config Functions

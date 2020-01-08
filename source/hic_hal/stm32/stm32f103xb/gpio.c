@@ -101,7 +101,7 @@ static void output_clock_enable(void)
         util_assert(0);
         return;
     }
-    
+
     __HAL_TIM_SET_COMPARE(&timer, TIM_CHANNEL_1, period / 2);
     ret = HAL_TIM_PWM_Start(&timer, TIM_CHANNEL_1);
     if (ret != HAL_OK) {

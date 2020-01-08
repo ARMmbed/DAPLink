@@ -1090,7 +1090,7 @@ void USBD_MSC_BulkOut(void)
         case MSC_BS_RESET:
             // If Bulk-Only Mass Storage Reset command was received on
             // Control Endpoint ignore next Bulk OUT transfer if it was not
-            // a CBW (as it means it was a unprocessed leftover from 
+            // a CBW (as it means it was a unprocessed leftover from
             // transfer before reset happened)
             BulkStage = MSC_BS_CBW;
             if (BulkLen == sizeof(USBD_MSC_CBW)) {

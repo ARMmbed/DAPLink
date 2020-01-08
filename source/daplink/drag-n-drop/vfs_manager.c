@@ -634,7 +634,7 @@ static void transfer_reset_file_info()
           file_transfer_state = default_transfer_state;
           abort_remount();
     }
-    
+
 }
 
 // Update the tranfer state with new information

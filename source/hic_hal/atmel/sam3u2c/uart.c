@@ -1,6 +1,6 @@
 /**
  * @file    uart.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -182,7 +182,7 @@ static int get_tx_ready()
 {
     if (!_FlowControlEnabled) {
         return 1;
-    } 
+    }
     return ((PIOA->PIO_PDSR >> BIT_CDC_USB2UART_CTS) & 1) == 0;
 }
 

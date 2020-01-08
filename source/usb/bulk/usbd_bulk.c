@@ -65,7 +65,7 @@ void USBD_BULK_EP_BULKIN_Event(U32 event)
  */
 
 void USBD_BULK_EP_BULKOUT_Event(U32 event)
-{    
+{
     U16 bytes_rece;
     uint8_t * rbuf;
 
