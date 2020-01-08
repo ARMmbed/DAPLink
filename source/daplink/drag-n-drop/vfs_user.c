@@ -28,7 +28,6 @@
 #include "error.h"
 #include "util.h"
 #include "settings.h"
-#include "target_reset.h"
 #include "daplink.h"
 #include "version_git.h"
 #include "info.h"

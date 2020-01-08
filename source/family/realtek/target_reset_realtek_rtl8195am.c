@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include <string.h>
-#include "target_reset.h"
 #include "swd_host.h"
 #include "DAP_config.h"
 #include "target_family.h"

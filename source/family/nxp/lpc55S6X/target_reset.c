@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 #include "target_family.h"
-#include "target_reset.h"
 #include "swd_host.h"
 #include "cmsis_os2.h"
 

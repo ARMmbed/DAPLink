@@ -20,10 +20,8 @@
  */
 
 #include "target_family.h"
-#include "target_reset.h"
 #include "target_config.h"  // for target_device
 #include "swd_host.h"
-
 #include "gpio.h"
 #include "debug_cm.h"
 #include "utils.h"

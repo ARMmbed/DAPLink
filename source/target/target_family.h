@@ -24,10 +24,26 @@
 
 #include <stdint.h>
 #include <string.h>
-#include "target_reset.h"
 
 //! @brief Creates a family ID from a vendor ID and family index within that vendor.
 #define VENDOR_TO_FAMILY(vendor, family) ((vendor) << 8 | (family))
+
+//! @brief States into which the target can be placed.
+//!
+//! These enums are passed to target_set_state() and indicate the desired state into which
+//! the target should be reset.
+typedef enum {
+    RESET_HOLD,              //!< Hold target in reset
+    RESET_PROGRAM,           //!< Reset target and setup for flash programming
+    RESET_RUN,               //!< Reset target and run normally
+    NO_DEBUG,                //!< Disable debug on running target
+    DEBUG,                   //!< Enable debug on running target
+    HALT,                    //!< Halt the target without resetting it
+    RUN,                     //!< Resume the target without resetting it
+    POST_FLASH_RESET,        //!< Reset target after flash programming
+    POWER_ON,                //!< Poweron the target
+    SHUTDOWN,                //!< Poweroff the target
+} TARGET_RESET_STATE;
 
 //! @brief Options for reset.
 typedef enum _reset_type {

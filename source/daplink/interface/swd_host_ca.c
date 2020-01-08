@@ -22,7 +22,6 @@
 #ifdef TARGET_MCU_CORTEX_A
 
 #include "cmsis_os2.h"
-#include "target_reset.h"
 #include "target_config.h"
 #include "swd_host.h"
 #include "debug_ca.h"

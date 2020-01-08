@@ -23,7 +23,7 @@
 #define SWDHOST_CM_H
 
 #include "flash_blob.h"
-#include "target_reset.h"
+#include "target_family.h"
 #ifdef TARGET_MCU_CORTEX_A
 #include "debug_ca.h"
 #else

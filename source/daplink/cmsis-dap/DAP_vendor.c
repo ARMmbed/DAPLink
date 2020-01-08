@@ -32,7 +32,6 @@
 #include "main.h"
 #include "uart.h"
 #include "settings.h"
-#include "target_reset.h"
 #include "target_family.h"
 #include <string.h>
 

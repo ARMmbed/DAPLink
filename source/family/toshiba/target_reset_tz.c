@@ -20,7 +20,6 @@
  */
 
 #include "cmsis_os2.h"
-#include "target_reset.h"
 #include "swd_host.h"
 #include "target_family.h"
 
