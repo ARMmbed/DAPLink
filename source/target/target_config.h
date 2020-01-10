@@ -1,6 +1,6 @@
 /**
  * @file    target_config.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -24,7 +24,7 @@
 
 #include "stddef.h"
 #include "stdint.h"
- 
+
 #include "flash_blob.h"
 #include "macro.h"
 

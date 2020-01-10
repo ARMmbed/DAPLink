@@ -1,6 +1,6 @@
 /**
  * @file    target_family.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
@@ -28,10 +28,10 @@
 
 #define VENDOR_TO_FAMILY(x, y) (x<<8 | y)
 
-typedef enum _reset_type { 
-    kHardwareReset=1, 
-    kSoftwareReset, 
-} reset_type_t; 
+typedef enum _reset_type {
+    kHardwareReset = 1,
+    kSoftwareReset,
+} reset_type_t;
 
 enum _vendor_ids {
     kStub_VendorID = 0,
@@ -61,10 +61,10 @@ typedef enum _family_id {
     kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
     kRenesas_FamilyID = VENDOR_TO_FAMILY(kRenesas_VendorID, 1),
 } family_id_t;
- 
-typedef struct target_family_descriptor { 
-    uint16_t family_id;                         /*!< Use to select or identify target family from defined target family or custom ones */ 
-    reset_type_t default_reset_type;            /*!< Target family can select predefined reset from  kHardwareReset and kSoftwareReset */ 
+
+typedef struct target_family_descriptor {
+    uint16_t family_id;                         /*!< Use to select or identify target family from defined target family or custom ones */
+    reset_type_t default_reset_type;            /*!< Target family can select predefined reset from  kHardwareReset and kSoftwareReset */
     uint32_t soft_reset_type;                   /*!< Families can override software reset type to VECTRESET or SYSRESETREQ */
     void (*target_before_init_debug)(void);     /*!< Target dependant function before debug initialization */
     void (*prerun_target_config)(void);         /*!< Target specific initialization */
