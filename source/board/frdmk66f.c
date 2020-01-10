@@ -23,7 +23,7 @@
 #include "target_board.h"
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0311",
     .family_id = kNXP_KinetisK_FamilyID,
     .flags = kEnablePageErase,

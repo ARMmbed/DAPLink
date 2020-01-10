@@ -55,7 +55,7 @@ target_cfg_t target_device = {
 const target_family_descriptor_t *g_target_family = NULL;
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0000",
     .daplink_url_name =       "HELP_FAQHTM",
     .daplink_drive_name =       "MAINTENANCE",

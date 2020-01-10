@@ -30,7 +30,7 @@ static void nina_swd_set_target_reset(uint8_t asserted){
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "1237",
     .family_id = kNordic_Nrf52_FamilyID,
     .swd_set_target_reset = nina_swd_set_target_reset,

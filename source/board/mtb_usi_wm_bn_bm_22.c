@@ -25,7 +25,7 @@
 extern target_cfg_t target_device;
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0462",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,

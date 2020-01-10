@@ -213,6 +213,9 @@ void main_task(void * arg)
     // Initialize the DAP
     DAP_Setup();
 
+    // make sure we have a valid board info structure.
+    util_assert(g_board_info.info_version == kBoardInfoVersion);
+
     // do some init with the target before USB and files are configured
     if (g_board_info.prerun_board_config) {
         g_board_info.prerun_board_config();

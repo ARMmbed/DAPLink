@@ -27,6 +27,13 @@
 #include "target_reset.h"
 #include "virtual_fs.h" 
 
+//! @brief Current board info version.
+//!
+//! - Version 1: Initial version.
+enum _board_info_version {
+    kBoardInfoVersion = 1, //!< The current board info version.
+};
+
 // Flags for board_info 
 enum { 
 	kEnablePageErase = 1,               /*!< Enable page programming and sector erase for drag and drop */
@@ -34,7 +41,7 @@ enum {
 };
 
 typedef struct __attribute__((__packed__)) board_info { 
-    uint16_t infoVersion;               /*!< Version number of the board */ 
+    uint16_t info_version;              /*!< Version number of the board info */ 
     uint16_t family_id;                 /*!< Use to select or identify target family from defined target family or custom ones */ 
     char board_id[5];                   /*!< 4-char board ID plus null terminator */
     uint8_t _padding[3]; 
