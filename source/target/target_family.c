@@ -114,11 +114,6 @@ void init_family(void)
     }
 }
 
-uint8_t target_family_valid(void)
-{
-    return (g_target_family != NULL);
-}
-
 uint8_t target_set_state(TARGET_RESET_STATE state)
 {
     if (g_board_info.target_set_state) { //target specific

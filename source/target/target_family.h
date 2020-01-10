@@ -84,7 +84,6 @@ extern "C" {
 #endif
 
 void init_family(void);
-uint8_t target_family_valid(void);
 uint8_t target_set_state(TARGET_RESET_STATE state);
 void swd_set_target_reset(uint8_t asserted);
 uint32_t target_get_apsel(void);
