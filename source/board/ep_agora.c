@@ -25,7 +25,7 @@
 extern target_cfg_t target_device_nrf52840;
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0002,
+    .info_version = kBoardInfoVersion,
     .flags = kEnablePageErase,
     .board_id = "2600",
     .family_id = kNordic_Nrf52_FamilyID,

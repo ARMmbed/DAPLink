@@ -29,7 +29,7 @@ static void vbluno_prerun_board_config()
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "C006",
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",

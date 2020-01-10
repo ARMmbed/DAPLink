@@ -132,7 +132,7 @@ static void nrf_swd_set_target_reset(uint8_t asserted){
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .flags = kEnablePageErase,
     .prerun_board_config = nrf_prerun_board_config,
     .swd_set_target_reset = nrf_swd_set_target_reset,

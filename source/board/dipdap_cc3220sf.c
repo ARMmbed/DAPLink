@@ -23,7 +23,7 @@
 #include "target_board.h"
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "3300",
     .family_id = kTI_Cc3220sf_FamilyID,
     .flags = kEnablePageErase,
