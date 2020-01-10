@@ -114,7 +114,7 @@ void init_family(void)
     }
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
+uint8_t target_set_state(target_state_t state)
 {
     if (g_board_info.target_set_state) { //target specific
         g_board_info.target_set_state(state);

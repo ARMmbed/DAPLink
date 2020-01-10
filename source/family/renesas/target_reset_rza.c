@@ -22,7 +22,7 @@
 #include "swd_host.h"
 #include "target_family.h"
 
-static uint8_t target_set_state_rza(TARGET_RESET_STATE state)
+static uint8_t target_set_state_rza(target_state_t state)
 {
     return swd_set_target_state_hw(state);
 }

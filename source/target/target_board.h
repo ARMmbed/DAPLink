@@ -73,7 +73,7 @@ typedef struct __attribute__((__packed__)) board_info {
     //@{
     void (*prerun_board_config)(void);                      /*!< Specific board debug/ID related initialization */
     void (*swd_set_target_reset)(uint8_t asserted);         /*!< Boards can customize how to send reset to the target with precedence over target family */
-    uint8_t (*target_set_state)(TARGET_RESET_STATE state);  /*!< Boards can customize target debug states with precedence over target family */
+    uint8_t (*target_set_state)(target_state_t state);  /*!< Boards can customize target debug states with precedence over target family */
     uint32_t soft_reset_type;                               /*!< Boards can override software reset type to VECTRESET or SYSRESETREQ */
     //@}
 } board_info_t;

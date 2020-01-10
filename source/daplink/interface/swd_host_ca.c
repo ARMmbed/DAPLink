@@ -787,7 +787,7 @@ uint8_t swd_uninit_debug(void)
     return 1;
 }
 
-uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
+uint8_t swd_set_target_state_hw(target_state_t state)
 {
     uint32_t val;
     swd_init();
@@ -870,7 +870,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
     return 1;
 }
 
-uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
+uint8_t swd_set_target_state_sw(target_state_t state)
 {
     uint32_t val;
     swd_init();

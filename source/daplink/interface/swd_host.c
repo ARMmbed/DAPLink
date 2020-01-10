@@ -881,7 +881,7 @@ uint8_t swd_init_debug(void)
     return 0;
 }
 
-uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
+uint8_t swd_set_target_state_hw(target_state_t state)
 {
     uint32_t val;
     int8_t ap_retries = 2;
@@ -1022,7 +1022,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
     return 1;
 }
 
-uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
+uint8_t swd_set_target_state_sw(target_state_t state)
 {
     uint32_t val;
     int8_t ap_retries = 2;

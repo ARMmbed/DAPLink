@@ -35,7 +35,7 @@ uint8_t target_unlock_sequence(void)
     return 1;
 }
 
-uint8_t target_set_state(TARGET_RESET_STATE state)
+uint8_t target_set_state(target_state_t state)
 {
     // invoke reset by sw (VECT_REQ or SYS_REQ) or hw (hardware IO toggle)
     // return swd_set_target_state_sw(state);

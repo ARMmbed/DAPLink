@@ -32,7 +32,7 @@
 //!
 //! These enums are passed to target_set_state() and indicate the desired state into which
 //! the target should be reset.
-typedef enum {
+typedef enum _target_state {
     RESET_HOLD,              //!< Hold target in reset
     RESET_PROGRAM,           //!< Reset target and setup for flash programming
     RESET_RUN,               //!< Reset target and run normally
@@ -43,7 +43,7 @@ typedef enum {
     POST_FLASH_RESET,        //!< Reset target after flash programming
     POWER_ON,                //!< Poweron the target
     SHUTDOWN,                //!< Poweroff the target
-} TARGET_RESET_STATE;
+} target_state_t;
 
 //! @brief Options for reset.
 typedef enum _reset_type {
@@ -113,7 +113,7 @@ typedef struct target_family_descriptor {
     void (*prerun_target_config)(void);         /*!< Target specific initialization */
     uint8_t (*target_unlock_sequence)(void);    /*!< Unlock targets that can enter lock state */
     uint8_t (*security_bits_set)(uint32_t addr, uint8_t *data, uint32_t size);  /*!< Check security bits in the programmable flash region */
-    uint8_t (*target_set_state)(TARGET_RESET_STATE state);  /*!< Families can customize target debug states */
+    uint8_t (*target_set_state)(target_state_t state);      /*!< Families can customize target debug states */
     void (*swd_set_target_reset)(uint8_t asserted);         /*!< Families can customize how to send reset to the target */
     uint8_t (*validate_bin_nvic)(const uint8_t *buf);       /*!< Validate a bin file to be flash by drag and drop */
     uint8_t (*validate_hexfile)(const uint8_t *buf);        /*!< Validate a hex file to be flash by drag and drop */
@@ -136,7 +136,7 @@ void init_family(void);
 //! @brief Reset the target into a new state.
 //!
 //! Used to prepare the target for some operation, or release it for user control.
-uint8_t target_set_state(TARGET_RESET_STATE state);
+uint8_t target_set_state(target_state_t state);
 
 //! @brief Controls reset of the target.
 void swd_set_target_reset(uint8_t asserted);

@@ -106,7 +106,7 @@ static void musca_b_target_before_init_debug(void)
     return;
 }
 
-static uint8_t musca_b_target_set_state(TARGET_RESET_STATE state)
+static uint8_t musca_b_target_set_state(target_state_t state)
 {
     if(state == RESET_RUN)
     {
