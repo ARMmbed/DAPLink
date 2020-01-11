@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
 #include "swd_host.h"
 #include "target_family.h"
 
@@ -27,7 +26,7 @@
 #define GPRCM_0_RESET_MCU_VALUE        0x1
 #define GPRCM_0_RESET_MCU_PERIPH_VALUE 0x2
 
-static uint8_t target_set_state_ti(TARGET_RESET_STATE state)
+static uint8_t target_set_state_ti(target_state_t state)
 {
     swd_set_soft_reset(VECTRESET);
     if (state == POST_FLASH_RESET)

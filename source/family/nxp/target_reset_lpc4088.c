@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
 #include "swd_host.h"
 #include "gpio.h"
 #include "target_family.h"
@@ -51,7 +50,7 @@ static void prerun_target_config(void)
 }
 
 
-static uint8_t lpc4088_target_set_state(TARGET_RESET_STATE state)
+static uint8_t lpc4088_target_set_state(target_state_t state)
 {
     //return swd_set_target_state_hw(state);
     uint8_t res;

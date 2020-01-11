@@ -22,7 +22,6 @@
 #include "LPC11Uxx.h"
 #include "gpio.h"
 #include "compiler.h"
-#include "target_reset.h"
 #include "IO_Config.h"
 #include "settings.h"
 #include "iap.h"

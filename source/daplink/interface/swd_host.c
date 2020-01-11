@@ -21,7 +21,6 @@
 
 #ifndef TARGET_MCU_CORTEX_A
 #include "cmsis_os2.h"
-#include "target_reset.h"
 #include "target_config.h"
 #include "swd_host.h"
 #include "debug_cm.h"
@@ -882,7 +881,7 @@ uint8_t swd_init_debug(void)
     return 0;
 }
 
-uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
+uint8_t swd_set_target_state_hw(target_state_t state)
 {
     uint32_t val;
     int8_t ap_retries = 2;
@@ -1023,7 +1022,7 @@ uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state)
     return 1;
 }
 
-uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state)
+uint8_t swd_set_target_state_sw(target_state_t state)
 {
     uint32_t val;
     int8_t ap_retries = 2;

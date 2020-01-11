@@ -24,7 +24,7 @@
 #include "target_family.h"
 #include "target_board.h"
 
-static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
+static uint8_t target_set_state_by_board(target_state_t state)
 {
     
     if (RESET_PROGRAM == state) {

@@ -20,12 +20,11 @@
  */
 
 #include "cmsis_os2.h"
-#include "target_reset.h"
 #include "swd_host.h"
 #include "target_family.h"
 #include "target_board.h"
 
-static uint8_t target_set_state_wiznet(TARGET_RESET_STATE state) {
+static uint8_t target_set_state_wiznet(target_state_t state) {
     uint8_t status;
 
     if( state == RESET_RUN )

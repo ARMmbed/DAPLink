@@ -20,10 +20,8 @@
  */
 
 #include "target_family.h"
-#include "target_reset.h"
 #include "target_config.h"  // for target_device
 #include "swd_host.h"
-
 #include "gpio.h"
 #include "debug_cm.h"
 #include "utils.h"
@@ -103,7 +101,7 @@ static void musca_a_target_before_init_debug(void)
     return;
 }
 
-static uint8_t musca_a_target_set_state(TARGET_RESET_STATE state)
+static uint8_t musca_a_target_set_state(target_state_t state)
 {
     if(state == RESET_RUN)
     {

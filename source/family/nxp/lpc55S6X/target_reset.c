@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 #include "target_family.h"
-#include "target_reset.h"
 #include "swd_host.h"
 #include "cmsis_os2.h"
 
@@ -36,7 +35,7 @@
 #define DEBUGMB_RET  0x02000008
 #define DEBUGMB_ID   0x020000FC
 
-static uint8_t lpc55s6x_target_set_state(TARGET_RESET_STATE state)
+static uint8_t lpc55s6x_target_set_state(target_state_t state)
 {
     uint32_t val;
     int8_t ap_retries = 2;

@@ -29,7 +29,6 @@
 #include "gpio.h"
 #include "uart.h"
 #include "tasks.h"
-#include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
 #include "settings.h"

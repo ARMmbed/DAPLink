@@ -22,7 +22,6 @@
 #include "string.h"
 
 #include "target_config.h"
-#include "target_reset.h"
 #include "gpio.h"
 #include "target_config.h"
 #include "intelhex.h"
