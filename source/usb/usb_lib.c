@@ -2547,7 +2547,9 @@ static U16 acm_cdc_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
 #endif    
     
     ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
-    pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
+    pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE;
+    ((CALL_MANAGEMENT_FUNCTIONAL_DESCRIPTOR *)pD)->bDataInterface = if_num + 1;
+    pD += CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bMasterInterface = if_num;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bSlaveInterface0 = if_num + 1;
     pD += CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE;
@@ -2572,7 +2574,9 @@ static U16 acm_cdc_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
 #endif    
     
     ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num;
-    pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
+    pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE;
+    ((CALL_MANAGEMENT_FUNCTIONAL_DESCRIPTOR *)pD)->bDataInterface = if_num + 1;
+    pD += CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bMasterInterface = if_num;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bSlaveInterface0 = if_num + 1;
     pD += CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE;
@@ -2666,68 +2670,115 @@ static U16 bulk_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
 }
 #endif
 
+/*------------------------------------------------------------------------------
+ *      USB Device Interface default order definiion
+ *----------------------------------------------------------------------------*/
+
+#define USBD_ADC_ID     (0)
+#define USBD_MSC_ID     (1)
+#define USBD_CDC_ACM_ID (2)
+#define USBD_HID_ID     (3)
+#define USBD_WEBUSB_ID  (4)
+#define USBD_BULK_ID    (5)
+
+#ifndef USBD_IF_ORDER
+#define USBD_IF_ORDER   USBD_ADC_ID,USBD_MSC_ID,USBD_CDC_ACM_ID,USBD_HID_ID,USBD_WEBUSB_ID,USBD_BULK_ID
+#endif
+
 void usbd_class_init(void)
 {   
     U8  if_num = 0;
     U16 desc_ptr = 0;
+    USB_CONFIGURATION_DESCRIPTOR *usb_conf_desc;
+    static const U8 if_order[] = {USBD_IF_ORDER};
     
     desc_ptr += start_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], if_num);    
-    
-#if (USBD_ADC_ENABLE)
-    usbd_adc_init();
-#endif
 
-
-#if (USBD_MSC_ENABLE)        
-    
-#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)
-    //change descriptors here
-    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 ){
-        usbd_if_num -= USBD_MSC_ENABLE;
-        USB_CONFIGURATION_DESCRIPTOR * usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor;
-        usb_conf_desc->bNumInterfaces = usbd_if_num;
-        U16 usb_wtotal_len = USBD_WTOTALLENGTH_MAX - (USBD_MSC_DESC_LEN     * USBD_MSC_ENABLE);
-        usb_conf_desc->wTotalLength = usb_wtotal_len;
-        USBD_ConfigDescriptor[usb_wtotal_len] = 0;
-        USBD_HID_DescriptorOffset -= USBD_MSC_ENABLE * USBD_MSC_DESC_LEN;
-#if (USBD_HS_ENABLE == 1)
-        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor_HS;
-        usb_conf_desc->bNumInterfaces = usbd_if_num;
-        usb_conf_desc->wTotalLength = usb_wtotal_len;
-        USBD_ConfigDescriptor_HS[usb_wtotal_len] = 0;
-#endif         
-    } else
-#endif
+    for (U8 i = 0; i < sizeof(if_order); i++)
     {
-    usbd_msc_if_num = if_num++;
-    desc_ptr += msc_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_msc_if_num);
-    usbd_msc_init();
+        switch(if_order[i])
+        {    
+            case USBD_ADC_ID:
+                #if (USBD_ADC_ENABLE)
+                    usbd_adc_init();
+                #endif
+                break;
 
+            case USBD_MSC_ID:
+                #if (USBD_MSC_ENABLE)
+
+                #if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)
+                    //change descriptors here
+                    if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 ){
+                        usbd_if_num -= USBD_MSC_ENABLE;
+                        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor;
+                        usb_conf_desc->bNumInterfaces = usbd_if_num;
+                        U16 usb_wtotal_len = USBD_WTOTALLENGTH_MAX - (USBD_MSC_DESC_LEN * USBD_MSC_ENABLE);
+                        usb_conf_desc->wTotalLength = usb_wtotal_len;
+                        USBD_ConfigDescriptor[usb_wtotal_len] = 0;
+                        USBD_HID_DescriptorOffset -= USBD_MSC_ENABLE * USBD_MSC_DESC_LEN;
+                #if (USBD_HS_ENABLE == 1)
+                        usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor_HS;
+                        usb_conf_desc->bNumInterfaces = usbd_if_num;
+                        usb_conf_desc->wTotalLength = usb_wtotal_len;
+                        USBD_ConfigDescriptor_HS[usb_wtotal_len] = 0;
+                #endif
+                    } else
+                #endif
+                    {
+                    usbd_msc_if_num = if_num++;
+                    desc_ptr += msc_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_msc_if_num);
+                    usbd_msc_init();
+
+                    }
+                #endif //#if (USBD_MSC_ENABLE)  
+                break;
+
+            case USBD_CDC_ACM_ID:
+                #if (USBD_CDC_ACM_ENABLE)
+                    usbd_cdc_acm_cif_num = if_num++;
+                    usbd_cdc_acm_dif_num = if_num++;
+                    desc_ptr += acm_cdc_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_cdc_acm_cif_num);
+                    USBD_CDC_ACM_Initialize();
+                #endif
+                break;
+
+            case USBD_HID_ID:
+                #if (USBD_HID_ENABLE) 
+                    usbd_hid_if_num = if_num++;
+                    desc_ptr += hid_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_hid_if_num);
+                    usbd_hid_init();
+                #endif
+                break;
+
+            case USBD_WEBUSB_ID:
+                #if (USBD_WEBUSB_ENABLE)
+                    usbd_webusb_if_num = if_num++;
+                    desc_ptr += webusb_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_webusb_if_num);
+                #endif
+                break;
+
+            case USBD_BULK_ID:
+                #if (USBD_BULK_ENABLE)
+                    usbd_bulk_if_num = if_num++;
+                    desc_ptr += bulk_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_bulk_if_num);
+                    usbd_bulk_init();
+                #endif
+                break;
+            
+            default:
+                // nothing to do
+                break;
+        }
     }
-#endif //#if (USBD_MSC_ENABLE)  
 
-#if (USBD_CDC_ACM_ENABLE)
-    usbd_cdc_acm_cif_num = if_num++;
-    usbd_cdc_acm_dif_num = if_num++;
-    desc_ptr += acm_cdc_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_cdc_acm_cif_num);
-    USBD_CDC_ACM_Initialize();
-#endif
-
-#if (USBD_HID_ENABLE) 
-    usbd_hid_if_num = if_num++;
-    desc_ptr += hid_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_hid_if_num);
-    usbd_hid_init();
-#endif
-
-#if (USBD_WEBUSB_ENABLE)
-    usbd_webusb_if_num = if_num++;   
-    desc_ptr += webusb_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_webusb_if_num);
-#endif
-
-#if (USBD_BULK_ENABLE)
-    usbd_bulk_if_num = if_num++;  
-    desc_ptr += bulk_desc_fill(&USBD_ConfigDescriptor[desc_ptr], &USBD_ConfigDescriptor_HS[desc_ptr], usbd_bulk_if_num);
-    usbd_bulk_init();
+    usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor;
+    usb_conf_desc->bNumInterfaces = if_num;
+    usb_conf_desc->wTotalLength = desc_ptr;
+#if (USBD_HS_ENABLE == 1)
+    usb_conf_desc = (USB_CONFIGURATION_DESCRIPTOR *)USBD_ConfigDescriptor_HS;
+    usb_conf_desc->bNumInterfaces = if_num;
+    usb_conf_desc->wTotalLength = desc_ptr;
 #endif
 
 #if (USBD_CLS_ENABLE)

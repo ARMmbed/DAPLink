@@ -304,6 +304,15 @@ typedef __packed struct _USB_BINARY_OBJECT_STORE_DESCRIPTOR {
     U8  bNumDeviceCaps;
 } USB_BINARY_OBJECT_STORE_DESCRIPTOR;
 
+/* Call Management Functional Descriptor */
+typedef __packed struct _CALL_MANAGEMENT_FUNCTIONAL_DESCRIPTOR {
+    U8  bLength;
+    U8  bDescriptorType;
+    U8  bDescriptorSubtype;
+    U8  bmCapabilities;
+    U8  bDataInterface;
+} CALL_MANAGEMENT_FUNCTIONAL_DESCRIPTOR;
+
 /* Union Functional Descriptor */ 
 typedef __packed struct _UNION_FUNCTIONAL_DESCRIPTOR {
     U8  bLength;
