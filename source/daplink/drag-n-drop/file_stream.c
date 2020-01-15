@@ -19,11 +19,10 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "file_stream.h"
 #include "util.h"
-#include "macro.h"
 #include "intelhex.h"
 #include "flash_decoder.h"
 #include "error.h"
@@ -80,7 +79,7 @@ stream_t stream[] = {
     {detect_bin, open_bin, write_bin, close_bin},   // STREAM_TYPE_BIN
     {detect_hex, open_hex, write_hex, close_hex},   // STREAM_TYPE_HEX
 };
-COMPILER_ASSERT(ELEMENTS_IN_ARRAY(stream) == STREAM_TYPE_COUNT);
+COMPILER_ASSERT(ARRAY_SIZE(stream) == STREAM_TYPE_COUNT);
 // STREAM_TYPE_NONE must not be included in count
 COMPILER_ASSERT(STREAM_TYPE_NONE > STREAM_TYPE_COUNT);
 

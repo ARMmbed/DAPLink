@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 #include "target_board.h"
 
 // Default empty board info.

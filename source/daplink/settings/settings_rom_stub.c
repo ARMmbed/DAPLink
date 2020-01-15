@@ -19,8 +19,6 @@
  * limitations under the License.
  */
 
-#include "stdbool.h"
-
 #include "settings.h"
 
 void config_rom_init()

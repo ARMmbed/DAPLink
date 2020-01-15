@@ -3,7 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,12 +22,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "stdint.h"
-#include "stdbool.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdint.h>
+#include <stdbool.h>
 
 // LED state
 typedef enum main_led_state {
@@ -45,13 +41,14 @@ typedef enum main_usb_connect {
     USB_DISCONNECTING
 } main_usb_connect_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void main_reset_target(uint8_t send_unique_id);
 void main_usb_set_test_mode(bool enabled);
-void main_usb_configure_event(void);
-void main_usb_busy_event(void);
 void main_powerdown_event(void);
 void main_disable_debug_event(void);
-void main_hid_send_event(void);
 void main_cdc_send_event(void);
 void main_msc_disconnect_event(void);
 void main_msc_delay_disconnect_event(void);

@@ -1,6 +1,6 @@
 /**
  * @file    flash_blob.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,7 +22,7 @@
 #ifndef FLASH_BLOB_H
 #define FLASH_BLOB_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -19,12 +19,8 @@
  * limitations under the License.
  */
 
-#include "string.h"
-#include "stdbool.h"
-
 #include "flash_manager.h"
 #include "util.h"
-#include "macro.h"
 #include "error.h"
 
 // Set to 1 to enable debugging
@@ -97,7 +93,7 @@ error_t flash_manager_init(const flash_intf_t *flash_intf)
         return status;
     }
 
-    if (!page_erase_enabled) {   
+    if (!page_erase_enabled) {
         // Erase flash and unint if there are errors
         status = intf->erase_chip();
         flash_manager_printf("    intf->erase_chip ret=%i\r\n", status);
@@ -136,16 +132,16 @@ error_t flash_manager_data(uint32_t addr, const uint8_t *data, uint32_t size)
         current_sector_valid = true;
         last_addr = addr;
     }
-    
+
     //non-increasing address support
-    if (ROUND_DOWN(addr, current_write_block_size) != ROUND_DOWN(last_addr, current_write_block_size)) {    
+    if (ROUND_DOWN(addr, current_write_block_size) != ROUND_DOWN(last_addr, current_write_block_size)) {
         status = flush_current_block(addr);
         if (ERROR_SUCCESS != status) {
             state = STATE_ERROR;
             return status;
         }
     }
-    
+
     if (ROUND_DOWN(addr, current_sector_size) != ROUND_DOWN(last_addr, current_sector_size)) {
         status = setup_next_sector(addr);
         if (ERROR_SUCCESS != status) {
@@ -273,7 +269,7 @@ static bool flash_intf_valid(const flash_intf_t *flash_intf)
     if (0 == flash_intf->erase_sector_size) {
         return false;
     }
-    
+
     if (0 == flash_intf->flash_busy) {
         return false;
     }
@@ -329,7 +325,7 @@ static error_t setup_next_sector(uint32_t addr)
             return status;
         }
     }
-    
+
     if (page_erase_enabled) {
         // Erase the current sector
         status = intf->erase_sector(current_sector_addr);
@@ -337,7 +333,7 @@ static error_t setup_next_sector(uint32_t addr)
         if (ERROR_SUCCESS != status) {
             intf->uninit();
             return status;
-        }         
+        }
     }
 
     // Clear out buffer in case block size changed

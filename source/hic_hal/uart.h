@@ -1,6 +1,6 @@
 /**
  * @file    uart.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,8 +22,8 @@
 #ifndef UART_H
 #define UART_H
 
-#include "stdint.h"
-#include "stdbool.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

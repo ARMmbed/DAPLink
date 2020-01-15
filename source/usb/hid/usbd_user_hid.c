@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 #include "rl_usb.h"
 #include "usb.h"
 #define __NO_USB_LIB_C
@@ -74,7 +74,7 @@ int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
 
                 case USBD_HID_REQ_EP_CTRL:
                 case USBD_HID_REQ_EP_INT:
-                    if (DAP_queue_get_send_buf(&DAP_Cmd_queue, &sbuf, &slen)) {                       
+                    if (DAP_queue_get_send_buf(&DAP_Cmd_queue, &sbuf, &slen)) {
                         if (slen > USBD_HID_OUTREPORT_MAX_SZ){
                             util_assert(0);
                         }else {
@@ -96,7 +96,7 @@ int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
     return (0);
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null 
+// USB HID override function return 1 if the activity is trivial or response is null
 __attribute__((weak))
 uint8_t usbd_hid_no_activity(U8 *buf)
 {
@@ -132,7 +132,7 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
             } else {
                 util_assert(0);
             }
-            
+
             main_blink_hid_led(led_next_state);
 
             break;

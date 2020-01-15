@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "util.h"
 #include "settings.h"
