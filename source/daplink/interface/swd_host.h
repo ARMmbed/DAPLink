@@ -62,6 +62,7 @@ uint8_t swd_transfer_retry(uint32_t req, uint32_t *data);
 void int2array(uint8_t *res, uint32_t data, uint8_t len);
 void swd_set_reset_connect(SWD_CONNECT_TYPE type);
 void swd_set_soft_reset(uint32_t soft_reset_type);
+uint8_t JTAG2SWD(void);
 
 #ifdef __cplusplus
 }

@@ -767,7 +767,7 @@ static uint8_t swd_read_idcode(uint32_t *id)
 }
 
 
-static uint8_t JTAG2SWD()
+uint8_t JTAG2SWD()
 {
     uint32_t tmp = 0;
 
