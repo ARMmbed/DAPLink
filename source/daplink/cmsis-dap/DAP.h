@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2013-2019 ARM Limited. All rights reserved.
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -100,6 +102,11 @@
 #define ID_DAP_Vendor29                 0x9DU
 #define ID_DAP_Vendor30                 0x9EU
 #define ID_DAP_Vendor31                 0x9FU
+
+// DAP Extended range of Vendor Command IDs
+
+#define ID_DAP_VendorExFirst            0xA0U
+#define ID_DAP_VendorExLast             0xFEU
 
 #define ID_DAP_Invalid                  0xFFU
 

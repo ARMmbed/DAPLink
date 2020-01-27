@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2013-2017 ARM Limited. All rights reserved.
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -1616,6 +1618,16 @@ __WEAK uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *respon
   return ((1U << 16) | 1U);
 }
 
+// Process DAP Vendor extended command request and prepare response
+// Default function (can be overridden)
+//   request:  pointer to request data
+//   response: pointer to response data
+//   return:   number of bytes in response (lower 16 bits)
+//             number of bytes in request (upper 16 bits)
+__weak uint32_t DAP_ProcessVendorCommandEx(const uint8_t *request, uint8_t *response) {
+  *response = ID_DAP_Invalid;
+  return ((1U << 16) | 1U);
+}
 
 // Process DAP command request and prepare response
 //   request:  pointer to request data
@@ -1628,6 +1640,10 @@ uint32_t DAP_ProcessCommand(const uint8_t *request, uint8_t *response) {
   if ((*request >= ID_DAP_Vendor0) && (*request <= ID_DAP_Vendor31)) {
     return DAP_ProcessVendorCommand(request, response);
   }
+
+  if ((*request >= ID_DAP_VendorExFirst) && (*request <= ID_DAP_VendorExLast)) {
+    return DAP_ProcessVendorCommandEx(request, response);
+  }  
 
   *response++ = *request;
 
