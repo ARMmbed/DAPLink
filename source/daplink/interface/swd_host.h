@@ -4,6 +4,8 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -39,6 +41,11 @@ typedef enum {
     CONNECT_UNDER_RESET,
 } SWD_CONNECT_TYPE;
 
+typedef enum {
+    FLASHALGO_RETURN_BOOL,
+    FLASHALGO_RETURN_POINTER
+} flash_algo_return_t;
+
 uint8_t swd_init(void);
 uint8_t swd_off(void);
 uint8_t swd_init_debug(void);
@@ -55,7 +62,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size);
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size);
 uint8_t swd_read_core_register(uint32_t n, uint32_t *val);
 uint8_t swd_write_core_register(uint32_t n, uint32_t val);
-uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4);
+uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t entry, uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4, flash_algo_return_t return_type);
 uint8_t swd_set_target_state_hw(target_state_t state);
 uint8_t swd_set_target_state_sw(target_state_t state);
 uint8_t swd_transfer_retry(uint32_t req, uint32_t *data);
