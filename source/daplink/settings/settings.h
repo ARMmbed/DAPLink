@@ -4,6 +4,8 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -55,6 +57,8 @@ uint8_t config_ram_add_hexdump(uint32_t hexdump);
 uint8_t config_ram_get_hexdumps(uint32_t **hexdumps);
 void config_ram_set_disable_msd(bool disable_msd);
 uint8_t config_ram_get_disable_msd(void);
+void config_ram_set_page_erase(bool page_erase_enable);
+bool config_ram_get_page_erase(void);
 
 // Private - should only be called from settings.c
 void config_rom_init(void);
