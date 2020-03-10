@@ -92,9 +92,9 @@ static const uint32_t ama3b1kk_flash_prog_blob[] = {
 };
 
 // Start address of flash
-static const uint32_t flash_start = 0x00000000;
+static const uint32_t flash_start = 0x0000c000;
 // Size of flash
-static const uint32_t flash_size = 0x00100000;
+static const uint32_t flash_size = 0x000f4000;
 
 /**
 * List of start and size for each size of flash sector - even indexes are start, odd are size
@@ -104,7 +104,7 @@ static const uint32_t flash_size = 0x00100000;
 * at address flash_start + flash_size.
 */
 static const uint32_t sectors_info[] = {
-    0x00000000, 0x00002000,
+    0x0000c000, 0x00002000,
 };
 
 static const program_target_t flash = {
@@ -113,7 +113,7 @@ static const program_target_t flash = {
     0x20000037, // EraseChip
     0x20000065, // EraseSector
     0x20000083, // ProgramPage
-    0x12000001f, // Verify
+    0x2000001f, // Verify
 
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
