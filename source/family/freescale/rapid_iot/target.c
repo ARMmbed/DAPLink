@@ -29,7 +29,7 @@
 // default target information is k64f
 target_cfg_t target_device = {
     .sectors_info                   = sectors_info_k64,
-    .sector_info_length             = (sizeof(sectors_info_k64))/(sizeof(sectors_info_k64)),
+    .sector_info_length             = (sizeof(sectors_info_k64))/(sizeof(sector_info_t)),
 #ifdef BOARD_RAPID_IOT
     .flash_regions[0].start         = 0x00014000,
 #else
@@ -44,7 +44,7 @@ target_cfg_t target_device = {
 
 target_cfg_t target_device_kw40 = {
     .sectors_info                   = sectors_info_kw40,
-    .sector_info_length             = (sizeof(sectors_info_kw40))/(sizeof(sectors_info_kw40)),
+    .sector_info_length             = (sizeof(sectors_info_kw40))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(160),
     .flash_regions[0].flags         = kRegionIsDefault,
@@ -55,7 +55,7 @@ target_cfg_t target_device_kw40 = {
 
 target_cfg_t target_device_kw41 = {
     .sectors_info                   = sectors_info_kw41,
-    .sector_info_length             = (sizeof(sectors_info_kw41))/(sizeof(sectors_info_kw41)),
+    .sector_info_length             = (sizeof(sectors_info_kw41))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0x4000,
     .flash_regions[0].end           = KB(512),
     .flash_regions[0].flags         = kRegionIsDefault,

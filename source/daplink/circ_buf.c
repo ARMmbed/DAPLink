@@ -22,7 +22,6 @@
 #include "circ_buf.h"
 
 #include "cortex_m.h"
-#include "macro.h"
 #include "util.h"
 
 void circ_buf_init(circ_buf_t *circ_buf, uint8_t *buffer, uint32_t size)
@@ -74,7 +73,7 @@ uint8_t circ_buf_pop(circ_buf_t *circ_buf)
     }
 
     cortex_int_restore(state);
-    
+
     return data;
 }
 
@@ -94,7 +93,7 @@ uint32_t circ_buf_count_used(circ_buf_t *circ_buf)
     cortex_int_restore(state);
     return cnt;
 }
-    
+
 uint32_t circ_buf_count_free(circ_buf_t *circ_buf)
 {
     uint32_t cnt;

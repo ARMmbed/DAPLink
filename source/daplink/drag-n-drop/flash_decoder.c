@@ -19,11 +19,10 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "flash_decoder.h"
 #include "util.h"
-#include "macro.h"
 #include "daplink.h"
 #include "flash_manager.h"
 #include "target_config.h"  // for target_device
@@ -353,7 +352,7 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
         case FLASH_DECODER_TYPE_INTERFACE:
             end_addr = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE;
             break;
-        
+
         case FLASH_DECODER_TYPE_TARGET:
             //only if we are sure it is a bin for the target; without check unordered hex files will cause to terminate flashing
             if (flash_type_target_bin && g_board_info.target_cfg) {
@@ -367,7 +366,7 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
                 if(end_addr == 0){ //invalid end_addr
                     return false;
                 }
-                
+
             }
             else {
                 return false;

@@ -31,11 +31,12 @@
 #ifndef _FSL_COMMON_H_
 #define _FSL_COMMON_H_
 
-#include <assert.h>
+// #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 #include "fsl_device_registers.h"
+#include "util.h"
 
 /*!
  * @addtogroup ksdk_common
@@ -45,6 +46,9 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+
+// Redefine assert to DAPLink's assert utility for code size savings.
+#define assert(x) util_assert((x));
 
 /*! @brief Construct a status code value from a group and code number. */
 #define MAKE_STATUS(group, code) ((((group)*100) + (code)))
@@ -122,17 +126,17 @@ typedef int32_t status_t;
 
 /*! @name Min/max macros */
 /* @{ */
-#if !defined(MIN)
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
-
-#if !defined(MAX)
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-/* @} */
-
-/*! @brief Computes the number of elements in an array. */
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+// #if !defined(MIN)
+// #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// #endif
+//
+// #if !defined(MAX)
+// #define MAX(a, b) ((a) > (b) ? (a) : (b))
+// #endif
+// /* @} */
+//
+// /*! @brief Computes the number of elements in an array. */
+// #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 /*! @name UINT16_MAX/UINT32_MAX value */
 /* @{ */

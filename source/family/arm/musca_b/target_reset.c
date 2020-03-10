@@ -20,10 +20,8 @@
  */
 
 #include "target_family.h"
-#include "target_reset.h"
 #include "target_config.h"  // for target_device
 #include "swd_host.h"
-
 #include "gpio.h"
 #include "i2c_gpio.h"
 #include "debug_cm.h"
@@ -31,7 +29,7 @@
 #include "power_ctrl.h"
 #include "uart.h"
 
-static void target_before_init_debug(void)
+static void musca_b_target_before_init_debug(void)
 {
     uint8_t buf[12];
 
@@ -108,7 +106,7 @@ static void target_before_init_debug(void)
     return;
 }
 
-static uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t musca_b_target_set_state(target_state_t state)
 {
     if(state == RESET_RUN)
     {
@@ -161,8 +159,8 @@ static uint8_t target_set_state(TARGET_RESET_STATE state)
 }
 
 const target_family_descriptor_t g_target_family_musca_b = {
-    .target_before_init_debug = target_before_init_debug,
-    .target_set_state = target_set_state,
+    .target_before_init_debug = musca_b_target_before_init_debug,
+    .target_set_state = musca_b_target_set_state,
     .apsel = 0x01000000,
 };
 

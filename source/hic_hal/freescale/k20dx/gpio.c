@@ -22,7 +22,6 @@
 #include "MK20D5.h"
 #include "DAP_config.h"
 #include "gpio.h"
-#include "target_reset.h"
 #include "daplink.h"
 
 static void busy_wait(uint32_t cycles)

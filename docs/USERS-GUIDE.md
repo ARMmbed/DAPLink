@@ -17,14 +17,14 @@ The serial port is connected directly to the target MCU allowing for bidirection
 
 Supported baud rates:
 
-- 9600.
-- 14400.
-- 19200.
-- 28800.
-- 38400.
-- 56000.
-- 57600.
-- 115200.
+- 9600
+- 14400
+- 19200
+- 28800
+- 38400
+- 56000
+- 57600
+- 115200
 
 Note: Most DAPLink implementations support other baud rates in addition to the ones listed here.
 

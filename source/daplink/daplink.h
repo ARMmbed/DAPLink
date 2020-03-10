@@ -22,8 +22,8 @@
 #ifndef DAPLINK_H
 #define DAPLINK_H
 
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #include "daplink_addr.h"
 #include "compiler.h"
@@ -67,6 +67,7 @@ COMPILER_ASSERT(DAPLINK_RAM_SHARED_START + DAPLINK_RAM_SHARED_SIZE == DAPLINK_RA
 #define DAPLINK_HIC_ID_LPC54606     0x9796990C // reserving for future use
 #define DAPLINK_HIC_ID_STM32F723IE  0x9796990D // reserving for future use
 #define DAPLINK_HIC_ID_LPC55S69     0x97969920 // reserving for future use
+#define DAPLINK_HIC_ID_M48SSIDAE    0x97969921
 #define DAPLINK_HIC_ID_PSOC5        0x2E127069
 //@}
 

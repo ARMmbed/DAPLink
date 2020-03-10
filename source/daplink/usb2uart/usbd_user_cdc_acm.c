@@ -22,7 +22,6 @@
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main.h"
-#include "target_reset.h"
 #include "uart.h"
 #ifdef DRAG_N_DROP_SUPPORT
 #include "flash_intf.h"
@@ -115,9 +114,9 @@ static U32 start_break_time = 0;
 int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
 {
     uint32_t end_break_time;
-#ifdef DRAG_N_DROP_SUPPORT    
-    if (!flash_intf_target->flash_busy()) 
-#endif    
+#ifdef DRAG_N_DROP_SUPPORT
+    if (!flash_intf_target->flash_busy())
+#endif
     { //added checking if flashing on target is in progress
         // reset and send the unique id over CDC
         if (dur != 0) {
@@ -188,7 +187,7 @@ void cdc_process_event()
             main_blink_cdc_led(MAIN_LED_FLASH);
         }
     }
- 
+
     // Always process events
     main_cdc_send_event();
 }

@@ -22,8 +22,8 @@
 #ifndef FLASH_DECODER_H
 #define FLASH_DECODER_H
 
-#include "stdint.h"
-#include "stdbool.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #include "flash_intf.h"
 #include "error.h"

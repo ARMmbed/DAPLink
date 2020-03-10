@@ -1,6 +1,6 @@
 /**
  * @file    board_LPC43xx.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -19,10 +19,10 @@
  * limitations under the License.
  */
 
-#include "board.h"
+#include "sdk.h"
 #include "lpc43xx_cgu.h"
 
-void board_init(void)
+void sdk_init(void)
 {
     /* Set core clock to 96MHz */
     CGU_Init(96000000);

@@ -3,7 +3,7 @@
  * @brief   useful things
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,8 +22,32 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
+
+// Protect commonly-defined macros with ifdefs, to prevent conflicts if redefined
+// in imported sources (mostly vendor SDKs).
+
+#if !defined(ARRAY_SIZE)
+//! @brief Get number of elements in the array.
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+#endif
+
+#if !defined(MIN)
+#define MIN(a,b)                        ((a) < (b) ? (a) : (b))
+#endif
+
+#if !defined(MAX)
+#define MAX(a,b)                        ((a) > (b) ? (a) : (b))
+#endif
+
+#define MB(size)                        ((size) * 1024 * 1024)
+
+#define KB(size)                        ((size) * 1024)
+
+#define ROUND_UP(value, boundary)       ((value) + ((boundary) - (value)) % (boundary))
+
+#define ROUND_DOWN(value, boundary)     ((value) - ((value) % (boundary)))
 
 #ifdef __cplusplus
 extern "C" {

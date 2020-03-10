@@ -3,7 +3,7 @@
  * @brief   Implementation of vfs_user.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,16 +19,15 @@
  * limitations under the License.
  */
 
-#include "stdbool.h"
-#include "ctype.h"
-#include "string.h"
+#include <stdbool.h>
+#include <ctype.h>
+#include <string.h>
 
+#include "vfs_user.h"
 #include "vfs_manager.h"
-#include "macro.h"
 #include "error.h"
 #include "util.h"
 #include "settings.h"
-#include "target_reset.h"
 #include "daplink.h"
 #include "version_git.h"
 #include "info.h"
@@ -37,9 +36,40 @@
 #include "cortex_m.h"
 #include "target_board.h"
 
-// Must be bigger than 4x the flash size of the biggest supported
-// device.  This is to accomodate for hex file programming.
-static const uint32_t disc_size = MB(64);
+//! @brief Size in bytes of the virtual disk.
+//!
+//! Must be bigger than 4x the flash size of the biggest supported
+//! device.  This is to accomodate for hex file programming.
+#define VFS_DISK_SIZE (MB(64))
+
+//! @brief Constants for magic action or config files.
+//!
+//! The "magic files" are files with a special name that if created on the USB MSC volume, will
+//! cause an event. There are two classes of magic files: action files and config files. The former
+//! causes a given action to take place, while the latter changes a persistent configuration setting
+//! to a predetermined value.
+//!
+//! See #s_magic_file_info for the mapping of filenames to these enums.
+typedef enum _magic_file {
+    kDAPLinkModeActionFile,     //!< Switch between interface and bootloader.
+    kTestAssertActionFile,      //!< Force an assertion for testing.
+    kRefreshActionFile,         //!< Force a remount.
+    kEraseActionFile,           //!< Erase the target flash.
+    kAutoResetConfigFile,       //!< Enable reset after flash.
+    kHardResetConfigFile,       //!< Disable reset after flash.
+    kAutomationOnConfigFile,    //!< Enable automation.
+    kAutomationOffConfigFile,   //!< Disable automation.
+    kOverflowOnConfigFile,      //!< Enable UART overflow reporting.
+    kOverflowOffConfigFile,     //!< Disable UART overflow reporting.
+    kMSDOnConfigFile,           //!< Enable USB MSC. Uh....
+    kMSDOffConfigFile,          //!< Disable USB MSC.
+} magic_file_t;
+
+//! @brief Mapping from filename string to magic file enum.
+typedef struct _magic_file_info {
+    const char *name;   //!< Name of the magic file, must be in 8.3 format.
+    magic_file_t which; //!< Enum for the file.
+} magic_file_info_t;
 
 static const char mbed_redirect_file[] =
     "<!doctype html>\r\n"
@@ -61,6 +91,22 @@ static const char error_type_prefix[] = "type: ";
 
 static const vfs_filename_t assert_file = "ASSERT  TXT";
 
+//! @brief Table of magic files and their names.
+static const magic_file_info_t s_magic_file_info[] = {
+        { daplink_mode_file_name, kDAPLinkModeActionFile },
+        { "ASSERT  ACT", kTestAssertActionFile      },
+        { "REFRESH ACT", kRefreshActionFile         },
+        { "ERASE   ACT", kEraseActionFile           },
+        { "AUTO_RSTCFG", kAutoResetConfigFile       },
+        { "HARD_RSTCFG", kHardResetConfigFile       },
+        { "AUTO_ON CFG", kAutomationOnConfigFile    },
+        { "AUTO_OFFCFG", kAutomationOffConfigFile   },
+        { "OVFL_ON CFG", kOverflowOnConfigFile      },
+        { "OVFL_OFFCFG", kOverflowOffConfigFile     },
+        { "MSD_ON  CFG", kMSDOnConfigFile           },
+        { "MSD_OFF CFG", kMSDOffConfigFile          },
+    };
+
 static uint8_t file_buffer[VFS_SECTOR_SIZE];
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
@@ -81,14 +127,12 @@ static void erase_target(void);
 
 static uint32_t expand_info(uint8_t *buf, uint32_t bufsize);
 
-#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
 void vfs_user_build_filesystem()
 {
     uint32_t file_size;
     vfs_file_t file_handle;
     // Setup the filesystem based on target parameters
-    vfs_init(get_daplink_drive_name(), disc_size);
+    vfs_init(get_daplink_drive_name(), VFS_DISK_SIZE);
     // MBED.HTM
     file_size = get_file_size(read_file_mbed_htm);
     vfs_create_file(get_daplink_url_name(), read_file_mbed_htm, 0, file_size);
@@ -124,9 +168,28 @@ void vfs_user_build_filesystem()
     }
 }
 
+// Default file change hook.
+__WEAK bool vfs_user_file_change_handler_hook(const vfs_filename_t filename, vfs_file_change_t change,
+        vfs_file_t file, vfs_file_t new_file_data)
+{
+    return false;
+}
+
+// Default magic file hook.
+__WEAK bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
+{
+    return false;
+}
+
 // Callback to handle changes to the root directory.  Should be used with vfs_set_file_change_callback
 void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change_t change, vfs_file_t file, vfs_file_t new_file_data)
 {
+    // Call file changed hook. If it returns true, then it handled the request and we have nothing
+    // more to do.
+    if (vfs_user_file_change_handler_hook(filename, change, file, new_file_data)) {
+        return;
+    }
+
     // Allow settings to be changed if automation mode is
     // enabled or if the user is holding the reset button
     bool btn_pressed = gpio_get_reset_btn();
@@ -139,52 +202,81 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
         // Unused
     }
 
-    if (VFS_FILE_CREATED == change) {
-        if (!memcmp(filename, daplink_mode_file_name, sizeof(vfs_filename_t))) {
-            if (daplink_is_interface()) {
-                config_ram_set_hold_in_bl(true);
-            } else {
-                // Do nothing - bootloader will go to interface by default
+    else if (VFS_FILE_CREATED == change) {
+        bool do_remount = true; // Almost all magic files cause a remount.
+        int32_t which_magic_file = -1;
+
+        // Let the hook examine the filename. If it returned false then look for the standard
+        // magic files.
+        if (!vfs_user_magic_file_hook(filename, &do_remount)) {
+            // Compare the new file's name to our table of magic filenames.
+            for (int32_t i = 0; i < ARRAY_SIZE(s_magic_file_info); ++i) {
+                if (!memcmp(filename, s_magic_file_info[i].name, sizeof(vfs_filename_t))) {
+                    which_magic_file = i;
+                }
             }
 
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "AUTO_RSTCFG", sizeof(vfs_filename_t))) {
-            config_set_auto_rst(true);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "HARD_RSTCFG", sizeof(vfs_filename_t))) {
-            config_set_auto_rst(false);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "ASSERT  ACT", sizeof(vfs_filename_t))) {
-            // Test asserts
-            util_assert(0);
-        } else if (!memcmp(filename, "REFRESH ACT", sizeof(vfs_filename_t))) {
-            // Remount to update the drive
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "AUTO_ON CFG", sizeof(vfs_filename_t))) {
-            config_set_automation_allowed(true);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "AUTO_OFFCFG", sizeof(vfs_filename_t))) {
-            config_set_automation_allowed(false);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
-            erase_target();
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "OVFL_ON CFG", sizeof(vfs_filename_t))) {
-            config_set_overflow_detect(true);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "OVFL_OFFCFG", sizeof(vfs_filename_t))) {
-            config_set_overflow_detect(false);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "MSD_ON  ACT", sizeof(vfs_filename_t))) {
-            config_ram_set_disable_msd(false);
-            vfs_mngr_fs_remount();
-        } else if (!memcmp(filename, "MSD_OFF ACT", sizeof(vfs_filename_t))) {
-            config_ram_set_disable_msd(true);
+            // Check if we matched a magic filename and handle it.
+            if (which_magic_file != -1) {
+                switch (which_magic_file) {
+                    case kDAPLinkModeActionFile:
+                        if (daplink_is_interface()) {
+                            config_ram_set_hold_in_bl(true);
+                        } else {
+                            // Do nothing - bootloader will go to interface by default
+                        }
+                        break;
+                    case kTestAssertActionFile:
+                        // Test asserts
+                        util_assert(0);
+                        do_remount = false;
+                        break;
+                    case kRefreshActionFile:
+                        // Remount to update the drive
+                        break;
+                    case kEraseActionFile:
+                        erase_target();
+                        break;
+                    case kAutoResetConfigFile:
+                        config_set_auto_rst(true);
+                        break;
+                    case kHardResetConfigFile:
+                        config_set_auto_rst(false);
+                        break;
+                    case kAutomationOnConfigFile:
+                        config_set_automation_allowed(true);
+                        break;
+                    case kAutomationOffConfigFile:
+                        config_set_automation_allowed(false);
+                        break;
+                    case kOverflowOnConfigFile:
+                        config_set_overflow_detect(true);
+                        break;
+                    case kOverflowOffConfigFile:
+                        config_set_overflow_detect(false);
+                        break;
+                    case kMSDOnConfigFile:
+                        config_ram_set_disable_msd(false);
+                        break;
+                    case kMSDOffConfigFile:
+                        config_ram_set_disable_msd(true);
+                        break;
+                    default:
+                        util_assert(false);
+                }
+            }
+            else {
+                do_remount = false;
+            }
+        }
+
+        // Remount if requested.
+        if (do_remount) {
             vfs_mngr_fs_remount();
         }
     }
 
-    if (VFS_FILE_DELETED == change) {
+    else if (VFS_FILE_DELETED == change) {
         if (!memcmp(filename, assert_file, sizeof(vfs_filename_t))) {
             // Clear assert and remount to update the drive
             util_assert_clear();
@@ -294,7 +386,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
     uint32_t * hexdumps = 0;
     uint8_t valid_hexdumps = 0;
     uint8_t index = 0;
-    
+
     if (sector_offset != 0) {
         return 0;
     }
@@ -332,7 +424,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint
             pos += util_write_string(buf + pos, "\r\n");
         }
     }
-    
+
     return pos;
 }
 

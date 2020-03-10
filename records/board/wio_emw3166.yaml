@@ -1,0 +1,6 @@
+common:
+    sources:
+        board:
+            - source/board/wio_emw3166.c
+        family:
+            - source/family/st/stm32f412rg/target.c

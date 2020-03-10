@@ -25,7 +25,7 @@
 extern target_cfg_t target_device_nrf52;
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "1238",
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",

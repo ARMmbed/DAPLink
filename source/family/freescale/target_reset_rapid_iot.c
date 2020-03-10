@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
 #include "target_config.h"

@@ -18,31 +18,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "Systick_Handler.h"
 
-#if defined (INTERFACE_K20D5)
-#include "MK20D5.h"
-#elif defined (INTERFACE_K26F)
-#include "MK26F18.h"
-#elif defined (INTERFACE_KL26Z)
-#include "MKL26Z4.h"
-#elif defined (INTERFACE_LPC11U35)
-#include "LPC11Uxx.h"
-#elif defined (INTERFACE_LPC4322)
-#include "LPC43xx.h"
-#elif defined (INTERFACE_MAX32620)
-#include "max32620.h"
-#elif defined (INTERFACE_MAX32625)
-#include "max32625.h"
-#elif defined (INTERFACE_SAM3U2C)
-#include "sam3u2c.h"
-#elif defined (INTERFACE_STM32F103XB)
-#include "stm32f103xb.h"
-#else
-#error "CMSIS core headers needed"
-#endif
-
+#include "SysTick_Handler.h"
+#include "device.h"
 
 //SysTick Timer Configuration
 #ifndef OS_CLOCK

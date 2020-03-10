@@ -19,12 +19,11 @@
  * limitations under the License.
  */
 
-#include "string.h"
- 
+#include <string.h>
+
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 #include "util.h"
-#include "macro.h"
 
 BOOL USBD_MSC_MediaReady = __FALSE;
 BOOL USBD_MSC_ReadOnly = __FALSE;
@@ -1091,7 +1090,7 @@ void USBD_MSC_BulkOut(void)
         case MSC_BS_RESET:
             // If Bulk-Only Mass Storage Reset command was received on
             // Control Endpoint ignore next Bulk OUT transfer if it was not
-            // a CBW (as it means it was a unprocessed leftover from 
+            // a CBW (as it means it was a unprocessed leftover from
             // transfer before reset happened)
             BulkStage = MSC_BS_CBW;
             if (BulkLen == sizeof(USBD_MSC_CBW)) {

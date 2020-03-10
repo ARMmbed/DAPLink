@@ -24,7 +24,7 @@
 #include "target_board.h"
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "4600",
     .family_id = kRealtek_Rtl8195am_FamilyID,
     .flags = kEnablePageErase,

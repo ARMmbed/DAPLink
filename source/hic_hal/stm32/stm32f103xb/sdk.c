@@ -22,7 +22,6 @@
 #include "stm32f1xx.h"
 #include "DAP_config.h"
 #include "gpio.h"
-#include "target_reset.h"
 #include "daplink.h"
 #include "util.h"
 #include "cortex_m.h"

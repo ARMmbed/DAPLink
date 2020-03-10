@@ -19,11 +19,11 @@
  * limitations under the License.
  */
 
+#include <string.h>
 #include "flash_hal.h"
 #include "iap.h"
-#include "macro.h"
+#include "util.h"
 #include "LPC11Uxx.h"
-#include "string.h"
 
 // page buffer must be 4 byte algined and must reside in ram bank 1
 static __attribute__((section("RAM1"))) uint32_t page_buf[64];
@@ -48,7 +48,7 @@ uint32_t EraseChip(void)
 uint32_t EraseSector(uint32_t adr)
 {
     uint32_t num = get_sector_num(adr);
-    
+
     iap_lock();
 
     iap_op.cmd = 50;        // Prepare Sector for Erase

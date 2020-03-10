@@ -20,7 +20,7 @@ common:
             - source/family/nordic/target_reset_nrf51.c
 ```
 
-This assumes there is already target support present in the codebase. If adding a new target family is needed, additional steps in [Porting target family guide](PORT_TARGET_FAMILY.md) will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. To get a BOARD ID email support@mbed.org
+This assumes there is already target support present in the codebase. If adding a new target family is needed, additional steps in [Porting target family guide](PORT_TARGET_FAMILY.md) will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. If you're developing a custom or non-official Mbed platform, then can use any BOARD ID and the `mbedls` [mocking feature](https://github.com/ARMmbed/mbed-os-tools/blob/master/packages/mbed-ls/README.md#mocking-renaming-platforms).
 ```c
 /**
  * @file   myboard.c

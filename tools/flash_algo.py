@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
  mbed
- Copyright (c) 2017-2017 ARM Limited
+ Copyright (c) 2017-2019 ARM Limited
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import struct
 import binascii
 import argparse
 import logging
-import StringIO
+from six.moves import StringIO
 import jinja2
 from collections import namedtuple
 from itertools import count

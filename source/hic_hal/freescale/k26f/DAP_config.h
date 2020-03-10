@@ -42,7 +42,7 @@ This information includes:
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK               120000000        ///< Specifies the CPU Clock in Hz
+#define CPU_CLOCK               SystemCoreClock        ///< Specifies the CPU Clock in Hz
 
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
@@ -103,6 +103,12 @@ This information includes:
 #define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n)
 
 #define SWO_USART_PORT 1 ///< UART1 is used for the SWO UART.
+
+/// SWO Streaming Trace.
+#define SWO_STREAM              0               ///< SWO Streaming Trace: 1 = available, 0 = not available.
+
+/// Clock frequency of the Test Domain Timer. Timer value is returned with \ref TIMESTAMP_GET.
+#define TIMESTAMP_CLOCK         1000000U      ///< Timestamp clock in Hz (0 = timestamps not supported).
 
 /// Debug Unit is connected to fixed Target Device.
 /// The Debug Unit may be part of an evaluation board and always connected to a fixed
@@ -200,7 +206,7 @@ static inline void PORT_OFF(void)
 /** SWCLK/TCK I/O pin: Get Input.
 \return Current status of the SWCLK/TCK DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWCLK_TCK_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN(void)
 {
     return (0);   // Not available
 }
@@ -208,7 +214,7 @@ static __forceinline uint32_t PIN_SWCLK_TCK_IN(void)
 /** SWCLK/TCK I/O pin: Set Output to High.
 Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
-static __forceinline void     PIN_SWCLK_TCK_SET(void)
+__STATIC_FORCEINLINE void     PIN_SWCLK_TCK_SET(void)
 {
     PIN_SWCLK_GPIO->PSOR = 1 << PIN_SWCLK_BIT;
 }
@@ -216,7 +222,7 @@ static __forceinline void     PIN_SWCLK_TCK_SET(void)
 /** SWCLK/TCK I/O pin: Set Output to Low.
 Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
-static __forceinline void     PIN_SWCLK_TCK_CLR(void)
+__STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR(void)
 {
     PIN_SWCLK_GPIO->PCOR = 1 << PIN_SWCLK_BIT;
 }
@@ -227,7 +233,7 @@ static __forceinline void     PIN_SWCLK_TCK_CLR(void)
 /** SWDIO/TMS I/O pin: Get Input.
 \return Current status of the SWDIO/TMS DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWDIO_TMS_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN(void)
 {
     return ((PIN_SWDIO_IN_GPIO->PDIR >> PIN_SWDIO_IN_BIT) & 1);
 }
@@ -235,7 +241,7 @@ static __forceinline uint32_t PIN_SWDIO_TMS_IN(void)
 /** SWDIO/TMS I/O pin: Set Output to High.
 Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
-static __forceinline void     PIN_SWDIO_TMS_SET(void)
+__STATIC_FORCEINLINE void     PIN_SWDIO_TMS_SET(void)
 {
     PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
 }
@@ -243,7 +249,7 @@ static __forceinline void     PIN_SWDIO_TMS_SET(void)
 /** SWDIO/TMS I/O pin: Set Output to Low.
 Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
-static __forceinline void     PIN_SWDIO_TMS_CLR(void)
+__STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR(void)
 {
     PIN_SWDIO_OUT_GPIO->PCOR = 1 << PIN_SWDIO_OUT_BIT;
 }
@@ -251,7 +257,7 @@ static __forceinline void     PIN_SWDIO_TMS_CLR(void)
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
 \return Current status of the SWDIO DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_SWDIO_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 {
     return (BITBAND_REG(PIN_SWDIO_IN_GPIO->PDIR, PIN_SWDIO_IN_BIT));
 }
@@ -259,7 +265,7 @@ static __forceinline uint32_t PIN_SWDIO_IN(void)
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
 \param bit Output value for the SWDIO DAP hardware I/O pin.
 */
-static __forceinline void     PIN_SWDIO_OUT(uint32_t bit)
+__STATIC_FORCEINLINE void     PIN_SWDIO_OUT(uint32_t bit)
 {
     BITBAND_REG(PIN_SWDIO_OUT_GPIO->PDOR, PIN_SWDIO_OUT_BIT) = bit;
 }
@@ -268,7 +274,7 @@ static __forceinline void     PIN_SWDIO_OUT(uint32_t bit)
 Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 called prior \ref PIN_SWDIO_OUT function calls.
 */
-static __forceinline void     PIN_SWDIO_OUT_ENABLE(void)
+__STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE(void)
 {
     PIN_SWDIO_OE_GPIO->PSOR = 1 << PIN_SWDIO_OE_BIT;
 }
@@ -277,7 +283,7 @@ static __forceinline void     PIN_SWDIO_OUT_ENABLE(void)
 Configure the SWDIO DAP hardware I/O pin to input mode. This function is
 called prior \ref PIN_SWDIO_IN function calls.
 */
-static __forceinline void     PIN_SWDIO_OUT_DISABLE(void)
+__STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE(void)
 {
     PIN_SWDIO_OE_GPIO->PCOR = 1 << PIN_SWDIO_OE_BIT;
 }
@@ -288,7 +294,7 @@ static __forceinline void     PIN_SWDIO_OUT_DISABLE(void)
 /** TDI I/O pin: Get Input.
 \return Current status of the TDI DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_TDI_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_TDI_IN(void)
 {
     return (0);   // Not available
 }
@@ -296,7 +302,7 @@ static __forceinline uint32_t PIN_TDI_IN(void)
 /** TDI I/O pin: Set Output.
 \param bit Output value for the TDI DAP hardware I/O pin.
 */
-static __forceinline void     PIN_TDI_OUT(uint32_t bit)
+__STATIC_FORCEINLINE void     PIN_TDI_OUT(uint32_t bit)
 {
     ;             // Not available
 }
@@ -307,7 +313,7 @@ static __forceinline void     PIN_TDI_OUT(uint32_t bit)
 /** TDO I/O pin: Get Input.
 \return Current status of the TDO DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_TDO_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_TDO_IN(void)
 {
     return (0);   // Not available
 }
@@ -318,7 +324,7 @@ static __forceinline uint32_t PIN_TDO_IN(void)
 /** nTRST I/O pin: Get Input.
 \return Current status of the nTRST DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_nTRST_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_nTRST_IN(void)
 {
     return (0);   // Not available
 }
@@ -328,7 +334,7 @@ static __forceinline uint32_t PIN_nTRST_IN(void)
            - 0: issue a JTAG TRST Test Reset.
            - 1: release JTAG TRST Test Reset.
 */
-static __forceinline void     PIN_nTRST_OUT(uint32_t bit)
+__STATIC_FORCEINLINE void     PIN_nTRST_OUT(uint32_t bit)
 {
     ;             // Not available
 }
@@ -338,7 +344,7 @@ static __forceinline void     PIN_nTRST_OUT(uint32_t bit)
 /** nRESET I/O pin: Get Input.
 \return Current status of the nRESET DAP hardware I/O pin.
 */
-static __forceinline uint32_t PIN_nRESET_IN(void)
+__STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 {
     return ((PIN_nRESET_GPIO->PDIR >> PIN_nRESET_BIT) & 1);
 }
@@ -348,7 +354,7 @@ static __forceinline uint32_t PIN_nRESET_IN(void)
            - 0: issue a device hardware reset.
            - 1: release device hardware reset.
 */
-static __forceinline void     PIN_nRESET_OUT(uint32_t bit)
+__STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
 {
     BITBAND_REG(PIN_nRESET_GPIO->PDOR, PIN_nRESET_BIT) = bit;
 }
@@ -387,6 +393,28 @@ static inline void LED_CONNECTED_OUT(uint32_t bit)
 static inline void LED_RUNNING_OUT(uint32_t bit)
 {
     ;             // Not available
+}
+
+///@}
+
+
+//**************************************************************************************************
+/**
+\defgroup DAP_Config_Timestamp_gr CMSIS-DAP Timestamp
+\ingroup DAP_ConfigIO_gr
+@{
+Access function for Test Domain Timer.
+
+The value of the Test Domain Timer in the Debug Unit is returned by the function \ref TIMESTAMP_GET. By
+default, the DWT timer is used.  The frequency of this timer is configured with \ref TIMESTAMP_CLOCK.
+
+*/
+
+/** Get timestamp of Test Domain Timer.
+\return Current timestamp value.
+*/
+__STATIC_INLINE uint32_t TIMESTAMP_GET (void) {
+  return (DWT->CYCCNT) / (CPU_CLOCK / TIMESTAMP_CLOCK);
 }
 
 ///@}

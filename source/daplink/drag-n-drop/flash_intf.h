@@ -22,7 +22,7 @@
 #ifndef FLASH_INTF_H
 #define FLASH_INTF_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #include "error.h"
 

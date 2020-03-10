@@ -22,7 +22,7 @@
 #ifndef FILE_STREAM_H
 #define FILE_STREAM_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #include "virtual_fs.h"
 #include "error.h"

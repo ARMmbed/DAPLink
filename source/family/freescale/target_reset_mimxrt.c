@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
 #include "target_family.h"
@@ -31,7 +30,10 @@ static void target_before_init_debug(void)
     // RESET pin to high state ensure a successfully access. If external debugger not
     // connected. It's not necessary for doing that.
     swd_set_target_reset(0);
+}
 
+static void prerun_target_config(void)
+{
     // In some case the CPU will enter "cannot debug" state (low power, SWD pin mux changed, etc.).
     // Doing a hardware reset will clear those states (probably, depends on app). Also, if the
     // external flash's data is not a valid bootable image, DAPLink cannot attached to target. A
@@ -56,5 +58,6 @@ const target_family_descriptor_t g_nxp_mimxrt = {
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = VECTRESET,
     .target_before_init_debug = target_before_init_debug,
+    .prerun_target_config = prerun_target_config,
     .validate_bin_nvic = validate_bin_nvic,
 };

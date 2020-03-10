@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
+#include <string.h>
 #include "rl_usb.h"
-#include "string.h"
 #include "usb_for_lib.h"
 #include "info.h"
 

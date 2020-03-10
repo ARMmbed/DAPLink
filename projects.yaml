@@ -69,6 +69,9 @@ module:
     hic_max32625: &module_hic_max32625
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/max32625.yaml
+    hic_m48ssidae: &module_hic_m48ssidae
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/m48ssidae.yaml
 
 projects:
     kl26z_bl:
@@ -275,6 +278,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/mimxrt1050_evk_qspi.yaml
+    k20dx_ep_agora_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/ep_agora.yaml
     k26f_frdmk32w042_if:
         - *module_if
         - *module_hic_k26f
@@ -619,3 +626,23 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
+    lpc11u35_wio_emw3166_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/wio_emw3166.yaml
+    m48ssidae_bl:
+        - *module_bl
+        - records/hic_hal/m48ssidae.yaml
+        - records/board/m48ssidae_bl.yaml
+    m48ssidae_numaker_m252kg_if:
+        - *module_if
+        - *module_hic_m48ssidae
+        - records/board/numaker_m252kg.yaml
+    m48ssidae_numaker_iot_m263a_if:
+        - *module_if
+        - *module_hic_m48ssidae
+        - records/board/numaker_iot_m263a.yaml
+    lpc4322_hani_iot_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/hani_iot.yaml

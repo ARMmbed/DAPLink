@@ -24,7 +24,7 @@
 #include "target_family.h"
 #include "target_board.h"
 
-static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
+static uint8_t target_set_state_by_board(target_state_t state)
 {
     
     if (RESET_PROGRAM == state) {
@@ -35,7 +35,7 @@ static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "7010",
     .family_id = kToshiba_Tz_FamilyID,
     .target_set_state = target_set_state_by_board,

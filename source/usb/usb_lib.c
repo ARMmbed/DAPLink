@@ -2468,7 +2468,6 @@ BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
 
 
 extern uint8_t flash_algo_valid(void);
-extern uint8_t target_family_valid(void);
 
 static U16 start_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
     U8 * pD = 0;

@@ -19,13 +19,12 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "virtual_fs.h"
 #include "info.h"
 #include "settings.h"
 #include "compiler.h"
-#include "macro.h"
 #include "util.h"
 
 // Virtual file system driver
@@ -257,7 +256,7 @@ const virtual_media_t virtual_media_tmpl[] = {
     /* Raw filesystem contents follow */
 };
 // Keep virtual_media_idx_t in sync with virtual_media_tmpl
-COMPILER_ASSERT(MEDIA_IDX_COUNT == ELEMENTS_IN_ARRAY(virtual_media_tmpl));
+COMPILER_ASSERT(MEDIA_IDX_COUNT == ARRAY_SIZE(virtual_media_tmpl));
 
 static const FatDirectoryEntry_t root_dir_entry = {
     /*uint8_t[11] */ .filename = {""},
@@ -311,7 +310,7 @@ static void write_fat(file_allocation_table_t *fat, uint32_t idx, uint16_t val)
     high_idx = idx * 2 + 1;
 
     // Assert that this is still within the fat table
-    if (high_idx >= ELEMENTS_IN_ARRAY(fat->f)) {
+    if (high_idx >= ARRAY_SIZE(fat->f)) {
         util_assert(0);
         return;
     }
@@ -349,10 +348,10 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     }
     if (total_sectors >= 0x10000) {
         mbr.total_logical_sectors = 0;
-        mbr.big_sectors_on_drive  = total_sectors;  
+        mbr.big_sectors_on_drive  = total_sectors;
     } else {
         mbr.total_logical_sectors = total_sectors;
-        mbr.big_sectors_on_drive  = 0;  
+        mbr.big_sectors_on_drive  = 0;
     }
     // FAT table will likely be larger than needed, but this is allowed by the
     // fat specification
@@ -366,7 +365,7 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     virtual_media_idx = MEDIA_IDX_COUNT;
     data_start = 0;
 
-    for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media_tmpl); i++) {
+    for (i = 0; i < ARRAY_SIZE(virtual_media_tmpl); i++) {
         data_start += virtual_media[i].length;
     }
 
@@ -424,7 +423,7 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     }
 
     // Update directory entry
-    if (dir_idx >= ELEMENTS_IN_ARRAY(dir_current.f)) {
+    if (dir_idx >= ARRAY_SIZE(dir_current.f)) {
         util_assert(0);
         return VFS_FILE_INVALID;
     }
@@ -438,7 +437,7 @@ vfs_file_t vfs_create_file(const vfs_filename_t filename, vfs_read_cb_t read_cb,
     de->first_cluster_low_16 = (first_cluster >> 0) & 0xFFFF;
 
     // Update virtual media
-    if (virtual_media_idx >= ELEMENTS_IN_ARRAY(virtual_media)) {
+    if (virtual_media_idx >= ARRAY_SIZE(virtual_media)) {
         util_assert(0);
         return VFS_FILE_INVALID;
     }
@@ -502,7 +501,7 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
     memset(buf, 0, num_sectors * VFS_SECTOR_SIZE);
     current_sector = 0;
 
-    for (i = 0; i < ELEMENTS_IN_ARRAY(virtual_media); i++) {
+    for (i = 0; i < ARRAY_SIZE(virtual_media); i++) {
         uint32_t vm_sectors = virtual_media[i].length / VFS_SECTOR_SIZE;
         uint32_t vm_start = current_sector;
         uint32_t vm_end = current_sector + vm_sectors;
@@ -613,7 +612,7 @@ static uint32_t read_dir(uint32_t sector_offset, uint8_t *data, uint32_t num_sec
         util_assert(0);
         return 0;
     }
-   
+
     // Zero buffer data is VFS_SECTOR_SIZE max
     memset(data, 0, VFS_SECTOR_SIZE);
 
