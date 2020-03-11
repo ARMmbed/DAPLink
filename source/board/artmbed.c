@@ -24,44 +24,48 @@
 #include "target_family.h"
 #include "target_board.h"
 
-const char * const board_id_artmbed_v10 = "A127";
+const char *const board_id_artmbed_v10 = "A127";
 
-typedef enum {
+typedef enum
+{
     BOARD_VERSION_v10 = 0,
 } artmbed_version_t;
 
-static void set_board_id(artmbed_version_t board_version) {
-    switch (board_version) {
-        case BOARD_VERSION_v10:
-            target_device.rt_board_id = board_id_artmbed_v10;
-            break;
-        default:
-            target_device.rt_board_id = board_id_artmbed_v10;
-            break;
+static void set_board_id(artmbed_version_t board_version)
+{
+    switch (board_version)
+    {
+    case BOARD_VERSION_v10:
+        target_device.rt_board_id = board_id_artmbed_v10;
+        break;
+    default:
+        target_device.rt_board_id = board_id_artmbed_v10;
+        break;
     }
 }
 
 // Called in main_task() to init before USB and files are configured
-static void prerun_board_config(void) {
+static void prerun_board_config(void)
+{
     // in the future you could auto-detect board version here
     artmbed_version_t board_version = (artmbed_version_t)BOARD_VERSION_v10;
     set_board_id(board_version);
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null 
+// USB HID override function return 1 if the activity is trivial or response is null
 uint8_t usbd_hid_no_activity(uint8_t *buf)
 {
-    if(buf[0] == ID_DAP_Vendor3 &&  buf[1] == 0)
+    if (buf[0] == ID_DAP_Vendor3 && buf[1] == 0)
         return 1;
     else
         return 0;
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = 0x1,
     .family_id = kAmbiq_ama3b1kk_FamilyID,
-    .daplink_url_name =       "ARTMBED_HTM",
-    .daplink_drive_name =       "ARTMBED    ",
+    .daplink_url_name = "ARTMBED_HTM",
+    .daplink_drive_name = "ARTMBED    ",
     .daplink_target_url = "https://www.sparkfun.com/artemis",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device,

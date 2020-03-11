@@ -19,9 +19,13 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
+//#include "target_reset.h"
 #include "swd_host.h"
 #include "target_family.h"
+#include "DAP_config.h"
+#include "util.h"
+
+#define MCUCTRL_SCRATCH0 0x400401B0
 
 static void target_before_init_debug(void)
 {
@@ -37,7 +41,7 @@ static uint8_t target_unlock_sequence(void)
     return 1;
 }
 
-static uint8_t target_set_state(TARGET_RESET_STATE state)
+static uint8_t target_set_state(target_state_t state)
 {
     // if a custom state machine is needed to set the TARGET_RESET_STATE state
     return 1;
@@ -53,13 +57,53 @@ static uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
+static void swd_set_target_reset_ama3b1kk(uint8_t asserted)
+{
+    uint32_t scratch0;
+    if (asserted)
+    {
+        //Set POWER->RESET on NRF to 1
+        if (!swd_write_ap(AP_TAR, MCUCTRL_SCRATCH0))
+        {
+            util_assert(0);
+            return;
+        }
+
+        if (!(swd_read_ap(AP_TAR, &scratch0)))
+        {
+            util_assert(0);
+            return;
+        }
+
+        if (!swd_write_ap(AP_DRW, MCUCTRL_SCRATCH0))
+        {
+            util_assert(0);
+            return;
+        }
+
+        if (!swd_write_ap(AP_DRW, scratch0 | 0x01))
+        {
+            util_assert(0);
+            return;
+        }
+
+        PIN_nRESET_OUT(1);
+    }
+    else
+    {
+        PIN_nRESET_OUT(0);
+    }
+}
+
 const target_family_descriptor_t _g_target_family = {
     .family_id = kAmbiq_ama3b1kk_FamilyID,
-    .default_reset_type = kHardwareReset,
+    .default_reset_type = kSoftwareReset,
+    .soft_reset_type = SYSRESETREQ,
     .target_before_init_debug = target_before_init_debug,
     .target_unlock_sequence = target_unlock_sequence,
     .target_set_state = target_set_state,
     .security_bits_set = security_bits_set,
+    .swd_set_target_reset = swd_set_target_reset_ama3b1kk,
 };
 
-const target_family_descriptor_t* g_target_family = &_g_target_family;
+const target_family_descriptor_t *g_target_family = &_g_target_family;
