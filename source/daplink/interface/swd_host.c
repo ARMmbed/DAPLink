@@ -28,6 +28,7 @@
 #include "DAP.h"
 #include "target_family.h"
 #include "device.h"
+//#include "daplink_debug.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -516,7 +517,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size)
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size)
 {
     uint32_t n = 0;
-
+    //debug_msg("POPOPOPPOPOPPOPO %X, %X %X\r\n", address, (uint8_t *)data, size);
     // Write bytes until word aligned
     while ((size > 0) && (address & 0x3)) {
         if (!swd_write_byte(address, *data)) {

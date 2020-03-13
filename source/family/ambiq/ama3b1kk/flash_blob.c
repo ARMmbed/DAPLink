@@ -4,14 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+
  */
 
 static const uint32_t ama3b1kk_flash_prog_blob[] = {
@@ -88,8 +81,7 @@ static const uint32_t ama3b1kk_flash_prog_blob[] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000
-};
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
 
 // Start address of flash
 static const uint32_t flash_start = 0x0000c000;
@@ -104,29 +96,29 @@ static const uint32_t flash_size = 0x000f4000;
 * at address flash_start + flash_size.
 */
 static const uint32_t sectors_info[] = {
-    0x0000c000, 0x00002000,
+    0x0000c000,
+    0x00002000,
 };
 
 static const program_target_t flash = {
-    0x20000021, // Init
-    0x20000033, // UnInit
-    0x20000037, // EraseChip
-    0x20000065, // EraseSector
-    0x20000083, // ProgramPage
-    0x2000001f, // Verify
+    0x10000021, // Init
+    0x10000033, // UnInit
+    0x10000037, // EraseChip
+    0x10000065, // EraseSector
+    0x10000083, // ProgramPage
+    0x0,        // Verify
 
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
     // RSP  : stack pointer
     {
-        0x20000001,
-        0x20000114,
-        0x20000400
-    },
+        0x10000001,
+        0x10000114,
+        0x10000400},
 
-    0x20000000 + 0x00000A00,  // mem buffer location
-    0x20000000,               // location to write prog_blob in target RAM
-    sizeof(ama3b1kk_flash_prog_blob),   // prog_blob size
-    ama3b1kk_flash_prog_blob,           // address of prog_blob
-    0x00002000       // ram_to_flash_bytes_to_be_written
+    0x10000000 + 0x00000A00,          // mem buffer location
+    0x10000000,                       // location to write prog_blob in target RAM
+    sizeof(ama3b1kk_flash_prog_blob), // prog_blob size
+    ama3b1kk_flash_prog_blob,         // address of prog_blob
+    0x00002000                        // ram_to_flash_bytes_to_be_written
 };

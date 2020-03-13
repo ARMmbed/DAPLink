@@ -32,6 +32,8 @@
 #include "target_family.h"
 #include "target_board.h"
 
+//#include "daplink_debug.h"
+
 typedef enum {
     STATE_CLOSED,
     STATE_OPEN,
@@ -137,6 +139,7 @@ static error_t target_flash_set(uint32_t addr)
         }
         // Download flash programming algorithm to target
         if (0 == swd_write_memory(new_flash_algo->algo_start, (uint8_t *)new_flash_algo->algo_blob, new_flash_algo->algo_size)) {
+            //debug_msg("ASDASDASDASDASDASDASDASDASD %X, %X %X\r\n", new_flash_algo->algo_start, (uint8_t *)new_flash_algo->algo_blob, new_flash_algo->algo_size);
             return ERROR_ALGO_DL;
         }
 

@@ -87,6 +87,8 @@ void main_force_msc_disconnect_event(void);
  */
 void main_blink_msc_led(main_led_state_t permanent);
 
+
+// extern uint8_t global_flags_for_kyle;
 #ifdef __cplusplus
 }
 #endif

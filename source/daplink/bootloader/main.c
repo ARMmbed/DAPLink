@@ -38,6 +38,8 @@
 #define MSC_LED_DEF GPIO_LED_ON
 #endif
 
+
+
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     MOV SP, R0
@@ -67,6 +69,8 @@ main_usb_connect_t usb_state;
 
 // Reference to our main task
 osThreadId_t main_task_id;
+
+		// uint8_t global_flags_for_kyle = 0;
 
 static uint8_t msc_led_usb_activity = 0;
 static main_led_state_t msc_led_state = MAIN_LED_FLASH;
@@ -242,7 +246,24 @@ int main(void)
         // modify stack pointer and start app
         modify_stack_pointer_and_start_app((*(uint32_t *)(g_board_info.target_cfg->flash_regions[0].start)), (*(uint32_t *)(g_board_info.target_cfg->flash_regions[0].start + 4)));
     }
+	
 
+		// if(!config_ram_get_initial_hold_in_bl())
+		// {
+		// 	global_flags_for_kyle |= 0x01;
+		// }
+		// if(validate_bin_nvic((uint8_t *)g_board_info.target_cfg->flash_regions[0].start))
+		// {
+		// 	global_flags_for_kyle |= 0x02;
+		// }
+		// if(g_board_info.target_cfg)
+		// {
+		// 	global_flags_for_kyle |= 0x04;
+		// }
+		// if(!gpio_get_reset_btn())
+		// {
+		// 	global_flags_for_kyle |= 0x08;
+		// }
     // config the usb interface descriptor and web auth token before USB connects
     //unique_string_auth_config();
     // either the rst pin was pressed or we have an empty app region
