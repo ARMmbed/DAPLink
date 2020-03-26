@@ -4,6 +4,8 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,6 +24,7 @@
 #include "flash_manager.h"
 #include "util.h"
 #include "error.h"
+#include "settings.h"
 
 // Set to 1 to enable debugging
 #define DEBUG_FLASH_MANAGER     0
@@ -236,6 +239,7 @@ error_t flash_manager_uninit(void)
 
 void flash_manager_set_page_erase(bool enabled)
 {
+    config_ram_set_page_erase(enabled);
     page_erase_enabled = enabled;
 }
 
