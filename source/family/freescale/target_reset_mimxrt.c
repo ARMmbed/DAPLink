@@ -22,14 +22,18 @@
 #include "swd_host.h"
 #include "info.h"
 #include "target_family.h"
+#include "cmsis_os2.h"
 
 static void target_before_init_debug(void)
 {
     // This is for the hardware conflict (the EVK are not consider >2 debugger connection
-    // situation) with another external debugger(such as JLINK). Before drag&pull, to force
-    // RESET pin to high state ensure a successfully access. If external debugger not
-    // connected. It's not necessary for doing that.
+    // situation) with another external debugger(such as JLINK). Before drag&pull, issue a
+    // hardware reset to bring the platform to a known state and also force
+    // RESET pin to high state ensure a successfully access.
+    swd_set_target_reset(1);
+    osDelay(5);
     swd_set_target_reset(0);
+    osDelay(5);
 }
 
 static void prerun_target_config(void)
