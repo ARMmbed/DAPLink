@@ -4,6 +4,8 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,6 +30,13 @@
 extern "C" {
 #endif
 
+// Flags for program_target
+enum { 
+    kAlgoVerifyReturnsAddress = (1u << 0u),     /*!< Verify function returns address if bit set */
+    kAlgoSingleInitType =       (1u << 1u),     /*!< The init function ignores the function code. */
+    kAlgoSkipChipErase =        (1u << 2u),     /*!< Skip region when erase.act action triggers. */
+};
+
 typedef struct __attribute__((__packed__)) {
     uint32_t breakpoint;
     uint32_t static_base;
@@ -47,6 +56,7 @@ typedef struct __attribute__((__packed__)) {
     const uint32_t  algo_size;
     const uint32_t *algo_blob;
     const uint32_t  program_buffer_size;
+    const uint32_t  algo_flags;         /*!< Combination of kAlgoVerifyReturnsAddress, kAlgoSingleInitType and kAlgoSkipChipErase*/
 } program_target_t;
 
 typedef struct __attribute__((__packed__)) {
