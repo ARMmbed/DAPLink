@@ -170,7 +170,11 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     //Only 8 bit support
     configuration.DataBits = UART_DATA_BITS_8;
-    uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+    if (uart_handle.Init.Parity == HAL_UART_PARITY_ODD || uart_handle.Init.Parity == HAL_UART_PARITY_EVEN) {
+        uart_handle.Init.WordLength = UART_WORDLENGTH_9B;
+    } else {
+        uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+    }
 
     // No flow control
     configuration.FlowControl = UART_FLOW_CONTROL_NONE;
