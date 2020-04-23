@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2014 - 2015, Freescale Semiconductor, Inc.
- * All rights reserved.
- *
+ * Copyright (c) 2014 - 2016, Freescale Semiconductor, Inc.
+ * Copyright 2016 - 2017 NXP
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
@@ -12,7 +11,7 @@
  *   list of conditions and the following disclaimer in the documentation and/or
  *   other materials provided with the distribution.
  *
- * o Neither the name of Freescale Semiconductor, Inc. nor the names of its
+ * o Neither the name of the copyright holder nor the names of its
  *   contributors may be used to endorse or promote products derived from this
  *   software without specific prior written permission.
  *
@@ -26,6 +25,7 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
 
 #ifndef __FSL_DEVICE_REGISTERS_H__
@@ -36,19 +36,16 @@
  *
  * The CPU macro should be declared in the project or makefile.
  */
-#if (defined(CPU_MKL26Z128CAL4) || defined(CPU_MKL26Z32VFM4) || defined(CPU_MKL26Z64VFM4) || \
-    defined(CPU_MKL26Z128VFM4) || defined(CPU_MKL26Z32VFT4) || defined(CPU_MKL26Z64VFT4) || \
-    defined(CPU_MKL26Z128VFT4) || defined(CPU_MKL26Z32VLH4) || defined(CPU_MKL26Z64VLH4) || \
-    defined(CPU_MKL26Z128VLH4) || defined(CPU_MKL26Z256VLH4) || defined(CPU_MKL26Z128VLL4) || \
-    defined(CPU_MKL26Z256VLL4) || defined(CPU_MKL26Z128VMC4) || defined(CPU_MKL26Z256VMC4) || \
-    defined(CPU_MKL26Z256VMP4))
+#if (defined(CPU_MKL27Z128VFM4) || defined(CPU_MKL27Z128VFT4) || defined(CPU_MKL27Z128VLH4) || \
+    defined(CPU_MKL27Z128VMP4) || defined(CPU_MKL27Z256VFM4) || defined(CPU_MKL27Z256VFT4) || \
+    defined(CPU_MKL27Z256VLH4) || defined(CPU_MKL27Z256VMP4))
 
-#define KL26Z4_SERIES
+#define KL27Z4_SERIES
 
 /* CMSIS-style register definitions */
-#include "MKL26Z4.h"
+#include "MKL27Z4.h"
 /* CPU specific feature definitions */
-#include "MKL26Z4_features.h"
+#include "MKL27Z4_features.h"
 
 #else
     #error "No valid CPU defined!"

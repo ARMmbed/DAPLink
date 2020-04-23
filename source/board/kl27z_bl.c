@@ -1,6 +1,6 @@
 /**
- * @file    kl26z_bl.c
- * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on the NXP KL26Z
+ * @file    kl27z_bl.c
+ * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on the NXP KL27Z
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -27,7 +27,7 @@
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
-COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(95));
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == (KB(128) - KB(32) - KB(1)));
 
 /**
 * List of start and size for each size of flash sector
@@ -47,8 +47,8 @@ target_cfg_t target_device = {
     .flash_regions[0].start     = DAPLINK_ROM_IF_START,
     .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
     .flash_regions[0].flags     = kRegionIsDefault,  
-    .ram_regions[0].start       = 0x1FFFF000,
-    .ram_regions[0].end         = 0x20003000,
+    .ram_regions[0].start       = 0x1FFFE000,
+    .ram_regions[0].end         = 0x20006000,
 };
 
 //bootloader has no family

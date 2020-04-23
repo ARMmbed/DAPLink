@@ -1,5 +1,5 @@
 /**
- * @file    microbit.c
+ * @file    microbitv2.c
  * @brief   board ID for the BBC Microbit board
  *
  * DAPLink Interface Firmware
@@ -24,49 +24,14 @@
 #include "target_family.h"
 #include "target_board.h"
 
-const char * const board_id_mb_1_3 = "9900";
-const char * const board_id_mb_1_5 = "9901";
+const char * const board_id_mb_2_0 = "9903";
 
-typedef enum {
-    BOARD_VERSION_1_3 = 0,
-    BOARD_VERSION_1_5 = 1,
-} mb_version_t;
-
-// Enables Board Type Pin, reads it and disables it
-// Depends on gpio_init() to have been executed already
-static uint8_t read_board_type_pin(void) {
-    uint8_t pin_state = 0;
-    // GPIO mode, Pull enable, pull down, input
-    PIN_BOARD_TYPE_PORT->PCR[PIN_BOARD_TYPE_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE(1) | PORT_PCR_PS(0);
-    PIN_BOARD_TYPE_GPIO->PDDR &= ~PIN_BOARD_TYPE;
-    // Wait to stabilise, based on gpio.c busy_wait(), at -O2 10000 iterations delay ~850us
-    for (volatile uint32_t i = 10000; i > 0; i--);
-    // Read pin
-    pin_state = (PIN_BOARD_TYPE_GPIO->PDIR & PIN_BOARD_TYPE);
-    // Revert and disable
-    PIN_BOARD_TYPE_PORT->PCR[PIN_BOARD_TYPE_BIT] = PORT_PCR_MUX(0) | PORT_PCR_PE(0);
-    return pin_state;
-}
-
-static void set_board_id(mb_version_t board_version) {
-    switch (board_version) {
-        case BOARD_VERSION_1_3:
-            target_device.rt_board_id = board_id_mb_1_3;
-            break;
-        case BOARD_VERSION_1_5:
-            target_device.rt_board_id = board_id_mb_1_5;
-            break;
-        default:
-            target_device.rt_board_id = board_id_mb_1_5;
-            break;
-    }
-}
+extern target_cfg_t target_device_nrf52_64;
 
 // Called in main_task() to init before USB and files are configured
 static void prerun_board_config(void) {
-    // With only two boards the digital pin read maps directly to the type
-    mb_version_t board_version = (mb_version_t)read_board_type_pin();
-    set_board_id(board_version);
+    target_device = target_device_nrf52_64;
+    target_device.rt_board_id = board_id_mb_2_0;
 }
 
 // USB HID override function return 1 if the activity is trivial or response is null 
@@ -80,9 +45,9 @@ uint8_t usbd_hid_no_activity(uint8_t *buf)
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .family_id = kNordic_Nrf51_FamilyID,
+    .family_id = kNordic_Nrf52_FamilyID,
     .daplink_url_name =       "MICROBITHTM",
-    .daplink_drive_name =       "MICROBIT   ",
+    .daplink_drive_name =       "MICROBIT",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device,

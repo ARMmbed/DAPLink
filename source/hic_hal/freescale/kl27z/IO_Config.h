@@ -1,6 +1,6 @@
 /**
  * @file    IO_Config.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -30,98 +30,83 @@
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
-#include "MKL26Z4.h"
+#include "MKL27Z4.h"
 #include "compiler.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the KL26 HIC
-COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL26);
+// This GPIO configuration is only valid for the KL27 HIC
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 
 
 // Debug Port I/O Pins
 
-// SWCLK Pin                    PTC5(C5)
+// SWCLK Pin                    PTC6
 #define PIN_SWCLK_PORT          PORTC
 #define PIN_SWCLK_GPIO          PTC
-#define PIN_SWCLK_BIT           (5)
+#define PIN_SWCLK_BIT           (6)
 #define PIN_SWCLK               (1<<PIN_SWCLK_BIT)
 
-// SWDIO Pin                    PTC6(C6)
+// SWDIO Pin                    PTC5
 #define PIN_SWDIO_PORT          PORTC
 #define PIN_SWDIO_GPIO          PTC
-#define PIN_SWDIO_BIT           (6)
+#define PIN_SWDIO_BIT           (5)
 #define PIN_SWDIO               (1<<PIN_SWDIO_BIT)
 
-// nRESET Pin                   PTC8(C8)
-#define PIN_nRESET_PORT         PORTC
-#define PIN_nRESET_GPIO         PTC
-#define PIN_nRESET_BIT          (8)
+// nRESET Pin                   PTA20
+#define PIN_nRESET_PORT         PORTA
+#define PIN_nRESET_GPIO         PTA
+#define PIN_nRESET_BIT          (20)
 #define PIN_nRESET              (1<<PIN_nRESET_BIT)
-
-// PWR_REG_EN PTD2 - Not connected
-#define PIN_POWER_EN_PORT       PORTD
-#define PIN_POWER_EN_GPIO       PTD
-#define PIN_POWER_EN_BIT        (2)
-#define PIN_POWER_EN            (1<<PIN_POWER_EN_BIT)
-
-// VTRG_FAULT_B PTD3 - Not connected
-#define PIN_VTRG_FAULT_B_PORT   PORTD
-#define PIN_VTRG_FAULT_B_GPIO   PTD
-#define PIN_VTRG_FAULT_B_BIT    (7)
-#define PIN_VTRG_FAULT_B_EN     (1<<PIN_VTRG_FAULT_B_BIT)
 
 // Debug Unit LEDs
 
-// HID_LED PTD4
-#define PIN_HID_LED_PORT        PORTD
-#define PIN_HID_LED_GPIO        PTD
-#define PIN_HID_LED_BIT         (4)
+// HID_LED PTB0
+#define PIN_HID_LED_PORT        PORTB
+#define PIN_HID_LED_GPIO        PTB
+#define PIN_HID_LED_BIT         (0)
 #define PIN_HID_LED             (1<<PIN_HID_LED_BIT)
+#define PIN_HID_LED_MUX_ALT     (1)
 
-// MSC_LED PTD5
-#define PIN_MSC_LED_PORT        PORTD
-#define PIN_MSC_LED_GPIO        PTD
-#define PIN_MSC_LED_BIT         (4)
+// MSC_LED PTB0
+#define PIN_MSC_LED_PORT        PORTB
+#define PIN_MSC_LED_GPIO        PTB
+#define PIN_MSC_LED_BIT         (0)
 #define PIN_MSC_LED             (1<<PIN_MSC_LED_BIT)
+#define PIN_MSC_LED_MUX_ALT     (1)
 
-// CDC_LED PTD6
-#define PIN_CDC_LED_PORT        PORTD
-#define PIN_CDC_LED_GPIO        PTD
-#define PIN_CDC_LED_BIT         (4)
+// CDC_LED PTB0
+#define PIN_CDC_LED_PORT        PORTB
+#define PIN_CDC_LED_GPIO        PTB
+#define PIN_CDC_LED_BIT         (0)
 #define PIN_CDC_LED             (1<<PIN_CDC_LED_BIT)
+#define PIN_CDC_LED_MUX_ALT     (1)
 
-// SW RESET BUTTON PTB1
-#define PIN_SW_RESET_PORT       PORTB
-#define PIN_SW_RESET_GPIO       PTB
-#define PIN_SW_RESET_BIT        (1)
+// Reset pins
+
+// SW RESET BUTTON PTD4
+#define PIN_SW_RESET_PORT       PORTD
+#define PIN_SW_RESET_GPIO       PTD
+#define PIN_SW_RESET_BIT        (4)
 #define PIN_SW_RESET            (1<<PIN_SW_RESET_BIT)
-
-// BOARD TYPE
-#define PIN_BOARD_TYPE_PORT     PORTB
-#define PIN_BOARD_TYPE_GPIO     PTB
-#define PIN_BOARD_TYPE_BIT      (0)
-#define PIN_BOARD_TYPE          (1<<PIN_BOARD_TYPE_BIT)
-
-// Connected LED                Not available
-
-// Target Running LED           Not available
+#define SW_RESET_PRESSED        (0)
+#define SW_RESET_NOT_PRESSED    (1)
 
 // UART
-#define UART_PORT               PORTC
+#define UART_PORT               PORTA
 #define UART_NUM                (1)
-// RX PTC3
-#define PIN_UART_RX_GPIO        PTC
-#define PIN_UART_RX_BIT         (3)
+// RX PTA18
+#define PIN_UART_RX_GPIO        PTA
+#define PIN_UART_RX_BIT         (18)
 #define PIN_UART_RX             (1<<PIN_UART_RX_BIT)
 #define PIN_UART_RX_MUX_ALT     (3)
-// TX PTC4
-#define PIN_UART_TX_GPIO        PTC
-#define PIN_UART_TX_BIT         (4)
+// TX PTA19
+#define PIN_UART_TX_GPIO        PTA
+#define PIN_UART_TX_BIT         (19)
 #define PIN_UART_TX             (1<<PIN_UART_TX_BIT)
 #define PIN_UART_TX_MUX_ALT     (3)
 
-#define UART                    UART1
-#define UART_RX_TX_IRQn         UART1_IRQn
-#define UART_RX_TX_IRQHandler   UART1_IRQHandler
+#define UART                    LPUART1
+#define UART_RX_TX_IRQn         LPUART1_IRQn
+#define UART_RX_TX_IRQHandler   LPUART1_IRQHandler
 
 #endif

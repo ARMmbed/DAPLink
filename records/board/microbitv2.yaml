@@ -6,7 +6,7 @@ common:
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
     sources:
         board:
-            - source/board/microbit.c
-        family:
-            - source/family/nordic/nrf51822/target_16.c
-            - source/family/nordic/target_reset_nrf51.c
+            - source/board/microbitv2/microbitv2.c
+        target:
+            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/target_reset_nrf52.c
