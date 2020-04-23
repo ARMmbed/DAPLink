@@ -1,0 +1,35 @@
+common:
+    target:
+        - mkl26z128xxx4
+    core:
+        - Cortex-M0+
+    macros:
+        - INTERFACE_KL26Z
+        - CPU_MKL26Z128VLH4
+        - DAPLINK_HIC_ID=0x97969901  # DAPLINK_HIC_ID_KL26
+        - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
+        - FLASH_DRIVER_IS_FLASH_RESIDENT=1
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=48000000
+    includes:
+        - source/hic_hal/freescale/kl26z
+        - source/hic_hal/freescale/kl26z/MKL26Z4
+        - projectfiles/uvision/kl26z_bl/build
+    sources:
+        hic_hal:
+            - source/hic_hal/freescale
+            - source/hic_hal/freescale/kl26z
+            - source/hic_hal/freescale/kl26z/MKL26Z4
+            - source/hic_hal/freescale/kl26z/armcc
+        fsl_flash_driver:
+            - source/hic_hal/freescale/iap
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\freescale\kl26z"
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\freescale\kl26z"
