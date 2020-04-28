@@ -28,10 +28,10 @@
 target_cfg_t target_device = {
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
-    .flash_regions[0].start         = 0x00000000,
-    .flash_regions[0].end           = 0x00100000,
+    .flash_regions[0].start         = 0x10000000,
+    .flash_regions[0].end           = 0x10100000,
     .flash_regions[0].flags         = kRegionIsDefault,
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
-    .ram_regions[0].start           = 0x1fff0000,
-    .ram_regions[0].end             = 0x20030000,
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x2000,
 };

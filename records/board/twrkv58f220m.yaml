@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/twrkv58f.c
+        family:
+            - source/family/freescale/kv58f/target.c
+            - source/family/freescale/target_reset_Vseries.c
