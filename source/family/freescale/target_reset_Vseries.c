@@ -1,6 +1,6 @@
 /**
- * @file    target_reset_Kseries.c
- * @brief   Target reset for the Kinetis K series
+ * @file    target_reset_Vseries.c
+ * @brief   Target reset for the Kinetis V series
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
 #include "target_family.h"
@@ -27,7 +26,7 @@
 #define MDM_STATUS  0x01000000
 #define MDM_CTRL    0x01000004
 #define MDM_IDR     0x010000fc
-#define MDM_ID      0x001c0000 // K64, K22 (K series)
+#define MDM_ID      0x001c0030 // (V series)
 
 static void target_before_init_debug(void)
 {
@@ -109,7 +108,7 @@ static uint8_t target_unlock_sequence(void)
 //
 static uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
 {
-    const uint32_t fsec_addr = 0x40C;
+    const uint32_t fsec_addr = 0x1000040C;
 
     if ((addr <= fsec_addr) && (addr + size) > fsec_addr) {
         uint8_t fsec = data[fsec_addr - addr];
@@ -129,7 +128,7 @@ static uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
     return 0;
 }
 
-const target_family_descriptor_t g_nxp_kinetis_kseries = {
+const target_family_descriptor_t g_nxp_kinetis_vseries = {
     .family_id = kNXP_KinetisV_FamilyID,
     .default_reset_type = kHardwareReset,
     .target_before_init_debug = target_before_init_debug,
