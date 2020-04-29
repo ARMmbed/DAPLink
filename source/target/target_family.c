@@ -25,6 +25,8 @@
 #include "target_family.h"
 #include "target_board.h"
 
+#include "daplink_debug.h"
+
 // Stub families
 const target_family_descriptor_t g_hw_reset_family = {
     .family_id = kStub_HWReset_FamilyID,
@@ -68,6 +70,9 @@ __attribute__((weak))
 const target_family_descriptor_t g_renesas_family  = {0};
 __attribute__((weak))
 const target_family_descriptor_t g_toshiba_tz_family  = {0};
+__attribute__((weak))
+const target_family_descriptor_t g_ambiq_ama3b1kk  = {0};
+
 
 __attribute__((weak))
 const target_family_descriptor_t *g_families[] = {
@@ -86,6 +91,7 @@ const target_family_descriptor_t *g_families[] = {
     &g_wiznet_family,
     &g_renesas_family,
     &g_toshiba_tz_family,
+    &g_ambiq_ama3b1kk,
     0 // list terminator
 };
 
@@ -145,8 +151,10 @@ uint8_t target_set_state(target_state_t state)
 void swd_set_target_reset(uint8_t asserted)
 {
     if (g_target_family && g_target_family->swd_set_target_reset) {
+        debug_msg("family specific reset \r\n");
         g_target_family->swd_set_target_reset(asserted);
     }else {
+        debug_msg("family generic reset \r\n");
         (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
     }
 }
