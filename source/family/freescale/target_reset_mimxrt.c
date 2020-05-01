@@ -21,6 +21,7 @@
 
 #include "swd_host.h"
 #include "info.h"
+#include "target_config.h"
 #include "target_family.h"
 #include "cmsis_os2.h"
 
@@ -49,12 +50,16 @@ static uint8_t validate_bin_nvic(const uint8_t *buf)
 {
     if(buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')
     {
+        target_device.flash_regions[0].start = 0x30000400;
         return 1;
     }
-    else
+    else if(buf[0] == 0xFF && buf[1] == 0xFF && buf[2] == 0xFF && buf[3] == 0xFF)
     {
-        return 0;
+        target_device.flash_regions[0].start = 0x30000000;
+        return 1;
     }
+
+    return 0;
 }
 
 const target_family_descriptor_t g_nxp_mimxrt = {

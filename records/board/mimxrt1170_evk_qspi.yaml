@@ -1,0 +1,11 @@
+common:
+    macros:
+        - SOFT_RESET=VECTRESET
+    includes:
+        - source/family/nxp/mimxrt1170_spi_flash
+    sources:
+        board:
+            - source/board/mimxrt1170_evk.c
+        target:
+            - source/family/nxp/mimxrt1170_spi_flash/target.c
+            - source/family/freescale/target_reset_mimxrt.c
