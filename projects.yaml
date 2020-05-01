@@ -650,3 +650,7 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/hani_iot.yaml
+    lpc4322_mimxrt1170_evk_qspi_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/mimxrt1170_evk_qspi.yaml
