@@ -1161,7 +1161,7 @@
 #endif
 //   <o> RX <0=>Not used <1=>P1_14 <2=>P3_5 <3=>P5_7 <4=>PC_14 <5=>PE_12
 //   <i> UART1 Serial Input pin
-#define   RTE_UART1_RX_ID               0
+#define   RTE_UART1_RX_ID               1
 #if      (RTE_UART1_RX_ID == 0)
   #define RTE_UART1_RX_PIN_EN           0
 #elif    (RTE_UART1_RX_ID == 1)
