@@ -74,6 +74,11 @@ void gpio_init(void)
     LPC_SCU->PINTSEL0 &= ~0xff;
     LPC_SCU->PINTSEL0 |= (PORT_nRESET << 5) | (PIN_nRESET_IN_BIT);
 
+#if (SWO_UART != 0)
+    /* Configure: SWO as input */
+    LPC_GPIO_PORT->DIR[PORT_SWO] &= ~(1 << PIN_SWO_IN_BIT);
+#endif
+
     busy_wait(10000);
 }
 
