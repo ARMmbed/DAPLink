@@ -84,9 +84,9 @@ static const uint32_t ama3b1kk_flash_prog_blob[] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
 
 // Start address of flash
-static const uint32_t flash_start = 0x00010000;
+static const uint32_t flash_start = 0x0000C000;
 // Size of flash
-static const uint32_t flash_size = 0x000f0000;
+static const uint32_t flash_size = 0x000f4000;
 
 /**
 * List of start and size for each size of flash sector - even indexes are start, odd are size
@@ -96,7 +96,7 @@ static const uint32_t flash_size = 0x000f0000;
 * at address flash_start + flash_size.
 */
 static const uint32_t sectors_info[] = {
-    0x00010000,
+    0x0000C000,
     0x00002000,
 };
 
