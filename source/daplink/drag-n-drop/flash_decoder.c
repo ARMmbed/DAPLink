@@ -29,6 +29,7 @@
 #include "settings.h"       // for config_get_automation_allowed
 #include "validation.h"
 #include "target_board.h"
+#include "cmsis_compiler.h"
 
 // Set to 1 to enable debugging
 #define DEBUG_FLASH_DECODER     0
@@ -58,6 +59,11 @@ static bool initial_addr_set;
 static bool flash_type_target_bin;
 
 static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t size);
+
+__WEAK uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
+{
+    return 0;   // Return 0 if image is compatible
+}
 
 flash_decoder_type_t flash_decoder_detect_type(const uint8_t *data, uint32_t size, uint32_t addr, bool addr_valid)
 {
@@ -179,6 +185,28 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     return status;
 }
 
+error_t flash_decoder_validate_target_image(flash_decoder_type_t type, const uint8_t *data, uint32_t size)
+{
+    error_t status = ERROR_SUCCESS;
+
+    if (daplink_is_interface()) {
+        if (FLASH_DECODER_TYPE_TARGET == type) {
+            if (g_board_info.target_cfg) {
+                if (board_detect_incompatible_image(data, size)){
+                    status = ERROR_FD_INCOMPATIBLE_IMAGE;
+                    flash_intf_target->init();
+                    flash_intf_target->erase_chip();
+                    flash_intf_target->uninit();
+                } else {
+                    status = ERROR_SUCCESS;
+                }
+            }
+        }
+    }
+
+    return status;
+}
+
 error_t flash_decoder_open(void)
 {
     flash_decoder_printf("flash_decoder_open()\r\n");
@@ -261,6 +289,16 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
             if (ERROR_SUCCESS != status) {
                 state = DECODER_STATE_ERROR;
                 return status;
+            }
+            
+            // Validate incompatible target image file
+            if (config_get_detect_incompatible_target()){
+                status = flash_decoder_validate_target_image(flash_type, flash_buf, flash_buf_pos);
+
+                if (ERROR_SUCCESS != status) {
+                    state = DECODER_STATE_ERROR;
+                    return status;
+                }
             }
 
             flash_decoder_printf("    flash_start_addr=0x%x\r\n", flash_start_addr);

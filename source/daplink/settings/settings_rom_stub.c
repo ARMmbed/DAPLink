@@ -41,6 +41,11 @@ void config_set_overflow_detect(bool on)
     // Do nothing
 }
 
+void config_set_detect_incompatible_target(bool on)
+{
+    // Do nothing
+}
+
 bool config_get_auto_rst()
 {
     return false;
@@ -52,6 +57,11 @@ bool config_get_automation_allowed()
 }
 
 bool config_get_overflow_detect()
+{
+    return false;
+}
+
+bool config_get_detect_incompatible_target()
 {
     return false;
 }
