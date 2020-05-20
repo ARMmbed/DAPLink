@@ -143,6 +143,35 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 main_usb_connect_t usb_state;
 static bool usb_test_mode = false;
 
+__WEAK void board_30ms_hook(void){}
+
+__WEAK void handle_reset_button(void)
+{
+	// button state
+    static uint8_t reset_pressed = 0;
+
+    // handle reset button without eventing
+    if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
+#ifdef DRAG_N_DROP_SUPPORT
+        if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
+#endif
+        {
+            // Reset button pressed
+            target_set_state(RESET_HOLD);
+            reset_pressed = 1;
+        }
+    } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
+        // Reset button released
+        target_set_state(RESET_RUN);
+        reset_pressed = 0;
+    }
+}
+
+__WEAK void board_handle_powerdown()
+{
+    // TODO: put the interface chip in sleep mode
+}
+
 // Timer task, set flags every 30mS and 90mS
 void timer_task_30mS(void * arg)
 {
@@ -229,8 +258,6 @@ void main_task(void * arg)
     // USB
     uint32_t usb_state_count = USB_BUSY_TIME;
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
-    // button state
-    uint8_t reset_pressed = 0;
 #ifdef PBON_BUTTON
     uint8_t power_on = 1;
 #endif
@@ -332,8 +359,7 @@ void main_task(void * arg)
             gpio_set_cdc_led(GPIO_LED_OFF);
             gpio_set_msc_led(GPIO_LED_OFF);
 
-            // TODO: put the interface chip in sleep mode
-            while (1);
+            board_handle_powerdown();
         }
 
         if (flags & FLAGS_MAIN_DISABLEDEBUG) {
@@ -382,12 +408,19 @@ void main_task(void * arg)
                         // powered by a USB wall wart or similar power source. Go ahead and enable
                         // board power.
                         gpio_set_board_power(true);
+                        usb_state = USB_DISCONNECTED;
                     }
 
                     break;
 
                 case USB_CONNECTED:
                 case USB_DISCONNECTED:
+                if (usbd_configured()) {
+                    usb_state = USB_CONNECTED;
+                }
+                else {
+                    usb_state = USB_DISCONNECTED;
+                }
                 default:
                     break;
             }
@@ -396,21 +429,7 @@ void main_task(void * arg)
         // 30mS tick used for flashing LED when USB is busy
         if (flags & FLAGS_MAIN_30MS) {
 
-            // handle reset button without eventing
-            if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
-#ifdef DRAG_N_DROP_SUPPORT
-               if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
-#endif
-                {
-                    // Reset button pressed
-                    target_set_state(RESET_HOLD);
-                    reset_pressed = 1;
-                }
-            } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
-                // Reset button released
-                target_set_state(RESET_RUN);
-                reset_pressed = 0;
-            }
+            handle_reset_button();
 
 #ifdef PBON_BUTTON
             // handle PBON pressed
@@ -434,6 +453,8 @@ void main_task(void * arg)
                 }
             }
 #endif
+            // 30ms event hook function
+            board_30ms_hook();
 
             // DAP LED
             if (hid_led_usb_activity) {
