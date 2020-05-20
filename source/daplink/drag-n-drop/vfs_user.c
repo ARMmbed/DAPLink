@@ -66,6 +66,8 @@ typedef enum _magic_file {
     kOverflowOffConfigFile,     //!< Disable UART overflow reporting.
     kMSDOnConfigFile,           //!< Enable USB MSC. Uh....
     kMSDOffConfigFile,          //!< Disable USB MSC.
+    kImageCheckOnConfigFile,    //!< Enable Incompatible target image detection.
+    kImageCheckOffConfigFile,   //!< Disable Incompatible target image detection.
     kPageEraseActionFile,       //!< Enable page programming and sector erase for drag and drop.
     kChipEraseActionFile,       //!< Enable page programming and chip erase for drag and drop.
 } magic_file_t;
@@ -110,6 +112,8 @@ static const magic_file_info_t s_magic_file_info[] = {
         { "OVFL_OFFCFG", kOverflowOffConfigFile     },
         { "MSD_ON  CFG", kMSDOnConfigFile           },
         { "MSD_OFF CFG", kMSDOffConfigFile          },
+        { "COMP_ON CFG", kImageCheckOnConfigFile    },
+        { "COMP_OFFCFG", kImageCheckOffConfigFile   },
         { "PAGE_ON ACT", kPageEraseActionFile       },
         { "PAGE_OFFACT", kChipEraseActionFile       },
     };
@@ -267,6 +271,12 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
                         break;
                     case kMSDOffConfigFile:
                         config_ram_set_disable_msd(true);
+                        break;
+                    case kImageCheckOnConfigFile:
+                        config_set_detect_incompatible_target(true);
+                        break;
+                    case kImageCheckOffConfigFile:
+                        config_set_detect_incompatible_target(false);
                         break;
                     case kPageEraseActionFile:
                         config_ram_set_page_erase(true);

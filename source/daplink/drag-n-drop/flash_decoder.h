@@ -45,6 +45,7 @@ typedef enum {
 flash_decoder_type_t flash_decoder_detect_type(const uint8_t *data, uint32_t size, uint32_t addr, bool addr_valid);
 error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool addr_valid, uint32_t *start_addr, const flash_intf_t **flash_intf);
 
+error_t flash_decoder_validate_target_image(flash_decoder_type_t type, const uint8_t *data, uint32_t size);
 error_t flash_decoder_open(void);
 error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size);
 error_t flash_decoder_close(void);
