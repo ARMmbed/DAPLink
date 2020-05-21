@@ -339,6 +339,19 @@ SysTick_Handler\
                 EXPORT  SysTick_Handler         [WEAK]
                 B       .
                 ENDP
+I2C0_IRQHandler\
+                PROC
+                EXPORT  I2C0_IRQHandler         [WEAK]
+                LDR     R0, =I2C0_DriverIRQHandler
+                BX      R0
+                ENDP
+
+I2C1_IRQHandler\
+                PROC
+                EXPORT  I2C1_IRQHandler         [WEAK]
+                LDR     R0, =I2C1_DriverIRQHandler
+                BX      R0
+                ENDP
 Default_Handler\
                 PROC
                 EXPORT  DMA0_IRQHandler         [WEAK]
@@ -349,8 +362,8 @@ Default_Handler\
                 EXPORT  FTFA_IRQHandler         [WEAK]
                 EXPORT  PMC_IRQHandler         [WEAK]
                 EXPORT  LLWU_IRQHandler         [WEAK]
-                EXPORT  I2C0_IRQHandler         [WEAK]
-                EXPORT  I2C1_IRQHandler         [WEAK]
+                EXPORT  I2C0_DriverIRQHandler   [WEAK]
+                EXPORT  I2C1_DriverIRQHandler   [WEAK]
                 EXPORT  SPI0_IRQHandler         [WEAK]
                 EXPORT  SPI1_IRQHandler         [WEAK]
                 EXPORT  LPUART0_IRQHandler         [WEAK]
@@ -382,8 +395,8 @@ Reserved20_IRQHandler
 FTFA_IRQHandler
 PMC_IRQHandler
 LLWU_IRQHandler
-I2C0_IRQHandler
-I2C1_IRQHandler
+I2C0_DriverIRQHandler
+I2C1_DriverIRQHandler
 SPI0_IRQHandler
 SPI1_IRQHandler
 LPUART0_IRQHandler
