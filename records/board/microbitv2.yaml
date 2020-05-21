@@ -4,9 +4,10 @@ common:
         - CDC_LED_DEF=GPIO_LED_ON
         - MSC_LED_DEF=GPIO_LED_ON
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
+        - IO_CONFIG_OVERRIDE
     sources:
         board:
-            - source/board/microbitv2/microbitv2.c
+            - source/board/microbitv2/
         target:
             - source/family/nordic/nrf5x/target.c
             - source/family/nordic/target_reset_nrf52.c
