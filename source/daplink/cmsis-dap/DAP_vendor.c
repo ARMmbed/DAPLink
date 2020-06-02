@@ -2,6 +2,7 @@
  * Copyright (c) 2013-2020 Arm Limited. All rights reserved.
  * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
+ * Copyright (c) 2021 Chris Reed
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -38,7 +39,7 @@
 #include "target_family.h"
 #include "flash_manager.h"
 #include <string.h>
-
+#include "daplink_vendor_commands.h"
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "file_stream.h"
@@ -67,7 +68,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
   *response++ = *request;        // copy Command ID
 
   switch (*request++) {          // first byte in request is Command ID
-    case ID_DAP_Vendor0: {
+    case ID_DAP_GetUniqueID: {
         const char *id_str = info_get_unique_id();
         uint8_t len = strlen(id_str);
         *response++ = len;
@@ -75,7 +76,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (len + 1); // increment response count by ID length + length byte
         break;
     }
-    case ID_DAP_Vendor1: {
+    case ID_DAP_UART_GetLineCoding: {
         // get line coding
         int32_t read_len = sizeof(CDC_LINE_CODING);
         CDC_LINE_CODING cdc_line_coding;
@@ -84,7 +85,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (read_len + 1);
         break;
     }
-    case ID_DAP_Vendor2: {
+    case ID_DAP_UART_SetConfiguration: {
         // set uart configuration
         CDC_LINE_CODING cdc_line_coding;
         USBD_CDC_ACM_PortGetLineCoding(&cdc_line_coding);
@@ -98,7 +99,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (sizeof(uint32_t) << 16) | 1;
         break;
     }
-    case ID_DAP_Vendor3:  {
+    case ID_DAP_UART_Read:  {
         // uart read
         int32_t read_len = 62;
         read_len = uart_read_data(response + 1, read_len);
@@ -110,7 +111,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (read_len + 1);
         break;
     }
-    case ID_DAP_Vendor4:  {
+    case ID_DAP_UART_Write:  {
         // uart write
         int32_t write_len = *request;
         request++;
@@ -123,7 +124,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
     case ID_DAP_Vendor5:  break;
     case ID_DAP_Vendor6:  break;
     case ID_DAP_Vendor7:  break;
-    case ID_DAP_Vendor8: {
+    case ID_DAP_SetUSBTestMode: {
         *response = 1;
         if (0 == *request) {
             main_usb_set_test_mode(false);
@@ -135,7 +136,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (1U << 16) | 1U; // increment request and response count each by 1
         break;
     }
-    case ID_DAP_Vendor9: {
+    case ID_DAP_ResetTargetIfNoAutoReset: {
         // reset target
         *response = 1;
         if (!config_get_auto_rst()) {
@@ -145,19 +146,19 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         break;
     }
 #ifdef DRAG_N_DROP_SUPPORT
-    case ID_DAP_Vendor10: {
+    case ID_DAP_MSD_Open: {
         // open mass storage device stream
         *response = stream_open((stream_type_t)(*request));
         num += (1 << 16) | 1;
         break;
     }
-    case ID_DAP_Vendor11: {
+    case ID_DAP_MSD_Close: {
         // close mass storage device stream
         *response = stream_close();
         num += 1;
         break;
     }
-    case ID_DAP_Vendor12: {
+    case ID_DAP_MSD_Write: {
         // write to mass storage device
         uint32_t write_len = *request;
         request++;
@@ -167,7 +168,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         break;
     }
 #endif
-    case ID_DAP_Vendor13: {
+    case ID_DAP_SelectEraseMode: {
         // switching between chip erase and page erase
         //              COMMAND(OUT Packet)
         //              BYTE 0 1000 1110 0x8D
