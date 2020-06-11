@@ -107,7 +107,7 @@ You may need to update one or more other dictionaries. See comments in the code 
 See [Automated Tests](AUTOMATED_TESTS.md) for more information related to automated testing.
 
 # Post-build Board ID and Family ID
-Board ID and Family ID can be overwritten by `tools/post_build_scpript.py`. This is helpful for supporting existing families and adding board IDs to the database without the need to compile DAPLink. Board ID can uniquely identify the target board while family ID can select which target family to support.
+Board ID and Family ID can be overwritten by `tools/post_build_script.py`. This is helpful for supporting existing families and adding board IDs to the database without the need to compile DAPLink. Board ID can uniquely identify the target board while family ID can select which target family to support.
 ```
 usage: post_build_script.py [-h] [--board-id BOARD_ID] [--family-id FAMILY_ID]
                             [--bin-offset BIN_OFFSET]
