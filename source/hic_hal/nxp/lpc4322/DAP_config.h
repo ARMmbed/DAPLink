@@ -151,6 +151,11 @@ extern BOOL gpio_reset_pin_is_input;
 #define PIN_SWDIO_TXE_IN_BIT  8
 #define PIN_SWDIO_TXE         (1<<PIN_SWDIO_TXE_IN_BIT)
 
+// SWO Pin                    P1_14:  GPIO1[7]
+#define PORT_SWO              1
+#define PIN_SWO_IN_BIT        7
+#define PIN_SWO               (1<<PIN_SWO_IN_BIT)
+
 // nRESET Pin                 P2_5:  GPIO5[5]
 #define PORT_nRESET           5
 #define PIN_nRESET_IN_BIT     5
