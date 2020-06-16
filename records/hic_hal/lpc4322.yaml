@@ -12,9 +12,14 @@ common:
     includes:
         - source/cmsis-driver
         - source/hic_hal/nxp/lpc4322
+        - source/hic_hal/nxp/lpc4322/RTE_Driver
+        - source/hic_hal/nxp/lpc4322/RTE_Driver/Config
     sources:
         hic_hal:
             - source/hic_hal/nxp/lpc4322
+            - source/hic_hal/nxp/lpc4322/RTE_Driver/SCU_LPC43xx.c
+            - source/hic_hal/nxp/lpc4322/RTE_Driver/USART_LPC43xx.c
+            - source/hic_hal/nxp/lpc4322/RTE_Driver/GPDMA_LPC43xx.c
 
 tool_specific:
     uvision:
