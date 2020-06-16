@@ -10,6 +10,7 @@ common:
         - DAPLINK_HIC_ID=0x97969905  # DAPLINK_HIC_ID_LPC4322
         - OS_CLOCK=96000000
     includes:
+        - source/cmsis-driver
         - source/hic_hal/nxp/lpc4322
     sources:
         hic_hal:

@@ -11,6 +11,7 @@ common:
         - FLASH_DRIVER_IS_FLASH_RESIDENT=1
         - OS_CLOCK=120000000
     includes:
+        - source/cmsis-driver
         - source/hic_hal/freescale/k26f
         - source/hic_hal/freescale/k26f/MK26F18
         - source/hic_hal/freescale/iap
