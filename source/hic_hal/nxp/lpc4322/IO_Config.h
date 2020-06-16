@@ -42,6 +42,11 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC4322);
 #define PIN_SWDIO_IN_BIT      9
 #define PIN_SWDIO             (1<<PIN_SWDIO_IN_BIT)
 
+// SWO Pin                    P1_14:  GPIO1[7]
+#define PORT_SWO              1
+#define PIN_SWO_IN_BIT        7
+#define PIN_SWO               (1<<PIN_SWO_IN_BIT)
+
 // SWDIO Output Enable Pin    P1_5:  GPIO1[8]
 #define PORT_SWDIO_TXE        1
 #define PIN_SWDIO_TXE_IN_BIT  8
