@@ -1,6 +1,8 @@
 common:
     macros:
         - SOFT_RESET=VECTRESET
+        - SWO_UART=1
+        - SWO_USART_PORT=1
     includes:
         - source/family/nxp/mimxrt1170_spi_flash
     sources:
