@@ -93,7 +93,9 @@ typedef unsigned int    BOOL;
 
 /// Indicate that UART Serial Wire Output (SWO) trace is available.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#if !defined(SWO_UART)
 #define SWO_UART                0               ///< SWO UART:  1 = available, 0 = not available
+#endif
 
 /// Maximum SWO UART Baudrate
 #define SWO_UART_MAX_BAUDRATE   10000000U       ///< SWO UART Maximum Baudrate in Hz
