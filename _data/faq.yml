@@ -9,7 +9,7 @@
 
 - question3:
   question: Does it work with other development tools?
-  answer: The HID endpoint creates a tunel to the CPUs debug access port. If you develop with an IDE that support the CMSIS-DAP debug protocol then DAPLink is compatible! You'll need to make sure the device you wish to debug is supported in that environment otherwise you can debug (but not program flash contents) by seleting the Arm CPU architecture of the microcontroller in the device running your application. We also develop [pyOCD, a python based on-chip debugger](https://github.com/mbedmicro/pyOCD) and gdb-server that runs on Windows, Mac OSX and Linux. 
+  answer: The HID endpoint creates a tunnel to the CPUs debug access port. If you develop with an IDE that support the CMSIS-DAP debug protocol then DAPLink is compatible! You'll need to make sure the device you wish to debug is supported in that environment otherwise you can debug (but not program flash contents) by selecting the Arm CPU architecture of the microcontroller in the device running your application. We also develop [pyOCD, a python based on-chip debugger](https://github.com/mbedmicro/pyOCD) and gdb-server that runs on Windows, Mac OSX and Linux. 
 
 - question4:
   question: Do I need to install any drivers?
@@ -17,7 +17,7 @@
 
 - question5:
   question: Can I clone DAPLink hardware or use on my boards?
-  answer: Sure! Check out the [Arm Mbed HDK](https://github.com/armmbed/mbed-HDK) and grab the reference designs. These inculed schematics and board layout files. It's recommended to copy the circuits pin for pin and to use the same component values as called out to avoid software modifications such as IO or clock configurations. This allows your design to be compatible with mainline DAPLink updates as they're made available. If your design requires modified IO connections or different component values, [open an issue and start a conversation](https://github.com/armmbed/DAPLink/issues) about why this is needed otherwise you'll be at risk of needing to maintain your own fork of the project which is not ideal.
+  answer: Sure! Check out the [Arm Mbed HDK](https://github.com/armmbed/mbed-HDK) and grab the reference designs. These includes schematics and board layout files. It's recommended to copy the circuits pin for pin and to use the same component values as called out to avoid software modifications such as IO or clock configurations. This allows your design to be compatible with mainline DAPLink updates as they're made available. If your design requires modified IO connections or different component values, [open an issue and start a conversation](https://github.com/armmbed/DAPLink/issues) about why this is needed otherwise you'll be at risk of needing to maintain your own fork of the project which is not ideal.
 
 - question6:
   question: Where is the DAPLink source code?

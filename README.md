@@ -8,4 +8,4 @@
 1. Extract files into `./firmware/`
 1. Inside `update.yml` modify the `fw_version` field
 1. Look for any new builds and add entries to `update.yml`
-1. Commit chamges and make a pull request against the `gh-pages` branch
+1. Commit changes and make a pull request against the `gh-pages` branch
