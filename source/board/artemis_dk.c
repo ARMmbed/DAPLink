@@ -24,22 +24,22 @@
 #include "target_family.h"
 #include "target_board.h"
 
-const char *const board_id_artmbed_v10 = "A127";
+const char *const board_id_artemis_dk_v10 = "A127";
 
 typedef enum
 {
     BOARD_VERSION_v10 = 0,
-} artmbed_version_t;
+} artemis_dk_version_t;
 
-static void set_board_id(artmbed_version_t board_version)
+static void set_board_id(artemis_dk_version_t board_version)
 {
     switch (board_version)
     {
     case BOARD_VERSION_v10:
-        target_device.rt_board_id = board_id_artmbed_v10;
+        target_device.rt_board_id = board_id_artemis_dk_v10;
         break;
     default:
-        target_device.rt_board_id = board_id_artmbed_v10;
+        target_device.rt_board_id = board_id_artemis_dk_v10;
         break;
     }
 }
@@ -48,7 +48,7 @@ static void set_board_id(artmbed_version_t board_version)
 static void prerun_board_config(void)
 {
     // in the future you could auto-detect board version here
-    artmbed_version_t board_version = (artmbed_version_t)BOARD_VERSION_v10;
+    artemis_dk_version_t board_version = (artemis_dk_version_t)BOARD_VERSION_v10;
     set_board_id(board_version);
 }
 
@@ -64,8 +64,8 @@ uint8_t usbd_hid_no_activity(uint8_t *buf)
 const board_info_t g_board_info = {
     .info_version = 0x1,
     .family_id = kAmbiq_ama3b1kk_FamilyID,
-    .daplink_url_name = "ARTMBED_HTM",
-    .daplink_drive_name = "ARTMBED    ",
+    .daplink_url_name = "ARTEMIS_HTM",
+    .daplink_drive_name = "ARTEMIS    ",
     .daplink_target_url = "https://www.sparkfun.com/artemis",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device,

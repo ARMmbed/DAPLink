@@ -35,7 +35,6 @@
 #include "flash_intf.h"     // for flash_intf_target
 #include "cortex_m.h"
 #include "target_board.h"
-//#include "main.h"
 
 //! @brief Size in bytes of the virtual disk.
 //!
@@ -545,8 +544,6 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
 
     //Target URL
     pos += util_write_string(buf + pos, "URL: @R\r\n");
-		//pos += util_write_string(buf + pos, "Kyles Flags: ");
-		//pos += util_write_hex32(buf + pos, global_flags_for_kyle);
 
     return expand_info(data, datasize);
 }

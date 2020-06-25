@@ -43,77 +43,9 @@
 #define SCB_AIRCR_PRIGROUP_Msk (7UL << SCB_AIRCR_PRIGROUP_Pos) /*!< SCB AIRCR: PRIGROUP Mask */
 #endif
 
-static void target_before_init_debug(void)
-{
-    // any target specific sequences needed before attaching
-    //	to the DAP across JTAG or SWD
-    return;
-}
-
-static uint8_t target_unlock_sequence(void)
-{
-    // if the device can secure the flash and there is a way to
-    //	erase all it should be implemented here.
-    return 1;
-}
-
-static uint8_t target_set_state(target_state_t state)
-{
-    // if a custom state machine is needed to set the TARGET_RESET_STATE state
-    return 1;
-}
-
-static uint8_t security_bits_set(uint32_t addr, uint8_t *data, uint32_t size)
-{
-    // if there are security bits in the programmable flash region
-    //	a check should be performed. This method is used when programming
-    //	by drag-n-drop and should refuse to program an image requesting
-    //	to set the device security. This can be performed with the debug channel
-    //	if needed.
-    return 0;
-}
-
-// static void swd_set_target_reset_ama3b1kk(uint8_t asserted)
-// {
-//     uint32_t scratch0;
-//     if (asserted)
-//     {
-//         //Set POWER->RESET on NRF to 1
-//         if (!swd_write_ap(AP_TAR, MCUCTRL_SCRATCH0))
-//         {
-//             util_assert(0);
-//             return;
-//         }
-
-//         if (!(swd_read_ap(AP_TAR, &scratch0)))
-//         {
-//             util_assert(0);
-//             return;
-//         }
-
-//         if (!swd_write_ap(AP_DRW, MCUCTRL_SCRATCH0))
-//         {
-//             util_assert(0);
-//             return;
-//         }
-
-//         if (!swd_write_ap(AP_DRW, scratch0 | 0x01))
-//         {
-//             util_assert(0);
-//             return;
-//         }
-
-//         //PIN_nRESET_OUT(1);
-//     }
-//     else
-//     {
-//         //PIN_nRESET_OUT(0);
-//     }
-// }
-
 uint8_t swd_set_state_ama3b1kk(target_state_t state)
 {
-    uint32_t val, scratch0, jdecpid, bootldr, secure;
+    uint32_t val, scratch0, secure; //jdecpid, bootldr
     int8_t ap_retries = 2;
     swd_init();
     switch (state)
