@@ -516,7 +516,7 @@ uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size)
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size)
 {
     uint32_t n = 0;
-    
+
     // Write bytes until word aligned
     while ((size > 0) && (address & 0x3)) {
         if (!swd_write_byte(address, *data)) {
