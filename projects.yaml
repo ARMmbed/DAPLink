@@ -90,6 +90,10 @@ projects:
         - *module_bl
         - records/hic_hal/kl27z.yaml
         - records/board/kl27z_bl.yaml
+    kl27z_if:
+        - *module_if
+        - *module_hic_kl27z
+        - records/family/all_family.yaml
     k20dx_bl:
         - *module_bl
         - records/hic_hal/k20dx.yaml
