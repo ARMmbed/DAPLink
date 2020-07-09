@@ -69,7 +69,7 @@ uint8_t swd_set_state_ama3b1kk(target_state_t state)
             // Enable debug and halt the core (DHCSR <- 0xA05F0003)
             while (swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT) == 0) {
                 if (--ap_retries <= 0) {
-                return 0;
+                    return 0;
                 }
                 // Target is in invalid state?
                 swd_set_target_reset(1);
@@ -170,7 +170,6 @@ uint8_t swd_set_state_ama3b1kk(target_state_t state)
             if (!swd_write_word(DBG_HCSR, DBGKEY | C_DEBUGEN)) {
                 return 0;
             }
-
             break;
 
         default:
