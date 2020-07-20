@@ -42,13 +42,13 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 
 // SWCLK Pin                    PTC6
 #define PIN_SWCLK_PORT          PORTC
-#define PIN_SWCLK_GPIO          PTC
+#define PIN_SWCLK_GPIO          FGPIOC
 #define PIN_SWCLK_BIT           (6)
 #define PIN_SWCLK               (1<<PIN_SWCLK_BIT)
 
 // SWDIO Pin                    PTC5
 #define PIN_SWDIO_PORT          PORTC
-#define PIN_SWDIO_GPIO          PTC
+#define PIN_SWDIO_GPIO          FGPIOC
 #define PIN_SWDIO_BIT           (5)
 #define PIN_SWDIO               (1<<PIN_SWDIO_BIT)
 
