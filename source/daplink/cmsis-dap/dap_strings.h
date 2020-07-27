@@ -54,7 +54,7 @@ __STATIC_INLINE uint8_t DAP_GetSerNumString (char *str) {
 \param str Pointer to buffer to store the string.
 \return String length.
 */
-__STATIC_INLINE uint8_t DAP_GetFirmwareVersionString (char *str) {
+__STATIC_INLINE uint8_t DAP_ProductFirmwareVerString (char *str) {
     const char * data = info_get_version();
     uint8_t length = (uint8_t)strlen(data) + 1;
     memcpy(str, data, length);
