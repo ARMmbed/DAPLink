@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-//#include "target_reset.h"
 #include "util.h"
 #include "cmsis_os2.h"
 #include "target_config.h"

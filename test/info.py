@@ -30,7 +30,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
-    ("kl26z_artemis_dk_if",                            False,      0x8000,     "hex"       ),
+    ("kl26z_artemis_dk_if",                         False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc4322_lpc54114xpresso_if",                  False,      0x10000,    "bin"       ),
