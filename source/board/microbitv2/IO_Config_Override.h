@@ -123,10 +123,11 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define PIN_RED_LED              (1<<PIN_RED_LED_BIT)
 
 
-// define the long and short reset button presses
-#define RESET_SHORT_PRESS          8    // x 30ms debounce time =  240ms
-#define RESET_LONG_PRESS           130  // x 30ms debounce time = 3900ms
-#define RESET_MAX_LENGTH_PRESS     RESET_LONG_PRESS
+// define the reset button presses
+#define RESET_SHORT_PRESS       10   // x 30ms debounce time = 300ms
+#define RESET_MID_PRESS         80   // x 30ms debounce time = 2400ms
+#define RESET_LONG_PRESS        120  // x 30ms debounce time = 3600ms
+#define RESET_MAX_LENGTH_PRESS  RESET_LONG_PRESS
 
 // BOARD REV ID
 #define PIN_BOARD_REV_ID_PORT     PORTD
@@ -135,6 +136,11 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define PIN_BOARD_REV_ID          (1<<PIN_BOARD_REV_ID_BIT)
 #define PIN_BOARD_REV_ID_ADC_CH   (7)
 #define PIN_BOARD_REV_ID_ADC_MUX  (1)
+
+// COMBINED_SENSOR_INT PTA1
+#define COMBINED_SENSOR_INT_PORT        PORTA
+#define COMBINED_SENSOR_INT_GPIO        GPIOA
+#define COMBINED_SENSOR_INT_PIN         (1)
 
 // Connected LED                Not available
 

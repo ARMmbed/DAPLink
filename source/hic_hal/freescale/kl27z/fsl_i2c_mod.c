@@ -1,3 +1,11 @@
+/* This is a modification of the default fsl_i2c.c driver.
+ *
+ * Needed in order to be able to identify slave address that triggered the 
+ * kI2C_SlaveAddressMatchEvent from an address range configuration.
+ * Address is saved the i2c slave hanlder user data pointer, which is passed
+ * to the interrupt handler callback from the i2c_slave.c. 
+ */
+ 
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
  * Copyright 2016-2017 NXP
@@ -2240,6 +2248,8 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
             base->C1 |= I2C_C1_TX_MASK;
 
             doTransmit = true;
+            // Store the slave address match
+            dummy = base->D;
         }
         else
         {
@@ -2247,6 +2257,7 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
             base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
             /* Read dummy to release the bus. */
+            // Which happens to contain the slave address match
             dummy = base->D;
 
             if (dummy == 0u)
@@ -2257,6 +2268,8 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
 
         if ((0U != (handle->eventMask & (uint32_t)xfer->event)) && (NULL != handle->callback))
         {
+            // Store the matched slave address in userData
+            *(uint8_t *)(handle->userData) = dummy;
             handle->callback(base, xfer, handle->userData);
         }
     }

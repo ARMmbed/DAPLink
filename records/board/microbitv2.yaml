@@ -5,6 +5,9 @@ common:
         - MSC_LED_DEF=GPIO_LED_ON
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
         - IO_CONFIG_OVERRIDE
+        - DELAY_FAST_CYCLES=2U
+    includes:
+        - source/board/microbitv2
     sources:
         board:
             - source/board/microbitv2/

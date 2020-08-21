@@ -9,38 +9,26 @@
 #define I2C_SLAVE_CLK_SRC I2C1_CLK_SRC
 #define I2C_SLAVE_CLK_FREQ CLOCK_GetFreq(I2C1_CLK_SRC)
 
-#define I2C_MASTER_SLAVE_ADDR_7BIT  0x7AU
-#define I2C_DATA_LENGTH             (32U)
+#define I2C_SLAVE_LOWER_ADDR_7BIT   (0x70U)
+#define I2C_SLAVE_UPPER_ADDR_7BIT   (0x72U)
+#define I2C_DATA_LENGTH             (1024U + 8U)
 
 // We'll start with 5 RX commands
 #define RX_CMDS_LENGTH              5
 #define I2C_CMD_SLEEP               0xABU
 
-static void i2c_cmd_sleep_callback(void);
-
-typedef struct _cmd_callback {
-    uint8_t cmdValue;
-    void (*callback)();
-} cmd_callback_t;
-
-static cmd_callback_t i2cSleepCmd = {
-    .cmdValue = I2C_CMD_SLEEP,
-    .callback = i2c_cmd_sleep_callback,
-};
-
-static cmd_callback_t *rx_cmds[RX_CMDS_LENGTH];
-
 static uint8_t g_slave_buff[I2C_DATA_LENGTH];
 static i2c_slave_handle_t g_s_handle;
 static volatile bool g_SlaveCompletionFlag = false;
 static volatile bool g_SlaveRxFlag = false;
+uint8_t address_match = 0;
 
-bool go_to_sleep = false;
-
-
-static void i2c_cmd_sleep_callback() {
-    go_to_sleep = true;
-}
+static i2cWriteCallback_t pfWriteCommsCallback = NULL;
+static i2cReadCallback_t pfReadCommsCallback = NULL;
+static i2cWriteCallback_t pfWriteHIDCallback = NULL;
+static i2cReadCallback_t pfReadHIDCallback = NULL;
+static i2cWriteCallback_t pfWriteFlashCallback = NULL;
+static i2cReadCallback_t pfReadFlashCallback = NULL;
 
 static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void *userData) {
     switch (xfer->event)
@@ -49,13 +37,12 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
         case kI2C_SlaveAddressMatchEvent:
             xfer->data     = NULL;
             xfer->dataSize = 0;
+            // fsl_i2c.c IRQ updated in fsl_i2c_mod.c to include I2C D register
+            address_match = *(uint8_t*)userData >> 1;
             break;
         /*  Transmit request */
         case kI2C_SlaveTransmitEvent:
             /*  Update information for transmit process */
-            for (uint32_t i = 0U; i < I2C_DATA_LENGTH; i++) {
-                    g_slave_buff[i] = i;
-            }
             xfer->data     = g_slave_buff;
             xfer->dataSize = I2C_DATA_LENGTH;
             break;
@@ -81,14 +68,28 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             // Default driver couldn't differentiate between RX or TX completion
             // Check flag set in kI2C_SlaveReceiveEvent
             if (g_SlaveRxFlag) {
-                // Check all registered commands
-                for (uint8_t i = 0; i < RX_CMDS_LENGTH; i++) {
-                    if (rx_cmds[i] != NULL && (g_slave_buff[0] == (rx_cmds[i])->cmdValue)) {
-                        rx_cmds[i]->callback();
-                    }
+                g_SlaveRxFlag = false;
+                
+                if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
+                    pfWriteCommsCallback(&g_slave_buff[0], xfer->transferredCount);
+                }
+                if (pfWriteHIDCallback && address_match == I2C_SLAVE_HID) {
+                    pfWriteHIDCallback(&g_slave_buff[0], xfer->transferredCount);
+                }
+                if (pfWriteFlashCallback && address_match == I2C_SLAVE_FLASH) {
+                    pfWriteFlashCallback(&g_slave_buff[0], xfer->transferredCount);
+                }
+            } else { 
+                if (pfReadCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
+                    pfReadCommsCallback(&g_slave_buff[0], xfer->transferredCount);
+                }
+                if (pfReadHIDCallback && address_match == I2C_SLAVE_HID) {
+                    pfReadHIDCallback(&g_slave_buff[0], xfer->transferredCount);
+                }
+                if (pfReadFlashCallback && address_match == I2C_SLAVE_FLASH) {
+                    pfReadFlashCallback(&g_slave_buff[0], xfer->transferredCount);
                 }
             }
-            g_SlaveRxFlag = false;
             break;
 
         default:
@@ -127,7 +128,7 @@ static int32_t i2c_start_transfer(void) {
     memset(&g_s_handle, 0, sizeof(g_s_handle));
 
     I2C_SlaveTransferCreateHandle(I2C_SLAVE_BASEADDR, &g_s_handle,
-            i2c_slave_callback, NULL);
+            i2c_slave_callback, &address_match);
 
     /* Set up slave transfer. */
     I2C_SlaveTransferNonBlocking(I2C_SLAVE_BASEADDR, &g_s_handle,
@@ -136,27 +137,16 @@ static int32_t i2c_start_transfer(void) {
     return 1;
 }
 
-static status_t i2c_slave_register_cmd_callback(cmd_callback_t *cmdCalback) {
-    for (uint8_t i = 0; i < RX_CMDS_LENGTH; i++) {
-        if (rx_cmds[i] == NULL) {
-            rx_cmds[i] = cmdCalback;
-            return kStatus_Success;
-        }
-    }
-    return kStatus_Fail;
-}
-
 int32_t i2c_initialize(void) {
     i2c_slave_config_t slaveConfig;
     
     i2c_init_pins();
 
-    status_t cmd_register_status = i2c_slave_register_cmd_callback(&i2cSleepCmd);
-
     I2C_SlaveGetDefaultConfig(&slaveConfig);
 
-    slaveConfig.addressingMode = kI2C_Address7bit;
-    slaveConfig.slaveAddress   = I2C_MASTER_SLAVE_ADDR_7BIT;
+    slaveConfig.addressingMode = kI2C_RangeMatch;
+    slaveConfig.slaveAddress   = I2C_SLAVE_LOWER_ADDR_7BIT;
+    slaveConfig.upperAddress   = I2C_SLAVE_UPPER_ADDR_7BIT;
     slaveConfig.enableWakeUp   = true;
 
     I2C_SlaveInit(I2C_SLAVE_BASEADDR, &slaveConfig, I2C_SLAVE_CLK_FREQ);
@@ -169,5 +159,63 @@ int32_t i2c_initialize(void) {
 int32_t i2c_deinitialize(void) {
     I2C_SlaveDeinit(I2C_SLAVE_BASEADDR);
     return 1;
+}
+
+status_t i2c_RegisterWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress)
+{
+    status_t status = kStatus_Success;
+    
+    switch (slaveAddress){
+        case I2C_SLAVE_NRF_KL_COMMS:
+            pfWriteCommsCallback = writeCallback;
+            break;
+        case I2C_SLAVE_HID:
+            pfWriteHIDCallback = writeCallback;
+            break;
+        case I2C_SLAVE_FLASH:
+            pfWriteFlashCallback = writeCallback;
+            break;
+        default:
+            status = kStatus_Fail;
+            break;
+    }
+    
+    return status;
+}
+
+status_t i2c_RegisterReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress)
+{
+    status_t status = kStatus_Success;
+    
+    switch (slaveAddress) {
+        case I2C_SLAVE_NRF_KL_COMMS:
+            pfReadCommsCallback = readCallback;
+            break;
+        case I2C_SLAVE_HID:
+            pfReadHIDCallback = readCallback;
+            break;
+        case I2C_SLAVE_FLASH:
+            pfReadFlashCallback = readCallback;
+            break;
+        default:
+            status = kStatus_Fail;
+            break;
+    }
+    
+    return status;
+}
+
+void i2c_clearBuffer (void) {
+    memset(&g_slave_buff, 0, sizeof(g_slave_buff));
+}
+
+void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
+    if ((position + size) > I2C_DATA_LENGTH) {
+        return;
+    }
+    
+    for (uint32_t i = 0; i < size; i++) { 
+            g_slave_buff[position + i] = data[i];
+    }
 }
 

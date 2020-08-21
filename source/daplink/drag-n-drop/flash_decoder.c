@@ -130,9 +130,14 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
                 flash_intf_local = flash_intf_iap_protected;
             }
         } else if (FLASH_DECODER_TYPE_TARGET == type) {
-            // "Target" update in this case would be a 3rd party interface application
-            flash_start_local = DAPLINK_ROM_IF_START;
-            flash_intf_local = flash_intf_iap_protected;
+            if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
+                // Address is wrong so display error message
+                status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
+            } else {
+                // "Target" update in this case would be a 3rd party interface application
+                flash_start_local = DAPLINK_ROM_IF_START;
+                flash_intf_local = flash_intf_iap_protected;
+            }
         } else {
             status = ERROR_FD_UNSUPPORTED_UPDATE;
         }
