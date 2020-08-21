@@ -138,6 +138,8 @@ static void erase_target(void);
 
 static uint32_t expand_info(uint8_t *buf, uint32_t bufsize);
 
+__WEAK void vfs_user_build_filesystem_hook(){}
+
 void vfs_user_build_filesystem()
 {
     uint32_t file_size;
@@ -177,6 +179,8 @@ void vfs_user_build_filesystem()
         file_size = get_file_size(read_file_need_bl_txt);
         vfs_create_file("NEED_BL TXT", read_file_need_bl_txt, 0, file_size);
     }
+    
+    vfs_user_build_filesystem_hook();
 }
 
 // Default file change hook.
