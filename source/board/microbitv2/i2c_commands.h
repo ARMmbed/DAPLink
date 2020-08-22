@@ -33,7 +33,7 @@ typedef enum propertyId_tag {
     gPowerConsumption_c     = 0x05,
     gUSBEnumerationState_c  = 0x06,
     gPowerMode_c            = 0x07,
-    gNRFPowerMode_c         = 0x08
+    gPowerLedSleepState_c   = 0x08
 } propertyId_t;
 
 /*! property Id type enumeration */

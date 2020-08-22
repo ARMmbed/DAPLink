@@ -160,7 +160,6 @@ static void power_pre_switch_hook(smc_power_state_t originPowerState, app_power_
      * UART TX pin: Don't need to change.
      */
     PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, kPORT_PinDisabledOrAnalog);
-    PORT_SetPinMux(PIN_RED_LED_PORT, PIN_RED_LED_BIT, kPORT_PinDisabledOrAnalog);
     PORT_SetPinMux(PIN_HID_LED_PORT, PIN_HID_LED_BIT, kPORT_PinDisabledOrAnalog);
 }
 
@@ -171,7 +170,6 @@ static void power_post_switch_hook(smc_power_state_t originPowerState, app_power
      * UART TX pin: Don't need to change.
      */
     PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, (port_mux_t)PIN_UART_RX_MUX_ALT);
-    PORT_SetPinMux(PIN_RED_LED_PORT, PIN_RED_LED_BIT, kPORT_MuxAlt3);
     PORT_SetPinMux(PIN_HID_LED_PORT, PIN_HID_LED_BIT, kPORT_PinDisabledOrAnalog);
 
     uart_initialize();
