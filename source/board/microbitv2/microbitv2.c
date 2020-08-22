@@ -51,8 +51,10 @@
 #define BRD_ID_1_UPPER_THR_V        935   // Upper threshold in mV for 100nF and 4700R
 #define BRD_ID_1_LOWER_THR_V        268   // Lower threshold in mV for 100nF and 4700R
 
-#define PWR_LED_ON_BATT_BRIGHTNESS      40 // LED Brightness while being powered by battery
-#define PWR_LED_FADEOUT_MIN_BRIGHTNESS  30 // Minimum LED brightness when fading out
+#define PWR_LED_ON_MAX_BRIGHTNESS       100 // Max LED Brightness (PC Connected)
+#define PWR_LED_INIT_FADE_BRIGHTNESS    80  // Initial fade LED Brightness
+#define PWR_LED_ON_BATT_BRIGHTNESS      40  // LED Brightness while being powered by battery
+#define PWR_LED_FADEOUT_MIN_BRIGHTNESS  30  // Minimum LED brightness when fading out
 
 #define FLASH_CONFIG_ADDRESS        (0x00020000)
 #define FLASH_STORAGE_ADDRESS       (0x00020400)
@@ -99,9 +101,10 @@ static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32
 
 // shutdown state
 static main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
-static uint8_t shutdown_led_dc = 100;
-static uint8_t power_led_max_duty_cycle = 100;
-static uint8_t initial_fade_brightness = 80;
+static uint8_t shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
+static uint8_t power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
+static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
+static bool power_led_sleep_state_on = true;
 static app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
 static power_source_t power_source;
 // reset button state count
@@ -218,7 +221,7 @@ static void prerun_board_config(void)
         
     } else {
         // Turn on the red LED with max duty cycle when powered by USB or EC
-        power_led_max_duty_cycle = 100;
+        power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
     }
     uint8_t gamma_led_dc = get_led_gamma(power_led_max_duty_cycle);
     flexio_pwm_set_dutycycle(gamma_led_dc);
@@ -316,7 +319,7 @@ void board_30ms_hook()
     if (usb_state == USB_CONNECTED) {
       // configure pin as GPIO
       PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
-      power_led_max_duty_cycle = 100;
+      power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
     }
     else if (usb_state == USB_DISCONNECTED) {
       // Disable pin
@@ -352,7 +355,15 @@ void board_30ms_hook()
           // TODO:  put nRF into deep sleep and wake nRF when KL27 wakes up
           if (power_source == PWR_BATT_ONLY || usb_state == USB_DISCONNECTED) {
               main_powerdown_event();
+              
+              if (power_led_sleep_state_on == true) {
+                  shutdown_led_dc = PWR_LED_ON_BATT_BRIGHTNESS;
+              }
+              else {
+                  shutdown_led_dc = 0;
+              }
           }
+
           main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           break;
       case MAIN_SHUTDOWN_WAITING:
@@ -498,13 +509,13 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &board_id_hex, sizeof(board_id_hex));
                 break;
                 case gI2CProtocolVersion_c: {
-                    uint32_t i2c_version = 1;
+                    uint16_t i2c_version = 1;
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(i2c_version);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &i2c_version, sizeof(i2c_version));
                 }
                 break;
                 case gDAPLinkVersion_c: {
-                    uint32_t daplink_version = DAPLINK_VERSION;
+                    uint16_t daplink_version = DAPLINK_VERSION;
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(daplink_version);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &daplink_version, sizeof(daplink_version));
                 }
@@ -524,7 +535,6 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &usb_state, sizeof(usb_state));
                 break;
                 case gPowerMode_c:
-                case gNRFPowerMode_c:
                     i2cResponse.cmdId = gErrorResponse_c;
                     i2cResponse.cmdData.errorRspCmd.errorCode = gErrorReadDisallowed_c;
                 break;
@@ -578,9 +588,20 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                         i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWrongPropertySize_c;
                     }
                 break;
-                case gNRFPowerMode_c:
-                    i2cResponse.cmdId = gErrorResponse_c;
-                    i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWriteDisallowed_c;
+                case gPowerLedSleepState_c:
+                    if (pI2cCommand->cmdData.writeReqCmd.dataSize == 1) {
+                        if (pI2cCommand->cmdData.writeReqCmd.data[0] != 0) {
+                            power_led_sleep_state_on = true;
+                        }
+                        else {
+                            power_led_sleep_state_on = false;
+                        }
+                        i2cResponse.cmdId = gWriteResponse_c;
+                        i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
+                    } else {
+                        i2cResponse.cmdId = gErrorResponse_c;
+                        i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWrongPropertySize_c;
+                    }
                 break;
                 default:
                     i2cResponse.cmdId = gErrorResponse_c;

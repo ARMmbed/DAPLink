@@ -19,8 +19,8 @@
 #define DEMO_FLEXIO_OUTPUTPIN 7U /* Select FXIO_D7 as PWM output */
 #define DEMO_FLEXIO_TIMER_CH 0U  /* Flexio timer0 used */
 
-#define DEMO_FLEXIO_CLOCK_FREQUENCY CLOCK_GetFreq(kCLOCK_McgIrc48MClk)
-#define DEMO_FLEXIO_FREQUENCY 200000U
+#define DEMO_FLEXIO_CLOCK_FREQUENCY CLOCK_GetFreq(kCLOCK_McgInternalRefClk)
+#define DEMO_FLEXIO_FREQUENCY 31250U
 #define FLEXIO_MAX_FREQUENCY (DEMO_FLEXIO_CLOCK_FREQUENCY / 2U)
 #define FLEXIO_MIN_FREQUENCY (DEMO_FLEXIO_CLOCK_FREQUENCY / 256U)
 
@@ -35,14 +35,24 @@
 void flexio_pwm_init(void)
 {
     flexio_config_t fxioUserConfig;
-
-    CLOCK_SetFlexio0Clock(1U);
+    
+    /* Enable the LIRC clock in the MCG */
+    MCG->C1 |= MCG_C1_IRCLKEN_MASK | MCG_C1_IREFSTEN_MASK;
+    
+    /* Select the clock source for the FlexIO
+        00 - Clock disabled
+        01 - MCGPCLK clock
+        10 - OSCERCLK clock
+        11 - MCGIRCLK clock
+    */
+    CLOCK_SetFlexio0Clock(3U);
 
     /* Init flexio, use default configure
-     * Disable doze and fast access mode
+     * Enable in Doze and fast access mode
      * Enable in debug mode
      */
     FLEXIO_GetDefaultConfig(&fxioUserConfig);
+    fxioUserConfig.enableInDoze = true;
     FLEXIO_Init(DEMO_FLEXIO_BASEADDR, &fxioUserConfig);
 }
 
