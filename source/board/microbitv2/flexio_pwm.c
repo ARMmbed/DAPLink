@@ -60,7 +60,7 @@ void flexio_pwm_set_dutycycle(uint8_t duty)
 {
     uint32_t freq_Hz = DEMO_FLEXIO_FREQUENCY;
     
-    assert((freq_Hz < FLEXIO_MAX_FREQUENCY) && (freq_Hz > FLEXIO_MIN_FREQUENCY));
+    assert((freq_Hz <= FLEXIO_MAX_FREQUENCY) && (freq_Hz >= FLEXIO_MIN_FREQUENCY));
 
     uint32_t lowerValue = 0; /* Number of clock cycles in high logic state in one period */
     uint32_t upperValue = 0; /* Number of clock cycles in low logic state in one period */
