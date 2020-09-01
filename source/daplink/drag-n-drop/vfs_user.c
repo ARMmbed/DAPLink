@@ -506,6 +506,9 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
     pos += util_write_string(buf + pos, "Overflow detection: ");
     pos += util_write_string(buf + pos, config_get_overflow_detect() ? "1" : "0");
     pos += util_write_string(buf + pos, "\r\n");
+    pos += util_write_string(buf + pos, "Incompatible image detection: ");
+    pos += util_write_string(buf + pos, config_get_detect_incompatible_target() ? "1" : "0");
+    pos += util_write_string(buf + pos, "\r\n");
     pos += util_write_string(buf + pos, "Page erasing: ");
     pos += util_write_string(buf + pos, config_ram_get_page_erase() ? "1" : "0");
     pos += util_write_string(buf + pos, "\r\n");
