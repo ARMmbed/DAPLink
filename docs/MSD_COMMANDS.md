@@ -82,3 +82,8 @@ data fast enough from DAPLink and an overflow occurs the text ```<DAPLink:Overfl
 will show up in the serial data. Serial overflow reporting is turned off by default.
 
 ``ovfl_off.cfg`` This file turns off serial overflow reporting.
+
+
+``comp_on.cfg`` This file turns on the incompatible target image detection. The interface project must define a board specific `board_detect_incompatible_image()` function with the criteria to validate the target image over the first 12 vectors. Otherwise, the incompatible target image detection won't have an effect.
+
+``comp_off.cfg`` This file turns off the incompatible target image detection (off by default).
