@@ -642,6 +642,28 @@ static void i2c_read_comms_callback(uint8_t* pData, uint8_t size) {
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }
 
+static bool file_extension_valid(const vfs_filename_t  filename)
+{
+    const char *valid_extensions[] = {
+        "BIN",
+        "TXT",
+        "CSV",
+        "HTM",
+        "WAV",
+    };
+    uint32_t i;
+
+    // Check for invalid starting characters
+    for (i = 0; i < (sizeof((valid_extensions))/sizeof((valid_extensions)[0])); i++) {
+        if (0 == memcmp(&filename[8], valid_extensions[i], 3)) {
+            return true;
+        }
+    }
+
+    // Some checks failed so file extension is invalid
+    return false;
+}
+
 static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
     i2cFlashCmd_t* pI2cCommand = (i2cFlashCmd_t*) pData;
     
@@ -689,7 +711,24 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
         }
         break;
         case gFlashCfgFileName_c:
-            memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 11);
+            // Validate 8.3 filename 
+            if (true != filename_valid((char *) pI2cCommand->cmdData.data) || size != 12) {
+                // Send error if invalid filename
+                i2c_clearBuffer();
+                pI2cCommand->cmdId = gFlashError_c;
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+            }
+            else { 
+                // Validate allowed extensions (.bin, .txt, .csv, .htm, .wav)
+                if ( true == file_extension_valid((char *) pI2cCommand->cmdData.data)) {
+                    memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 11);
+                }
+                // If invalid extension is requested, .bin will be used
+                else { 
+                    memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 8);
+                    memcpy(&gflashConfig.fileName[8], "BIN", 3);
+                }
+            }            
         break;
         case gFlashCfgFileSize_c:
             gflashConfig.fileSizeKB = pI2cCommand->cmdData.data[0];

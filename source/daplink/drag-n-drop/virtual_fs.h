@@ -23,6 +23,7 @@
 #define VIRTUAL_FS_H
 
 #include <stdint.h>
+#include <stdbool.h> 
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,6 +101,9 @@ void vfs_read(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors);
 
 // Write one or more sectors to the virtual filesystem
 void vfs_write(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors);
+
+// Validate 8.3 filenames
+bool filename_valid(const vfs_filename_t  filename);
 
 #ifdef __cplusplus
 }
