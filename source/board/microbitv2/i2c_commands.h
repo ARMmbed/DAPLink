@@ -17,9 +17,9 @@ extern "C" {
 
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
-    gReadRequest_c  = 0x10,
-    gReadResponse_c = 0x11,
-    gWriteRequest_c = 0x12,
+    gReadRequest_c   = 0x10,
+    gReadResponse_c  = 0x11,
+    gWriteRequest_c  = 0x12,
     gWriteResponse_c = 0x13,
     gErrorResponse_c = 0x20
 } cmdId_t;
@@ -33,8 +33,16 @@ typedef enum propertyId_tag {
     gPowerConsumption_c     = 0x05,
     gUSBEnumerationState_c  = 0x06,
     gPowerMode_c            = 0x07,
-    gPowerLedSleepState_c   = 0x08
+    gPowerLedSleepState_c   = 0x08,
+    gUserEvent_c            = 0x09
 } propertyId_t;
+
+/*! user event type enumeration */
+typedef enum userEventType_tag {
+    gWakeFromResetButton_c  = 0x01,
+    gWakeFromWakeOnEdge_c   = 0x02,
+    gResetButtonLongPress_c = 0x03,
+} userEventType_t;
 
 /*! property Id type enumeration */
 typedef enum errorCode_tag {

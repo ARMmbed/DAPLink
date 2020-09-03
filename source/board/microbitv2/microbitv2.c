@@ -82,11 +82,14 @@ extern bool go_to_sleep;
 
 typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_WAITING = 0,
+    MAIN_SHUTDOWN_WAITING_OFF,
     MAIN_SHUTDOWN_PENDING,
     MAIN_SHUTDOWN_REACHED,
     MAIN_SHUTDOWN_REACHED_FADE,
+    MAIN_SHUTDOWN_ALERT,
     MAIN_SHUTDOWN_REQUESTED,
-    MAIN_LED_BLINK,
+    MAIN_LED_BLINK_ONCE,
+    MAIN_LED_BLINKING,
     MAIN_LED_FULL_BRIGHTNESS,
     MAIN_SHUTDOWN_CANCEL
 } main_shutdown_state_t;
@@ -107,6 +110,7 @@ static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
 static bool power_led_sleep_state_on = true;
 static app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
 static power_source_t power_source;
+static main_usb_connect_t prev_usb_state;
 // reset button state count
 static uint16_t gpio_reset_count = 0;
 static bool do_remount = false;
@@ -275,16 +279,15 @@ void handle_reset_button()
         reset_pressed = 0;
 
         if (gpio_reset_count <= RESET_SHORT_PRESS) {
-            main_shutdown_state = MAIN_LED_BLINK;
+            main_shutdown_state = MAIN_LED_BLINK_ONCE;
         }
         else if (gpio_reset_count < RESET_MID_PRESS) {
             // Indicate button has been released to stop to cancel the shutdown
-            main_shutdown_state = MAIN_LED_BLINK;
+            main_shutdown_state = MAIN_LED_BLINK_ONCE;
         }
         else if (gpio_reset_count >= RESET_MID_PRESS) {
             // Indicate the button has been released when shutdown is requested
-            interface_power_mode = kAPP_PowerModeVlls0;
-            main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
+            main_shutdown_state = MAIN_SHUTDOWN_ALERT;
         }
     } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
         // Reset button is still pressed
@@ -326,6 +329,11 @@ void board_30ms_hook()
       PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(0);
       power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
     }
+    
+    if (prev_usb_state != usb_state) {
+      power_source = pwr_mon_get_power_source();
+    }
+    prev_usb_state = usb_state;
 
     switch (main_shutdown_state) {
       case MAIN_LED_FULL_BRIGHTNESS:
@@ -351,26 +359,55 @@ void board_30ms_hook()
               shutdown_led_dc--;
           }
           break;
+      case MAIN_SHUTDOWN_ALERT:
+          {
+          // Assert the interrupt line and prepare I2C response
+          i2cCommand_t i2cResponse = {0};
+          i2cResponse.cmdId = gReadResponse_c;
+          i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
+          i2cResponse.cmdData.readRspCmd.dataSize = 1;
+          i2cResponse.cmdData.readRspCmd.data[0] = gResetButtonLongPress_c;
+
+          i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
+
+          // Response ready, assert COMBINED_SENSOR_INT
+          PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
+      
+          // Keep LED off
+          main_shutdown_state = MAIN_SHUTDOWN_WAITING_OFF;
+          }
+          break;
       case MAIN_SHUTDOWN_REQUESTED:
-          // TODO:  put nRF into deep sleep and wake nRF when KL27 wakes up
           if (power_source == PWR_BATT_ONLY || usb_state == USB_DISCONNECTED) {
               main_powerdown_event();
-              
-              if (power_led_sleep_state_on == true) {
-                  shutdown_led_dc = PWR_LED_ON_BATT_BRIGHTNESS;
-              }
-              else {
-                  shutdown_led_dc = 0;
-              }
+              shutdown_led_dc = 0;
+              main_shutdown_state = MAIN_SHUTDOWN_WAITING;
+          }
+          else {
+              main_shutdown_state = MAIN_LED_BLINKING;
           }
 
-          main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           break;
       case MAIN_SHUTDOWN_WAITING:
           // Set the PWM value back to max duty cycle
           shutdown_led_dc = power_led_max_duty_cycle;
           break;
-      case MAIN_LED_BLINK:
+      case MAIN_SHUTDOWN_WAITING_OFF:
+          shutdown_led_dc = 0;
+          break;
+      case MAIN_LED_BLINKING:
+           // Blink the LED to indicate standby mode
+          if (shutdown_led_dc < 10) {
+              shutdown_led_dc++;
+          } else if (shutdown_led_dc == 10) {
+              shutdown_led_dc = 100;
+          } else if (shutdown_led_dc <= 90) {
+              shutdown_led_dc = 0;
+          } else if (shutdown_led_dc > 90) {
+              shutdown_led_dc--;
+          }
+          break;
+      case MAIN_LED_BLINK_ONCE:
           
           if (blink_in_progress) {
             blink_in_progress--;
@@ -562,23 +599,13 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                 case gPowerMode_c:
                     if (pI2cCommand->cmdData.writeReqCmd.dataSize == 1) {
                         if (pI2cCommand->cmdData.writeReqCmd.data[0] == kAPP_PowerModeVlls0) {
-                            if (power_source == PWR_BATT_ONLY || usb_state == USB_DISCONNECTED) {
-                                interface_power_mode = kAPP_PowerModeVlls0;
-                                i2cResponse.cmdId = gWriteResponse_c;
-                                i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
-                            } else {
-                                i2cResponse.cmdId = gErrorResponse_c;
-                                i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWriteDisallowed_c;
-                            }
+                            interface_power_mode = kAPP_PowerModeVlls0;
+                            i2cResponse.cmdId = gWriteResponse_c;
+                            i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
                         } else if (pI2cCommand->cmdData.writeReqCmd.data[0] == kAPP_PowerModeVlps) {
-                            if (power_source == PWR_BATT_ONLY || usb_state == USB_DISCONNECTED) {
-                                interface_power_mode = kAPP_PowerModeVlps;
-                                i2cResponse.cmdId = gWriteResponse_c;
-                                i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
-                            } else {
-                                i2cResponse.cmdId = gErrorResponse_c;
-                                i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWriteDisallowed_c;
-                            }
+                            interface_power_mode = kAPP_PowerModeVlps;
+                            i2cResponse.cmdId = gWriteResponse_c;
+                            i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
                         } else { 
                             i2cResponse.cmdId = gErrorResponse_c;
                             i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWriteFail_c;
@@ -637,6 +664,8 @@ static void i2c_read_comms_callback(uint8_t* pData, uint8_t size) {
             }
         break;
     }
+    
+    i2c_clearBuffer();
     
     // Release COMBINED_SENSOR_INT
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
