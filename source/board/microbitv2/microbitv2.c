@@ -71,6 +71,8 @@ const char * const board_id_mb_2_1 = "9904";
 uint16_t board_id_hex_min = 0x9903;
 uint16_t board_id_hex = 0;
 
+volatile uint8_t wake_from_reset = 0;
+
 typedef enum {
     BOARD_VERSION_2_0 = 0,
     BOARD_VERSION_2_1 = 1,
@@ -262,7 +264,7 @@ void handle_reset_button()
     static uint8_t reset_pressed = 0;
 
     // handle reset button without eventing
-    if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
+    if (!reset_pressed && (gpio_get_reset_btn_fwrd() || wake_from_reset)) {
 #ifdef DRAG_N_DROP_SUPPORT
         if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
 #endif
@@ -271,6 +273,7 @@ void handle_reset_button()
             target_set_state(RESET_HOLD);
             reset_pressed = 1;
             gpio_reset_count = 0;
+            wake_from_reset = 0;
             main_shutdown_state = MAIN_LED_FULL_BRIGHTNESS;
         }
     } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {

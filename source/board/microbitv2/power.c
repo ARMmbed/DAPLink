@@ -23,6 +23,8 @@ static void power_pre_switch_hook(smc_power_state_t originPowerState, app_power_
 static void power_post_switch_hook(smc_power_state_t originPowerState, app_power_mode_t targetMode);
 static void power_enter_mode(app_power_mode_t targetPowerMode);
 
+extern volatile uint8_t wake_from_reset;
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -31,14 +33,12 @@ void LLWU_IRQHandler(void)
     /* If wakeup by external pin BTN_NOT_PRESSED. */
     if (LLWU_GetExternalWakeupPinFlag(LLWU, PIN_SW_RESET_LLWU_PIN))
     {
-        PORT_SetPinInterruptConfig(PIN_SW_RESET_PORT, PIN_SW_RESET_BIT, kPORT_InterruptOrDMADisabled);
-        PORT_ClearPinsInterruptFlags(PIN_SW_RESET_PORT, (1U << PIN_SW_RESET_BIT));
         LLWU_ClearExternalWakeupPinFlag(LLWU, PIN_SW_RESET_LLWU_PIN);
+        wake_from_reset = 1;
     }
     /* If wakeup by external pin WAKE_ON_EDGE. */
     if (LLWU_GetExternalWakeupPinFlag(LLWU, PIN_WAKE_ON_EDGE_LLWU_PIN))
     {
-        PORT_ClearPinsInterruptFlags(PIN_WAKE_ON_EDGE_PORT, (1U << PIN_WAKE_ON_EDGE_BIT));
         LLWU_ClearExternalWakeupPinFlag(LLWU, PIN_WAKE_ON_EDGE_LLWU_PIN);
     }
 }
@@ -71,7 +71,6 @@ void power_init(void)
     if (kRCM_SourceWakeup & RCM_GetPreviousResetSources(RCM)) /* Wakeup from VLLS. */
     {
         PMC_ClearPeriphIOIsolationFlag(PMC);
-        NVIC_ClearPendingIRQ(LLWU_IRQn);
     }
 
     /* Enable rising edge interrupt on WAKE_ON_EDGE pin (VBUS falling edge) to detect USB detach */

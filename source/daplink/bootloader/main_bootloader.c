@@ -100,6 +100,11 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 static main_usb_busy_t usb_busy;
 static uint32_t usb_busy_count;
 
+__WEAK bool reset_button_pressed()
+{
+    return gpio_get_reset_btn();
+}
+
 // Timer task, set flags every 30mS and 90mS
 void timer_task_30mS(void * arg)
 {
@@ -262,7 +267,7 @@ int main(void)
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app
-    if (!gpio_get_reset_btn()
+    if (!reset_button_pressed()
             && g_board_info.target_cfg
             && validate_bin_nvic((uint8_t *)g_board_info.target_cfg->flash_regions[0].start)
             && !config_ram_get_initial_hold_in_bl()) {

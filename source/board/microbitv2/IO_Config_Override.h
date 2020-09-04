@@ -100,8 +100,8 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define SW_RESET_PRESSED        (0)
 #define SW_RESET_NOT_PRESSED    (1)
 #define PIN_SW_RESET_LLWU_PIN   (14)
-#define PIN_SW_RESET_LLWU_WAKEUP_TYPE   kLLWU_ExternalPinRisingEdge
-#define PIN_SW_RESET_PORT_WAKEUP_TYPE   kPORT_InterruptRisingEdge
+#define PIN_SW_RESET_LLWU_WAKEUP_TYPE   kLLWU_ExternalPinFallingEdge
+#define PIN_SW_RESET_PORT_WAKEUP_TYPE   kPORT_InterruptFallingEdge
 
 // WAKE_ON_EDGE PTC4
 #define PIN_WAKE_ON_EDGE_PORT               PORTC
