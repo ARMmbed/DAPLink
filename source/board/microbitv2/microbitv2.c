@@ -280,6 +280,7 @@ void handle_reset_button()
         // Reset button released
         target_set_state(RESET_RUN);
         reset_pressed = 0;
+        power_led_sleep_state_on = true;
 
         if (gpio_reset_count <= RESET_SHORT_PRESS) {
             main_shutdown_state = MAIN_LED_BLINK_ONCE;
@@ -376,20 +377,28 @@ void board_30ms_hook()
           // Response ready, assert COMBINED_SENSOR_INT
           PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
       
-          // Keep LED off
-          main_shutdown_state = MAIN_SHUTDOWN_WAITING_OFF;
+          // Return LED to ON after release of long press
+          main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           break;
       case MAIN_SHUTDOWN_REQUESTED:
           if (power_source == PWR_BATT_ONLY || usb_state == USB_DISCONNECTED) {
               main_powerdown_event();
-              shutdown_led_dc = 0;
+              
+              // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
+              // When the duty cycle is 0% or 100%, the FlexIO driver will configure the pin as GPIO
+              if (power_led_sleep_state_on == true) {
+                  shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
+              }
+              else {
+                  shutdown_led_dc = 0;
+              }
+              
               main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           else {
               main_shutdown_state = MAIN_LED_BLINKING;
           }
-
           break;
       case MAIN_SHUTDOWN_WAITING:
           // Set the PWM value back to max duty cycle
