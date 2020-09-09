@@ -23,6 +23,7 @@
 #include "uart_regs.h"
 #include "pwrman_regs.h"
 #include "uart.h"
+#include "circ_buf.h"
 
 // Size must be 2^n
 #define BUFFER_SIZE (4096)
@@ -34,14 +35,10 @@ static mxc_uart_regs_t *CdcAcmUart = NULL;
 static mxc_uart_fifo_regs_t *CdcAcmUartFifo = NULL;
 static IRQn_Type CdcAcmUartIrqNumber = MXC_IRQ_EXT_COUNT;
 
-// Ring buffer
-static struct {
-    uint8_t  data[BUFFER_SIZE];
-    volatile uint16_t idx_in;
-    volatile uint16_t idx_out;
-    volatile int16_t cnt_in;
-    volatile int16_t cnt_out;
-} write_buffer, read_buffer;
+circ_buf_t write_buffer;
+uint8_t write_buffer_data[BUFFER_SIZE];
+circ_buf_t read_buffer;
+uint8_t read_buffer_data[BUFFER_SIZE];
 
 /******************************************************************************/
 static void set_bitrate(uint32_t target_baud)
@@ -200,6 +197,9 @@ int32_t uart_initialize(void)
     // Enable UART
     CdcAcmUart->ctrl |= MXC_F_UART_CTRL_UART_EN;
 
+    circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
+    circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
+
     return 1;
 }
 
@@ -214,8 +214,8 @@ int32_t uart_uninitialize(void)
     NVIC_DisableIRQ(CdcAcmUartIrqNumber);
 
     // Clear buffers
-    memset(&write_buffer, 0, sizeof(write_buffer));
-    memset(&read_buffer, 0, sizeof(read_buffer));
+    memset(&write_buffer_data, 0, sizeof(write_buffer_data));
+    memset(&read_buffer_data, 0, sizeof(read_buffer_data));
 
     return 1;
 }
@@ -228,9 +228,8 @@ void uart_set_control_line_state(uint16_t ctrl_bmp)
 /******************************************************************************/
 int32_t uart_reset(void)
 {
-    // Clear buffers
-    memset(&write_buffer, 0, sizeof(write_buffer));
-    memset(&read_buffer, 0, sizeof(read_buffer));
+    circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
+    circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
 
     return 1;
 }
@@ -329,7 +328,7 @@ int32_t uart_get_configuration(UART_Configuration *config)
 /******************************************************************************/
 int32_t uart_write_free(void)
 {
-    return BUFFER_SIZE - (write_buffer.cnt_in - write_buffer.cnt_out);
+    return circ_buf_count_free(&write_buffer);
 }
 
 /******************************************************************************/
@@ -338,48 +337,26 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
     uint16_t xfer_count = size;
 
     // Prioritize writes to TX FIFO, then to write_buffer
-    if (write_buffer.cnt_in == write_buffer.cnt_out) {
+    if (circ_buf_count_used(&write_buffer) == 0) {
         while ((((CdcAcmUart->tx_fifo_ctrl & MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY) >> MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY_POS) < MXC_UART_FIFO_DEPTH) &&
                 (xfer_count > 0)) {
-
             NVIC_DisableIRQ(CdcAcmUartIrqNumber);
             CdcAcmUart->intfl = MXC_F_UART_INTFL_TX_FIFO_AE;
             CdcAcmUartFifo->tx = *data++;
             xfer_count--;
             NVIC_EnableIRQ(CdcAcmUartIrqNumber);
-
         }
     }
 
-    while (xfer_count > 0) {
-        if ((write_buffer.cnt_in - write_buffer.cnt_out) < BUFFER_SIZE) {
+    xfer_count = circ_buf_write(&write_buffer, data, xfer_count);
 
-            NVIC_DisableIRQ(CdcAcmUartIrqNumber);
-            write_buffer.data[write_buffer.idx_in++] = *data++;
-            write_buffer.idx_in &= (BUFFER_SIZE - 1);
-            write_buffer.cnt_in++;
-            xfer_count--;
-            NVIC_EnableIRQ(CdcAcmUartIrqNumber);
-
-        } else {
-            break;
-        }
-    }
     return size - xfer_count;
 }
 
 /******************************************************************************/
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
-    int32_t cnt;
-
-    for (cnt = 0; (cnt < size) && (read_buffer.cnt_in != read_buffer.cnt_out); cnt++) {
-        *data++ = read_buffer.data[read_buffer.idx_out++];
-        read_buffer.idx_out &= (BUFFER_SIZE - 1);
-        read_buffer.cnt_out++;
-    }
-
-    return cnt;
+    return circ_buf_read(&read_buffer, data, size);
 }
 
 /******************************************************************************/
@@ -398,18 +375,9 @@ void UART_IRQHandler(void)
 
     if (intfl & MXC_F_UART_INTFL_RX_FIFO_NOT_EMPTY) {
         while ((CdcAcmUart->rx_fifo_ctrl & MXC_F_UART_RX_FIFO_CTRL_FIFO_ENTRY) &&
-                ((read_buffer.cnt_in - read_buffer.cnt_out) < BUFFER_SIZE)) {
-            read_buffer.data[read_buffer.idx_in++] = CdcAcmUartFifo->rx;
+                circ_buf_count_free(&read_buffer)) {
+            circ_buf_push(&read_buffer, CdcAcmUartFifo->rx);
             CdcAcmUart->intfl = MXC_F_UART_INTFL_RX_FIFO_NOT_EMPTY;
-            read_buffer.idx_in &= (BUFFER_SIZE - 1);
-            read_buffer.cnt_in++;
-        }
-
-        // Ring buffer overflow
-        if (((read_buffer.cnt_in - read_buffer.cnt_out) >= BUFFER_SIZE)) {
-            read_buffer.data[read_buffer.idx_in++] = '%';
-            read_buffer.idx_in &= (BUFFER_SIZE - 1);
-            read_buffer.cnt_in++;
         }
     }
 
@@ -419,11 +387,9 @@ void UART_IRQHandler(void)
         	a) write buffer contains data and
         	b) transmit FIFO is not full
         */
-        while ((write_buffer.cnt_out != write_buffer.cnt_in) &&
+        while (circ_buf_count_used(&write_buffer) &&
                 (((CdcAcmUart->tx_fifo_ctrl & MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY) >> MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY_POS) < MXC_UART_FIFO_DEPTH)) {
-            CdcAcmUartFifo->tx = write_buffer.data[write_buffer.idx_out++];
-            write_buffer.idx_out &= (BUFFER_SIZE - 1);
-            write_buffer.cnt_out++;
+            CdcAcmUartFifo->tx = circ_buf_pop(&write_buffer);
         }
     }
 }
