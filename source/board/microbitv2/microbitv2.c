@@ -396,7 +396,7 @@ void board_30ms_hook()
               
               main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
-          else {
+          else if (usb_state == USB_CONNECTED){
               main_shutdown_state = MAIN_LED_BLINKING;
           }
           break;
