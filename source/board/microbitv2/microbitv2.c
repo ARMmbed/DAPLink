@@ -55,6 +55,7 @@
 #define PWR_LED_INIT_FADE_BRIGHTNESS    80  // Initial fade LED Brightness
 #define PWR_LED_ON_BATT_BRIGHTNESS      40  // LED Brightness while being powered by battery
 #define PWR_LED_FADEOUT_MIN_BRIGHTNESS  30  // Minimum LED brightness when fading out
+#define PWR_LED_SLEEP_STATE_DEFAULT     true
 
 #define FLASH_CONFIG_ADDRESS        (0x00020000)
 #define FLASH_STORAGE_ADDRESS       (0x00020400)
@@ -72,6 +73,7 @@ uint16_t board_id_hex_min = 0x9903;
 uint16_t board_id_hex = 0;
 
 volatile uint8_t wake_from_reset = 0;
+volatile uint8_t wake_from_usb = 0;
 
 typedef enum {
     BOARD_VERSION_2_0 = 0,
@@ -109,7 +111,7 @@ static main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 static uint8_t shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
-static bool power_led_sleep_state_on = true;
+static bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 static app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
 static power_source_t power_source;
 static main_usb_connect_t prev_usb_state;
@@ -280,7 +282,7 @@ void handle_reset_button()
         // Reset button released
         target_set_state(RESET_RUN);
         reset_pressed = 0;
-        power_led_sleep_state_on = true;
+        power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 
         if (gpio_reset_count <= RESET_SHORT_PRESS) {
             main_shutdown_state = MAIN_LED_BLINK_ONCE;
@@ -344,6 +346,10 @@ void board_30ms_hook()
         interface_power_mode = kAPP_PowerModeVlps;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }
+    
+    if (wake_from_usb) {
+        main_shutdown_state = MAIN_SHUTDOWN_ALERT;
+    }
 
     switch (main_shutdown_state) {
       case MAIN_LED_FULL_BRIGHTNESS:
@@ -371,12 +377,21 @@ void board_30ms_hook()
           break;
       case MAIN_SHUTDOWN_ALERT:
           {
-          // Assert the interrupt line and prepare I2C response
+          // Release COMBINED_SENSOR_INT in case it was previously asserted
+          PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
+              
+          // Prepare I2C response
           i2cCommand_t i2cResponse = {0};
           i2cResponse.cmdId = gReadResponse_c;
           i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
           i2cResponse.cmdData.readRspCmd.dataSize = 1;
-          i2cResponse.cmdData.readRspCmd.data[0] = gResetButtonLongPress_c;
+          
+          if (wake_from_usb) {
+              i2cResponse.cmdData.readRspCmd.data[0] = gWakeFromWakeOnEdge_c;
+              wake_from_usb = 0;
+          } else {
+              i2cResponse.cmdData.readRspCmd.data[0] = gResetButtonLongPress_c;
+          }
 
           i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
 
