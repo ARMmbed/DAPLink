@@ -324,20 +324,26 @@ void board_30ms_hook()
   static uint8_t blink_in_progress = 0;
     
     if (usb_state == USB_CONNECTED) {
-      // configure pin as GPIO
-      PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
-      power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
+        // configure pin as GPIO
+        PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
+        power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
     }
     else if (usb_state == USB_DISCONNECTED) {
-      // Disable pin
-      PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(0);
-      power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
+        // Disable pin
+        PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(0);
+        power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
     }
     
     if (prev_usb_state != usb_state) {
-      power_source = pwr_mon_get_power_source();
+        power_source = pwr_mon_get_power_source();
     }
     prev_usb_state = usb_state;
+    
+    // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
+    if (usb_state == USB_DISCONNECTED && main_shutdown_state == MAIN_SHUTDOWN_WAITING) { 
+        interface_power_mode = kAPP_PowerModeVlps;
+        main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
+    }
 
     switch (main_shutdown_state) {
       case MAIN_LED_FULL_BRIGHTNESS:
@@ -387,8 +393,10 @@ void board_30ms_hook()
               
               // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
               // When the duty cycle is 0% or 100%, the FlexIO driver will configure the pin as GPIO
-              if (power_led_sleep_state_on == true) {
+              if (power_led_sleep_state_on == true && interface_power_mode == kAPP_PowerModeVlls0) {
                   shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
+              } else if (power_led_sleep_state_on == true && interface_power_mode == kAPP_PowerModeVlps) {
+                  shutdown_led_dc = PWR_LED_ON_BATT_BRIGHTNESS;
               }
               else {
                   shutdown_led_dc = 0;
@@ -417,6 +425,11 @@ void board_30ms_hook()
               shutdown_led_dc = 0;
           } else if (shutdown_led_dc > 90) {
               shutdown_led_dc--;
+          }
+          
+          // If we are no longer PC connected, go into idle mode
+          if (usb_state == USB_DISCONNECTED) {
+              main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           break;
       case MAIN_LED_BLINK_ONCE:
@@ -464,7 +477,7 @@ void board_handle_powerdown()
     i2c_deinitialize();
     i2c_initialize();
     
-    usbd_connect(1);
+    usb_state = USB_CONNECTING;
     
     gpio_set_hid_led(HID_LED_DEF);
 }
@@ -612,10 +625,6 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     if (pI2cCommand->cmdData.writeReqCmd.dataSize == 1) {
                         if (pI2cCommand->cmdData.writeReqCmd.data[0] == kAPP_PowerModeVlls0) {
                             interface_power_mode = kAPP_PowerModeVlls0;
-                            i2cResponse.cmdId = gWriteResponse_c;
-                            i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
-                        } else if (pI2cCommand->cmdData.writeReqCmd.data[0] == kAPP_PowerModeVlps) {
-                            interface_power_mode = kAPP_PowerModeVlps;
                             i2cResponse.cmdId = gWriteResponse_c;
                             i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
                         } else { 
