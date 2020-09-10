@@ -278,6 +278,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/ep_agora.yaml
+    k20dx_ep_kairos_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/ep_kairos.yaml
     k26f_frdmk32w042_if:
         - *module_if
         - *module_hic_k26f
