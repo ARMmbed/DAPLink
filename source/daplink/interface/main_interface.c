@@ -420,6 +420,8 @@ void main_task(void * arg)
                 }
                 else {
                     usb_state = USB_DISCONNECTED;
+                    usb_state_count = USB_CONNECT_DELAY;
+                    usb_no_config_count = USB_CONFIGURE_TIMEOUT;
                 }
                 default:
                     break;
