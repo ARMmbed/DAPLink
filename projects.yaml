@@ -158,6 +158,10 @@ projects:
         - *module_if
         - *module_hic_kl26z
         - records/board/nina_b1.yaml
+    kl26z_artemis_dk_if:
+        - *module_if
+        - *module_hic_kl26z
+        - records/board/artemis_dk.yaml
     k20dx_frdmk20dx_if:
         - *module_if
         - *module_hic_k20dx

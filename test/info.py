@@ -30,6 +30,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
+    ("kl26z_artemis_dk_if",                         False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc4322_lpc54114xpresso_if",                  False,      0x10000,    "bin"       ),
@@ -149,6 +150,7 @@ VENDOR_ID = {
     'Renesas' : 117,
     'Wiznet': 122,
     'Realtek': 124,
+    'Ambiq' : 126,
 }
 
 def VENDOR_TO_FAMILY(x, y) : return (VENDOR_ID[x] <<8) | y
@@ -293,6 +295,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'sam3u2c_if',                               None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_if',                           None,               None                                    ),
+    (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                                ),
 ]
 
 # Add new HICs here
@@ -371,6 +374,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
 
 #Hack until these targets have an image with a valid vector table
 TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
+    'Artemis_DK',
     'Microbit',
     'Nordic-nRF51-DK',
     'Nordic-nRF52-DK',
