@@ -17,6 +17,7 @@ extern "C" {
 
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
+    gNopCmd_c        = 0x00,
     gReadRequest_c   = 0x10,
     gReadResponse_c  = 0x11,
     gWriteRequest_c  = 0x12,
