@@ -24,6 +24,7 @@ static void power_post_switch_hook(smc_power_state_t originPowerState, app_power
 static void power_enter_mode(app_power_mode_t targetPowerMode);
 
 extern volatile uint8_t wake_from_reset;
+extern volatile uint8_t wake_from_usb;
 
 /*******************************************************************************
  * Code
@@ -40,6 +41,7 @@ void LLWU_IRQHandler(void)
     if (LLWU_GetExternalWakeupPinFlag(LLWU, PIN_WAKE_ON_EDGE_LLWU_PIN))
     {
         LLWU_ClearExternalWakeupPinFlag(LLWU, PIN_WAKE_ON_EDGE_LLWU_PIN);
+        wake_from_usb = 1;
     }
 }
 
@@ -55,9 +57,15 @@ void PORTCD_IRQHandler(void)
     {
         PORT_ClearPinsInterruptFlags(PIN_WAKE_ON_EDGE_PORT, (1U << PIN_WAKE_ON_EDGE_BIT));
 
-        /* Reset USB on cable detach (VBUS falling edge) */
-        USBD_Reset();
-        usbd_reset_core();
+        if ((PIN_WAKE_ON_EDGE_PORT->PCR[PIN_WAKE_ON_EDGE_BIT] & PORT_PCR_IRQC_MASK) == PORT_PCR_IRQC(kPORT_InterruptRisingEdge)) {
+            /* Reset USB on cable detach (VBUS falling edge) */
+            USBD_Reset();
+            usbd_reset_core();
+        }
+        else {
+            // Cable inserted
+            wake_from_usb = 1;
+        }
     }
 }
 
