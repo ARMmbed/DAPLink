@@ -394,6 +394,7 @@ void board_30ms_hook()
           if (wake_from_usb) {
               i2cResponse.cmdData.readRspCmd.data[0] = gWakeFromWakeOnEdge_c;
               wake_from_usb = 0;
+              power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
           } else {
               i2cResponse.cmdData.readRspCmd.data[0] = gResetButtonLongPress_c;
           }
