@@ -68,7 +68,7 @@
 //       <i> when the device is fully operational (bMaxPower)
 //   </h>
 #define USBD_CFGDESC_BMATTRIBUTES   0x80
-#define USBD_CFGDESC_BMAXPOWER      0xFA
+#define USBD_CFGDESC_BMAXPOWER      0x96    // Temporal modification to 300mA for microbit
 
 //   <h> String Settings
 //     <i> These settings affect String Descriptor
