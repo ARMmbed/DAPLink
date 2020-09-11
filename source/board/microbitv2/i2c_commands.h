@@ -35,7 +35,8 @@ typedef enum propertyId_tag {
     gUSBEnumerationState_c  = 0x06,
     gPowerMode_c            = 0x07,
     gPowerLedSleepState_c   = 0x08,
-    gUserEvent_c            = 0x09
+    gUserEvent_c            = 0x09,
+    gAutomaticSleep_c       = 0x0A
 } propertyId_t;
 
 /*! user event type enumeration */

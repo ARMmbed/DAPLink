@@ -56,6 +56,7 @@
 #define PWR_LED_ON_BATT_BRIGHTNESS      40  // LED Brightness while being powered by battery
 #define PWR_LED_FADEOUT_MIN_BRIGHTNESS  30  // Minimum LED brightness when fading out
 #define PWR_LED_SLEEP_STATE_DEFAULT     true
+#define AUTOMATIC_SLEEP_DEFAULT         true
 
 #define FLASH_CONFIG_ADDRESS        (0x00020000)
 #define FLASH_STORAGE_ADDRESS       (0x00020400)
@@ -112,6 +113,7 @@ static uint8_t shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
 static bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
+static bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 static app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
 static power_source_t power_source;
 static main_usb_connect_t prev_usb_state;
@@ -342,7 +344,7 @@ void board_30ms_hook()
     prev_usb_state = usb_state;
     
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
-    if (usb_state == USB_DISCONNECTED && main_shutdown_state == MAIN_SHUTDOWN_WAITING) { 
+    if (usb_state == USB_DISCONNECTED && main_shutdown_state == MAIN_SHUTDOWN_WAITING && automatic_sleep_on == true) { 
         interface_power_mode = kAPP_PowerModeVlps;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }
@@ -659,6 +661,21 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                         }
                         else {
                             power_led_sleep_state_on = false;
+                        }
+                        i2cResponse.cmdId = gWriteResponse_c;
+                        i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
+                    } else {
+                        i2cResponse.cmdId = gErrorResponse_c;
+                        i2cResponse.cmdData.errorRspCmd.errorCode = gErrorWrongPropertySize_c;
+                    }
+                break;
+                case gAutomaticSleep_c:
+                    if (pI2cCommand->cmdData.writeReqCmd.dataSize == 1) {
+                        if (pI2cCommand->cmdData.writeReqCmd.data[0] != 0) {
+                            automatic_sleep_on = true;
+                        }
+                        else {
+                            automatic_sleep_on = false;
                         }
                         i2cResponse.cmdId = gWriteResponse_c;
                         i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
