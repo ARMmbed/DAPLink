@@ -34,6 +34,7 @@
 #include "adc.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+#include "fsl_i2c.h"
 #include "led_error_app.h"
 #include "flash_manager.h"
 #include "virtual_fs.h"
@@ -84,6 +85,7 @@ typedef enum {
 extern target_cfg_t target_device_nrf52_64;
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
+extern i2c_slave_handle_t g_s_handle;
 
 typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_WAITING = 0,
@@ -344,7 +346,8 @@ void board_30ms_hook()
     prev_usb_state = usb_state;
     
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
-    if (usb_state == USB_DISCONNECTED && main_shutdown_state == MAIN_SHUTDOWN_WAITING && automatic_sleep_on == true) { 
+    if (usb_state == USB_DISCONNECTED && main_shutdown_state == MAIN_SHUTDOWN_WAITING 
+        && automatic_sleep_on == true && g_s_handle.isBusy == false) { 
         interface_power_mode = kAPP_PowerModeVlps;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }

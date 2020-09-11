@@ -19,7 +19,7 @@
 
 static uint8_t g_slave_TX_buff[I2C_DATA_LENGTH];
 static uint8_t g_slave_RX_buff[I2C_DATA_LENGTH];
-static i2c_slave_handle_t g_s_handle;
+i2c_slave_handle_t g_s_handle;
 static volatile bool g_SlaveCompletionFlag = false;
 static volatile bool g_SlaveRxFlag = false;
 uint8_t address_match = 0;
@@ -135,6 +135,9 @@ static int32_t i2c_start_transfer(void) {
     /* Set up slave transfer. */
     I2C_SlaveTransferNonBlocking(I2C_SLAVE_BASEADDR, &g_s_handle,
             kI2C_SlaveCompletionEvent | kI2C_SlaveAddressMatchEvent);
+    
+    // i2c handle will be busy until an address match
+    g_s_handle.isBusy = false;
 
     return 1;
 }
