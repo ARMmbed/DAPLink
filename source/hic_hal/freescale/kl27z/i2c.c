@@ -125,8 +125,6 @@ static void i2c_init_pins(void) {
 }
 
 static int32_t i2c_start_transfer(void) {
-    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
-    memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
     memset(&g_s_handle, 0, sizeof(g_s_handle));
 
     I2C_SlaveTransferCreateHandle(I2C_SLAVE_BASEADDR, &g_s_handle,
