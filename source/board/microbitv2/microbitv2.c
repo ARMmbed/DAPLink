@@ -879,8 +879,6 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             pI2cCommand->cmdData.data[1] = 0x00;
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 3);
         break;
-        case gFlashStatus_c:
-        break;
         case gFlashRemountMSD_c:
             do_remount = true;
         break;

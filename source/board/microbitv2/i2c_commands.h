@@ -114,7 +114,6 @@ typedef enum flashCmdId_tag {
     gFlashStorageSize_c     = 0x06,
     gFlashSectorSize_c      = 0x07,
     gFlashRemountMSD_c      = 0x08,
-    gFlashStatus_c          = 0x09,
     gFlashDataRead_c        = 0x0A,
     gFlashDataWrite_c       = 0x0B,
     gFlashDataErase_c       = 0x0C,
