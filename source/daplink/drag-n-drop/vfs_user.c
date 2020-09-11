@@ -118,7 +118,7 @@ static const magic_file_info_t s_magic_file_info[] = {
         { "PAGE_OFFACT", kChipEraseActionFile       },
     };
 
-static uint8_t file_buffer[VFS_SECTOR_SIZE];
+static uint8_t file_buffer[VFS_SECTOR_SIZE+100];
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
 static assert_source_t assert_source;
@@ -348,12 +348,22 @@ static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *data, uint32
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
+    uint32_t size = 0;
 
-    if (sector_offset != 0) {
+    if (sector_offset > 1) {
         return 0;
     }
+    
+    size = update_details_txt_file(file_buffer, VFS_SECTOR_SIZE+100);
+    
+    if (size - VFS_SECTOR_SIZE * sector_offset > VFS_SECTOR_SIZE) {
+        memcpy(data, file_buffer + sector_offset * VFS_SECTOR_SIZE, VFS_SECTOR_SIZE);
+    }
+    else {
+        memcpy(data, file_buffer + sector_offset * VFS_SECTOR_SIZE, size - VFS_SECTOR_SIZE * sector_offset);
+    }
 
-    return update_details_txt_file(data, VFS_SECTOR_SIZE);
+    return size;
 }
 
 // Text representation of each error type, starting from the rightmost bit
