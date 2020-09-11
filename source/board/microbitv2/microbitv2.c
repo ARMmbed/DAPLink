@@ -686,9 +686,8 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
         break;
     }
     
-    i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
-    
     if (assert_interrupt) {
+        i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
         // Response ready, assert COMBINED_SENSOR_INT
         PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
     }

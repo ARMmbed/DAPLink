@@ -17,7 +17,8 @@
 #define RX_CMDS_LENGTH              5
 #define I2C_CMD_SLEEP               0xABU
 
-static uint8_t g_slave_buff[I2C_DATA_LENGTH];
+static uint8_t g_slave_TX_buff[I2C_DATA_LENGTH];
+static uint8_t g_slave_RX_buff[I2C_DATA_LENGTH];
 static i2c_slave_handle_t g_s_handle;
 static volatile bool g_SlaveCompletionFlag = false;
 static volatile bool g_SlaveRxFlag = false;
@@ -43,7 +44,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
         /*  Transmit request */
         case kI2C_SlaveTransmitEvent:
             /*  Update information for transmit process */
-            xfer->data     = g_slave_buff;
+            xfer->data     = g_slave_TX_buff;
             xfer->dataSize = I2C_DATA_LENGTH;
             break;
 
@@ -53,8 +54,8 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             // Hack: Default driver can't differentiate between RX or TX on
             // completion event, so we set a flag here. Can't process more
             // than I2C_DATA_LENGTH bytes on RX
-            memset(&g_slave_buff, 0, sizeof(g_slave_buff));
-            xfer->data     = g_slave_buff;
+            memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
+            xfer->data     = g_slave_RX_buff;
             xfer->dataSize = I2C_DATA_LENGTH;
             g_SlaveRxFlag = true;
             break;
@@ -71,23 +72,23 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
                 g_SlaveRxFlag = false;
                 
                 if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
-                    pfWriteCommsCallback(&g_slave_buff[0], xfer->transferredCount);
+                    pfWriteCommsCallback(&g_slave_RX_buff[0], xfer->transferredCount);
                 }
                 if (pfWriteHIDCallback && address_match == I2C_SLAVE_HID) {
-                    pfWriteHIDCallback(&g_slave_buff[0], xfer->transferredCount);
+                    pfWriteHIDCallback(&g_slave_RX_buff[0], xfer->transferredCount);
                 }
                 if (pfWriteFlashCallback && address_match == I2C_SLAVE_FLASH) {
-                    pfWriteFlashCallback(&g_slave_buff[0], xfer->transferredCount);
+                    pfWriteFlashCallback(&g_slave_RX_buff[0], xfer->transferredCount);
                 }
             } else { 
                 if (pfReadCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
-                    pfReadCommsCallback(&g_slave_buff[0], xfer->transferredCount);
+                    pfReadCommsCallback(&g_slave_TX_buff[0], xfer->transferredCount);
                 }
                 if (pfReadHIDCallback && address_match == I2C_SLAVE_HID) {
-                    pfReadHIDCallback(&g_slave_buff[0], xfer->transferredCount);
+                    pfReadHIDCallback(&g_slave_TX_buff[0], xfer->transferredCount);
                 }
                 if (pfReadFlashCallback && address_match == I2C_SLAVE_FLASH) {
-                    pfReadFlashCallback(&g_slave_buff[0], xfer->transferredCount);
+                    pfReadFlashCallback(&g_slave_TX_buff[0], xfer->transferredCount);
                 }
             }
             break;
@@ -124,7 +125,8 @@ static void i2c_init_pins(void) {
 }
 
 static int32_t i2c_start_transfer(void) {
-    memset(&g_slave_buff, 0, sizeof(g_slave_buff));
+    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
     memset(&g_s_handle, 0, sizeof(g_s_handle));
 
     I2C_SlaveTransferCreateHandle(I2C_SLAVE_BASEADDR, &g_s_handle,
@@ -206,7 +208,7 @@ status_t i2c_RegisterReadCallback(i2cReadCallback_t readCallback, uint8_t slaveA
 }
 
 void i2c_clearBuffer (void) {
-    memset(&g_slave_buff, 0, sizeof(g_slave_buff));
+    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
 }
 
 void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
@@ -215,7 +217,7 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
     }
     
     for (uint32_t i = 0; i < size; i++) { 
-            g_slave_buff[position + i] = data[i];
+            g_slave_TX_buff[position + i] = data[i];
     }
 }
 
