@@ -76,6 +76,7 @@ uint16_t board_id_hex = 0;
 
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
+volatile bool usb_pc_connected = false;
 
 typedef enum {
     BOARD_VERSION_2_0 = 0,
@@ -330,6 +331,9 @@ void board_30ms_hook()
   static uint8_t blink_in_progress = 0;
     
     if (usb_state == USB_CONNECTED) {
+        /* Set usb_pc_connected to true to prevent entering sleep mode when host does re-enumeration.
+        *  Will be set to false when the USB cable is detached. */
+        usb_pc_connected = true;
         // configure pin as GPIO
         PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
@@ -346,7 +350,7 @@ void board_30ms_hook()
     prev_usb_state = usb_state;
     
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
-    if (usb_state == USB_DISCONNECTED && main_shutdown_state == MAIN_SHUTDOWN_WAITING 
+    if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING 
         && automatic_sleep_on == true && g_s_handle.isBusy == false) { 
         interface_power_mode = kAPP_PowerModeVlps;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
@@ -409,7 +413,7 @@ void board_30ms_hook()
           }
           break;
       case MAIN_SHUTDOWN_REQUESTED:
-          if (power_source == PWR_BATT_ONLY || usb_state == USB_DISCONNECTED) {
+          if (power_source == PWR_BATT_ONLY || (usb_state == USB_DISCONNECTED && !usb_pc_connected)) {
               main_powerdown_event();
               
               // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
@@ -449,7 +453,7 @@ void board_30ms_hook()
           }
           
           // If we are no longer PC connected, go into idle mode
-          if (usb_state == USB_DISCONNECTED) {
+          if (usb_state == USB_DISCONNECTED && !usb_pc_connected) {
               main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           break;

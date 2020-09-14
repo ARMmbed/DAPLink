@@ -25,6 +25,7 @@ static void power_enter_mode(app_power_mode_t targetPowerMode);
 
 extern volatile uint8_t wake_from_reset;
 extern volatile uint8_t wake_from_usb;
+extern volatile bool usb_pc_connected;
 
 /*******************************************************************************
  * Code
@@ -61,6 +62,7 @@ void PORTCD_IRQHandler(void)
             /* Reset USB on cable detach (VBUS falling edge) */
             USBD_Reset();
             usbd_reset_core();
+            usb_pc_connected = false;
         }
         else {
             // Cable inserted
