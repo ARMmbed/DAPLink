@@ -16,6 +16,7 @@
 #define ADC_VREFH_MUX       (kADC16_ChannelMuxA)
 
 #define ADC_MV_TO_ADC(x)    ((x) * 0xFFF / 3300)  // Convert mV to ADC value (12bit and 3.3V reference)
+#define BATT_MIN_VOLTAGE    1500
 
 void pwr_mon_bandgap_init(void);
 uint32_t pwr_mon_read_vbg(uint32_t channelGroup);
@@ -54,13 +55,13 @@ power_source_t pwr_mon_get_power_source(void) {
     
     bat_voltage_mv = pwr_mon_adc_to_mv(bat_adc);
     
-    if (usb_on == true && bat_voltage_mv < (2500)) {
+    if (usb_on == true && bat_voltage_mv < (BATT_MIN_VOLTAGE)) {
         power_source = PWR_USB_ONLY;
-    } else if (usb_on == true && bat_voltage_mv >= (2500)) {
+    } else if (usb_on == true && bat_voltage_mv >= (BATT_MIN_VOLTAGE)) {
         power_source = PWR_USB_AND_BATT;
-    } else if (usb_on == false && bat_voltage_mv >= (2500)) {
+    } else if (usb_on == false && bat_voltage_mv >= (BATT_MIN_VOLTAGE)) {
         power_source = PWR_BATT_ONLY;
-    } else if (usb_on == false && bat_voltage_mv < (2500)) {
+    } else if (usb_on == false && bat_voltage_mv < (BATT_MIN_VOLTAGE)) {
         power_source = PWR_SOURCE_NONE;
     }
 
