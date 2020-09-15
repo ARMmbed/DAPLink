@@ -9,6 +9,7 @@
 #include "fsl_port.h"
 #include "fsl_clock.h"
 
+#include "main_interface.h"
 #include "power.h"
 #include "IO_Config.h"
 #include "uart.h"
@@ -26,6 +27,7 @@ static void power_enter_mode(app_power_mode_t targetPowerMode);
 extern volatile uint8_t wake_from_reset;
 extern volatile uint8_t wake_from_usb;
 extern volatile bool usb_pc_connected;
+extern main_usb_connect_t usb_state;
 
 /*******************************************************************************
  * Code
@@ -63,6 +65,7 @@ void PORTCD_IRQHandler(void)
             USBD_Reset();
             usbd_reset_core();
             usb_pc_connected = false;
+            usb_state = USB_DISCONNECTED;
         }
         else {
             // Cable inserted
