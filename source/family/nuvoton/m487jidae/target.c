@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the m263kiaae
+ * @brief   Target information for the m487jidae
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
@@ -31,10 +31,13 @@ target_cfg_t target_device = {
     .flash_regions[0].start         = 0x00000000,
     .flash_regions[0].end           = 0x00080000,
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *)&M261_AP_512_flash,
+    .flash_regions[0].flash_algo    = (program_target_t *)&M487_AP_SP_flash,
     .flash_regions[1].start         = 0x00100000,
     .flash_regions[1].end           = 0x00101000,
-    .flash_regions[1].flash_algo    = (program_target_t *)&M261_LD_4_flash,
+    .flash_regions[1].flash_algo    = (program_target_t *)&M487_LD_flash,
+    .flash_regions[2].start         = 0x00200000,
+    .flash_regions[2].end           = 0x00201000,
+    .flash_regions[2].flash_algo    = (program_target_t *)&M487_AP_SP_flash,
     .ram_regions[0].start           = 0x20000000,
-    .ram_regions[0].end             = 0x20018000,
+    .ram_regions[0].end             = 0x20028000,
 };

@@ -1,0 +1,6 @@
+common:
+    sources:
+        board:
+            - source/board/numaker_pfm_m487km.c
+        family:
+            - source/family/nuvoton/m487jidae/target.c
