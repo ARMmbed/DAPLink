@@ -24,4 +24,8 @@ Porting DAPLink to new systems:
 * [Adding a new target device](PORT_TARGET_FAMILY.md)
 * [Adding a new HIC](PORT_HIC.md)
 
+### Troubleshooting
+
+* [micro:bit maintenence mode](TROUBLESHOOTING.md)
+
 
