@@ -100,7 +100,7 @@ typedef __PACKED_STRUCT i2cCommand_tag {
 typedef __PACKED_STRUCT flashConfig_tag {
     uint32_t        key;            // Magic key to indicate a valid record
     vfs_filename_t  fileName;
-    uint32_t        fileSizeKB;
+    uint32_t        fileSize;
     bool            fileVisible;
 } flashConfig_t;
 
