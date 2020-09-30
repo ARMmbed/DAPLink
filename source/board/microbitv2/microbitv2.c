@@ -60,10 +60,13 @@
 #define AUTOMATIC_SLEEP_DEFAULT         true
 
 #define FLASH_CONFIG_ADDRESS        (0x00020000)
+#define FLASH_CONFIG_SIZE           (0x00000400)
+#define FLASH_DAL_CFG_SIZE          (0x00000400)
+#define FLASH_INTERFACE_SIZE        (128*1024)
 #define FLASH_STORAGE_ADDRESS       (0x00020400)
-#define FLASH_CFG_FILENAME      "DATA    BIN"
-#define FLASH_CFG_FILESIZEKB    126
-#define FLASH_CFG_FILEVISIBLE   false
+#define FLASH_CFG_FILENAME          "DATA    BIN"
+#define FLASH_CFG_FILESIZE          (126*1024)
+#define FLASH_CFG_FILEVISIBLE       false
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
@@ -127,7 +130,7 @@ static bool do_remount = false;
 flashConfig_t gflashConfig = {
     .key = CFG_KEY,
     .fileName = FLASH_CFG_FILENAME,
-    .fileSizeKB = FLASH_CFG_FILESIZEKB,
+    .fileSize = FLASH_CFG_FILESIZE,
     .fileVisible = FLASH_CFG_FILEVISIBLE,
 };
 
@@ -537,7 +540,7 @@ void vfs_user_build_filesystem_hook() {
         }
     }
 
-    file_size = gflashConfig.fileSizeKB * 1024;
+    file_size = gflashConfig.fileSize;
     
     if (gflashConfig.fileVisible) {
         vfs_create_file(gflashConfig.fileName, read_file_data_txt, 0, file_size);
@@ -737,7 +740,7 @@ static void i2c_read_comms_callback(uint8_t* pData, uint8_t size) {
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }
 
-static bool file_extension_valid(const vfs_filename_t  filename)
+static bool file_extension_allowed(const vfs_filename_t  filename)
 {
     const char *valid_extensions[] = {
         "BIN",
@@ -762,74 +765,161 @@ static bool file_extension_valid(const vfs_filename_t  filename)
 static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
     i2cFlashCmd_t* pI2cCommand = (i2cFlashCmd_t*) pData;
     
-    uint32_t status;
+    uint32_t status = 0;
     cortex_int_state_t state;
     
-    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, sizeof(i2cFlashCmd_t) - 1024);
-    
-    uint32_t address = pI2cCommand->cmdData.write.addr2 << 16 |
+    uint32_t storage_address = pI2cCommand->cmdData.write.addr2 << 16 |
                             pI2cCommand->cmdData.write.addr1 << 8 |
                             pI2cCommand->cmdData.write.addr0 << 0;
-    address = address + FLASH_STORAGE_ADDRESS;
+    uint32_t address = storage_address + FLASH_STORAGE_ADDRESS;
     uint32_t length = __REV(pI2cCommand->cmdData.write.length);
     uint32_t data = (uint32_t) pI2cCommand->cmdData.write.data;
 
+    i2c_clearBuffer();
+    
     switch (pI2cCommand->cmdId) {
         case gFlashDataWrite_c:
-            state = cortex_int_get_and_disable();
-            status = ProgramPage(address, length, (uint32_t *) data);
-            cortex_int_restore(state);
-        
-            if (0 != status) {
-                i2c_clearBuffer();
+            /* Validate length field matches with I2C Write data */
+            if (size == length + 8) { 
+                /* Address range and alignment validation done inside ProgramPage() */
+                state = cortex_int_get_and_disable();
+                status = ProgramPage(address, length, (uint32_t *) data);
+                cortex_int_restore(state);
+            
+                if (0 != status) {
+                    pI2cCommand->cmdId = gFlashError_c;
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                }
+                else {
+                    /* Fill TX Buffer with received command args */
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, sizeof(i2cFlashCmd_t) - 1024);
+                    /* Fill TX Buffer with Flash Data Written */
+                    i2c_fillBuffer((uint8_t*) address, sizeof(i2cFlashCmd_t) - 1024, length);
+                }
+            } else {
                 pI2cCommand->cmdId = gFlashError_c;
                 i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
-            }
-            else {
-                i2c_fillBuffer((uint8_t*) address, sizeof(i2cFlashCmd_t) - 1024, length);
             }
         break;
         case gFlashDataRead_c: {
-            i2c_fillBuffer((uint8_t*) address, sizeof(i2cFlashCmd_t) - 1024, length);
+            /* Do address range validation */
+            if (address + length > (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE)) {
+                pI2cCommand->cmdId = gFlashError_c;
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+            } else { 
+                /* Fill TX Buffer with received command args */
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, sizeof(i2cFlashCmd_t) - 1024);
+                /* Fill TX Buffer with Flash Data Read */
+                i2c_fillBuffer((uint8_t*) address, sizeof(i2cFlashCmd_t) - 1024, length);
+            }
         }
         break;
         case gFlashDataErase_c: {
-            state = cortex_int_get_and_disable();
-            status = EraseSector(address);
-            cortex_int_restore(state);
+            uint32_t address = pI2cCommand->cmdData.erase.sAddr2 << 16 |
+                            pI2cCommand->cmdData.erase.sAddr1 << 8 |
+                            pI2cCommand->cmdData.erase.sAddr0 << 0;
+            uint32_t start_addr = address + FLASH_STORAGE_ADDRESS;
             
-            if (status != 0) {
-                i2c_clearBuffer();
+            address = pI2cCommand->cmdData.erase.eAddr2 << 16 |
+                            pI2cCommand->cmdData.erase.eAddr1 << 8 |
+                            pI2cCommand->cmdData.erase.eAddr0 << 0;
+            uint32_t end_addr = address + FLASH_STORAGE_ADDRESS;
+            
+            /* Do address range validation */
+            if (start_addr % DAPLINK_SECTOR_SIZE == 0 &&
+                end_addr % DAPLINK_SECTOR_SIZE == 0 &&
+                start_addr <= end_addr &&
+                start_addr < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE) &&
+                end_addr < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE)) {
+                for (uint32_t addr = start_addr; addr <= end_addr && status == 0; addr += DAPLINK_SECTOR_SIZE) {
+                    state = cortex_int_get_and_disable();
+                    status = EraseSector(addr);
+                    cortex_int_restore(state);
+                }
+                
+                if (status != 0) {
+                    pI2cCommand->cmdId = gFlashError_c;
+                }
+            } else {
                 pI2cCommand->cmdId = gFlashError_c;
-                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
             }
+            i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+
         }
         break;
-        case gFlashCfgFileName_c:
-            // Validate 8.3 filename 
-            if (true != filename_valid((char *) pI2cCommand->cmdData.data) || size != 12) {
-                // Send error if invalid filename
-                i2c_clearBuffer();
+        case gFlashCfgFileName_c:        
+             if (size == 1) {
+                /* If size is 1 (only cmd id), this means it's a read */
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                i2c_fillBuffer((uint8_t*) &gflashConfig.fileName, 1, sizeof(gflashConfig.fileName));
+            } else if (size == 12) {
+                /* If size is 12 (cmd id + 11B data), this means it's a write */
+                /* Validate 8.3 filename  */
+                if (filename_valid((char *) pI2cCommand->cmdData.data)) {
+                    // Check allowed extensions (.bin, .txt, .csv, .htm, .wav)
+                    if (file_extension_allowed((char *) pI2cCommand->cmdData.data)) {
+                        memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 11);
+                    }
+                    // If disallowed extension is requested, .bin will be used
+                    else { 
+                        memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 8);
+                        memcpy(&gflashConfig.fileName[8], "BIN", 3);
+                    }
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                    i2c_fillBuffer((uint8_t*) &gflashConfig.fileName, 1, sizeof(gflashConfig.fileName));
+                }
+                else { 
+                    // Send error if invalid filename
+                    pI2cCommand->cmdId = gFlashError_c;
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                }
+            } else {
                 pI2cCommand->cmdId = gFlashError_c;
                 i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
             }
-            else { 
-                // Validate allowed extensions (.bin, .txt, .csv, .htm, .wav)
-                if ( true == file_extension_valid((char *) pI2cCommand->cmdData.data)) {
-                    memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 11);
-                }
-                // If invalid extension is requested, .bin will be used
-                else { 
-                    memcpy(gflashConfig.fileName, pI2cCommand->cmdData.data, 8);
-                    memcpy(&gflashConfig.fileName[8], "BIN", 3);
-                }
-            }            
         break;
-        case gFlashCfgFileSize_c:
-            gflashConfig.fileSizeKB = pI2cCommand->cmdData.data[0];
+        case gFlashCfgFileSize_c:        
+            if (size == 1) {
+                /* If size is 1 (only cmd id), this means it's a read */
+                uint32_t tempFileSize = __REV(gflashConfig.fileSize);
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                i2c_fillBuffer((uint8_t*) &tempFileSize, 1, sizeof(gflashConfig.fileSize));
+            } else if (size == 5) {
+                /* If size is 5 (cmd id + 4B data), this means it's a write */
+                uint32_t tempFileSize = pI2cCommand->cmdData.data[0] << 24 |
+                                        pI2cCommand->cmdData.data[1] << 16 |
+                                        pI2cCommand->cmdData.data[2] << 8 |
+                                        pI2cCommand->cmdData.data[3] << 0;
+                
+                /* Validate file size */
+                if (tempFileSize <= (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE - FLASH_DAL_CFG_SIZE)) {
+                    gflashConfig.fileSize = tempFileSize;
+                    tempFileSize = __REV(gflashConfig.fileSize);
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                    i2c_fillBuffer((uint8_t*) &tempFileSize, 1, sizeof(gflashConfig.fileSize));
+                } else {
+                    pI2cCommand->cmdId = gFlashError_c;
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                }
+            } else {
+                pI2cCommand->cmdId = gFlashError_c;
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+            }
         break;
         case gFlashCfgFileVisible_c:
-            gflashConfig.fileVisible = pI2cCommand->cmdData.data[0];
+            if (size == 1) {
+                /* If size is 1 (only cmd id), this means it's a read */
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                i2c_fillBuffer((uint8_t*) &gflashConfig.fileVisible, 1, sizeof(gflashConfig.fileVisible));
+            } else if (size == 2) {
+                /* If size is 2 (cmd id + 1B data), this means it's a write */
+                gflashConfig.fileVisible = pI2cCommand->cmdData.data[0];
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                i2c_fillBuffer((uint8_t*) &gflashConfig.fileVisible, 1, sizeof(gflashConfig.fileVisible));
+            } else {
+                pI2cCommand->cmdId = gFlashError_c;
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+            }
         break;
         case gFlashCfgWrite_c:
             // Check first is config is already present in flash
@@ -840,9 +930,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                 cortex_int_restore(state);
 
                 if (status != 0) {
-                    i2c_clearBuffer();
                     pI2cCommand->cmdId = gFlashError_c;
-                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
                 }
                 else {
                     state = cortex_int_get_and_disable();
@@ -850,6 +938,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                     cortex_int_restore(state);
                 }
             }
+            i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         case gFlashCfgErase_c:
             // Erase flash sector containing flash config
@@ -858,36 +947,31 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             cortex_int_restore(state);
             
             if (status != 0) {
-                i2c_clearBuffer();
                 pI2cCommand->cmdId = gFlashError_c;
-                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
             }
             else {
                 // Return flash config (RAM) to default values
                 gflashConfig.key = CFG_KEY;
                 memcpy(gflashConfig.fileName, FLASH_CFG_FILENAME, 11);
-                gflashConfig.fileSizeKB = FLASH_CFG_FILESIZEKB;
+                gflashConfig.fileSize = FLASH_CFG_FILESIZE;
                 gflashConfig.fileVisible = FLASH_CFG_FILEVISIBLE;
             }
+            i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         case gFlashStorageSize_c:
-            i2c_clearBuffer();
-            pI2cCommand->cmdId = gFlashStorageSize_c;
-            pI2cCommand->cmdData.data[0] = 128;
+            pI2cCommand->cmdData.data[0] = (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE - FLASH_DAL_CFG_SIZE)/1024;
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 2);
         break;
         case gFlashSectorSize_c:
-            i2c_clearBuffer();
-            pI2cCommand->cmdId = gFlashSectorSize_c;
-            pI2cCommand->cmdData.data[0] = 0x04;
-            pI2cCommand->cmdData.data[1] = 0x00;
+            pI2cCommand->cmdData.data[0] = (DAPLINK_SECTOR_SIZE >> 8) & 0xFF;
+            pI2cCommand->cmdData.data[1] = DAPLINK_SECTOR_SIZE & 0xFF;
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 3);
         break;
         case gFlashRemountMSD_c:
             do_remount = true;
+            i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         default:
-            i2c_clearBuffer();
             pI2cCommand->cmdId = gFlashError_c;
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
@@ -898,13 +982,6 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
 }
 
 static void i2c_read_flash_callback(uint8_t* pData, uint8_t size) {
-    i2cCommand_t* pI2cCommand = (i2cCommand_t*) pData;
-
-    switch (pI2cCommand->cmdId) {
-        case gWriteResponse_c:
-        break;
-    }
-    
     i2c_clearBuffer();
     
     // Release COMBINED_SENSOR_INT
