@@ -40,7 +40,7 @@
 #include "virtual_fs.h"
 #include "vfs_manager.h"
 #include "cortex_m.h"
-#include "FlashPrg.h"
+#include "fsl_flash.h"
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "flash_intf.h"
@@ -90,6 +90,7 @@ extern target_cfg_t target_device_nrf52_64;
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
 extern i2c_slave_handle_t g_s_handle;
+extern flash_config_t g_flash;
 
 typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_WAITING = 0,
@@ -762,11 +763,33 @@ static bool file_extension_allowed(const vfs_filename_t  filename)
     return false;
 }
 
+static uint32_t erase_storage_sector(uint32_t adr)
+{
+    int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_apiEraseKey);
+    if (status == kStatus_Success)
+    {
+        status = FLASH_VerifyErase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_marginValueNormal);
+    }
+    return status;
+}
+
+static uint32_t program_storage_page(uint32_t adr, uint32_t sz, uint32_t *buf)
+{
+    int status = FLASH_Program(&g_flash, adr, buf, sz);
+    if (status == kStatus_Success)
+    {
+        // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
+        status = FLASH_VerifyProgram(&g_flash, adr, sz,
+                              buf, kFLASH_marginValueUser,
+                              NULL, NULL);
+    }
+    return status;
+}
+
 static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
     i2cFlashCmd_t* pI2cCommand = (i2cFlashCmd_t*) pData;
     
     uint32_t status = 0;
-    cortex_int_state_t state;
     
     uint32_t storage_address = pI2cCommand->cmdData.write.addr2 << 16 |
                             pI2cCommand->cmdData.write.addr1 << 8 |
@@ -781,10 +804,8 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
         case gFlashDataWrite_c:
             /* Validate length field matches with I2C Write data */
             if (size == length + 8) { 
-                /* Address range and alignment validation done inside ProgramPage() */
-                state = cortex_int_get_and_disable();
-                status = ProgramPage(address, length, (uint32_t *) data);
-                cortex_int_restore(state);
+                /* Address range and alignment validation done inside program_storage_page() */
+                status = program_storage_page(address, length, (uint32_t *) data);
             
                 if (0 != status) {
                     pI2cCommand->cmdId = gFlashError_c;
@@ -832,9 +853,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                 start_addr < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE) &&
                 end_addr < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE)) {
                 for (uint32_t addr = start_addr; addr <= end_addr && status == 0; addr += DAPLINK_SECTOR_SIZE) {
-                    state = cortex_int_get_and_disable();
-                    status = EraseSector(addr);
-                    cortex_int_restore(state);
+                    status = erase_storage_sector(addr);
                 }
                 
                 if (status != 0) {
@@ -925,26 +944,20 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             // Check first is config is already present in flash
             // If differences are found, erase and write new config
             if (0 != memcmp(&gflashConfig, (void *)FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t))) {
-                state = cortex_int_get_and_disable();
-                status = EraseSector(FLASH_CONFIG_ADDRESS);
-                cortex_int_restore(state);
+                status = erase_storage_sector(FLASH_CONFIG_ADDRESS);
 
                 if (status != 0) {
                     pI2cCommand->cmdId = gFlashError_c;
                 }
                 else {
-                    state = cortex_int_get_and_disable();
-                    status = ProgramPage(FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint32_t *) &gflashConfig);
-                    cortex_int_restore(state);
+                    status = program_storage_page(FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint32_t *) &gflashConfig);
                 }
             }
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         case gFlashCfgErase_c:
             // Erase flash sector containing flash config
-            state = cortex_int_get_and_disable();
-            status = EraseSector(FLASH_CONFIG_ADDRESS);
-            cortex_int_restore(state);
+            status = erase_storage_sector(FLASH_CONFIG_ADDRESS);
             
             if (status != 0) {
                 pI2cCommand->cmdId = gFlashError_c;
