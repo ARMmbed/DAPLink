@@ -3,6 +3,7 @@
 #include "fsl_clock.h"
 #include "fsl_port.h"
 #include "settings.h" // for config_get_overflow_detect
+#include "main_interface.h"
 
 /* I2C source clock */
 #define I2C_SLAVE_BASEADDR I2C1
@@ -13,21 +14,17 @@
 #define I2C_SLAVE_UPPER_ADDR_7BIT   (0x72U)
 #define I2C_DATA_LENGTH             (1024U + 8U)
 
-// We'll start with 5 RX commands
-#define RX_CMDS_LENGTH              5
-#define I2C_CMD_SLEEP               0xABU
 
 static uint8_t g_slave_TX_buff[I2C_DATA_LENGTH];
 static uint8_t g_slave_RX_buff[I2C_DATA_LENGTH];
 i2c_slave_handle_t g_s_handle;
 static volatile bool g_SlaveCompletionFlag = false;
 static volatile bool g_SlaveRxFlag = false;
-uint8_t address_match = 0;
+static uint8_t address_match = 0;
+static uint32_t transferredCount = 0;
 
 static i2cWriteCallback_t pfWriteCommsCallback = NULL;
 static i2cReadCallback_t pfReadCommsCallback = NULL;
-static i2cWriteCallback_t pfWriteHIDCallback = NULL;
-static i2cReadCallback_t pfReadHIDCallback = NULL;
 static i2cWriteCallback_t pfWriteFlashCallback = NULL;
 static i2cReadCallback_t pfReadFlashCallback = NULL;
 
@@ -46,6 +43,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             /*  Update information for transmit process */
             xfer->data     = g_slave_TX_buff;
             xfer->dataSize = I2C_DATA_LENGTH;
+            g_SlaveRxFlag = false;
             break;
 
         /*  Receive request */
@@ -65,37 +63,36 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             g_SlaveCompletionFlag = true;
             xfer->data            = NULL;
             xfer->dataSize        = 0;
+            transferredCount = xfer->transferredCount;
             
             // Default driver couldn't differentiate between RX or TX completion
             // Check flag set in kI2C_SlaveReceiveEvent
-            if (g_SlaveRxFlag) {
-                g_SlaveRxFlag = false;
-                
-                if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
-                    pfWriteCommsCallback(&g_slave_RX_buff[0], xfer->transferredCount);
-                }
-                if (pfWriteHIDCallback && address_match == I2C_SLAVE_HID) {
-                    pfWriteHIDCallback(&g_slave_RX_buff[0], xfer->transferredCount);
-                }
-                if (pfWriteFlashCallback && address_match == I2C_SLAVE_FLASH) {
-                    pfWriteFlashCallback(&g_slave_RX_buff[0], xfer->transferredCount);
-                }
-            } else { 
-                if (pfReadCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
-                    pfReadCommsCallback(&g_slave_TX_buff[0], xfer->transferredCount);
-                }
-                if (pfReadHIDCallback && address_match == I2C_SLAVE_HID) {
-                    pfReadHIDCallback(&g_slave_TX_buff[0], xfer->transferredCount);
-                }
-                if (pfReadFlashCallback && address_match == I2C_SLAVE_FLASH) {
-                    pfReadFlashCallback(&g_slave_TX_buff[0], xfer->transferredCount);
-                }
-            }
+
+            main_board_event();
             break;
 
         default:
             g_SlaveCompletionFlag = false;
             break;
+    }
+}
+
+void board_custom_event() {
+    
+    if (g_SlaveRxFlag) {
+        if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
+            pfWriteCommsCallback(&g_slave_RX_buff[0], transferredCount);
+        }
+        if (pfWriteFlashCallback && address_match == I2C_SLAVE_FLASH) {
+            pfWriteFlashCallback(&g_slave_RX_buff[0], transferredCount);
+        }
+    } else { 
+        if (pfReadCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
+            pfReadCommsCallback(&g_slave_TX_buff[0], transferredCount);
+        }
+        if (pfReadFlashCallback && address_match == I2C_SLAVE_FLASH) {
+            pfReadFlashCallback(&g_slave_TX_buff[0], transferredCount);
+        }
     }
 }
 
@@ -173,7 +170,6 @@ status_t i2c_RegisterWriteCallback(i2cWriteCallback_t writeCallback, uint8_t sla
             pfWriteCommsCallback = writeCallback;
             break;
         case I2C_SLAVE_HID:
-            pfWriteHIDCallback = writeCallback;
             break;
         case I2C_SLAVE_FLASH:
             pfWriteFlashCallback = writeCallback;
@@ -195,7 +191,6 @@ status_t i2c_RegisterReadCallback(i2cReadCallback_t readCallback, uint8_t slaveA
             pfReadCommsCallback = readCallback;
             break;
         case I2C_SLAVE_HID:
-            pfReadHIDCallback = readCallback;
             break;
         case I2C_SLAVE_FLASH:
             pfReadFlashCallback = readCallback;

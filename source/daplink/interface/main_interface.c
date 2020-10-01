@@ -73,6 +73,7 @@ void __libc_init_array (void) {}
 // Reset events
 #define FLAGS_MAIN_RESET        (1 << 2)
 // Other Events
+#define FLAGS_BOARD_EVENT       (1 << 3)
 #define FLAGS_MAIN_POWERDOWN    (1 << 4)
 #define FLAGS_MAIN_DISABLEDEBUG (1 << 5)
 #define FLAGS_MAIN_PROC_USB     (1 << 9)
@@ -172,6 +173,11 @@ __WEAK void board_handle_powerdown()
     // TODO: put the interface chip in sleep mode
 }
 
+__WEAK void board_custom_event()
+{
+
+}
+
 // Timer task, set flags every 30mS and 90mS
 void timer_task_30mS(void * arg)
 {
@@ -218,6 +224,13 @@ void main_blink_msc_led(main_led_state_t state)
 void main_powerdown_event(void)
 {
     osThreadFlagsSet(main_task_id, FLAGS_MAIN_POWERDOWN);
+    return;
+}
+
+// Set custom board event
+void main_board_event(void)
+{
+    osThreadFlagsSet(main_task_id, FLAGS_BOARD_EVENT);
     return;
 }
 
@@ -331,6 +344,7 @@ void main_task(void * arg)
                        | FLAGS_MAIN_DISABLEDEBUG    // Disable target debug
                        | FLAGS_MAIN_PROC_USB        // process usb events
                        | FLAGS_MAIN_CDC_EVENT       // cdc event
+                       | FLAGS_BOARD_EVENT          // custom board event
                        , osFlagsWaitAny
                        , osWaitForever);
 
@@ -369,6 +383,10 @@ void main_task(void * arg)
 
         if (flags & FLAGS_MAIN_CDC_EVENT) {
             cdc_process_event();
+        }
+        
+        if (flags & FLAGS_BOARD_EVENT) {
+            board_custom_event();
         }
 
         if (flags & FLAGS_MAIN_90MS) {

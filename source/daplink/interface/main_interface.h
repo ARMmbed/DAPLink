@@ -48,6 +48,7 @@ extern "C" {
 void main_reset_target(uint8_t send_unique_id);
 void main_usb_set_test_mode(bool enabled);
 void main_powerdown_event(void);
+void main_board_event(void);
 void main_disable_debug_event(void);
 void main_cdc_send_event(void);
 void main_msc_disconnect_event(void);
