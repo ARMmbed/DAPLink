@@ -80,7 +80,7 @@ uint32_t pwr_mon_vcc_mv(void) {
 void pwr_mon_bandgap_init(void) {
     pmc_bandgap_buffer_config_t pmcBandgapConfig;
     pmcBandgapConfig.enable = true;
-    pmcBandgapConfig.enableInLowPowerMode = true;
+    pmcBandgapConfig.enableInLowPowerMode = false;
     PMC_ConfigureBandgapBuffer(PMC, &pmcBandgapConfig);
 }
 
