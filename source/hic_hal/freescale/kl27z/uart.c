@@ -86,7 +86,7 @@ int32_t uart_initialize(void)
     clear_buffers();
 
     // alternate setting
-    UART_PORT->PCR[PIN_UART_RX_BIT] = PORT_PCR_MUX(PIN_UART_RX_MUX_ALT) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
+    UART_PORT->PCR[PIN_UART_RX_BIT] = PORT_PCR_MUX(PIN_UART_RX_MUX_ALT);
     UART_PORT->PCR[PIN_UART_TX_BIT] = PORT_PCR_MUX(PIN_UART_TX_MUX_ALT);
     // transmitter and receiver enabled
     UART->CTRL |= LPUART_CTRL_RE_MASK | LPUART_CTRL_TE_MASK;
