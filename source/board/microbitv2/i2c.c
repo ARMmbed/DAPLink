@@ -103,22 +103,8 @@ static void i2c_init_pins(void) {
     /* PORTC1 is configured as I2C1_SCL */
     PORT_SetPinMux(PORTC, 1U, kPORT_MuxAlt2);
 
-    PORTC->PCR[1] = ((PORTC->PCR[1] &
-                      /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-
-                     /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
-                     | (uint32_t)(PORT_PCR_PE_MASK));
-
     /* PORTC2 is configured as I2C1_SDA */
     PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt2);
-
-    PORTC->PCR[2] = ((PORTC->PCR[2] &
-                      /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-
-                     /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
-                     | (uint32_t)(PORT_PCR_PE_MASK));
 }
 
 static int32_t i2c_start_transfer(void) {

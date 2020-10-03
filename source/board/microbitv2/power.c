@@ -86,6 +86,11 @@ void power_init(void)
         PMC_ClearPeriphIOIsolationFlag(PMC);
     }
 
+    /* Allow writes to USBREGEN */
+    SIM->SOPT1CFG |= SIM_SOPT1CFG_URWE_MASK;
+    /* Disable USB voltage regulator */
+    SIM->SOPT1 &= ~SIM_SOPT1_USBREGEN_MASK;
+
     /* Enable rising edge interrupt on WAKE_ON_EDGE pin (VBUS falling edge) to detect USB detach */
     PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, kPORT_InterruptRisingEdge);
 
@@ -166,23 +171,44 @@ static void power_pre_switch_hook(smc_power_state_t originPowerState, app_power_
     }
     uart_uninitialize();
 
-    /*
-     * Set pin for current leakage.
-     * UART RX pin: Set to pinmux to disable.
-     * UART TX pin: Don't need to change.
-     */
+    /* Disable pins to lower current leakage */
     PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, kPORT_PinDisabledOrAnalog);
+    PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, kPORT_PinDisabledOrAnalog);
     PORT_SetPinMux(PIN_HID_LED_PORT, PIN_HID_LED_BIT, kPORT_PinDisabledOrAnalog);
+    
+    /* Disable I/O pin SWCLK */
+    PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = 0;
+    
+    /* Disable I/O pin SWDIO */
+    PIN_SWDIO_PORT->PCR[PIN_SWDIO_BIT] = 0;
+    
+    /* If targetMode is VLLS0, disable I2C pins */
+    if (kAPP_PowerModeVlls0 == targetMode)
+    {
+        /* PORTC1 is configured as I2C1_SCL */
+        PORT_SetPinMux(PORTC, 1U, kPORT_PinDisabledOrAnalog);
+
+        /* PORTC2 is configured as I2C1_SDA */
+        PORT_SetPinMux(PORTC, 2U, kPORT_PinDisabledOrAnalog);
+    }
 }
 
 static void power_post_switch_hook(smc_power_state_t originPowerState, app_power_mode_t targetMode)
 {
-    /*
-     * UART RX pin is set to disable for current leakage, need to re-configure pinmux.
-     * UART TX pin: Don't need to change.
-     */
+    
+    /* Configure I/O pin SWCLK */
+    PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = PORT_PCR_MUX(1)  | /* GPIO */
+                                         PORT_PCR_PE_MASK;  /* Pull (Down) enable */
+    PIN_SWCLK_GPIO->PSOR  = PIN_SWCLK;                      /* High level */
+    PIN_SWCLK_GPIO->PDDR |= PIN_SWCLK;                      /* Output */
+    /* Configure I/O pin SWDIO */
+    PIN_SWDIO_PORT->PCR[PIN_SWDIO_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
+                                         PORT_PCR_PE_MASK |  /* Pull enable */
+                                         PORT_PCR_PS_MASK;   /* Pull-up */
+    
+    /* re-configure pinmux of disabled pins */
     PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, (port_mux_t)PIN_UART_RX_MUX_ALT);
-    PORT_SetPinMux(PIN_HID_LED_PORT, PIN_HID_LED_BIT, kPORT_PinDisabledOrAnalog);
+    PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, (port_mux_t)PIN_UART_TX_MUX_ALT);
 
     uart_initialize();
 
