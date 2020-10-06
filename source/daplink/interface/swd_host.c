@@ -1051,6 +1051,19 @@ uint8_t swd_set_target_state_sw(target_state_t state)
             osDelay(2);
             swd_set_target_reset(0);
             osDelay(2);
+        
+            // Power down
+            if (!swd_write_dp(DP_CTRL_STAT, 0x0)) {
+                return 0;
+            }
+            
+            // Wait until ACK is deasserted
+            do {
+                if (!swd_read_dp(DP_CTRL_STAT, &val)) {
+                    return 0;
+                }
+            } while ((val & (CSYSPWRUPACK | CDBGPWRUPACK)) == 1);
+        
             swd_off();
             break;
 
