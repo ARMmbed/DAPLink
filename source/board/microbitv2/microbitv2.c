@@ -336,9 +336,6 @@ void board_30ms_hook()
   static uint8_t blink_in_progress = 0;
     
     if (usb_state == USB_CONNECTED) {
-        /* Set usb_pc_connected to true to prevent entering sleep mode when host does re-enumeration.
-        *  Will be set to false when the USB cable is detached. */
-        usb_pc_connected = true;
         // configure pin as GPIO
         PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
@@ -506,6 +503,13 @@ void board_handle_powerdown()
         default:
             break;
     }
+}
+
+void board_usb_sof_event(void)
+{
+    /* Set usb_pc_connected to true to prevent entering sleep mode when host does re-enumeration.
+    *  Will be set to false when the USB cable is detached. */
+    usb_pc_connected = true;
 }
 
 void vfs_user_build_filesystem_hook() {

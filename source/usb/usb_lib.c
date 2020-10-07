@@ -1068,6 +1068,8 @@ __WEAK void USBD_Reset_Event(void)
 #endif
 #endif  /* ((USBD_CDC_ACM_ENABLE)) */
 
+__WEAK void board_usb_sof_event(void) {}
+
 #if   ((USBD_HID_ENABLE) || (USBD_ADC_ENABLE) || (USBD_CDC_ACM_ENABLE) || (USBD_CLS_ENABLE))
 #ifndef __RTX
 __WEAK void USBD_SOF_Event(void)
@@ -1084,6 +1086,7 @@ __WEAK void USBD_SOF_Event(void)
 #if    (USBD_CLS_ENABLE)
     USBD_CLS_SOF_Event();
 #endif
+    board_usb_sof_event();
 }
 #endif
 #endif  /* ((USBD_HID_ENABLE) || (USBD_ADC_ENABLE) || (USBD_CDC_ACM_ENABLE) || (USBD_CLS_ENABLE)) */
