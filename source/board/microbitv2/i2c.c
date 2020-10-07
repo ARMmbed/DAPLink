@@ -136,6 +136,8 @@ int32_t i2c_initialize(void) {
     slaveConfig.enableWakeUp   = true;
 
     I2C_SlaveInit(I2C_SLAVE_BASEADDR, &slaveConfig, I2C_SLAVE_CLK_FREQ);
+    
+    NVIC_SetPriority(I2C1_IRQn, 0x00);  /* set highest priority */
 
     i2c_start_transfer();
 

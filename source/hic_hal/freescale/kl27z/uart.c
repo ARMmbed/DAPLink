@@ -92,6 +92,8 @@ int32_t uart_initialize(void)
     UART->CTRL |= LPUART_CTRL_RE_MASK | LPUART_CTRL_TE_MASK;
     // Enable receiver interrupt and RX Overrun interrupt
     UART->CTRL |= LPUART_CTRL_RIE_MASK | LPUART_CTRL_ORIE_MASK;
+    
+    NVIC_SetPriority(UART_RX_TX_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
     NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
     NVIC_EnableIRQ(UART_RX_TX_IRQn);
     return 1;

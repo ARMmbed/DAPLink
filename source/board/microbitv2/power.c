@@ -94,7 +94,9 @@ void power_init(void)
     /* Enable rising edge interrupt on WAKE_ON_EDGE pin (VBUS falling edge) to detect USB detach */
     PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, kPORT_InterruptRisingEdge);
 
+    NVIC_SetPriority(LLWU_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
     NVIC_EnableIRQ(LLWU_IRQn);
+    NVIC_SetPriority(PORTC_PORTD_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
     NVIC_EnableIRQ(PORTC_PORTD_IRQn);
 }
 
