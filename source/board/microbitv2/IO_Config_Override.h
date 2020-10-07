@@ -110,7 +110,7 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define PIN_WAKE_ON_EDGE                    (1<<PIN_WAKE_ON_EDGE_BIT)
 #define PIN_WAKE_ON_EDGE_LLWU_PIN           (8)
 #define PIN_WAKE_ON_EDGE_LLWU_WAKEUP_TYPE   kLLWU_ExternalPinFallingEdge
-#define PIN_WAKE_ON_EDGE_PORT_WAKEUP_TYPE   kPORT_InterruptFallingEdge
+#define PIN_WAKE_ON_EDGE_PORT_WAKEUP_TYPE   kPORT_InterruptEitherEdge
 
 // Power LEDs
 

@@ -28,6 +28,9 @@ static i2cReadCallback_t pfReadCommsCallback = NULL;
 static i2cWriteCallback_t pfWriteFlashCallback = NULL;
 static i2cReadCallback_t pfReadFlashCallback = NULL;
 
+extern uint8_t i2c_wake_timeout;
+extern bool i2c_allow_sleep;
+
 static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void *userData) {
     switch (xfer->event)
     {
@@ -37,6 +40,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             xfer->dataSize = 0;
             // fsl_i2c.c IRQ updated in fsl_i2c_mod.c to include I2C D register
             address_match = *(uint8_t*)userData >> 1;
+            i2c_wake_timeout = 3;   // 3 * 30ms tick = 90ms timeout
             break;
         /*  Transmit request */
         case kI2C_SlaveTransmitEvent:
@@ -67,8 +71,13 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             
             // Default driver couldn't differentiate between RX or TX completion
             // Check flag set in kI2C_SlaveReceiveEvent
-
-            main_board_event();
+            
+            // Ignore NOP cmd in I2C Write
+            if (!(g_SlaveRxFlag && g_slave_RX_buff[0] == 0x00)) {
+                main_board_event();
+            }
+        
+            i2c_allow_sleep = false;
             break;
 
         default:
@@ -76,7 +85,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             break;
     }
 }
-
+// Hook function executed in the main task
 void board_custom_event() {
     
     if (g_SlaveRxFlag) {
@@ -94,6 +103,7 @@ void board_custom_event() {
             pfReadFlashCallback(&g_slave_TX_buff[0], transferredCount);
         }
     }
+    i2c_allow_sleep = true;
 }
 
 static void i2c_init_pins(void) {
