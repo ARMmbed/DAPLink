@@ -80,6 +80,9 @@ uint16_t board_id_hex = 0;
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
+uint8_t i2c_wake_timeout = 0;
+bool i2c_allow_sleep = true;
+power_source_t power_source;
 
 typedef enum {
     BOARD_VERSION_2_0 = 0,
@@ -98,8 +101,8 @@ typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_PENDING,
     MAIN_SHUTDOWN_REACHED,
     MAIN_SHUTDOWN_REACHED_FADE,
-    MAIN_SHUTDOWN_ALERT,
     MAIN_SHUTDOWN_REQUESTED,
+    MAIN_USER_EVENT,
     MAIN_LED_BLINK_ONCE,
     MAIN_LED_BLINKING,
     MAIN_LED_FULL_BRIGHTNESS,
@@ -122,13 +125,11 @@ static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
 static bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 static bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 static app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
-static power_source_t power_source;
-static main_usb_connect_t prev_usb_state;
 // reset button state count
 static uint16_t gpio_reset_count = 0;
 static bool do_remount = false;
 
-flashConfig_t gflashConfig = {
+static flashConfig_t gflashConfig = {
     .key = CFG_KEY,
     .fileName = FLASH_CFG_FILENAME,
     .fileSize = FLASH_CFG_FILESIZE,
@@ -302,7 +303,7 @@ void handle_reset_button()
         }
         else if (gpio_reset_count >= RESET_MID_PRESS) {
             // Indicate the button has been released when shutdown is requested
-            main_shutdown_state = MAIN_SHUTDOWN_ALERT;
+            main_shutdown_state = MAIN_USER_EVENT;
         }
     } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
         // Reset button is still pressed
@@ -348,20 +349,23 @@ void board_30ms_hook()
         power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
     }
     
-    if (prev_usb_state != usb_state) {
-        power_source = pwr_mon_get_power_source();
+    if (wake_from_usb) {
+        main_shutdown_state = MAIN_USER_EVENT;
+        
+        if (usb_state == USB_DISCONNECTED) {
+            usb_state = USB_CONNECTING;
+        }
     }
-    prev_usb_state = usb_state;
+    
+    if (i2c_wake_timeout > 0) {
+        i2c_wake_timeout--;
+    }
     
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
     if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING 
-        && automatic_sleep_on == true && g_s_handle.isBusy == false) { 
+        && automatic_sleep_on == true && g_s_handle.isBusy == false && i2c_wake_timeout == 0 && i2c_allow_sleep) { 
         interface_power_mode = kAPP_PowerModeVlps;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
-    }
-    
-    if (wake_from_usb) {
-        main_shutdown_state = MAIN_SHUTDOWN_ALERT;
     }
 
     switch (main_shutdown_state) {
@@ -388,7 +392,7 @@ void board_30ms_hook()
               shutdown_led_dc--;
           }
           break;
-      case MAIN_SHUTDOWN_ALERT:
+      case MAIN_USER_EVENT:
           {
           // Release COMBINED_SENSOR_INT in case it was previously asserted
           PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
@@ -502,13 +506,6 @@ void board_handle_powerdown()
         default:
             break;
     }
-    
-    i2c_deinitialize();
-    i2c_initialize();
-    
-    usb_state = USB_CONNECTING;
-    
-    gpio_set_hid_led(HID_LED_DEF);
 }
 
 void vfs_user_build_filesystem_hook() {
@@ -711,7 +708,7 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
         break;
         default:
             i2cResponse.cmdId = gErrorResponse_c;
-            i2cResponse.cmdData.errorRspCmd.errorCode = gErrorUnknownProperty_c;
+            i2cResponse.cmdData.errorRspCmd.errorCode = gErrorUnknownCommand_c;
         break;
     }
     

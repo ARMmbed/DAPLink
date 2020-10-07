@@ -11,8 +11,10 @@
 
 #include "main_interface.h"
 #include "power.h"
+#include "pwr_mon.h"
 #include "IO_Config.h"
 #include "uart.h"
+#include "i2c.h"
 #include "rl_usb.h"
 
 /*******************************************************************************
@@ -28,6 +30,7 @@ extern volatile uint8_t wake_from_reset;
 extern volatile uint8_t wake_from_usb;
 extern volatile bool usb_pc_connected;
 extern main_usb_connect_t usb_state;
+extern power_source_t power_source;
 
 /*******************************************************************************
  * Code
@@ -59,8 +62,12 @@ void PORTCD_IRQHandler(void)
     if ((1U << PIN_WAKE_ON_EDGE_BIT) & PORT_GetPinsInterruptFlags(PIN_WAKE_ON_EDGE_PORT))
     {
         PORT_ClearPinsInterruptFlags(PIN_WAKE_ON_EDGE_PORT, (1U << PIN_WAKE_ON_EDGE_BIT));
+        
+        power_source = pwr_mon_get_power_source();
 
-        if ((PIN_WAKE_ON_EDGE_PORT->PCR[PIN_WAKE_ON_EDGE_BIT] & PORT_PCR_IRQC_MASK) == PORT_PCR_IRQC(kPORT_InterruptRisingEdge)) {
+        bool usb_on = (((PIN_WAKE_ON_EDGE_GPIO->PDIR) >> PIN_WAKE_ON_EDGE_BIT) & 0x01U) ? false : true;
+
+        if (usb_on == false) {
             /* Reset USB on cable detach (VBUS falling edge) */
             USBD_Reset();
             usbd_reset_core();
@@ -91,8 +98,8 @@ void power_init(void)
     /* Disable USB voltage regulator */
     SIM->SOPT1 &= ~SIM_SOPT1_USBREGEN_MASK;
 
-    /* Enable rising edge interrupt on WAKE_ON_EDGE pin (VBUS falling edge) to detect USB detach */
-    PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, kPORT_InterruptRisingEdge);
+    /* Enable either edge interrupt on WAKE_ON_EDGE pin to detect USB attach/detach */
+    PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, PIN_WAKE_ON_EDGE_PORT_WAKEUP_TYPE);
 
     NVIC_SetPriority(LLWU_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
     NVIC_EnableIRQ(LLWU_IRQn);
@@ -128,7 +135,6 @@ static void power_enter_mode(app_power_mode_t targetPowerMode)
 static void power_set_wakeup_config(app_power_mode_t targetMode)
 {
     PORT_SetPinInterruptConfig(PIN_SW_RESET_PORT, PIN_SW_RESET_BIT, PIN_SW_RESET_PORT_WAKEUP_TYPE);
-    PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, PIN_WAKE_ON_EDGE_PORT_WAKEUP_TYPE);
 
     /* If targetMode is VLLS/LLS, setup LLWU. */
     if ((kAPP_PowerModeWait != targetMode) && (kAPP_PowerModeVlpw != targetMode) &&
@@ -197,7 +203,6 @@ static void power_pre_switch_hook(smc_power_state_t originPowerState, app_power_
 
 static void power_post_switch_hook(smc_power_state_t originPowerState, app_power_mode_t targetMode)
 {
-    
     /* Configure I/O pin SWCLK */
     PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT] = PORT_PCR_MUX(1)  | /* GPIO */
                                          PORT_PCR_PE_MASK;  /* Pull (Down) enable */
@@ -213,7 +218,6 @@ static void power_post_switch_hook(smc_power_state_t originPowerState, app_power
     PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, (port_mux_t)PIN_UART_TX_MUX_ALT);
 
     uart_initialize();
-
-    /* Change to rising edge interrupt on WAKE_ON_EDGE pin (VBUS falling edge) to detect USB detach */
-    PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, kPORT_InterruptRisingEdge);
+    i2c_deinitialize();
+    i2c_initialize();
 }
