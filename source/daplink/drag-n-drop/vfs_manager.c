@@ -158,6 +158,7 @@ static void transfer_stream_open(stream_type_t stream, uint32_t start_sector);
 static void transfer_stream_data(uint32_t sector, const uint8_t *data, uint32_t size);
 static void transfer_update_state(error_t status);
 
+__WEAK void board_vfs_stream_closed_hook(void){}
 
 void vfs_mngr_fs_enable(bool enable)
 {
@@ -717,6 +718,9 @@ static void transfer_stream_data(uint32_t sector, const uint8_t *data, uint32_t 
         file_transfer_state.stream_open = false;
         file_transfer_state.stream_finished = true;
         file_transfer_state.stream_optional_finish = true;
+
+        // Custom board hook to notify that a stream has close (flashing finished)
+        board_vfs_stream_closed_hook();
     } else if (ERROR_SUCCESS_DONE_OR_CONTINUE == status) {
         status = ERROR_SUCCESS;
         file_transfer_state.stream_optional_finish = true;
