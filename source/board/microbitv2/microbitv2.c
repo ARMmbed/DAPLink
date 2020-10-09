@@ -52,10 +52,10 @@
 #define BRD_ID_1_UPPER_THR_V        935   // Upper threshold in mV for 100nF and 4700R
 #define BRD_ID_1_LOWER_THR_V        268   // Lower threshold in mV for 100nF and 4700R
 
-#define PWR_LED_ON_MAX_BRIGHTNESS       100 // Max LED Brightness (PC Connected)
-#define PWR_LED_INIT_FADE_BRIGHTNESS    80  // Initial fade LED Brightness
-#define PWR_LED_ON_BATT_BRIGHTNESS      40  // LED Brightness while being powered by battery
-#define PWR_LED_FADEOUT_MIN_BRIGHTNESS  30  // Minimum LED brightness when fading out
+#define PWR_LED_ON_MAX_BRIGHTNESS       255 // Max LED Brightness (PC Connected)
+#define PWR_LED_INIT_FADE_BRIGHTNESS    200 // Initial fade LED Brightness
+#define PWR_LED_ON_BATT_BRIGHTNESS      100 // LED Brightness while being powered by battery
+#define PWR_LED_FADEOUT_MIN_BRIGHTNESS  80  // Minimum LED brightness when fading out
 #define PWR_LED_SLEEP_STATE_DEFAULT     true
 #define AUTOMATIC_SLEEP_DEFAULT         true
 
@@ -120,6 +120,7 @@ static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32
 // shutdown state
 static main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 static uint8_t shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
+static uint8_t final_fade_led_dc = 0;
 static uint8_t power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
 static bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
@@ -211,10 +212,10 @@ static void set_board_id(mb_version_t board_version) {
     }
 }
 
-// Apply a gamma curve to the LED. Input brightness between 0-100
+// Apply a gamma curve to the LED. Input brightness between 0-255
 static inline uint8_t get_led_gamma(uint8_t brightness) {
     uint8_t duty_cycle;
-    duty_cycle = (brightness * brightness * brightness + 5000) / 10000;
+    duty_cycle = (brightness * brightness * brightness + 32512) / (255*255);
     return duty_cycle;
 }
 
@@ -382,11 +383,12 @@ void board_30ms_hook()
       case MAIN_SHUTDOWN_REACHED:
           // Hold LED in min brightness
           shutdown_led_dc = PWR_LED_FADEOUT_MIN_BRIGHTNESS;
+          final_fade_led_dc = get_led_gamma(PWR_LED_FADEOUT_MIN_BRIGHTNESS);
           break;
       case MAIN_SHUTDOWN_REACHED_FADE:
           // Fast fade to off
-          if (shutdown_led_dc > 0) {
-              shutdown_led_dc--;
+          if (final_fade_led_dc > 0) {
+              final_fade_led_dc--;
           }
           break;
       case MAIN_USER_EVENT:
@@ -450,10 +452,10 @@ void board_30ms_hook()
           if (shutdown_led_dc < 10) {
               shutdown_led_dc++;
           } else if (shutdown_led_dc == 10) {
-              shutdown_led_dc = 100;
-          } else if (shutdown_led_dc <= 90) {
+              shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
+          } else if (shutdown_led_dc <= (PWR_LED_ON_MAX_BRIGHTNESS - 10)) {
               shutdown_led_dc = 0;
-          } else if (shutdown_led_dc > 90) {
+          } else if (shutdown_led_dc > (PWR_LED_ON_MAX_BRIGHTNESS - 10)) {
               shutdown_led_dc--;
           }
           
@@ -471,7 +473,7 @@ void board_30ms_hook()
             }
           } else {
             blink_in_progress = 10;
-            shutdown_led_dc = 100;
+            shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
           }
           
           if (blink_in_progress == 0) { 
@@ -481,8 +483,14 @@ void board_30ms_hook()
       default:
           break;
     }
-    uint8_t gamma_led_dc = get_led_gamma(shutdown_led_dc);
-    flexio_pwm_set_dutycycle(gamma_led_dc);
+
+    // Use gamma curve except in final fade
+    if (main_shutdown_state != MAIN_SHUTDOWN_REACHED_FADE) {
+        uint8_t gamma_led_dc = get_led_gamma(shutdown_led_dc);
+        flexio_pwm_set_dutycycle(gamma_led_dc);
+    } else {
+        flexio_pwm_set_dutycycle(final_fade_led_dc);
+    }
     
     // Remount if requested.
     if (do_remount) {
