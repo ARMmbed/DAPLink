@@ -275,58 +275,58 @@ void handle_reset_button()
     // button state
     static uint8_t reset_pressed = 0;
 
-    // handle reset button without eventing
-    if (!reset_pressed && (gpio_get_reset_btn_fwrd() || wake_from_reset)) {
 #ifdef DRAG_N_DROP_SUPPORT
-        if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
+    if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
 #endif
-        {
+    {
+        // handle reset button without eventing
+        if (!reset_pressed && (gpio_get_reset_btn_fwrd() || wake_from_reset)) {
             // Reset button pressed
-            target_set_state(RESET_HOLD);
+            target_set_state(RESET_PROGRAM);
             reset_pressed = 1;
             gpio_reset_count = 0;
             wake_from_reset = 0;
             main_shutdown_state = MAIN_LED_FULL_BRIGHTNESS;
-        }
-    } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
-        // Reset button released
-        target_set_state(RESET_RUN);
-        reset_pressed = 0;
-        power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
+        } else if (reset_pressed && !gpio_get_reset_btn_fwrd()) {
+            // Reset button released
+            target_set_state(RESET_RUN);
+            reset_pressed = 0;
+            power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 
-        if (gpio_reset_count <= RESET_SHORT_PRESS) {
-            main_shutdown_state = MAIN_LED_BLINK_ONCE;
-        }
-        else if (gpio_reset_count < RESET_MID_PRESS) {
-            // Indicate button has been released to stop to cancel the shutdown
-            main_shutdown_state = MAIN_LED_BLINK_ONCE;
-        }
-        else if (gpio_reset_count >= RESET_MID_PRESS) {
-            // Indicate the button has been released when shutdown is requested
-            main_shutdown_state = MAIN_USER_EVENT;
-        }
-    } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
-        // Reset button is still pressed
-        if (gpio_reset_count <= RESET_SHORT_PRESS) {
-            // Enter the shutdown pending state to begin LED dimming
-            main_shutdown_state = MAIN_SHUTDOWN_PENDING;
-        }
-        else if (gpio_reset_count < RESET_MID_PRESS) {
-            // Enter the shutdown pending state to begin LED dimming
-            main_shutdown_state = MAIN_SHUTDOWN_PENDING;
-        }
-        else if (gpio_reset_count < RESET_LONG_PRESS) {
-            // Enter the shutdown reached state to blink LED
-            main_shutdown_state = MAIN_SHUTDOWN_REACHED;
-        }
-        else if (gpio_reset_count >= RESET_LONG_PRESS) {
-            // Enter the shutdown reached state to blink LED
-            main_shutdown_state = MAIN_SHUTDOWN_REACHED_FADE;
-        }
+            if (gpio_reset_count <= RESET_SHORT_PRESS) {
+                main_shutdown_state = MAIN_LED_BLINK_ONCE;
+            }
+            else if (gpio_reset_count < RESET_MID_PRESS) {
+                // Indicate button has been released to stop to cancel the shutdown
+                main_shutdown_state = MAIN_LED_BLINK_ONCE;
+            }
+            else if (gpio_reset_count >= RESET_MID_PRESS) {
+                // Indicate the button has been released when shutdown is requested
+                main_shutdown_state = MAIN_USER_EVENT;
+            }
+        } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
+            // Reset button is still pressed
+            if (gpio_reset_count <= RESET_SHORT_PRESS) {
+                // Enter the shutdown pending state to begin LED dimming
+                main_shutdown_state = MAIN_SHUTDOWN_PENDING;
+            }
+            else if (gpio_reset_count < RESET_MID_PRESS) {
+                // Enter the shutdown pending state to begin LED dimming
+                main_shutdown_state = MAIN_SHUTDOWN_PENDING;
+            }
+            else if (gpio_reset_count < RESET_LONG_PRESS) {
+                // Enter the shutdown reached state to blink LED
+                main_shutdown_state = MAIN_SHUTDOWN_REACHED;
+            }
+            else if (gpio_reset_count >= RESET_LONG_PRESS) {
+                // Enter the shutdown reached state to blink LED
+                main_shutdown_state = MAIN_SHUTDOWN_REACHED_FADE;
+            }
 
-        // Avoid overflow, stop counting after longest event
-        if (gpio_reset_count <= RESET_MAX_LENGTH_PRESS) {
-            gpio_reset_count++;
+            // Avoid overflow, stop counting after longest event
+            if (gpio_reset_count <= RESET_MAX_LENGTH_PRESS) {
+                gpio_reset_count++;
+            }
         }
     }
 }
