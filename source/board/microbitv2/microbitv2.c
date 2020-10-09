@@ -512,6 +512,18 @@ void board_usb_sof_event(void)
     usb_pc_connected = true;
 }
 
+void board_vfs_stream_closed_hook()
+{
+    // Return LED to default ON state
+    main_shutdown_state = MAIN_SHUTDOWN_WAITING;
+    
+    // Clear any pending I2C response
+    i2c_clearBuffer();
+    
+    // Release COMBINED_SENSOR_INT
+    PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
+}
+
 void vfs_user_build_filesystem_hook() {
     uint32_t file_size;
     error_t status;
