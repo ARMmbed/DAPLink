@@ -68,9 +68,9 @@ void flexio_pwm_set_dutycycle(uint8_t duty)
     flexio_timer_config_t fxioTimerConfig;
 
     /* Check parameter */
-    if (duty > 99)
+    if (duty >= 255)
     {
-        duty = 99;
+        duty = 254;
         PIN_RED_LED_GPIO->PDDR |= PIN_RED_LED;
         PIN_RED_LED_GPIO->PSOR = PIN_RED_LED;
         PORT_SetPinMux(PIN_RED_LED_PORT, PIN_RED_LED_BIT, kPORT_MuxAsGpio);
@@ -107,8 +107,8 @@ void flexio_pwm_set_dutycycle(uint8_t duty)
     /* sum = DEMO_FLEXIO_CLOCK_FREQUENCY / freq_H */
     sum = (DEMO_FLEXIO_CLOCK_FREQUENCY * 2 / freq_Hz + 1) / 2;
     /* Calculate the nearest integer value for lowerValue, the high period of the pwm output */
-    /* lowerValue = sum * duty / 100 */
-    lowerValue = (sum * duty / 50 + 1) / 2;
+    /* lowerValue = sum * duty / 255 */
+    lowerValue = (sum * duty / 127 + 1) / 2;
     /* Calculate upper value, the low period of the pwm output */
     upperValue                   = sum - lowerValue;
     fxioTimerConfig.timerCompare = ((upperValue - 1) << 8U) | (lowerValue - 1);
