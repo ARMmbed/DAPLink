@@ -101,6 +101,9 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         // uart read
         int32_t read_len = 62;
         read_len = uart_read_data(response + 1, read_len);
+        if (read_len) {
+            main_blink_cdc_led(MAIN_LED_FLASH);
+        }
         response[0] = read_len;
         // increment request and response count
         num += (read_len + 1);
@@ -111,6 +114,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         int32_t write_len = *request;
         request++;
         uart_write_data((uint8_t *)request, write_len);
+        main_blink_cdc_led(MAIN_LED_FLASH);
         *response = 1;
         num += ((write_len + 1) << 16) | 1;
         break;
@@ -156,6 +160,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         // write to mass storage device
         uint32_t write_len = *request;
         request++;
+        main_blink_msc_led(MAIN_LED_FLASH);
         *response = stream_write((uint8_t *)request, write_len);
         num += ((write_len + 1) << 16) | 1;
         break;
