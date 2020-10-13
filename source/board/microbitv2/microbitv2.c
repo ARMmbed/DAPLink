@@ -638,9 +638,11 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &power_source, sizeof(power_source));
                 break;
                 case gPowerConsumption_c: {
-                    uint32_t power_consumption = 1;
-                    i2cResponse.cmdData.readRspCmd.dataSize = sizeof(power_consumption);
-                    memcpy(&i2cResponse.cmdData.readRspCmd.data, &power_consumption, sizeof(power_consumption));
+                    uint32_t vin_voltage_uv = pwr_mon_get_vin_mv() * 1000;
+                    uint32_t vbat_voltage_uv = pwr_mon_get_vbat_mv() * 1000;
+                    i2cResponse.cmdData.readRspCmd.dataSize = sizeof(vin_voltage_uv) + sizeof(vbat_voltage_uv);
+                    memcpy(&i2cResponse.cmdData.readRspCmd.data[0], &vbat_voltage_uv, sizeof(vbat_voltage_uv));
+                    memcpy(&i2cResponse.cmdData.readRspCmd.data[sizeof(vbat_voltage_uv)], &vin_voltage_uv, sizeof(vin_voltage_uv));
                 }
                 break;
                 case gUSBEnumerationState_c:

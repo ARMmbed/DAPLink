@@ -21,7 +21,8 @@ typedef enum {
 
 void pwr_mon_init(void);
 power_source_t pwr_mon_get_power_source(void);
-uint32_t pwr_mon_vcc_mv(void);
+uint32_t pwr_mon_get_vin_mv(void);
+uint32_t pwr_mon_get_vbat_mv(void);
 
 
 #ifdef __cplusplus

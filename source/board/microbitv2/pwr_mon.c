@@ -19,8 +19,8 @@
 #define BATT_MIN_VOLTAGE    1500
 
 void pwr_mon_bandgap_init(void);
-uint32_t pwr_mon_read_vbg(uint32_t channelGroup);
-uint32_t pwr_mon_adc_to_mv(uint32_t raw_adc);
+static uint32_t pwr_mon_read_vbg(uint32_t channelGroup);
+static uint32_t pwr_mon_adc_to_mv(uint32_t raw_adc);
 
 void pwr_mon_init(void)
 {
@@ -40,21 +40,14 @@ void pwr_mon_init(void)
 power_source_t pwr_mon_get_power_source(void) {
     power_source_t power_source = PWR_SOURCE_NONE;
     uint32_t bat_voltage_mv = 0;
-    // Detect if device is battery powered
-    GPIO_PinWrite(PIN_RUN_VBAT_SENSE_GPIO, PIN_RUN_VBAT_SENSE_BIT, 1);
-    // Add a ~3ms delay to allow the 100nF capacitors to charge to about 3*RC.
-    // 3 clock cycles per loop at -O2 ARMCC optimization
-    for (uint32_t count = 48000; count > 0UL; count--); 
-    uint32_t bat_adc = adc_read_channel(0, PIN_VMON_BAT_ADC_CH, PIN_VMON_BAT_ADC_MUX);
-    GPIO_PinWrite(PIN_RUN_VBAT_SENSE_GPIO, PIN_RUN_VBAT_SENSE_BIT, 0);
-    
+
+    // Read WAKE_ON_EDGE pin for detecting if board is USB powered
     bool usb_on = (((PIN_WAKE_ON_EDGE_GPIO->PDIR) >> PIN_WAKE_ON_EDGE_BIT) & 0x01U) ? false : true;
     
-    // Compensate for voltage divider with ratio of 11
-    bat_adc = bat_adc * 11;
+    // Read battery voltage
+    bat_voltage_mv = pwr_mon_get_vbat_mv();
     
-    bat_voltage_mv = pwr_mon_adc_to_mv(bat_adc);
-    
+    // Get power source based on battery and USB
     if (usb_on == true && bat_voltage_mv < (BATT_MIN_VOLTAGE)) {
         power_source = PWR_USB_ONLY;
     } else if (usb_on == true && bat_voltage_mv >= (BATT_MIN_VOLTAGE)) {
@@ -68,8 +61,24 @@ power_source_t pwr_mon_get_power_source(void) {
     return power_source;
 }
 
-uint32_t pwr_mon_vcc_mv(void) {
-    // ADC read the Vref (same as Vcc) and the Vbg 1V internal reference
+uint32_t pwr_mon_get_vbat_mv(void) {
+    // Enable voltage divider to take measurement
+    GPIO_PinWrite(PIN_RUN_VBAT_SENSE_GPIO, PIN_RUN_VBAT_SENSE_BIT, 1);
+    // Add a ~3ms delay to allow the 100nF capacitors to charge to about 3*RC.
+    // 3 clock cycles per loop at -O2 ARMCC optimization
+    for (uint32_t count = 48000; count > 0UL; count--); 
+    uint32_t bat_adc = adc_read_channel(0, PIN_VMON_BAT_ADC_CH, PIN_VMON_BAT_ADC_MUX);
+    // Disable voltage divider
+    GPIO_PinWrite(PIN_RUN_VBAT_SENSE_GPIO, PIN_RUN_VBAT_SENSE_BIT, 0);
+    
+    // Compensate for voltage divider with ratio of 11
+    bat_adc = bat_adc * 11;
+    
+    return pwr_mon_adc_to_mv(bat_adc);
+}
+
+uint32_t pwr_mon_get_vin_mv(void) {
+    // ADC read the Vref (same as Vdda) and the Vbg 1V internal reference
     uint32_t vref_high = adc_read_channel(0, ADC_VREFH_CHANNEL, ADC_VREFH_MUX);
     uint32_t ref_volt = pwr_mon_read_vbg(0);
 
@@ -77,14 +86,14 @@ uint32_t pwr_mon_vcc_mv(void) {
     return vref_high * 1000 / ref_volt;
 }
 
-void pwr_mon_bandgap_init(void) {
+static void pwr_mon_bandgap_init(void) {
     pmc_bandgap_buffer_config_t pmcBandgapConfig;
     pmcBandgapConfig.enable = true;
     pmcBandgapConfig.enableInLowPowerMode = false;
     PMC_ConfigureBandgapBuffer(PMC, &pmcBandgapConfig);
 }
 
-uint32_t pwr_mon_read_vbg(uint32_t channelGroup) {
+static uint32_t pwr_mon_read_vbg(uint32_t channelGroup) {
     // Ensure the Vbg is enabled from first use only
     static bool bandgap_enabled = false;
     if (!bandgap_enabled) {
@@ -94,7 +103,7 @@ uint32_t pwr_mon_read_vbg(uint32_t channelGroup) {
     return adc_read_channel(channelGroup, ADC_VBG_CHANNEL, ADC_VBG_MUX);
 }
 
-uint32_t pwr_mon_adc_to_mv(uint32_t raw_adc)
+static uint32_t pwr_mon_adc_to_mv(uint32_t raw_adc)
 {
     // ADC read Vbg, a 1V internal reference
     uint32_t ref_volt_read = pwr_mon_read_vbg(0);
