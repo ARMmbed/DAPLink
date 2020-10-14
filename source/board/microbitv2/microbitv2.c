@@ -128,6 +128,8 @@ static bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 static app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
 // reset button state count
 static uint16_t gpio_reset_count = 0;
+// button state
+static uint8_t reset_pressed = 0;
 static bool do_remount = false;
 
 static flashConfig_t gflashConfig = {
@@ -273,9 +275,6 @@ static void prerun_board_config(void)
 // Handle the reset button behavior, this function is called in the main task every 30ms
 void handle_reset_button()
 {
-    // button state
-    static uint8_t reset_pressed = 0;
-
 #ifdef DRAG_N_DROP_SUPPORT
     if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
 #endif
@@ -522,7 +521,9 @@ void board_usb_sof_event(void)
 
 void board_vfs_stream_closed_hook()
 {
-    // Return LED to default ON state
+    // Return reset button and LED to default state
+    reset_pressed = 0;
+    power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
     main_shutdown_state = MAIN_SHUTDOWN_WAITING;
     
     // Clear any pending I2C response
