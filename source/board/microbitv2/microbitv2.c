@@ -61,7 +61,6 @@
 
 #define FLASH_CONFIG_ADDRESS        (0x00020000)
 #define FLASH_CONFIG_SIZE           (0x00000400)
-#define FLASH_DAL_CFG_SIZE          (0x00000400)
 #define FLASH_INTERFACE_SIZE        (128*1024)
 #define FLASH_STORAGE_ADDRESS       (0x00020400)
 #define FLASH_CFG_FILENAME          "DATA    BIN"
@@ -533,6 +532,16 @@ void board_vfs_stream_closed_hook()
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }
 
+bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
+{
+    if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
+        // Erase last 128KB flash block
+        FLASH_Erase(&g_flash, FLASH_CONFIG_ADDRESS, g_flash.PFlashTotalSize / g_flash.PFlashBlockCount, kFLASH_apiEraseKey);
+    }
+    
+    return false;
+}
+
 void vfs_user_build_filesystem_hook() {
     uint32_t file_size;
     error_t status;
@@ -935,7 +944,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                                         pI2cCommand->cmdData.data[3] << 0;
                 
                 /* Validate file size */
-                if (tempFileSize <= (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE - FLASH_DAL_CFG_SIZE)) {
+                if (tempFileSize <= (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE)) {
                     gflashConfig.fileSize = tempFileSize;
                     tempFileSize = __REV(gflashConfig.fileSize);
                     i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
@@ -996,7 +1005,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         case gFlashStorageSize_c:
-            pI2cCommand->cmdData.data[0] = (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE - FLASH_DAL_CFG_SIZE)/1024;
+            pI2cCommand->cmdData.data[0] = (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE)/1024;
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 2);
         break;
         case gFlashSectorSize_c:
