@@ -40,6 +40,7 @@ void pwr_mon_init(void)
 power_source_t pwr_mon_get_power_source(void) {
     power_source_t power_source = PWR_SOURCE_NONE;
     uint32_t bat_voltage_mv = 0;
+    uint32_t vin_voltage_mv = 0;
 
     // Read WAKE_ON_EDGE pin for detecting if board is USB powered
     bool usb_on = (((PIN_WAKE_ON_EDGE_GPIO->PDIR) >> PIN_WAKE_ON_EDGE_BIT) & 0x01U) ? false : true;
@@ -47,15 +48,21 @@ power_source_t pwr_mon_get_power_source(void) {
     // Read battery voltage
     bat_voltage_mv = pwr_mon_get_vbat_mv();
     
+    // Read Vin voltage
+    vin_voltage_mv = pwr_mon_get_vin_mv();
+    
     // Get power source based on battery and USB
     if (usb_on == true && bat_voltage_mv < (BATT_MIN_VOLTAGE)) {
         power_source = PWR_USB_ONLY;
     } else if (usb_on == true && bat_voltage_mv >= (BATT_MIN_VOLTAGE)) {
         power_source = PWR_USB_AND_BATT;
     } else if (usb_on == false && bat_voltage_mv >= (BATT_MIN_VOLTAGE)) {
-        power_source = PWR_BATT_ONLY;
-    } else if (usb_on == false && bat_voltage_mv < (BATT_MIN_VOLTAGE)) {
-        power_source = PWR_SOURCE_NONE;
+        // If battery voltage is greater than Vin, it means the battery is used
+        if ( bat_voltage_mv + 200 > vin_voltage_mv ) {
+            power_source = PWR_BATT_ONLY;
+        } else { 
+            power_source = PWR_SOURCE_NONE;
+        }
     }
 
     return power_source;
