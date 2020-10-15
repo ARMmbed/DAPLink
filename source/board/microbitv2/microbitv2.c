@@ -582,7 +582,10 @@ void vfs_user_build_filesystem_hook() {
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    memcpy(data, (uint8_t *) (FLASH_STORAGE_ADDRESS + VFS_SECTOR_SIZE * sector_offset), VFS_SECTOR_SIZE);
+    // Ignore out of bound reads
+    if ( (FLASH_STORAGE_ADDRESS + VFS_SECTOR_SIZE * sector_offset) < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE) ) {
+        memcpy(data, (uint8_t *) (FLASH_STORAGE_ADDRESS + VFS_SECTOR_SIZE * sector_offset), VFS_SECTOR_SIZE);
+    }
 
     return VFS_SECTOR_SIZE;
 }
