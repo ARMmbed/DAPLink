@@ -644,6 +644,7 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                 }
                 break;
                 case gPowerState_c:
+                    power_source = pwr_mon_get_power_source();
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(power_source);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &power_source, sizeof(power_source));
                 break;
