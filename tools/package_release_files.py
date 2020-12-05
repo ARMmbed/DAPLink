@@ -84,7 +84,7 @@ def package_release_files(source, dest, version, toolchain, release_info, suppor
                 for fw_name_key in InstructionsText:
                     if fw_name_key in dest_name.lower():
                         fw_instuction = InstructionsText[fw_name_key]
-                        break;
+                        break
 
                 if extension == 'bin':
                     update_yml_entries.append({target_name:TargetList([
@@ -92,7 +92,7 @@ def package_release_files(source, dest, version, toolchain, release_info, suppor
                         ('product_code', "'" + format(product_code, '04x') + "'"),
                         ('fw_name', host_mcu + "_" + base_name + dest_offset_str),
                         ('instructions', fw_instuction)
-                        ])});
+                        ])})
 
     make_bin_zip(output_dir, build_number + '_release_package_' + subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode().strip() + '.zip')
 

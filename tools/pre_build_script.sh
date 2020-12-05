@@ -21,7 +21,7 @@ export TOOLS=../../../tools
 export DIR=../../../source/daplink
 #  Create dsion_git_tmpl.txt ${DIR}\version_git.h
 
-python --version 2> nul
+# python --version
 
 #  Run python script to delete default version_git.h and create the real one
 python ${TOOLS}/pre_build_script.py
