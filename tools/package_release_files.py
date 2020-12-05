@@ -57,10 +57,14 @@ def package_release_files(source, dest, version, toolchain, release_info, suppor
         legacy_str = "_legacy" if legacy else ""
         source_offset_str = "_0x%04x" % offset if legacy else ""
         source_name = prj_name + "_crc" + legacy_str + source_offset_str + "." + extension
-        source_dir_part = os.path.join(proj_dir, prj_name, toolchain).upper()
+        # The build path hierarchy is different between mbedcli and progen
+        if toolchain.startswith("projectfiles"):
+            source_dir_part = os.path.join(toolchain, prj_name, proj_dir)
+        else:
+            source_dir_part = os.path.join(proj_dir, prj_name, toolchain).upper()
         source_path = os.path.join(source_dir_part, source_name)
         if not os.path.isfile(source_path):
-            print("Warning %s not added to release" % prj_name)
+            print("Warning %s not added to release (expected file '%s')" % (prj_name, source_path))
             continue
         items = prj_name.split('_')  # "k20dx_frdmk22f_if" -> ("k20dx", "frdmk22f", "if")
         assert items[-1] == "if", "Unexpected string: %s" % items[2]
