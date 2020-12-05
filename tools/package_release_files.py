@@ -22,21 +22,8 @@ import shutil
 import argparse
 import yaml
 import subprocess
-
-self_path = os.path.abspath(__file__)
-tools_dir = os.path.dirname(self_path)
-daplink_dir = os.path.dirname(tools_dir)
-test_dir = os.path.join(daplink_dir, "test")
-sys.path.append(test_dir)
-
-import info
-
-from make_update_yml import DefaultList
-from make_update_yml import TargetList
-from make_update_yml import InstructionsText
-from make_update_yml import make_update_yml_file
-
 import zipfile
+from make_update_yml import DefaultList, TargetList, InstructionsText, make_update_yml_file
 
 def make_bin_zip(dir, name):
     working_dir = os.getcwd()
@@ -48,8 +35,7 @@ def make_bin_zip(dir, name):
     #go back
     os.chdir(working_dir)
 
-def package_release_files(source, dest, version, toolchain):
-
+def package_release_files(source, dest, version, toolchain, release_info, supported_configurations):
     proj_dir = source
     output_dir = dest
     build_number = "%04i" % version
@@ -67,7 +53,7 @@ def package_release_files(source, dest, version, toolchain):
 
     os.mkdir(output_dir)
 
-    for prj_name, legacy, offset, extension in info.PROJECT_RELEASE_INFO:
+    for prj_name, legacy, offset, extension in release_info:
         legacy_str = "_legacy" if legacy else ""
         source_offset_str = "_0x%04x" % offset if legacy else ""
         source_name = prj_name + "_crc" + legacy_str + source_offset_str + "." + extension
@@ -86,7 +72,7 @@ def package_release_files(source, dest, version, toolchain):
         shutil.copyfile(source_path, dest_path)
 
         product_code = 'NOT SUPPORTED'
-        for board_id, family_id, fimware, bootloader, target in info.SUPPORTED_CONFIGURATIONS:
+        for board_id, family_id, fimware, bootloader, target in supported_configurations:
             if fimware == prj_name:
                 product_code = board_id
                 if target is not None:
@@ -113,6 +99,14 @@ def package_release_files(source, dest, version, toolchain):
     make_update_yml_file(os.path.join(output_dir, 'update.yml'), update_yml_entries, explicit_start=True)
 
 if __name__ == "__main__":
+    self_path = os.path.abspath(__file__)
+    tools_dir = os.path.dirname(self_path)
+    daplink_dir = os.path.dirname(tools_dir)
+    test_dir = os.path.join(daplink_dir, "test")
+    sys.path.append(test_dir)
+
+    import info
+
     parser = argparse.ArgumentParser(description='Package a release for distribution')
     parser.add_argument('source', help='Release directory to grab files from')
     parser.add_argument('dest', help='Directory to create and place files in')
@@ -120,6 +114,7 @@ if __name__ == "__main__":
     parser.add_argument('--toolchain', type=str, default='', help='Toolchain directory if present')
     args = parser.parse_args()
 
-    print("args",args.source,args.dest,args.version,args.toolchain)
+    print("args", args.source, args.dest, args.version, args.toolchain)
     
-    package_release_files(args.source,args.dest,args.version,args.toolchain)
+    package_release_files(args.source, args.dest, args.version, args.toolchain,
+                          info.PROJECT_RELEASE_INFO, info.SUPPORTED_CONFIGURATIONS)
