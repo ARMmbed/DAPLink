@@ -46,7 +46,6 @@ static uint32_t hic_id = DAPLINK_HIC_ID;
 
 static uint32_t crc_bootloader;
 static uint32_t crc_interface;
-static uint32_t crc_config_admin;
 static uint32_t crc_config_user;
 
 // Strings
@@ -274,11 +273,6 @@ uint32_t info_get_crc_interface()
     return crc_interface;
 }
 
-uint32_t info_get_crc_config_admin()
-{
-    return crc_config_admin;
-}
-
 uint32_t info_get_crc_config_user()
 {
     return crc_config_user;
@@ -288,7 +282,6 @@ void info_crc_compute()
 {
     crc_bootloader = 0;
     crc_interface = 0;
-    crc_config_admin = 0;
     crc_config_user = 0;
 
     // Compute the CRCs of regions that exist
@@ -300,11 +293,6 @@ void info_crc_compute()
     if ((DAPLINK_ROM_IF_SIZE > 0)
             && flash_is_readable(DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4)) {
         crc_interface = crc32((void *)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
-    }
-
-    if ((DAPLINK_ROM_CONFIG_ADMIN_SIZE > 0)
-            && flash_is_readable(DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE)) {
-        crc_config_admin = crc32((void *)DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE);
     }
 
     if ((DAPLINK_ROM_CONFIG_USER_SIZE > 0)
