@@ -17,13 +17,21 @@
 ## limitations under the License.
 ##
 
-export PROJECT_DIR=build
-export TOOLS=../../../tools
+PROJECT_DIR=build
+TOOLS=../../../tools
+PROJECT_NAME=$(basename $PWD)
 
-python --version 2> /dev/null
+INFILE=${PROJECT_DIR}/${PROJECT_NAME}.hex
+OUTBASE=${PROJECT_DIR}/${PROJECT_NAME}_crc
+CRCBIN=${OUTBASE}.bin
 
 fromelf --bin $PROJECT_DIR/*.axf -o $PROJECT_DIR/firmware.bin
 
 fromelf --i32 $PROJECT_DIR/*.axf -o $PROJECT_DIR/firmware.hex
 
-python ${TOOLS}/post_compute_crc.py ${PROJECT_DIR}/firmware.hex ${PROJECT_DIR}/firmware_crc
+# Only execute the post build script if the input is newer than output, or the
+# output doesn't exist.
+if [[ "$INFILE" -nt "$CRCBIN" ]]; then
+    python "${TOOLS}/post_build_script.py" "$INFILE" "$OUTBASE"
+fi
+
