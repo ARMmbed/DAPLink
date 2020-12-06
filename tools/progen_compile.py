@@ -99,37 +99,43 @@ args = parser.parse_args()
 
 toolchain = "make_gcc_arm" if args.toolchain in ['GCC'] else 'make_armcc'
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
-# logging_level = logging.DEBUG
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
 logger = logging.getLogger('progen_build')
 
 if args.release:
-    sys.path.append(os.path.join(daplink_dir, "test"))
-    from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
+    if len(args.projects) > 0:
+        logger.warning("A release can should only be done on all packages")
     version_git_dir = os.path.join(daplink_dir, "source", "daplink")
     generate_version_file(version_git_dir)
 
 projects = args.projects if len(args.projects) > 0 else project_list
-print(projects)
 build_projects(PROJECTS_YAML, projects, toolchain, args.build, args.clean)
 
-if args.release:
-    id_map = {}
-    for board_id, family_id, firmware, bootloader, target in SUPPORTED_CONFIGURATIONS:
-        if firmware in id_map:
-            id_map[firmware].append((hex(board_id), hex(family_id)))
-        else:
-            id_map[firmware] = [(hex(board_id), hex(family_id))]
-    for project in projects:
-        output = "projectfiles/%s/%s/build/%s" % (toolchain, project, project)
-        hex = output + ".hex"
-        crc = output + "_crc"
+sys.path.append(os.path.join(daplink_dir, "test"))
+from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
+id_map = {}
+for board_id, family_id, firmware, bootloader, target in SUPPORTED_CONFIGURATIONS:
+    if firmware in id_map:
+        id_map[firmware].append((hex(board_id), hex(family_id)))
+    else:
+        id_map[firmware] = [(hex(board_id), hex(family_id))]
+for project in projects:
+    output = "projectfiles/%s/%s/build/%s" % (toolchain, project, project)
+    hex = output + ".hex"
+    crc = output + "_crc"
+
+    # TODO: I think this part is already done as part of the progen build with the call
+    # to the post_build_script_gcc.sh. Remove the next block if confirmed.
+    # We use the same check as the shell wrapper guard to run it only if necessary.
+    if os.path.getmtime(hex) >= os.path.getmtime(crc + '.bin'):
+        logger.debug("Generating %s" % (crc + '.bin'))
         post_build_script(hex, crc)
-        # do a build with board_id and family_id
-        if project in id_map:
-            for (boardid, familyid) in id_map[project]:
-                print(project, boardid, familyid)
-                post_build_script(hex, crc, boardid, familyid)
+
+    # Do a build with board_id and family_id
+    if project in id_map:
+        for (boardid, familyid) in id_map[project]:
+            logger.debug("Building image for %s (%s, %s)" % (project, boardid, familyid))
+            post_build_script(hex, crc, boardid, familyid)
 
 if args.release:
     release_version = 0
