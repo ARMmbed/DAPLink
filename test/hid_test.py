@@ -24,7 +24,7 @@ import math
 
 from pyocd.core.helpers import ConnectHelper
 from pyocd.core.memory_map import MemoryType
-from pyocd.flash.loader import FileProgrammer
+from pyocd.flash.file_programmer import FileProgrammer
 from pyocd.utility.conversion import float32_to_u32
 
 # TODO - make a dedicated test
@@ -43,7 +43,7 @@ def test_hid(workspace, parent_test):
         target = mbed_board.target
         binary_file = workspace.target.bin_path
 
-        ram_region = target.memory_map.get_first_region_of_type(MemoryType.RAM)
+        ram_region = target.memory_map.get_default_region_of_type(MemoryType.RAM)
         rom_region = target.memory_map.get_boot_memory()
 
         addr = ram_region.start + 4
@@ -74,11 +74,16 @@ def test_hid(workspace, parent_test):
         psp = target.read_core_register('psp')
         test_info.info("MSP = 0x%08x; PSP = 0x%08x" % (msp, psp))
 
-        control = target.read_core_register('control')
-        faultmask = target.read_core_register('faultmask')
-        basepri = target.read_core_register('basepri')
-        primask = target.read_core_register('primask')
-        test_info.info("CONTROL = 0x%02x; FAULTMASK = 0x%02x; BASEPRI = 0x%02x; PRIMASK = 0x%02x" % (control, faultmask, basepri, primask))
+        if 'faultmask' in target.core_registers.by_name:
+            control = target.read_core_register('control')
+            faultmask = target.read_core_register('faultmask')
+            basepri = target.read_core_register('basepri')
+            primask = target.read_core_register('primask')
+            test_info.info("CONTROL = 0x%02x; FAULTMASK = 0x%02x; BASEPRI = 0x%02x; PRIMASK = 0x%02x" % (control, faultmask, basepri, primask))
+        else:
+            control = target.read_core_register('control')
+            primask = target.read_core_register('primask')
+            test_info.info("CONTROL = 0x%02x; PRIMASK = 0x%02x" % (control, primask))
 
         target.write_core_register('primask', 1)
         newPrimask = target.read_core_register('primask')
@@ -87,7 +92,7 @@ def test_hid(workspace, parent_test):
         newPrimask = target.read_core_register('primask')
         test_info.info("Restored PRIMASK = 0x%02x" % newPrimask)
 
-        if target.has_fpu:
+        if target.selected_core.has_fpu:
             s0 = target.read_core_register('s0')
             test_info.info("S0 = %g (0x%08x)" % (s0, float32_to_u32(s0)))
             target.write_core_register('s0', math.pi)
@@ -178,40 +183,6 @@ def test_hid(workspace, parent_test):
         for i in range(5):
             target.step()
             test_info.info("pc: 0x%X" % target.read_core_register('pc'))
-
-        test_info.info("\r\n\r\n------ TEST PROGRAM/ERASE PAGE ------")
-        # Fill 3 pages with 0x55
-        page_size = flash.get_page_info(addr_flash).size
-        fill = [0x55] * page_size
-        for i in range(0, 3):
-            address = addr_flash + page_size * i
-            # Test only supports a location with 3 aligned
-            # pages of the same size
-            current_page_size = flash.get_page_info(addr_flash).size
-            assert page_size == current_page_size
-            assert address % current_page_size == 0
-
-            flash.init(flash.Operation.ERASE)
-            flash.erase_page(address)
-            flash.uninit()
-
-            flash.init(flash.Operation.PROGRAM)
-            flash.program_page(address, fill)
-            flash.uninit()
-        # Erase the middle page
-        flash.init(flash.Operation.ERASE)
-        flash.erase_page(addr_flash + page_size)
-        flash.cleanup()
-        # Verify the 1st and 3rd page were not erased, and that the 2nd page is fully erased
-        data = target.read_memory_block8(addr_flash, page_size * 3)
-        expected = fill + [0xFF] * page_size + fill
-        if data == expected:
-            test_info.info("TEST PASSED")
-        else:
-            test_info.failure("TEST FAILED")
-
-        test_info.info("\r\n\r\n----- Restoring image -----")
-        FileProgrammer(session).program(binary_file, base_address=addr_bin)
 
         target.reset()
         test_info.info("HID test complete")

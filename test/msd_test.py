@@ -411,7 +411,7 @@ def test_mass_storage(workspace, parent_test):
         test = MassStorageTester(board, test_info, "Sector Erase")
         with ConnectHelper.session_with_chosen_probe(unique_id=board.get_unique_id(), open_session=False) as session:
             memory_map = session.target.memory_map
-        flash_regions = memory_map.get_regions_of_type(MemoryType.FLASH)
+        flash_regions = list(memory_map.iter_matching_regions(type=MemoryType.FLASH))
 
         max_address = intel_hex.maxaddr()
         # Create an object. We'll add the addresses of unused even blocks to it first, then unused odd blocks for each region
