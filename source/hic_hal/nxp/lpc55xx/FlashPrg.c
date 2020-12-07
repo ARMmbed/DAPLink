@@ -3,7 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2020, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,33 +19,15 @@
  * limitations under the License.
  */
 
+#include <string.h>
 #include "FlashOS.h"        // FlashOS Structures
-#include "fsl_flash.h"
-#include "string.h"
+#include "fsl_iap.h"
 #include "cortex_m.h"
 
 flash_config_t g_flash; //!< Storage for flash driver.
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
-    cortex_int_state_t state = cortex_int_get_and_disable();
-#if defined (WDOG)
-    /* Write 0xC520 to the unlock register */
-    WDOG->UNLOCK = 0xC520;
-    /* Followed by 0xD928 to complete the unlock */
-    WDOG->UNLOCK = 0xD928;
-    /* Clear the WDOGEN bit to disable the watchdog */
-    WDOG->STCTRLH &= ~WDOG_STCTRLH_WDOGEN_MASK;
-#else
-#ifdef LPC55_FIXME
-    /* FIXME: Commenting out next line which seems to disable the watchdog?
-      source/hic_hal/freescale/kl26z/MKL26Z4/system_MKL26Z4.c:SystemInit.c
-    */
-    SIM->COPC = 0x00u;
-#endif
-#endif
-    cortex_int_restore(state);
-
     return (FLASH_Init(&g_flash) != kStatus_Success);
 }
 
@@ -105,14 +87,8 @@ uint32_t UnInit(uint32_t fnc)
  */
 uint32_t EraseChip(void)
 {
-    cortex_int_state_t state = cortex_int_get_and_disable();
-    int status = FLASH_EraseAll(&g_flash, kFLASH_apiEraseKey);
-    if (status == kStatus_Success)
-    {
-        status = FLASH_VerifyEraseAll(&g_flash, kFLASH_marginValueNormal);
-    }
-    cortex_int_restore(state);
-    return status;
+    // Not used in DAPLink.
+    return 1;
 }
 
 /*
@@ -123,10 +99,10 @@ uint32_t EraseChip(void)
 uint32_t EraseSector(uint32_t adr)
 {
     cortex_int_state_t state = cortex_int_get_and_disable();
-    int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_apiEraseKey);
+    int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_ApiEraseKey);
     if (status == kStatus_Success)
     {
-        status = FLASH_VerifyErase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_marginValueNormal);
+        status = FLASH_VerifyErase(&g_flash, adr, g_flash.PFlashSectorSize);
     }
     cortex_int_restore(state);
     return status;
@@ -142,13 +118,10 @@ uint32_t EraseSector(uint32_t adr)
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
     cortex_int_state_t state = cortex_int_get_and_disable();
-    int status = FLASH_Program(&g_flash, adr, buf, sz);
+    int status = FLASH_Program(&g_flash, adr, (uint8_t *)buf, sz);
     if (status == kStatus_Success)
     {
-        // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
-        status = FLASH_VerifyProgram(&g_flash, adr, sz,
-                              buf, kFLASH_marginValueUser,
-                              NULL, NULL);
+        status = FLASH_VerifyProgram(&g_flash, adr, sz, (uint8_t *)buf, NULL, NULL);
     }
     cortex_int_restore(state);
     return status;
