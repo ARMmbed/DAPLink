@@ -56,6 +56,9 @@
 #define DAPLINK_SECTOR_SIZE             0x00002000
 #define DAPLINK_MIN_WRITE_SIZE          0x00000400
 
+#define DAPLINK_RAM_APP2_START          0x10080000
+#define DAPLINK_RAM_APP2_SIZE           0x0000A000
+
 /* Current build */
 
 #if defined(DAPLINK_BL)
