@@ -50,7 +50,7 @@ def load_project_list(path):
     return project_list
 
 
-def build_projects(file, projects, tool, build=True, clean=False, parallel=False, ignore_failures=False):
+def build_projects(file, projects, tool, build=True, clean=False, parallel=False, ignore_failures=False, verbose=False):
     generator = generate.Generator(file)
     cores = 1
     if parallel:
@@ -76,7 +76,7 @@ def build_projects(file, projects, tool, build=True, clean=False, parallel=False
                 logger.error("Error generating project %s", project.name)
                 failed = True
             if build and not failed:
-                if project.build(tool, jobs=cores) == -1:
+                if project.build(tool, jobs=cores, verbose=verbose) == -1:
                     logger.error("Error building project %s", project.name)
                     failed = True
             if failed and not ignore_failures:
@@ -121,7 +121,8 @@ if args.release:
     generate_version_file(version_git_dir)
 
 projects = args.projects if len(args.projects) > 0 else project_list
-build_projects(PROJECTS_YAML, projects, toolchain, args.build, args.clean, args.parallel, args.ignore_failures)
+build_projects(PROJECTS_YAML, projects, toolchain, args.build, args.clean,
+               args.parallel, args.ignore_failures, args.verbosity > 0)
 
 sys.path.append(os.path.join(daplink_dir, "test"))
 from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
