@@ -50,14 +50,16 @@ def load_project_list(path):
     return project_list
 
 
-def build_projects(file, projects, tool, build=True, clean=False, ignore_errors=True):
+def build_projects(file, projects, tool, build=True, clean=False, parallel=False, ignore_failures=False):
     generator = generate.Generator(file)
-    cores = 4
-    try:
-        import multiprocessing
-        cores = multiprocessing.cpu_count()
-    except:
-        pass
+    cores = 1
+    if parallel:
+        cores = 4
+        try:
+            import multiprocessing
+            cores = multiprocessing.cpu_count()
+        except:
+            pass
 
     for p_name in projects:
         for project in generator.generate(p_name):
@@ -77,7 +79,7 @@ def build_projects(file, projects, tool, build=True, clean=False, ignore_errors=
                 if project.build(tool, jobs=cores) == -1:
                     logger.error("Error building project %s", project.name)
                     failed = True
-            if failed and not ignore_errors:
+            if failed and not ignore_failures:
                 return -1
 
 project_list = load_project_list(PROJECTS_YAML)
@@ -88,16 +90,26 @@ parser.add_argument('projects', help='Selectively compile only the firmware spec
                     nargs='*', type=str, default=[])
 parser.add_argument('--release', dest='release', action='store_true', help='Create a release with the yaml version file')
 parser.add_argument('--release-folder', type=str, default='firmware', help='Directory to create and place files in')
-parser.add_argument('--toolchain', type=str, default='GCC', help='Toolchain ("GCC" or "ARM", default: %(default)s',
-                    choices=['GCC', 'ARM'])
+parser.add_argument('--toolchain', type=str, default='GCC', help='Toolchain ("GCC", "ARMCC", "ARMCLANG", default: %(default)s',
+                    choices=['GCC', 'ARMCC', "ARMCLANG"])
 parser.add_argument('--clean', dest='clean', action='store_true', help='Rebuild or delete build folder before compile')
+parser.add_argument('--ignore-failures', dest='ignore_failures', action='store_true', help='Continue build even in case of failures')
+parser.add_argument('--parallel', dest='parallel', action='store_true', help='Build with multiple compilations in parallel')
 parser.add_argument('-v', dest='verbosity', action='count', help='Increase verbosity (can be specify multiple times)', default=0)
 parser.set_defaults(build=True)
 parser.set_defaults(clean=False)
+parser.set_defaults(ignore_failures=False)
+parser.set_defaults(parallel=False)
 parser.set_defaults(release=False)
 args = parser.parse_args()
 
-toolchain = "make_gcc_arm" if args.toolchain in ['GCC'] else 'make_armcc'
+toolchains = {
+    "GCC": "make_gcc_arm",
+    "ARMCC": "make_armcc",
+    "ARMCLANG": "make_armclang",
+}
+
+toolchain = toolchains[args.toolchain] if args.toolchain in toolchains.keys() else 'make_gcc_arm'
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
 logger = logging.getLogger('progen_build')
@@ -109,7 +121,7 @@ if args.release:
     generate_version_file(version_git_dir)
 
 projects = args.projects if len(args.projects) > 0 else project_list
-build_projects(PROJECTS_YAML, projects, toolchain, args.build, args.clean)
+build_projects(PROJECTS_YAML, projects, toolchain, args.build, args.clean, args.parallel, args.ignore_failures)
 
 sys.path.append(os.path.join(daplink_dir, "test"))
 from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
