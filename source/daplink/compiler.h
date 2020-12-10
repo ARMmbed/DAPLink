@@ -44,11 +44,15 @@ extern "C" {
 #define NO_OPTIMIZE_PRE _Pragma("optimize = none")
 #define NO_OPTIMIZE_INLINE
 #define NO_OPTIMIZE_POST
-#elif (defined(__CC_ARM))
+#elif (defined(__CC_ARM)) /* ARMCC */
 #define NO_OPTIMIZE_PRE _Pragma("push") \
                         _Pragma("O0")
 #define NO_OPTIMIZE_INLINE
 #define NO_OPTIMIZE_POST _Pragma("pop")
+#elif (defined(__ARMCC_VERSION)) /* ARMCLANG */
+#define NO_OPTIMIZE_PRE
+#define NO_OPTIMIZE_INLINE
+#define NO_OPTIMIZE_POST
 #elif (defined(__GNUC__))
 #define NO_OPTIMIZE_PRE
 #define NO_OPTIMIZE_INLINE __attribute__((optimize("O0")))

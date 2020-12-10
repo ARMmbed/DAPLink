@@ -48,15 +48,15 @@ __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
     uint32_t z = 0;
-    asm volatile (  "msr    control, %[z]   \n\t"
-                    "isb                    \n\t"
-                    "mov    sp, %[r0_sp]    \n\t"
-                    "bx     %[r1_pc]"
-                    :
-                    :   [z] "l" (z),
-                        [r0_sp] "l" (r0_sp),
-                        [r1_pc] "l" (r1_pc)
-                    );
+    __ASM volatile (  "msr    control, %[z]   \n\t"
+                      "isb                    \n\t"
+                      "mov    sp, %[r0_sp]    \n\t"
+                      "bx     %[r1_pc]"
+                      :
+                      :   [z] "l" (z),
+                          [r0_sp] "l" (r0_sp),
+                          [r1_pc] "l" (r1_pc)
+                  );
 }
 #else
 #error "Unknown compiler!"

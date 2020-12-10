@@ -25,8 +25,10 @@
 #include "settings.h"
 #include "compiler.h"
 
+#if defined(__CC_ARM)
 #pragma thumb
 #pragma O3
+#endif
 
 
 /*------------------------------------------------------------------------------
