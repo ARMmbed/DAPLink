@@ -28,6 +28,10 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/maxim/max32620/armcc
+    make_armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/maxim/max32620/armcc
     make_gcc_arm:
         includes:
             - source/hic_hal/maxim/max32620/gcc

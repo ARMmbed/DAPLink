@@ -10,6 +10,7 @@ module:
     tools: &module_tools
         - records/tools/make_gcc_arm.yaml
         - records/tools/make_armcc.yaml
+        - records/tools/make_armclang.yaml
         - records/tools/version.yaml
     bl: &module_bl
         - *module_tools

@@ -52,6 +52,17 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k26f/armcc
+    make_armclang:
+        misc:
+            c_flags:
+                - -mno-unaligned-access
+            cxx_flags:
+                - -mno-unaligned-access
+            asm_flags:
+                - -Wa,armasm,--no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k26f/armcc
     make_gcc_arm:
         linker_file:
             - source/hic_hal/freescale/kinetis.ld

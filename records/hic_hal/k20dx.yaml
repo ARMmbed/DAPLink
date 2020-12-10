@@ -39,6 +39,10 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k20dx/armcc
+    make_armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/freescale/k20dx/armcc
     make_gcc_arm:
         linker_file:
             - source/hic_hal/freescale/kinetis.ld

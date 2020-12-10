@@ -25,3 +25,6 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-DDAPLINK_BL"
+    make_armclang:
+        linker_file:
+            - source/daplink/daplink.ac6.sct
