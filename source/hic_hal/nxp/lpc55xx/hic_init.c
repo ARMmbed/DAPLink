@@ -25,6 +25,9 @@
 #include "fsl_clock.h"
 #include "usb_phy.h"
 #include "util.h"
+#include "flash_hal.h"
+
+#define FLASH_CMD_BLANK_CHECK (0x5)
 
 static void busy_wait(uint32_t cycles)
 {
@@ -160,4 +163,36 @@ void hic_power_target(void)
         busy_wait(5115 * 50);
 #endif
     }
+}
+
+// Override the default weak implementation.
+bool flash_is_readable(uint32_t addr, uint32_t length)
+{
+    // Make sure the core clock is less than 100 MHz, or flash commands won't work.
+    util_assert(SystemCoreClock > 100000000);
+
+    // Return true if the address is within internal flash and the flash sector is not erased.
+    if (!(addr >= DAPLINK_ROM_START && addr < (DAPLINK_ROM_START + DAPLINK_ROM_SIZE))) {
+        return false;
+    }
+
+    // Use the blank check command directly. The address is right-shifted to convert to
+    // a flash word (16 bytes) address.
+    FLASH->STARTA = addr >> 4;
+    FLASH->STOPA = (addr + length - 1) >> 4;
+    FLASH->INT_CLR_STATUS = FLASH_INT_CLR_STATUS_FAIL_MASK
+                            | FLASH_INT_CLR_STATUS_ERR_MASK
+                            | FLASH_INT_CLR_STATUS_DONE_MASK
+                            | FLASH_INT_CLR_STATUS_ECC_ERR_MASK;
+    FLASH->CMD = FLASH_CMD_BLANK_CHECK;
+
+    // Wait until command is complete.
+    while (((FLASH->INT_STATUS) & FLASH_INT_STATUS_DONE_MASK) == 0) {
+    }
+
+    // Return true (is readable) if the blank check failed, meaning the page is programmed.
+    // Return false (not readable) for erased page or failure.
+    return ((FLASH->INT_STATUS & (FLASH_INT_STATUS_FAIL_MASK
+                                | FLASH_INT_STATUS_ERR_MASK
+                                | FLASH_INT_STATUS_ECC_ERR_MASK)) == FLASH_INT_STATUS_FAIL_MASK);
 }

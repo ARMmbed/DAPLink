@@ -24,9 +24,13 @@
 #include "compiler.h"
 #include "target_board.h"
 #include "target_family.h"
+#include "validation.h"
+#include "flash_hal.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == (DAPLINK_ROM_START + KB(64)));
+
+static uint8_t lpc55xx_bootloader_validate_nvic(const uint8_t *buf);
 
 /**
 * List of start and size for each size of flash sector
@@ -51,8 +55,16 @@ target_cfg_t target_device = {
     /* .flash_algo not needed for bootloader */
 };
 
-//bootloader has no family
-const target_family_descriptor_t *g_target_family = NULL;
+/*!
+ * Special target family for the LPC55xx bootloader. It's only purpose is to override the
+ * validate_bin_nvic() routine to prevent bus faults from attempting to read erased flash.
+ */
+static const target_family_descriptor_t g_lpc55xx_bootloader_family = {
+    .family_id = 0,
+    .validate_bin_nvic = lpc55xx_bootloader_validate_nvic,
+};
+
+const target_family_descriptor_t *g_target_family = &g_lpc55xx_bootloader_family;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
@@ -62,3 +74,27 @@ const board_info_t g_board_info = {
     .daplink_target_url = "https://mbed.com/daplink",
     .target_cfg = &target_device,
 };
+
+//! @brief Customized NVIC validator.
+//!
+//! This NVIC validator first checks if the passed-in address points to the internal flash
+//! memory. If so, an initial check is made to see if the flash is erased. If it is, then we
+//! can't read from it or the flash controller will generate a bus fault. If the address is
+//! either outside of flash, such as testing a new interface image in RAM, or the flash
+//! sector is programmed, then the standard NVIC validator is called.
+uint8_t lpc55xx_bootloader_validate_nvic(const uint8_t *buf)
+{
+    uint32_t addr = (uint32_t)buf;
+
+    // If the address within internal flash?
+    if (addr >= DAPLINK_ROM_START && addr < (DAPLINK_ROM_START + DAPLINK_ROM_SIZE)) {
+        // If the flash sector is erased, then report that the NVIC is invalid. Otherwise
+        // continue below and perform the usual NVIC validation test.
+        if (!flash_is_readable(addr, 32)) {
+            return 0;
+        }
+    }
+
+    // Call original implementation.
+    return validate_bin_nvic_base(buf);
+}
