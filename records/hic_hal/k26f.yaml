@@ -14,7 +14,6 @@ common:
         - source/hic_hal/freescale/k26f
         - source/hic_hal/freescale/k26f/MK26F18
         - source/hic_hal/freescale/iap
-        - projectfiles/uvision/k26f_bl/build
     sources:
         hic_hal:
             - source/hic_hal/freescale/k26f
@@ -34,6 +33,8 @@ tool_specific:
                 - --no_unaligned_access
             asm_flags:
                 - --no_unaligned_access
+        includes:
+            - projectfiles/uvision/k26f_bl/build
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k26f/armcc

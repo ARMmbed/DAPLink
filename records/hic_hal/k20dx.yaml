@@ -14,7 +14,6 @@ common:
     includes:
         - source/hic_hal/freescale/k20dx
         - source/hic_hal/freescale/k20dx/MK20D5
-        - projectfiles/uvision/k20dx_bl/build
     sources:
         hic_hal:
             - source/hic_hal/freescale
@@ -28,6 +27,8 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\k20dx"
+        includes:
+            - projectfiles/uvision/k20dx_bl/build
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k20dx/armcc
