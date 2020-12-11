@@ -28,6 +28,7 @@
 #include "daplink.h"
 #include "settings.h"
 #include "target_board.h"
+#include "flash_hal.h"
 
 static char hex_to_ascii(uint8_t x)
 {
@@ -209,40 +210,46 @@ void info_set_uuid_target(uint32_t *uuid_data)
 
 bool info_get_bootloader_present(void)
 {
-    bool present = true;
-
     if (0 == DAPLINK_ROM_BL_SIZE) {
-        present = false;
+        return false;
+    }
+
+    // Check whether we can read the bootloader info.
+    if (!flash_is_readable((uint32_t)info_bl, sizeof(daplink_info_t))) {
+        return false;
     }
 
     if (DAPLINK_BUILD_KEY_BL != info_bl->build_key) {
-        present = false;
+        return false;
     }
 
     if (DAPLINK_HIC_ID != info_bl->hic_id) {
-        present = false;
+        return false;
     }
 
-    return present;
+    return true;
 }
 
 bool info_get_interface_present(void)
 {
-    bool present = true;
-
     if (0 == DAPLINK_ROM_IF_SIZE) {
-        present = false;
+        return false;
+    }
+
+    // Check whether we can read the interface info.
+    if (!flash_is_readable((uint32_t)info_if, sizeof(daplink_info_t))) {
+        return false;
     }
 
     if (DAPLINK_BUILD_KEY_IF != info_if->build_key) {
-        present = false;
+        return false;
     }
 
     if (DAPLINK_HIC_ID != info_if->hic_id) {
-        present = false;
+        return false;
     }
 
-    return present;
+    return true;
 }
 
 bool info_get_config_admin_present(void)
@@ -285,19 +292,23 @@ void info_crc_compute()
     crc_config_user = 0;
 
     // Compute the CRCs of regions that exist
-    if (DAPLINK_ROM_BL_SIZE > 0) {
+    if ((DAPLINK_ROM_BL_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4)) {
         crc_bootloader = crc32((void *)DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4);
     }
 
-    if (DAPLINK_ROM_IF_SIZE > 0) {
+    if ((DAPLINK_ROM_IF_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4)) {
         crc_interface = crc32((void *)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
     }
 
-    if (DAPLINK_ROM_CONFIG_ADMIN_SIZE > 0) {
+    if ((DAPLINK_ROM_CONFIG_ADMIN_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE)) {
         crc_config_admin = crc32((void *)DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE);
     }
 
-    if (DAPLINK_ROM_CONFIG_USER_SIZE > 0) {
+    if ((DAPLINK_ROM_CONFIG_USER_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE)) {
         crc_config_user = crc32((void *)DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE);
     }
 }

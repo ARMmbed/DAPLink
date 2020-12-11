@@ -3,7 +3,7 @@
  * @brief   Implementation of settings.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -25,7 +25,7 @@
 #include "target_config.h"
 #include "compiler.h"
 #include "cortex_m.h"
-#include "FlashPrg.h"
+#include "flash_hal.h"
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
@@ -76,12 +76,14 @@ static const cfg_setting_t config_default = {
     .overflow_detect = 1,
 };
 
-// Buffer for data to flash
-static uint32_t write_buffer[SECTOR_BUFFER_SIZE / 4];
-
 // Check if the configuration in flash needs to be updated
 static bool config_needs_update()
 {
+    // Update if cfgrom cannot be read (needs to be programmed).
+    if (!flash_is_readable((uint32_t)&config_rom, sizeof(config_rom))) {
+        return true;
+    }
+
     // Update if the key is invalid
     if (CFG_KEY != config_rom.key) {
         return true;
@@ -103,23 +105,20 @@ static void program_cfg(cfg_setting_t *new_cfg)
 {
     uint32_t status;
     uint32_t addr;
-    cortex_int_state_t state;
-    addr = (uint32_t)&config_rom;
-    state = cortex_int_get_and_disable();
-    status = EraseSector(addr);
-    cortex_int_restore(state);
 
+    addr = (uint32_t)&config_rom;
+    status = flash_erase_sector(addr);
     if (status != 0) {
         return;
     }
 
+    // Buffer for data to flash
+    uint8_t write_buffer[SECTOR_BUFFER_SIZE] __ALIGNED(4);
+
     memset(write_buffer, 0xFF, sizeof(write_buffer));
     memcpy(write_buffer, new_cfg, sizeof(cfg_setting_t));
-    state = cortex_int_get_and_disable();
-    status = ProgramPage(addr, sizeof(write_buffer), write_buffer);
-    cortex_int_restore(state);
-
-    if (0 != status) {
+    status = flash_program_page(addr, sizeof(write_buffer), write_buffer);
+    if (status != 0) {
         return;
     }
 }
@@ -127,13 +126,16 @@ static void program_cfg(cfg_setting_t *new_cfg)
 void config_rom_init()
 {
     Init(0, 0, 0);
+
     // Fill in the ram copy with the defaults
     memcpy(&config_rom_copy, &config_default, sizeof(config_rom_copy));
 
-    // Read settings from flash if the key is valid
-    if (CFG_KEY == config_rom.key) {
-        uint32_t size = MIN(config_rom.size, sizeof(config_rom));
-        memcpy(&config_rom_copy, (void *)&config_rom, size);
+    if (flash_is_readable((uint32_t)&config_rom, sizeof(config_rom))) {
+        // Read settings from flash if the key is valid
+        if (CFG_KEY == config_rom.key) {
+            uint32_t size = MIN(config_rom.size, sizeof(config_rom));
+            memcpy(&config_rom_copy, (void *)&config_rom, size);
+        }
     }
 
     // Fill in special values
