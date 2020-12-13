@@ -32,20 +32,48 @@
 #define __NO_USB_LIB_C
 #include "usb_config.c"
 
-#define BUF_ACTIVE         (1UL << 31)
-#define EP_DISABLED        (1UL << 30)
-#define EP_STALL           (1UL << 29)
-#define TOOGLE_RESET       (1UL << 28)
-#define EP_TYPE            (1UL << 26)
+// Warning: this driver does *not* correctly support either isochronous endpoints or
+//          interrupt endpoints in rate feedback mode!
 
-#define N_BYTES(n)         ((n & 0x3FF) << 16)
-#define BUF_ADDR(addr)     (((addr) >> 6) & 0xFFFF)
+#define EP_BUF_ACTIVE       (1UL << 31)
+#define EP_DISABLED         (1UL << 30)
+#define EP_STALL            (1UL << 29)
+#define EP_TOGGLE_RESET     (1UL << 28)
+#define EP_RF_TV            (1UL << 27)
+#define EP_TYPE             (1UL << 26) // 0=generic, 1=periodic
+#define EP_NBYTES_MASK      (0x03fff800)
+#define EP_NBYTES_SHIFT     (11)
+#define EP_BUF_OFFSET_MASK  (0x000003ff)
+#define EP_BUF_OFFSET_SHIFT (0)
+
+// DEVCMDSTAT Speed field values.
+#define DEVCMDSTAT_SPEED_FULL (0x1)
+#define DEVCMDSTAT_SPEED_HIGH (0x2)
+
+// Alignment and rounding size for endpoint buffers.
+#define MIN_BUF_SIZE        (64)
+
+#define N_BYTES(n)         (((n) << EP_NBYTES_SHIFT) & EP_NBYTES_MASK)
+#define BUF_ADDR(s_next_ep_buf_addr)     (((s_next_ep_buf_addr) >> 6) & EP_BUF_OFFSET_MASK)
 
 #define EP_OUT_IDX(EPNum)  (EPNum * 2    )
 #define EP_IN_IDX(EPNum)   (EPNum * 2 + 1)
 
-#define EP_LIST_BASE       0x40100000
+#define EP_LIST_BASE       (0x40100000)
 #define EP_BUF_BASE        (uint32_t)(EP_LIST_BASE + 0x100)
+
+#define EP0_OUT_BUF_OFFSET      (0)
+#define EP0_SETUP_BUF_OFFSET    (1)
+#define EP0_IN_BUF_OFFSET       (2)
+
+#define EP0_OUT_BUF_BASE        (EP0_OUT_BUF_OFFSET * USBD_MAX_PACKET0 + EP_BUF_BASE)
+#define EP0_SETUP_BUF_BASE      (EP0_SETUP_BUF_OFFSET * USBD_MAX_PACKET0 + EP_BUF_BASE)
+#define EP0_IN_BUF_BASE         (EP0_IN_BUF_OFFSET * USBD_MAX_PACKET0 + EP_BUF_BASE)
+
+//! @brief Base address of the EP1 OUT buffer.
+//!
+//! The EP1 OUT buffer starts after the EP0 OUT buffer, SETUP buffer, and EP0 IN buffer.
+#define EP1_BUF_BASE (3 * USBD_MAX_PACKET0 + EP_BUF_BASE)
 
 typedef struct BUF_INFO {
     uint32_t  buf_len;
@@ -61,8 +89,8 @@ volatile uint32_t EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((section(".usbram
 #error "Unsupported compiler!"
 #endif
 
-static uint32_t addr = 3 * 64 + EP_BUF_BASE;
-static uint32_t ctrl_out_next = 0;
+static uint32_t s_next_ep_buf_addr = EP1_BUF_BASE;
+static uint32_t s_read_ctrl_out_next = 0;
 
 /*
  *  Get EP CmdStat pointer
@@ -113,50 +141,13 @@ void __SVC_1(int ena)
 
 void USBD_Init(void)
 {
-    // Enable VBUS pin.
-    CLOCK_EnableClock(kCLOCK_Iocon);
+    // Init clocks, HS PHY, and VBUS pin.
+    hic_enable_usb_clocks();
 
-    const uint32_t port0_pin22_config = (/* Pin is configured as USB0_VBUS */
-                                         IOCON_PIO_FUNC7 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN22 (coords: 78) is configured as USB0_VBUS */
-    IOCON_PinMuxSet(IOCON, 0U, 22U, port0_pin22_config);
-
-    // Switch IP to device mode. First enable the USB1 host clock.
-    CLOCK_EnableClock(kCLOCK_Usbh1);
-    // Put PHY powerdown under software control
-    USBHSH->PORTMODE = USBHSH_PORTMODE_SW_PDCOM_MASK;
-    // According to reference mannual, device mode setting has to be set by access usb host register
-    USBHSH->PORTMODE |= USBHSH_PORTMODE_DEV_ENABLE_MASK;
-    // Disable usb1 host clock
-    CLOCK_DisableClock(kCLOCK_Usbh1);
-
-    // Enable clocks.
-    CLOCK_EnableUsbhs0PhyPllClock(kCLOCK_UsbPhySrcExt, BOARD_XTAL0_CLK_HZ);
-    CLOCK_EnableUsbhs0DeviceClock(kCLOCK_UsbSrcUnused, 0U);
-
-    // Init PHY.
-    USB_EhciPhyInit(kUSB_ControllerLpcIp3511Hs0, BOARD_XTAL0_CLK_HZ, NULL);
-
-//     SYSCON->SYSAHBCLKCTRL |= (1UL <<  6);
-//     SYSCON->SYSAHBCLKCTRL |= (1UL << 14) |
-//                                  (1UL << 27);
+    // Force clocks enabled.
     USBHSD->DEVCMDSTAT  |= USBHSD_DEVCMDSTAT_FORCE_NEEDCLK_MASK;
-//     IOCON->PIO0_3    &=  ~(0x1F);
-//     IOCON->PIO0_3    |= (1UL << 0);     /* Secondary function VBUS */
-//     IOCON->PIO0_6    &=   ~7;
-//     IOCON->PIO0_6    |= (1UL << 0);     /* Secondary function USB CON */
-//     SYSCON->PDRUNCFG &= ~((1UL << 8) |  /* USB PLL powered */
-//                               (1UL << 10)); /* USB transceiver powered */
+
+    // Setup EP
     USBHSD->DATABUFSTART = EP_BUF_BASE & 0xFFC00000;
     USBHSD->EPLISTSTART  = EP_LIST_BASE;
 
@@ -197,29 +188,34 @@ void NO_OPTIMIZE_INLINE USBD_Reset(void)
 {
     uint32_t i;
     uint32_t *ptr;
-    addr = 3 * 64 + EP_BUF_BASE;
+    s_next_ep_buf_addr = EP1_BUF_BASE;
 
     for (i = 2; i < (5 * 4); i++) {
         EPList[i] = (1UL << 30);            /* EPs disabled */
     }
 
-    ctrl_out_next = 0;
+    s_read_ctrl_out_next = 0;
     EPBufInfo[0].buf_len = USBD_MAX_PACKET0;
-    EPBufInfo[0].buf_ptr = EP_BUF_BASE;
+    EPBufInfo[0].buf_ptr = EP0_OUT_BUF_BASE;
     EPBufInfo[1].buf_len = USBD_MAX_PACKET0;
-    EPBufInfo[1].buf_ptr = EP_BUF_BASE + 2 * 64;
+    EPBufInfo[1].buf_ptr = EP0_IN_BUF_BASE;
     ptr  = GetEpCmdStatPtr(0);
     *ptr = N_BYTES(EPBufInfo[0].buf_len) |     /* EP0 OUT */
            BUF_ADDR(EPBufInfo[0].buf_ptr) |
-           BUF_ACTIVE;
+           EP_BUF_ACTIVE;
+    // EP0 SETUP buf info follows EP0 OUT, precedes EP0 IN.
     ptr++;
-    *ptr = BUF_ADDR(EPBufInfo[0].buf_ptr + 64);/* SETUP */
+    *ptr = BUF_ADDR(EP0_SETUP_BUF_BASE);/* SETUP */
     USBHSD->DEVCMDSTAT |= USBHSD_DEVCMDSTAT_DEV_EN_MASK;         /*USB device enable */
     USBHSD->INTSTAT     = 0x2FC;              /* clear EP interrupt flags */
     USBHSD->INTEN = (USBHSD_INTEN_FRAME_INT_EN_MASK |            /* SOF intr enable */
                       USBHSD_INTEN_EP_INT_EN(0)     | /* EP0 OUT intr enable */
                       USBHSD_INTEN_EP_INT_EN(1)     | /* EP0 IN intr enable */
                       USBHSD_INTEN_DEV_INT_EN_MASK);    /* stat change int en */
+
+    // Set bus speed.
+    uint32_t speed = (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_Speed_MASK) >> USBHSD_DEVCMDSTAT_Speed_SHIFT;
+    USBD_HighSpeed = (speed == DEVCMDSTAT_SPEED_HIGH);
 }
 NO_OPTIMIZE_POST
 
@@ -305,7 +301,7 @@ void USBD_SetAddress(uint32_t adr, uint32_t setup)
 
 void USBD_Configure(BOOL cfg)
 {
-    addr = 3 * 64 + EP_BUF_BASE;
+    s_next_ep_buf_addr = EP1_BUF_BASE;
 }
 
 
@@ -327,12 +323,15 @@ void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
     if (num & 0x80) {
         num &= ~0x80;
         EPBufInfo[EP_IN_IDX(num)].buf_len  = val;
-        EPBufInfo[EP_IN_IDX(num)].buf_ptr  = addr;
-        addr += ((val + 63) >> 6) * 64;     /* calc new free buffer address */
+        EPBufInfo[EP_IN_IDX(num)].buf_ptr  = s_next_ep_buf_addr;
+        s_next_ep_buf_addr += ROUND_UP(val, MIN_BUF_SIZE);     /* calc new free buffer address */
         ptr  = GetEpCmdStatPtr(num | 0x80);
         *ptr = EP_DISABLED;
 
-        if (type == USB_ENDPOINT_TYPE_ISOCHRONOUS) {
+        if (type == USB_ENDPOINT_TYPE_INTERRUPT) {
+            *ptr |= EP_TYPE | EP_RF_TV;
+        }
+        else if (type == USB_ENDPOINT_TYPE_ISOCHRONOUS) {
             *ptr |= EP_TYPE;
         }
     }
@@ -340,17 +339,20 @@ void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
     /* OUT EPs */
     else {
         EPBufInfo[EP_OUT_IDX(num)].buf_len  = val;
-        EPBufInfo[EP_OUT_IDX(num)].buf_ptr  = addr;
+        EPBufInfo[EP_OUT_IDX(num)].buf_ptr  = s_next_ep_buf_addr;
         ptr  = GetEpCmdStatPtr(num);
         *ptr = N_BYTES(EPBufInfo[EP_OUT_IDX(num)].buf_len) |
                BUF_ADDR(EPBufInfo[EP_OUT_IDX(num)].buf_ptr) |
                EP_DISABLED;
 
-        if (type == USB_ENDPOINT_TYPE_ISOCHRONOUS) {
+        if (type == USB_ENDPOINT_TYPE_INTERRUPT) {
+            *ptr |= EP_TYPE | EP_RF_TV;
+        }
+        else if (type == USB_ENDPOINT_TYPE_ISOCHRONOUS) {
             *ptr |= EP_TYPE;
         }
 
-        addr += ((val + 63) >> 6) * 64;     /* calc new free buffer address */
+        s_next_ep_buf_addr += ROUND_UP(val, MIN_BUF_SIZE);     /* calc new free buffer address */
     }
 }
 
@@ -391,7 +393,7 @@ void USBD_EnableEP(uint32_t EPNum)
     /* OUT EP */
     else {
         *ptr &= ~EP_DISABLED;
-        *ptr |=  BUF_ACTIVE;
+        *ptr |=  EP_BUF_ACTIVE;
         USBHSD->INTSTAT = (1 << EP_OUT_IDX(EPNum));
         USBHSD->INTEN  |= (1 << EP_OUT_IDX(EPNum));
     }
@@ -434,7 +436,7 @@ void USBD_ResetEP(uint32_t EPNum)
 {
     uint32_t *ptr;
     ptr = GetEpCmdStatPtr(EPNum);
-    *ptr |= TOOGLE_RESET;
+    *ptr |= EP_TOGGLE_RESET;
 }
 
 
@@ -452,8 +454,8 @@ void USBD_SetStallEP(uint32_t EPNum)
     ptr = GetEpCmdStatPtr(EPNum);
 
     if (EPNum & 0x7F) {
-        if (*ptr & BUF_ACTIVE) {
-            *ptr &= ~(BUF_ACTIVE);
+        if (*ptr & EP_BUF_ACTIVE) {
+            *ptr &= ~(EP_BUF_ACTIVE);
         }
 
     } else {
@@ -472,7 +474,7 @@ void USBD_SetStallEP(uint32_t EPNum)
 
     if ((EPNum & 0x7F) == 0) {
         /* Endpoint is stalled so control out won't be next */
-        ctrl_out_next = 0;
+        s_read_ctrl_out_next = 0;
     }
 
     *ptr |=  EP_STALL;
@@ -497,7 +499,7 @@ void USBD_ClrStallEP(uint32_t EPNum)
 
     } else {
         *ptr &=  ~EP_STALL;
-        *ptr |=   BUF_ACTIVE;
+        *ptr |=   EP_BUF_ACTIVE;
     }
 
     USBD_ResetEP(EPNum);
@@ -515,11 +517,11 @@ void USBD_ClrStallEP(uint32_t EPNum)
 void USBD_ClearEPBuf(uint32_t EPNum)
 {
     uint32_t  cnt, i;
-    U8  *dataptr;
+    uint8_t  *dataptr;
 
     if (EPNum & 0x80) {
         EPNum &= ~0x80;
-        dataptr = (U8 *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
+        dataptr = (uint8_t *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
         cnt     =       EPBufInfo[EP_IN_IDX(EPNum)].buf_len;
 
         for (i = 0; i < cnt; i++) {
@@ -527,7 +529,7 @@ void USBD_ClearEPBuf(uint32_t EPNum)
         }
 
     } else {
-        dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
+        dataptr = (uint8_t *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
         cnt     =       EPBufInfo[EP_OUT_IDX(EPNum)].buf_len;
 
         for (i = 0; i < cnt; i++) {
@@ -546,47 +548,52 @@ void USBD_ClearEPBuf(uint32_t EPNum)
  *    Return Value:    Number of bytes read
  */
 
-uint32_t USBD_ReadEP(uint32_t EPNum, U8 *pData, uint32_t size)
+uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
 {
-    uint32_t cnt, i, xfer_size;
+    uint32_t cnt, i;//, xfer_size;
     volatile uint32_t *ptr;
-    U8 *dataptr;
+    uint8_t *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
     int timeout = 256;
 
     /* Setup packet */
-    if ((EPNum == 0) && !ctrl_out_next && (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_SETUP_MASK)) {
-        cnt = USBD_MAX_PACKET0;
+    if ((EPNum == 0) && !s_read_ctrl_out_next && (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_SETUP_MASK)) {
+        cnt = sizeof(USB_SETUP_PACKET);
 
         if (size < cnt) {
             util_assert(0);
             cnt = size;
         }
 
-        dataptr = (U8 *)(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr + 64);
+        dataptr = (uint8_t *)(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr + EP0_SETUP_BUF_OFFSET * USBD_MAX_PACKET0);
 
         for (i = 0; i < cnt; i++) {
             pData[i] = dataptr[i];
         }
 
-        xfer_size = (pData[7] << 8) | (pData[6] << 0);
-        if ((xfer_size > 0) && (pData[0] & (1 << 7))) {
+        // Copy the SETUP packet into a struct we can read from more understandably.
+        USB_SETUP_PACKET setup;
+        memcpy(&setup, pData, sizeof(setup));
+
+        if ((setup.wLength > 0) && setup.bmRequestType.Dir) {
             /* This control transfer has a data IN stage            */
             /* and ends with a zero length data OUT transfer.       */
             /* Ensure the data OUT token is not skipped even if     */
             /* a SETUP token arrives before USBD_ReadEP has         */
             /* been called.                                         */
-            ctrl_out_next = 1;
+            s_read_ctrl_out_next = 1;
         }
 
         USBHSD->EPSKIP |= (1 << EP_IN_IDX(EPNum));
 
         while (USBHSD->EPSKIP & (1 << EP_IN_IDX(EPNum)));
 
+        // Clear stall on EP0 IN.
         if (*(ptr + 2) & EP_STALL) {
             *(ptr + 2) &= ~(EP_STALL);
         }
 
+        // Clear stall on EP0 OUT.
         if (*ptr & EP_STALL) {
             *ptr &= ~(EP_STALL);
         }
@@ -597,11 +604,11 @@ uint32_t USBD_ReadEP(uint32_t EPNum, U8 *pData, uint32_t size)
     /* OUT packet */
     else {
         ptr = GetEpCmdStatPtr(EPNum);
-        cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr >> 16) & 0x3FF);
-        dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
+        cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr & EP_NBYTES_MASK) >> EP_NBYTES_SHIFT);
+        dataptr = (uint8_t *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
 
-        while ((timeout-- > 0) && (*ptr & BUF_ACTIVE)); //spin on the hardware until it's done
-        util_assert(!(*ptr & BUF_ACTIVE)); //check for timeout
+        while ((timeout-- > 0) && (*ptr & EP_BUF_ACTIVE)); //spin on the hardware until it's done
+        util_assert(!(*ptr & EP_BUF_ACTIVE)); //check for timeout
 
         if (size < cnt) {
             util_assert(0);
@@ -616,13 +623,13 @@ uint32_t USBD_ReadEP(uint32_t EPNum, U8 *pData, uint32_t size)
 
         *ptr = N_BYTES(EPBufInfo[EP_OUT_IDX(EPNum)].buf_len) |
                BUF_ADDR(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr) |
-               BUF_ACTIVE;
+               EP_BUF_ACTIVE;
 
         if (EPNum == 0) {
-            /* If ctrl_out_next is set then this should be a zero length        */
+            /* If s_read_ctrl_out_next is set then this should be a zero length        */
             /* data OUT packet.                                                 */
-            util_assert(!ctrl_out_next || (cnt == 0));
-            ctrl_out_next = 0;
+            util_assert(!s_read_ctrl_out_next || (cnt == 0));
+            s_read_ctrl_out_next = 0;
             if (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_SETUP_MASK)  {
                 // A setup packet is still pending so trigger another interrupt
                 USBHSD->INTSETSTAT |= USBHSD_INTSETSTAT_EP_SET_INT(0);
@@ -644,7 +651,7 @@ uint32_t USBD_ReadEP(uint32_t EPNum, U8 *pData, uint32_t size)
  *    Return Value:    Number of bytes written
  */
 
-uint32_t USBD_WriteEP(uint32_t EPNum, U8 *pData, uint32_t cnt)
+uint32_t USBD_WriteEP(uint32_t EPNum, uint8_t *pData, uint32_t cnt)
 {
     uint32_t i;
     volatile uint32_t *ptr;
@@ -652,7 +659,7 @@ uint32_t USBD_WriteEP(uint32_t EPNum, U8 *pData, uint32_t cnt)
     ptr = GetEpCmdStatPtr(EPNum);
     EPNum &= ~0x80;
 
-    while (*ptr & BUF_ACTIVE);
+    while (*ptr & EP_BUF_ACTIVE);
 
     *ptr &= ~(0x3FFFFFF);
     *ptr |=  BUF_ADDR(EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr) |
@@ -668,7 +675,7 @@ uint32_t USBD_WriteEP(uint32_t EPNum, U8 *pData, uint32_t cnt)
         return (0);
     }
 
-    *ptr |= BUF_ACTIVE;
+    *ptr |= EP_BUF_ACTIVE;
     return (cnt);
 }
 
@@ -816,7 +823,7 @@ void USBD_Handler(void)
 
             if (sts & (1UL << num)) {
                 /* Setup */
-                if ((num == 0) && !ctrl_out_next && (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_SETUP_MASK)) {
+                if ((num == 0) && !s_read_ctrl_out_next && (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_SETUP_MASK)) {
 #ifdef __RTX
 
                     if (USBD_RTX_EPTask[num / 2]) {
