@@ -9,6 +9,8 @@ tool_specific:
         misc:
             asm_flags:
                 - -g
+                - -x assembler-with-cpp
+                - -masm=auto
             cpp_flags:
                 - --target=arm-arm-none-eabi
             c_flags:
