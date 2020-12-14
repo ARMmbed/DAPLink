@@ -30,14 +30,14 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
-    make_armcc:
+    armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource\hic_hal\stm32\stm32f103xb"
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
-    make_armclang:
+    armclang:
         misc:
             c_flags:
                 - -mcpu=cortex-m3
@@ -46,7 +46,7 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
-    make_gcc_arm:
+    gcc_arm:
         includes:
             - source/hic_hal/stm32/stm32f103xb/gcc
         sources:

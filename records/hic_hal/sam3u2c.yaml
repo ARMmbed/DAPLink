@@ -24,18 +24,18 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/atmel/sam3u2c/armcc
-    make_armcc:
+    armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource\hic_hal\atmel\sam3u2c"
         sources:
             hic_hal:
                 - source/hic_hal/atmel/sam3u2c/armcc
-    make_armclang:
+    armclang:
         sources:
             hic_hal:
                 - source/hic_hal/atmel/sam3u2c/armcc
-    make_gcc_arm:
+    gcc_arm:
         includes:
             - source/hic_hal/atmel/sam3u2c/gcc
         sources:

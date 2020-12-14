@@ -1,5 +1,5 @@
 tool_specific:
-    make_armcc:
+    armcc:
         mcu:
             - cortex-m0
         macros:
