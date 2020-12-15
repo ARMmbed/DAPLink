@@ -3,6 +3,5 @@ branches:
   - gh-pages
 
 language: ruby
-rvm:
-  - 2.1
+cache: bundler
 script: "bundle exec jekyll build --verbose --trace"

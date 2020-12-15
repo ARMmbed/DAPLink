@@ -9,3 +9,4 @@ description: "mbed DAPLink interface firmware."
 # Build settings
 markdown: kramdown
 permalink: pretty
+exclude: [vendor]
