@@ -135,6 +135,7 @@ projects:
     lpc55s69_if:
         - *module_if
         - *module_hic_lpc55s69
+        - records/board/lpc55s69_if.yaml # Sets the USB product string.
         - records/family/all_family.yaml
     max32620_bl:
         - *module_bl
