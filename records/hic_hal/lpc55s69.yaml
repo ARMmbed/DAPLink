@@ -36,7 +36,7 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc55xx/armcc
                 - source/hic_hal/nxp/lpc55xx/LPC55S69/armcc/keil_lib_power_cm33_core0.lib
-    make_armcc:
+    armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource/hic_hal/nxp/lpc55xx"
@@ -53,7 +53,7 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc55xx/armcc
                 - source/hic_hal/nxp/lpc55xx/LPC55S69/armcc/keil_lib_power_cm33_core0.lib
-    make_gcc_arm:
+    gcc_arm:
         misc:
             c_flags:
                 - -march=armv8-m.main+fp+dsp

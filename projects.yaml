@@ -63,7 +63,7 @@ module:
         - records/hic_hal/lpc4322.yaml
         - records/usb/usb-bulk.yaml
     hic_lpc55s69: &module_hic_lpc55s69
-        - records/rtos/rtos-cm3.yaml
+        - records/rtos/rtos-cm33.yaml
         - records/hic_hal/lpc55s69.yaml
         - records/usb/usb-bulk.yaml
     hic_sam3u2c: &module_hic_sam3u2c
