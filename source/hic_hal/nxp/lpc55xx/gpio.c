@@ -26,112 +26,50 @@
 #include "daplink.h"
 #include "hic_init.h"
 #include "fsl_clock.h"
-
-static void busy_wait(uint32_t cycles)
-{
-    volatile uint32_t i = cycles;
-    while (i > 0) {
-        i--;
-    }
-}
+#include "fsl_iocon.h"
+#include "fsl_reset.h"
 
 void gpio_init(void)
 {
     // Enable hardfault on unaligned access for the interface only.
     // If this is done in the bootloader than then it might (will) break
     // older application firmware or firmware from 3rd party vendors.
-#if  defined(DAPLINK_IF)
+#if defined(DAPLINK_IF)
     SCB->CCR |= SCB_CCR_UNALIGN_TRP_Msk;
 #endif
-#ifdef LPC55_FIXME
-    // enable clock to ports
-    SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTC_MASK | SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTE_MASK;
-    SIM->SCGC6 |= SIM_SCGC6_DMAMUX_MASK;
-    // configure pin as GPIO
-    LED_CONNECTED_PORT->PCR[LED_CONNECTED_BIT] = PORT_PCR_MUX(1);
-    // led off - enable output
-    LED_CONNECTED_GPIO->PDOR = 1UL << LED_CONNECTED_BIT;
-    LED_CONNECTED_GPIO->PDDR = 1UL << LED_CONNECTED_BIT;
-    // led on
-    LED_CONNECTED_GPIO->PCOR = 1UL << LED_CONNECTED_BIT;
-    // reset button configured as gpio input
-    PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET;
-    PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_MUX(1);
-    /* Enable LVLRST_EN */
-    PIN_nRESET_EN_PORT->PCR[PIN_nRESET_EN_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
-            PORT_PCR_ODE_MASK;  /* Open-drain */
-    PIN_nRESET_EN_GPIO->PSOR  = PIN_nRESET_EN;
-    PIN_nRESET_EN_GPIO->PDDR |= PIN_nRESET_EN;
-    // Configure SWO UART RX.
-    PIN_SWO_RX_PORT->PCR[PIN_SWO_RX_BIT] = PORT_PCR_MUX(3); // UART1
-    PIN_SWO_RX_GPIO->PDDR &= ~(1 << PIN_SWO_RX_BIT); // Input
 
-    // Enable pulldowns on power monitor control signals to reduce power consumption.
-    PIN_CTRL0_PORT->PCR[PIN_CTRL0_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS(0);
-    PIN_CTRL1_PORT->PCR[PIN_CTRL1_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS(0);
-    PIN_CTRL2_PORT->PCR[PIN_CTRL2_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS(0);
-    PIN_CTRL3_PORT->PCR[PIN_CTRL3_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS(0);
+    // Ensure clocks are enabled.
+    SYSCON->AHBCLKCTRLSET[0] = SYSCON_AHBCLKCTRL0_IOCON_MASK
+                                | SYSCON_AHBCLKCTRL0_GPIO0_MASK;
+    SYSCON->AHBCLKCTRLSET[1] = SYSCON_AHBCLKCTRL1_FC0_MASK
+                                | SYSCON_AHBCLKCTRL1_FC3_MASK;
 
-    // Enable pulldown on GPIO0_B to prevent it floating.
-    PIN_GPIO0_B_PORT->PCR[PIN_GPIO0_B_BIT] = PORT_PCR_MUX(1) | PORT_PCR_PE_MASK | PORT_PCR_PS(0);
+    // Reset peripherals.
+    RESET_PeripheralReset(kIOCON_RST_SHIFT_RSTn);
+    RESET_PeripheralReset(kGPIO0_RST_SHIFT_RSTn);
+    RESET_PeripheralReset(kFC0_RST_SHIFT_RSTn);
+    RESET_PeripheralReset(kFC3_RST_SHIFT_RSTn);
 
-    // configure power enable pin as GPIO
-    PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
-    // set output to 0
-    PIN_POWER_EN_GPIO->PCOR = PIN_POWER_EN;
-    // switch gpio to output
-    PIN_POWER_EN_GPIO->PDDR |= PIN_POWER_EN;
+    // Configure pins.
+    IOCON->PIO[PIN_PIO_PORT][LED_CONNECTED] = IOCON_FUNC0 | IOCON_DIGITAL_EN;
 
-    // Let the voltage rails stabilize.  This is especailly important
-    // during software resets, since the target's 3.3v rail can take
-    // 20-50ms to drain.  During this time the target could be driving
-    // the reset pin low, causing the bootloader to think the reset
-    // button is pressed.
-    // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
-    busy_wait(1000000);
-#endif
+    // Turn off LED.
+    GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = 1;
+    // Set LED to output.
+    GPIO->DIRSET[PIN_PIO_PORT] = LED_CONNECTED_MASK;
+    // Turn on LED.
+    GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = 1;
 }
 
 void gpio_set_board_power(bool powerEnabled)
 {
-#ifdef LPC55_FIXME
-    if (powerEnabled) {
-        // enable power switch
-        PIN_POWER_EN_GPIO->PSOR = PIN_POWER_EN;
-    }
-    else {
-        // disable power switch
-        PIN_POWER_EN_GPIO->PCOR = PIN_POWER_EN;
-    }
-#endif
-}
-
-uint32_t UART1_GetFreq(void)
-{
-    return CLOCK_GetCoreSysClkFreq();
-}
-
-void UART1_InitPins(void)
-{
-    // RX pin inited in gpio_init();
-    // TX not used.
-}
-
-void UART1_DeinitPins(void)
-{
-    // No need to deinit the RX pin.
-    // TX not used.
+    // No target power control in this circuit.
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
 {
-#ifdef LPC55_FIXME
-    if (state) {
-        LED_CONNECTED_GPIO->PCOR = LED_CONNECTED; // LED on
-    } else {
-        LED_CONNECTED_GPIO->PSOR = LED_CONNECTED; // LED off
-    }
-#endif
+    // LED is active low, so set to inverse of the enum value.
+    GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = !(uint8_t)state;
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
@@ -146,11 +84,7 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-#ifdef LPC55_FIXME
-    return (PIN_nRESET_GPIO->PDIR & PIN_nRESET) ? 0 : 1;
-#else
     return 0;
-#endif
 }
 
 uint8_t gpio_get_reset_btn_fwrd(void)

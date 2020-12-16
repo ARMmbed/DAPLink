@@ -23,6 +23,7 @@
 #define __DAP_CONFIG_H__
 
 #include "IO_Config.h"
+#include "fsl_iocon.h"
 
 //**************************************************************************************************
 /**
@@ -169,6 +170,20 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 */
 __STATIC_INLINE void PORT_JTAG_SETUP(void)
 {
+    // Drive SWCLK, SWDIO, SWDIO_TXEN, nRESET, nRESET_TXEN high.
+    GPIO->SET[PIN_PIO_PORT] = PIN_TCK_SWCLK_MASK
+                            | PIN_TMS_SWDIO_MASK
+                            | PIN_TMS_SWDIO_TXEN_MASK
+                            | PIN_TDI_MASK
+                            | PIN_RESET_MASK
+                            | PIN_RESET_TXEN_MASK;
+
+    // Set SWCLK and SWDIO to outputs.
+    GPIO->DIRSET[PIN_PIO_PORT] = PIN_TCK_SWCLK_MASK | PIN_TMS_SWDIO_MASK;
+
+    // Switch TDO_SWO to GPIO input.
+    IOCON->PIO[PIN_PIO_PORT][PIN_TDO_SWO] = IOCON_FUNC0 | IOCON_DIGITAL_EN;
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_TDO_SWO;
 }
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
@@ -178,15 +193,22 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 */
 __STATIC_INLINE void PORT_SWD_SETUP(void)
 {
-//     PIN_SWCLK_GPIO->PSOR     = 1 << PIN_SWCLK_BIT;
-//     PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
-//     PIN_SWDIO_OE_GPIO->PSOR = 1 << PIN_SWDIO_OE_BIT;
-//     PIN_SWD_OE_GPIO->PSOR   = 1 << PIN_SWD_OE_BIT;
-//     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
-//     PIN_SWD_OE_GPIO->PDDR = PIN_SWD_OE_GPIO->PDDR | (1 << PIN_SWD_OE_BIT);
-//     PIN_nRESET_GPIO->PSOR = PIN_nRESET;
-//     PIN_nRESET_GPIO->PDDR |= PIN_nRESET; //output
-//     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
+    // Drive SWCLK, SWDIO, SWDIO_TXEN, nRESET, nRESET_TXEN high.
+    GPIO->SET[PIN_PIO_PORT] = PIN_TCK_SWCLK_MASK
+                            | PIN_TMS_SWDIO_MASK
+                            | PIN_TMS_SWDIO_TXEN_MASK
+                            | PIN_RESET_MASK
+                            | PIN_RESET_TXEN_MASK;
+
+
+    // Set SWCLK and SWDIO to outputs.
+    GPIO->DIRSET[PIN_PIO_PORT] = PIN_TCK_SWCLK_MASK | PIN_TMS_SWDIO_MASK;
+
+    // Disable TDI (set to input).
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_TDI_MASK;
+
+    // Switch TDO_SWO to Flexcomm.
+    IOCON->PIO[PIN_PIO_PORT][PIN_TDO_SWO] = IOCON_FUNC1 | IOCON_DIGITAL_EN;
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -195,12 +217,15 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF(void)
 {
-//     PIN_SWDIO_OE_GPIO->PCOR = 1 << PIN_SWDIO_OE_BIT;
-//     PIN_SWD_OE_GPIO->PCOR   = 1 << PIN_SWD_OE_BIT;
-//     PIN_nRESET_GPIO->PSOR    = 1 << PIN_nRESET_BIT;
-//     PIN_nRESET_GPIO->PDDR &= ~PIN_nRESET; //input
-//     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] |= PORT_PCR_ISF_MASK;
-//     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT] = PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_MUX(1);
+    // Disable driving of SWDIO and nRESET.
+    GPIO->CLR[PIN_PIO_PORT] = PIN_TMS_SWDIO_TXEN_MASK
+                                | PIN_RESET_TXEN_MASK;
+
+    // Disable SWCLK and TDI (set to inputs).
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_TCK_SWCLK_MASK | PIN_TDI_MASK;
+
+    // Switch TDO_SWO to Flexcomm.
+    IOCON->PIO[PIN_PIO_PORT][PIN_TDO_SWO] = IOCON_FUNC1 | IOCON_DIGITAL_EN;
 }
 
 
@@ -211,7 +236,7 @@ __STATIC_INLINE void PORT_OFF(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN(void)
 {
-    return (0);   // Not available
+    return GPIO->B[PIN_PIO_PORT][PIN_TCK_SWCLK];
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
@@ -219,7 +244,7 @@ Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_SET(void)
 {
-//     PIN_SWCLK_GPIO->PSOR = 1 << PIN_SWCLK_BIT;
+    GPIO->B[PIN_PIO_PORT][PIN_TCK_SWCLK] = 1;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
@@ -227,7 +252,7 @@ Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR(void)
 {
-//     PIN_SWCLK_GPIO->PCOR = 1 << PIN_SWCLK_BIT;
+    GPIO->B[PIN_PIO_PORT][PIN_TCK_SWCLK] = 0;
 }
 
 
@@ -238,7 +263,7 @@ __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN(void)
 {
-    return 0; // ((PIN_SWDIO_IN_GPIO->PDIR >> PIN_SWDIO_IN_BIT) & 1);
+    return GPIO->B[PIN_PIO_PORT][PIN_TMS_SWDIO];
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
@@ -246,7 +271,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_SET(void)
 {
-//     PIN_SWDIO_OUT_GPIO->PSOR = 1 << PIN_SWDIO_OUT_BIT;
+    GPIO->B[PIN_PIO_PORT][PIN_TMS_SWDIO] = 1;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
@@ -254,7 +279,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR(void)
 {
-//     PIN_SWDIO_OUT_GPIO->PCOR = 1 << PIN_SWDIO_OUT_BIT;
+    GPIO->B[PIN_PIO_PORT][PIN_TMS_SWDIO] = 0;
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
@@ -262,7 +287,7 @@ __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 {
-    return 0; // (BITBAND_REG(PIN_SWDIO_IN_GPIO->PDIR, PIN_SWDIO_IN_BIT));
+    return GPIO->B[PIN_PIO_PORT][PIN_TMS_SWDIO];
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
@@ -270,7 +295,7 @@ __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT(uint32_t bit)
 {
-//     BITBAND_REG(PIN_SWDIO_OUT_GPIO->PDOR, PIN_SWDIO_OUT_BIT) = bit;
+    GPIO->B[PIN_PIO_PORT][PIN_TMS_SWDIO] = bit;
 }
 
 /** SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
@@ -279,7 +304,7 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE(void)
 {
-//     PIN_SWDIO_OE_GPIO->PSOR = 1 << PIN_SWDIO_OE_BIT;
+    GPIO->DIRSET[PIN_PIO_PORT] = PIN_TMS_SWDIO_MASK;
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -288,7 +313,7 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE(void)
 {
-//     PIN_SWDIO_OE_GPIO->PCOR = 1 << PIN_SWDIO_OE_BIT;
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_TMS_SWDIO_MASK;
 }
 
 
@@ -299,7 +324,7 @@ __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_TDI_IN(void)
 {
-    return (0);   // Not available
+    return GPIO->B[PIN_PIO_PORT][PIN_TDI];
 }
 
 /** TDI I/O pin: Set Output.
@@ -307,7 +332,7 @@ __STATIC_FORCEINLINE uint32_t PIN_TDI_IN(void)
 */
 __STATIC_FORCEINLINE void     PIN_TDI_OUT(uint32_t bit)
 {
-    ;             // Not available
+    GPIO->B[PIN_PIO_PORT][PIN_TDI] = bit;
 }
 
 
@@ -318,7 +343,7 @@ __STATIC_FORCEINLINE void     PIN_TDI_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_TDO_IN(void)
 {
-    return (0);   // Not available
+    return GPIO->B[PIN_PIO_PORT][PIN_TDO_SWO];
 }
 
 
@@ -349,7 +374,7 @@ __STATIC_FORCEINLINE void     PIN_nTRST_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 {
-    return 0; //((PIN_nRESET_GPIO->PDIR >> PIN_nRESET_BIT) & 1);
+    return GPIO->B[PIN_PIO_PORT][PIN_RESET];
 }
 
 /** nRESET I/O pin: Set Output.
@@ -359,7 +384,7 @@ __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 */
 __STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
 {
-//     BITBAND_REG(PIN_nRESET_GPIO->PDOR, PIN_nRESET_BIT) = bit;
+    GPIO->B[PIN_PIO_PORT][PIN_RESET] = bit;
 }
 
 ///@}
@@ -442,63 +467,32 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
 */
 __STATIC_INLINE void DAP_SETUP(void)
 {
-//     SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK |  /* Enable Port A Clock */
-//                   SIM_SCGC5_PORTB_MASK |  /* Enable Port B Clock */
-//                   SIM_SCGC5_PORTC_MASK |  /* Enable Port C Clock */
-//                   SIM_SCGC5_PORTD_MASK;   /* Enable Port D Clock */
-//     /* Configure I/O pin SWCLK */
-//     PIN_SWCLK_PORT->PCR[PIN_SWCLK_BIT]         = PORT_PCR_MUX(1) |   /* GPIO */
-//              PORT_PCR_DSE_MASK; /* High drive strength */
-//     PIN_SWCLK_GPIO->PSOR  = 1 << PIN_SWCLK_BIT;                      /* High level */
-//     PIN_SWCLK_GPIO->PDDR |= 1 << PIN_SWCLK_BIT;                      /* Output */
-//     /* Configure I/O pin SWDIO_OUT */
-//     PIN_SWDIO_OUT_PORT->PCR[PIN_SWDIO_OUT_BIT] = PORT_PCR_MUX(1) |   /* GPIO */
-//              PORT_PCR_DSE_MASK; /* High drive strength */
-//     PIN_SWDIO_OUT_GPIO->PSOR  = 1 << PIN_SWDIO_OUT_BIT;              /* High level */
-//     PIN_SWDIO_OUT_GPIO->PDDR |= 1 << PIN_SWDIO_OUT_BIT;              /* Output */
-//     /* Configure I/O pin SWDIO_IN */
-//     PIN_SWDIO_IN_PORT->PCR[PIN_SWDIO_IN_BIT]   = PORT_PCR_MUX(1)  |  /* GPIO */
-//             PORT_PCR_PE_MASK |  /* Pull enable */
-//             PORT_PCR_PS_MASK;   /* Pull-up */
-//     PIN_SWDIO_IN_GPIO->PDDR &= ~(1 << PIN_SWDIO_IN_BIT);             /* Input */
-//     /* Configure I/O pin SWDIO_OE */
-//     PIN_SWDIO_OE_PORT->PCR[PIN_SWDIO_OE_BIT] = PORT_PCR_MUX(1) |     /* GPIO */
-//              PORT_PCR_DSE_MASK; /* High drive strength */
-//     PIN_SWDIO_OE_GPIO->PCOR  = 1 << PIN_SWDIO_OE_BIT;                /* Low level */
-//     PIN_SWDIO_OE_GPIO->PDDR |= 1 << PIN_SWDIO_OE_BIT;                /* Output */
-//     /* Configure I/O pin SWD_OE */
-//     PIN_SWD_OE_PORT->PCR[PIN_SWD_OE_BIT]     = PORT_PCR_MUX(1) |     /* GPIO */
-//              PORT_PCR_DSE_MASK; /* High drive strength */
-//     PIN_SWD_OE_GPIO->PCOR  = 1 << PIN_SWD_OE_BIT;                    /* Low level */
-//     PIN_SWD_OE_GPIO->PDDR |= 1 << PIN_SWD_OE_BIT;                    /* Output */
-//     /* Configure I/O pin nRESET */
-//     PIN_nRESET_PORT->PCR[PIN_nRESET_BIT]       = PORT_PCR_MUX(1)  |  /* GPIO */
-//             PORT_PCR_PE_MASK |  /* Pull enable */
-//             PORT_PCR_PS_MASK |  /* Pull-up */
-//             PORT_PCR_ODE_MASK;  /* Open-drain */
-//     PIN_nRESET_GPIO->PSOR  = 1 << PIN_nRESET_BIT;                    /* High level */
-//     PIN_nRESET_GPIO->PDDR &= ~(1 << PIN_nRESET_BIT);                    /* Input */
-//     // Configure I/O pin LVLRST_EN
-//     // The nRESET level translator is enabled by default. The translator is auto-
-//     // direction sensing. So as long as we don't drive nRESET from our side, we won't
-//     // interfere with another debug probe connected to the target SWD header.
-//     PIN_nRESET_EN_PORT->PCR[PIN_nRESET_EN_BIT]       = PORT_PCR_MUX(1)  |  /* GPIO */
-//             PORT_PCR_ODE_MASK;  /* Open-drain */
-//     PIN_nRESET_EN_GPIO->PSOR  = PIN_nRESET_EN;                    /* High level */
-//     PIN_nRESET_EN_GPIO->PDDR |= PIN_nRESET_EN;                    /* Output */
-//     /* Configure LED */
-//     LED_CONNECTED_PORT->PCR[LED_CONNECTED_BIT] = PORT_PCR_MUX(1)  |  /* GPIO */
-//             PORT_PCR_ODE_MASK;  /* Open-drain */
-//     LED_CONNECTED_GPIO->PCOR  = 1 << LED_CONNECTED_BIT;              /* Turned on */
-//     LED_CONNECTED_GPIO->PDDR |= 1 << LED_CONNECTED_BIT;              /* Output */
-
-
-    // Enable clocks.
+    // Ensure clocks are enabled.
     SYSCON->AHBCLKCTRLSET[0] = SYSCON_AHBCLKCTRL0_IOCON_MASK
                                 | SYSCON_AHBCLKCTRL0_GPIO0_MASK;
 
+    // Configure pins.
+    static const iocon_group_t kPinConfigs[] = {
+        {   .port = PIN_PIO_PORT,   .pin = PIN_TCK_SWCLK,       .modefunc = IOCON_FUNC0 | IOCON_DIGITAL_EN | IOCON_SLEW_FAST,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_TMS_SWDIO,       .modefunc = IOCON_FUNC0 | IOCON_DIGITAL_EN | IOCON_SLEW_FAST,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_TMS_SWDIO_TXEN,  .modefunc = IOCON_FUNC0 | IOCON_DIGITAL_EN | IOCON_SLEW_FAST,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_TDI,             .modefunc = IOCON_FUNC0 | IOCON_DIGITAL_EN | IOCON_SLEW_FAST,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_TDO_SWO,         .modefunc = IOCON_FUNC0 | IOCON_DIGITAL_EN,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_RESET,           .modefunc = IOCON_FUNC0 | IOCON_DIGITAL_EN,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_RESET_TXEN,      .modefunc = IOCON_FUNC0 | IOCON_GPIO_MODE | IOCON_DIGITAL_EN,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_DETECT,          .modefunc = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_HW_VERS_6,       .modefunc = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN,  },
+        {   .port = PIN_PIO_PORT,   .pin = PIN_HW_VERS_7,       .modefunc = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN,  },
+    };
 
+    IOCON_SetPinMuxing(IOCON, kPinConfigs, ARRAY_SIZE(kPinConfigs));
 
+    // Configure GPIO outputs.
+    GPIO->CLR[PIN_PIO_PORT] = PIN_TMS_SWDIO_TXEN_MASK
+                                    | PIN_RESET_TXEN_MASK;
+
+    GPIO->DIRSET[PIN_PIO_PORT] = PIN_TMS_SWDIO_TXEN_MASK
+                                    | PIN_RESET_TXEN_MASK;
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.
