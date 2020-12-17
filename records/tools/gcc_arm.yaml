@@ -23,7 +23,6 @@ tool_specific:
                 - -fshort-wchar
                 - -fno-common
                 - -ffreestanding
-                - -Wa,-adln=$@.lst
                 - -fverbose-asm
                 - -mno-unaligned-access
             ld_flags:
@@ -40,3 +39,7 @@ tool_specific:
                 - tools/pre_build_script.sh
             post_build_script:
                 - tools/post_build_script_gcc.sh
+    make_gcc_arm:
+        misc:
+            common_flags:
+                - -Wa,-adln=$@.lst
