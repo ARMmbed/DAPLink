@@ -137,10 +137,19 @@ for project in projects:
     hex = output + ".hex"
     crc = output + "_crc"
 
+    if not os.path.exists(hex):
+        # Build failed
+        if args.ignore_failures:
+            logger.warnig("Missing file %s (build failed)" % (hex))
+            continue
+        else:
+            logger.error("Missing file %s (build failed)" % (hex))
+            exit(-1)
+
     # TODO: I think this part is already done as part of the progen build with the call
     # to the post_build_script_gcc.sh. Remove the next block if confirmed.
     # We use the same check as the shell wrapper guard to run it only if necessary.
-    if os.path.getmtime(hex) >= os.path.getmtime(crc + '.bin'):
+    if not os.path.exists(crc + '.bin') or os.path.getmtime(hex) >= os.path.getmtime(crc + '.bin'):
         logger.debug("Generating %s" % (crc + '.bin'))
         post_build_script(hex, crc)
 
