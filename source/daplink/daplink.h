@@ -73,6 +73,15 @@ COMPILER_ASSERT(DAPLINK_RAM_SHARED_START + DAPLINK_RAM_SHARED_SIZE == DAPLINK_RA
 
 #define DAPLINK_INFO_OFFSET         0x20
 
+// Macro with the name of the main application header file.
+#if defined(DAPLINK_BL)
+#define DAPLINK_MAIN_HEADER "main_bootloader.h"
+#elif defined(DAPLINK_IF)
+#define DAPLINK_MAIN_HEADER "main_interface.h"
+#else
+#error "Neither DAPLINK_BL nor DAPLINK_IF are defined!"
+#endif
+
 typedef struct {
     uint32_t build_key;
     uint32_t hic_id;

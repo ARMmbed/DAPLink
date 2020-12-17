@@ -3,7 +3,7 @@
  * @brief   HID driver for CMSIS-DAP packet processing
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,7 +28,8 @@
 #include "DAP.h"
 #include "util.h"
 #include "DAP_queue.h"
-#include "main.h"
+#include "daplink.h"
+#include DAPLINK_MAIN_HEADER
 
 
 #if (USBD_HID_OUTREPORT_MAX_SZ > DAP_PACKET_SIZE)

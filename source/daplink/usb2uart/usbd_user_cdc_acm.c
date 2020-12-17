@@ -3,7 +3,7 @@
  * @brief   implementation of USB CDC ACM middleware
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,7 +21,8 @@
 
 #include "cmsis_os2.h"
 #include "rl_usb.h"
-#include "main.h"
+#include "daplink.h"
+#include DAPLINK_MAIN_HEADER
 #include "uart.h"
 #ifdef DRAG_N_DROP_SUPPORT
 #include "flash_intf.h"

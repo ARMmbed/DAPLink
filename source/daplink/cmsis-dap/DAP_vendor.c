@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013-2016 ARM Limited. All rights reserved.
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright (c) 2013-2020 Arm Limited. All rights reserved.
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -31,7 +31,8 @@
 #include "DAP_config.h"
 #include "DAP.h"
 #include "info.h"
-#include "main.h"
+#include "daplink.h"
+#include DAPLINK_MAIN_HEADER
 #include "uart.h"
 #include "settings.h"
 #include "target_family.h"
@@ -169,7 +170,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         //                                              0x00 - Chip Erase
         //                                              nonzero - Page Erase
         //              RESPONSE(IN Packet)
-        //              BYTE 0 
+        //              BYTE 0
         //                                              0x00 - OK
         *response = DAP_OK;
         if (0x00U == *request) {

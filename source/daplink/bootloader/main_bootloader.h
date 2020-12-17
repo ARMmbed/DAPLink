@@ -1,9 +1,9 @@
 /**
- * @file    main.h
+ * @file    main_bootloader.h
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MAIN_BOOTLOADER_H
+#define MAIN_BOOTLOADER_H
 
 #include <stdint.h>
 
