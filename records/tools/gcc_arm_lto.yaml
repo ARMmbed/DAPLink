@@ -1,0 +1,9 @@
+tool_specific:
+    gcc_arm:
+        misc:
+            common_flags:
+                - -flto
+            ld_flags:
+                - -flto
+                - -flto-partition=none
+                - -fuse-linker-plugin
