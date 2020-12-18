@@ -54,11 +54,11 @@ def build_projects(file, projects, tool, build=True, clean=False, parallel=False
     generator = generate.Generator(file)
     cores = 1
     if parallel:
-        cores = 4
         try:
             import multiprocessing
             cores = multiprocessing.cpu_count()
         except:
+            cores = 4
             pass
 
     for p_name in projects:
@@ -90,8 +90,7 @@ parser.add_argument('projects', help='Selectively compile only the firmware spec
                     nargs='*', type=str, default=[])
 parser.add_argument('--release', dest='release', action='store_true', help='Create a release with the yaml version file')
 parser.add_argument('--release-folder', type=str, default='firmware', help='Directory to create and place files in')
-parser.add_argument('--toolchain', type=str, default='GCC', help='Toolchain ("GCC", "ARMCC", "ARMCLANG", default: %(default)s',
-                    choices=['GCC', 'ARMCC', "ARMCLANG"])
+parser.add_argument('--toolchain', '-t', type=str, help='Toolchain (default: make_gcc_arm)')
 parser.add_argument('--clean', dest='clean', action='store_true', help='Rebuild or delete build folder before compile')
 parser.add_argument('--ignore-failures', dest='ignore_failures', action='store_true', help='Continue build even in case of failures')
 parser.add_argument('--parallel', dest='parallel', action='store_true', help='Build with multiple compilations in parallel')
@@ -103,13 +102,15 @@ parser.set_defaults(parallel=False)
 parser.set_defaults(release=False)
 args = parser.parse_args()
 
-toolchains = {
-    "GCC": "make_gcc_arm",
-    "ARMCC": "make_armcc",
-    "ARMCLANG": "make_armclang",
-}
 
-toolchain = toolchains[args.toolchain] if args.toolchain in toolchains.keys() else 'make_gcc_arm'
+toolchains = ["make_gcc_arm", "make_armcc", "make_armclang", # Make options
+              "cmake_gcc_arm", "cmake_armclang", # CMake options
+              "gcc_arm", "armcc", "armclang"] # Aliases for the make options
+toolchain = args.toolchain if args.toolchain else 'make_gcc_arm'
+if toolchain not in toolchains:
+    print("Unsupported toolchain '%s' (options: %s)\n" % (toolchain, ", ".join(toolchains)))
+    exit(-1)
+
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
 logger = logging.getLogger('progen_build')
@@ -145,13 +146,6 @@ for project in projects:
         else:
             logger.error("Missing file %s (build failed)" % (hex))
             exit(-1)
-
-    # TODO: I think this part is already done as part of the progen build with the call
-    # to the post_build_script_gcc.sh. Remove the next block if confirmed.
-    # We use the same check as the shell wrapper guard to run it only if necessary.
-    if not os.path.exists(crc + '.bin') or os.path.getmtime(hex) >= os.path.getmtime(crc + '.bin'):
-        logger.debug("Generating %s" % (crc + '.bin'))
-        post_build_script(hex, crc)
 
     # Do a build with board_id and family_id
     if project in id_map:
