@@ -35,6 +35,14 @@
 // Warning: this driver does *not* correctly support either isochronous endpoints or
 //          interrupt endpoints in rate feedback mode!
 
+// Number of logical endpoints.
+#define USBD_MAX_EPS (FSL_FEATURE_USBHSD_EP_NUM)
+
+// Mask for bit set on EP number to indicate IN EP.
+#define USB_IN_MASK         (0x80)
+// Mask to extract logical EP number from physical.
+#define USB_LOGICAL_EP_MASK (0x7f)
+
 #define EP_BUF_ACTIVE       (1UL << 31)
 #define EP_DISABLED         (1UL << 30)
 #define EP_STALL            (1UL << 29)
@@ -43,7 +51,7 @@
 #define EP_TYPE             (1UL << 26) // 0=generic, 1=periodic
 #define EP_NBYTES_MASK      (0x03fff800)
 #define EP_NBYTES_SHIFT     (11)
-#define EP_BUF_OFFSET_MASK  (0x000003ff)
+#define EP_BUF_OFFSET_MASK  (0x000007ff)
 #define EP_BUF_OFFSET_SHIFT (0)
 
 // DEVCMDSTAT Speed field values.
@@ -82,9 +90,9 @@ typedef struct BUF_INFO {
 
 EP_BUF_INFO EPBufInfo[(USBD_EP_NUM + 1) * 2];
 #if defined ( __CC_ARM ) || defined (__ARMCC_VERSION)
-volatile uint32_t EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((at(EP_LIST_BASE)));
+volatile uint32_t EPList[USBD_MAX_EPS * 4]  __attribute__((at(EP_LIST_BASE)));
 #elif defined ( __GNUC__ )
-volatile uint32_t EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((section(".usbram")));
+volatile uint32_t EPList[USBD_MAX_EPS * 4]  __attribute__((section(".usbram")));
 #else
 #error "Unsupported compiler!"
 #endif
@@ -100,15 +108,18 @@ static uint32_t s_read_ctrl_out_next = 0;
 
 uint32_t *GetEpCmdStatPtr(uint32_t EPNum)
 {
-    uint32_t ptr = 0;
+    uint32_t *ptr = (uint32_t *)EP_LIST_BASE;
 
-    if (EPNum & 0x80) {
-        EPNum &= ~0x80;
-        ptr = 8;
+    // 4 control words per endpoint: OUT 0, OUT 1, IN 0, IN 1
+    // EP0 is different but still has 4 words.
+    ptr += (EPNum & USB_LOGICAL_EP_MASK) * 4;
+
+    // For IN endpoints,
+    if (EPNum & USB_IN_MASK) {
+        ptr += 2;
     }
 
-    ptr += EP_LIST_BASE + EPNum * 16;
-    return ((uint32_t *)ptr);
+    return ptr;
 }
 
 
@@ -190,8 +201,9 @@ void NO_OPTIMIZE_INLINE USBD_Reset(void)
     uint32_t *ptr;
     s_next_ep_buf_addr = EP1_BUF_BASE;
 
-    for (i = 2; i < (5 * 4); i++) {
-        EPList[i] = (1UL << 30);            /* EPs disabled */
+    // Disable all EPs.
+    for (i = 0; i < sizeof(EPList) / sizeof(uint32_t); i++) {
+        EPList[i] = EP_DISABLED;
     }
 
     s_read_ctrl_out_next = 0;
@@ -320,12 +332,12 @@ void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
     type = pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK;
 
     /* IN EPs */
-    if (num & 0x80) {
-        num &= ~0x80;
+    if (num & USB_IN_MASK) {
+        num &= ~USB_IN_MASK;
         EPBufInfo[EP_IN_IDX(num)].buf_len  = val;
         EPBufInfo[EP_IN_IDX(num)].buf_ptr  = s_next_ep_buf_addr;
         s_next_ep_buf_addr += ROUND_UP(val, MIN_BUF_SIZE);     /* calc new free buffer address */
-        ptr  = GetEpCmdStatPtr(num | 0x80);
+        ptr  = GetEpCmdStatPtr(num | USB_IN_MASK);
         *ptr = EP_DISABLED;
 
         if (type == USB_ENDPOINT_TYPE_INTERRUPT) {
@@ -383,8 +395,8 @@ void USBD_EnableEP(uint32_t EPNum)
     ptr = GetEpCmdStatPtr(EPNum);
 
     /* IN EP */
-    if (EPNum & 0x80) {
-        EPNum &= ~0x80;
+    if (EPNum & USB_IN_MASK) {
+        EPNum &= ~USB_IN_MASK;
         *ptr &= ~EP_DISABLED;
         USBHSD->INTSTAT = (1 << EP_IN_IDX(EPNum));
         USBHSD->INTEN  |= (1 << EP_IN_IDX(EPNum));
@@ -414,8 +426,8 @@ void USBD_DisableEP(uint32_t EPNum)
     ptr = GetEpCmdStatPtr(EPNum);
     *ptr = EP_DISABLED;
 
-    if (EPNum & 0x80) {
-        EPNum &= ~0x80;
+    if (EPNum & USB_IN_MASK) {
+        EPNum &= ~USB_IN_MASK;
         USBHSD->INTEN &= ~(1 << EP_IN_IDX(EPNum));
 
     } else {
@@ -453,14 +465,14 @@ void USBD_SetStallEP(uint32_t EPNum)
     uint32_t *ptr;
     ptr = GetEpCmdStatPtr(EPNum);
 
-    if (EPNum & 0x7F) {
+    if (EPNum & USB_LOGICAL_EP_MASK) {
         if (*ptr & EP_BUF_ACTIVE) {
             *ptr &= ~(EP_BUF_ACTIVE);
         }
 
     } else {
-        if (EPNum & 0x80) {
-            EPNum &= ~0x80;
+        if (EPNum & USB_IN_MASK) {
+            EPNum &= ~USB_IN_MASK;
             USBHSD->EPSKIP |= (1 << EP_IN_IDX(EPNum));
 
             while (USBHSD->EPSKIP & (1 << EP_IN_IDX(EPNum)));
@@ -472,7 +484,7 @@ void USBD_SetStallEP(uint32_t EPNum)
         }
     }
 
-    if ((EPNum & 0x7F) == 0) {
+    if ((EPNum & USB_LOGICAL_EP_MASK) == 0) {
         /* Endpoint is stalled so control out won't be next */
         s_read_ctrl_out_next = 0;
     }
@@ -494,7 +506,7 @@ void USBD_ClrStallEP(uint32_t EPNum)
     uint32_t *ptr;
     ptr = GetEpCmdStatPtr(EPNum);
 
-    if (EPNum & 0x80) {
+    if (EPNum & USB_IN_MASK) {
         *ptr &=  ~EP_STALL;
 
     } else {
@@ -519,8 +531,8 @@ void USBD_ClearEPBuf(uint32_t EPNum)
     uint32_t  cnt, i;
     uint8_t  *dataptr;
 
-    if (EPNum & 0x80) {
-        EPNum &= ~0x80;
+    if (EPNum & USB_IN_MASK) {
+        EPNum &= ~USB_IN_MASK;
         dataptr = (uint8_t *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
         cnt     =       EPBufInfo[EP_IN_IDX(EPNum)].buf_len;
 
@@ -566,10 +578,7 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
         }
 
         dataptr = (uint8_t *)(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr + EP0_SETUP_BUF_OFFSET * USBD_MAX_PACKET0);
-
-        for (i = 0; i < cnt; i++) {
-            pData[i] = dataptr[i];
-        }
+        memcpy(pData, dataptr, cnt);
 
         // Copy the SETUP packet into a struct we can read from more understandably.
         USB_SETUP_PACKET setup;
@@ -615,11 +624,9 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
             cnt = size;
         }
 
-        cnt = cnt < size ? cnt : size;
+        cnt = MIN(cnt, size);
 
-        for (i = 0; i < cnt; i++) {
-            pData[i] = dataptr[i];
-        }
+        memcpy(pData, dataptr, cnt);
 
         *ptr = N_BYTES(EPBufInfo[EP_OUT_IDX(EPNum)].buf_len) |
                BUF_ADDR(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr) |
@@ -657,19 +664,17 @@ uint32_t USBD_WriteEP(uint32_t EPNum, uint8_t *pData, uint32_t cnt)
     volatile uint32_t *ptr;
     uint32_t *dataptr;
     ptr = GetEpCmdStatPtr(EPNum);
-    EPNum &= ~0x80;
+    EPNum &= ~USB_IN_MASK;
 
     while (*ptr & EP_BUF_ACTIVE);
 
-    *ptr &= ~(0x3FFFFFF);
-    *ptr |=  BUF_ADDR(EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr) |
-             N_BYTES(cnt);
-    dataptr = (uint32_t *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
+    uint32_t cmdstat = *ptr;
+    cmdstat &= ~(EP_NBYTES_MASK | EP_BUF_OFFSET_MASK);
+    cmdstat |=  BUF_ADDR(EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr) | N_BYTES(cnt);
+    *ptr = cmdstat;
 
-    for (i = 0; i < (cnt + 3) / 4; i++) {
-        dataptr[i] = __UNALIGNED_UINT32_READ(pData);
-        pData += 4;
-    }
+    dataptr = (uint32_t *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
+    memcpy(dataptr, pData, cnt);
 
     if (EPNum && (*ptr & EP_STALL)) {
         return (0);
@@ -813,7 +818,7 @@ void USBD_Handler(void)
     }
 
     /* EndPoint Interrupt */
-    if (sts & 0x3FF) {
+    if (sts & USBHSD_INTEN_EP_INT_EN_MASK) {
         const uint32_t endpoint_count = ((USBD_EP_NUM + 1) * 2);
 
         for (i = 0; i < endpoint_count; i++) {
