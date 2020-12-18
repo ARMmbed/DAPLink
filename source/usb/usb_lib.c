@@ -162,7 +162,7 @@ U8 USBD_Bulk_BulkOutBuf[USBD_BULK_MAX_PACKET];
 
 #if    (USBD_HID_ENABLE)
 #ifndef __RTX
-void USBD_Configure_Event(void)
+__WEAK void USBD_Configure_Event(void)
 {
     USBD_HID_Configure_Event();
 }
@@ -1056,7 +1056,7 @@ BOOL USBD_EndPoint0_Out_CLS_ReqToEP(void)
 
 #if   ((USBD_CDC_ACM_ENABLE))
 #ifndef __RTX
-void USBD_Reset_Event(void)
+__WEAK void USBD_Reset_Event(void)
 {
 #if    (USBD_CDC_ACM_ENABLE)
     USBD_CDC_ACM_Reset_Event();
@@ -1070,7 +1070,7 @@ void USBD_Reset_Event(void)
 
 #if   ((USBD_HID_ENABLE) || (USBD_ADC_ENABLE) || (USBD_CDC_ACM_ENABLE) || (USBD_CLS_ENABLE))
 #ifndef __RTX
-void USBD_SOF_Event(void)
+__WEAK void USBD_SOF_Event(void)
 {
 #if    (USBD_HID_ENABLE)
     USBD_HID_SOF_Event();

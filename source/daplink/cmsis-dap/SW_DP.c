@@ -32,7 +32,7 @@
 #pragma push
 #pragma O3
 #pragma Otime
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && !defined(__ARMCC_VERSION)
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 #endif
@@ -296,6 +296,6 @@ uint8_t  SWD_Transfer(uint32_t request, uint32_t *data) {
 
 #if defined(__CC_ARM)
 #pragma pop
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && !defined(__ARMCC_VERSION)
 #pragma GCC pop_options
 #endif

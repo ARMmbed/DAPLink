@@ -29,9 +29,11 @@
 #include "daplink.h"
 #include "crc.h"
 
+#if defined(__CC_ARM)
 // Supress the warning 'null argument provided for parameter marked with attribute "nonnull"'
 // since the vector table is at address 0
 #pragma diag_suppress 2748
+#endif
 
 #if !defined(DAPLINK_BOOTLOADER_UPDATE)
     #define DAPLINK_BOOTLOADER_UPDATE       0
