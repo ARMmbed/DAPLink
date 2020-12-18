@@ -143,3 +143,21 @@ void USART3_DeinitPins(void)
     /* PORT0 PIN29 (coords: ?) is configured as PIO0_24 */
     IOCON_PinMuxSet(IOCON, 0U, 3U, port0_pin3_config);
 }
+
+void init_vbus_pin(void)
+{
+    const uint32_t port0_pin22_config = (/* Pin is configured as USB0_VBUS */
+                                         IOCON_PIO_FUNC7 |
+                                         /* No addition pin function */
+                                         IOCON_PIO_MODE_INACT |
+                                         /* Standard mode, output slew rate control is enabled */
+                                         IOCON_PIO_SLEW_STANDARD |
+                                         /* Input function is not inverted */
+                                         IOCON_PIO_INV_DI |
+                                         /* Enables digital function */
+                                         IOCON_PIO_DIGITAL_EN |
+                                         /* Open drain is disabled */
+                                         IOCON_PIO_OPENDRAIN_DI);
+    /* PORT0 PIN22 (coords: 78) is configured as USB0_VBUS */
+    IOCON_PinMuxSet(IOCON, 0U, 22U, port0_pin22_config);
+}

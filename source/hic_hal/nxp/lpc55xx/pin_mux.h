@@ -48,6 +48,9 @@ void USART3_InitPins(void);
 void USART3_DeinitPins(void);
 //@}
 
+//! @brief Configure VBUS pin.
+void init_vbus_pin(void);
+
 #if defined(__cplusplus)
 }
 #endif

@@ -3,8 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
- * Copyright (c) 2016-2017 NXP
+ * Copyright (c) 2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,124 +20,189 @@
  */
 
 #include "hic_init.h"
-#include "gpio.h"
+#include "daplink.h"
 #include "fsl_clock.h"
+#include "fsl_power.h"
+#include "fsl_reset.h"
+#include "fsl_usb.h"
+#include "fsl_iocon.h"
 #include "usb_phy.h"
 #include "util.h"
 #include "flash_hal.h"
+#include "pin_mux.h"
 
 #define FLASH_CMD_BLANK_CHECK (0x5)
 
-static void busy_wait(uint32_t cycles)
-{
-    volatile uint32_t i;
-    i = cycles;
+/*******************************************************************************
+ ******************* Configuration BOARD_BootClockFROHF96M *********************
+ ******************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+!!Configuration
+name: BOARD_BootClockFROHF96M
+outputs:
+- {id: System_clock.outFreq, value: 96 MHz}
+settings:
+- {id: ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG, value: Enable}
+- {id: SYSCON.MAINCLKSELA.sel, value: ANACTRL.fro_hf_clk}
+sources:
+- {id: ANACTRL.fro_hf.outFreq, value: 96 MHz}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
 
-    while (i > 0) {
-        i--;
-    }
-}
-
-static void fll_delay(void)
+/*******************************************************************************
+ * Variables for BOARD_BootClockFROHF96M configuration
+ ******************************************************************************/
+/*******************************************************************************
+ * Code for BOARD_BootClockFROHF96M configuration
+ ******************************************************************************/
+void BOARD_BootClockFROHF96M(void)
 {
-    // ~2.5ms at 16MHz core clock
-    busy_wait(10000);
-}
+#ifndef SDK_SECONDARY_CORE
+    /*!< Set up the clock sources */
+    /*!< Configure FRO192M */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO192M); /*!< Ensure FRO is on  */
+    CLOCK_SetupFROClocking(12000000U);     /*!< Set up FRO to the 12 MHz, just for sure */
+    CLOCK_AttachClk(kFRO12M_to_MAIN_CLK);  /*!< Switch to FRO 12MHz first to ensure we can change the clock setting */
 
-// This IRQ handler will be invoked if VDD falls below the trip point.
-void LVD_LVW_IRQHandler(void)
-{
-#ifdef LPC55_FIXME
-    if (PMC->LVDSC1 & PMC_LVDSC1_LVDF_MASK)
-    {
-        util_assert(false && "low voltage detect tripped");
-        PMC->LVDSC1 |= PMC_LVDSC1_LVDACK_MASK;
-    }
-    if (PMC->LVDSC2 & PMC_LVDSC2_LVWF_MASK)
-    {
-        util_assert(false && "low voltage warning tripped");
-        PMC->LVDSC2 |= PMC_LVDSC2_LVWACK_MASK;
-    }
+    CLOCK_SetupFROClocking(96000000U); /* Enable FRO HF(96MHz) output */
+
+    POWER_SetVoltageForFreq(
+        96000000U); /*!< Set voltage for the one of the fastest clock outputs: System clock output */
+    CLOCK_SetFLASHAccessCyclesForFreq(96000000U); /*!< Set FLASH wait states for core */
+
+    /*!< Set up dividers */
+    CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false); /*!< Set AHBCLKDIV divider to value 1 */
+
+    /*!< Set up clock selectors - Attach clocks to the peripheries */
+    CLOCK_AttachClk(kFRO_HF_to_MAIN_CLK); /*!< Switch MAIN_CLK to FRO_HF */
+
+    /*< Set SystemCoreClock variable. */
+    SystemCoreClock = BOARD_BOOTCLOCKFROHF96M_CORE_CLOCK;
 #endif
 }
 
-//! - MPU is disabled and gated.
-//! - 8kB cache is enabled. SRAM is not cached, so no flushing is required for normal operation.
-//! - Enable low voltage warning interrupt.
-//! - Disable USB current limiter so the voltage doesn't drop as we enable high speed clocks.
+/*******************************************************************************
+ ******************** Configuration BOARD_BootClockPLL150M *********************
+ ******************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+!!Configuration
+name: BOARD_BootClockPLL150M
+called_from_default_init: true
+outputs:
+- {id: System_clock.outFreq, value: 150 MHz}
+settings:
+- {id: PLL0_Mode, value: Normal}
+- {id: ENABLE_CLKIN_ENA, value: Enabled}
+- {id: ENABLE_SYSTEM_CLK_OUT, value: Enabled}
+- {id: SYSCON.MAINCLKSELB.sel, value: SYSCON.PLL0_BYPASS}
+- {id: SYSCON.PLL0CLKSEL.sel, value: SYSCON.CLK_IN_EN}
+- {id: SYSCON.PLL0M_MULT.scale, value: '150', locked: true}
+- {id: SYSCON.PLL0N_DIV.scale, value: '8', locked: true}
+- {id: SYSCON.PLL0_PDEC.scale, value: '2', locked: true}
+sources:
+- {id: SYSCON.XTAL32M.outFreq, value: 16 MHz, enabled: true}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/*******************************************************************************
+ * Variables for BOARD_BootClockPLL150M configuration
+ ******************************************************************************/
+/*******************************************************************************
+ * Code for BOARD_BootClockPLL150M configuration
+ ******************************************************************************/
+void BOARD_BootClockPLL150M(void)
+{
+#ifndef SDK_SECONDARY_CORE
+    /*!< Set up the clock sources */
+    /*!< Configure FRO192M */
+//     POWER_DisablePD(kPDRUNCFG_PD_FRO192M); /*!< Ensure FRO is on  */
+//     CLOCK_SetupFROClocking(12000000U);     /*!< Set up FRO to the 12 MHz, just for sure */
+//     CLOCK_AttachClk(kFRO12M_to_MAIN_CLK);  /*!< Switch to FRO 12MHz first to ensure we can change the clock setting */
+
+    /*!< Configure XTAL32M */
+    POWER_DisablePD(kPDRUNCFG_PD_XTAL32M);                                /* Ensure XTAL32M is powered */
+    POWER_DisablePD(kPDRUNCFG_PD_LDOXO32M);                               /* Ensure XTAL32M is powered */
+    CLOCK_SetupExtClocking(16000000U);                                    /* Enable clk_in clock */
+    SYSCON->CLOCK_CTRL |= SYSCON_CLOCK_CTRL_CLKIN_ENA_MASK;               /* Enable clk_in from XTAL32M clock  */
+    ANACTRL->XO32M_CTRL |= ANACTRL_XO32M_CTRL_ENABLE_SYSTEM_CLK_OUT_MASK; /* Enable clk_in to system  */
+
+    POWER_SetVoltageForFreq(
+        150000000U); /*!< Set voltage for the one of the fastest clock outputs: System clock output */
+    CLOCK_SetFLASHAccessCyclesForFreq(150000000U); /*!< Set FLASH wait states for core */
+
+    /*!< Set up PLL */
+    CLOCK_AttachClk(kEXT_CLK_to_PLL0);  /*!< Switch PLL0CLKSEL to EXT_CLK */
+    POWER_DisablePD(kPDRUNCFG_PD_PLL0); /* Ensure PLL is on  */
+    POWER_DisablePD(kPDRUNCFG_PD_PLL0_SSCG);
+    const pll_setup_t pll0Setup = {
+        .pllctrl = SYSCON_PLL0CTRL_CLKEN_MASK | SYSCON_PLL0CTRL_SELI(53U) | SYSCON_PLL0CTRL_SELP(31U),
+        .pllndec = SYSCON_PLL0NDEC_NDIV(8U),
+        .pllpdec = SYSCON_PLL0PDEC_PDIV(1U),
+        .pllsscg = {0x0U, (SYSCON_PLL0SSCG1_MDIV_EXT(150U) | SYSCON_PLL0SSCG1_SEL_EXT_MASK)},
+        .pllRate = 150000000U,
+        .flags   = PLL_SETUPFLAG_WAITLOCK};
+    CLOCK_SetPLL0Freq(&pll0Setup); /*!< Configure PLL0 to the desired values */
+
+    /*!< Set up dividers */
+    CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false); /*!< Set AHBCLKDIV divider to value 1 */
+
+    /*!< Set up clock selectors - Attach clocks to the peripheries */
+    CLOCK_AttachClk(kPLL0_to_MAIN_CLK); /*!< Switch MAIN_CLK to PLL0 */
+
+    /*< Set SystemCoreClock variable. */
+    SystemCoreClock = BOARD_BOOTCLOCKPLL150M_CORE_CLOCK;
+#endif
+}
+
+//! Setup clocks to run from the FRO HF at 96 MHz.
 void sdk_init(void)
 {
-#ifdef LPC55_FIXME
-    CLOCK_SetXtal0Freq(16000000U); // 16 MHz crystal
-    CLOCK_SetXtal32Freq(0);
-
-    // Disable the MPU if it's enabled.
-    if (SIM->SCGC7 & SIM_SCGC7_MPU_MASK)
-    {
-        SYSMPU->CESR = 0;
-        SIM->SCGC7 &= ~SIM_SCGC7_MPU_MASK;
-    }
-
-    // Invalidate and enable code cache.
-    LMEM->PCCCR = LMEM_PCCCR_GO_MASK | LMEM_PCCCR_INVW1_MASK | LMEM_PCCCR_INVW0_MASK | LMEM_PCCCR_ENCACHE_MASK;
-
-    // Enable LVD/LVW IRQ.
-    PMC->LVDSC1 |= PMC_LVDSC1_LVDACK_MASK;
-    PMC->LVDSC1 = PMC_LVDSC1_LVDIE_MASK | PMC_LVDSC1_LVDV(0); // low trip point
-    PMC->LVDSC2 |= PMC_LVDSC2_LVWACK_MASK;
-    PMC->LVDSC2 = PMC_LVDSC2_LVWIE_MASK | PMC_LVDSC2_LVWV(0); // low trip point
-    // NVIC_EnableIRQ(LVD_LVW_IRQn);
-
-    // Disable USB inrush current limiter.
-    SIM->USBPHYCTL |= SIM_USBPHYCTL_USBDISILIM_MASK;
-#endif
+    BOARD_BootClockFROHF96M();
 }
 
+//! - Configure the VBUS pin.
+//! - Switch USB1 to device mode.
 //! - Turn on 16MHz crystal oscillator.
-//! - Turn on 32kHz IRC.
-//! - Switch core clock to System PLL at 120 MHz, bus clock at 60 MHz, flash clock at 24 MHz.
-//! - Enable the 480MHz USB PHY PLL.
+//! - Switch main clock to PLL0 at 150 MHz.
 //! - Ungate USBPHY and USBHS.
-//! - Configure the USB PHY.
+//! - Configure the USB PHY and USB1 clocks.
 void hic_enable_usb_clocks(void)
 {
-#ifdef LPC55_FIXME
-    // Enable external oscillator and 32kHz IRC.
-    MCG->C1 |= MCG_C1_IRCLKEN_MASK; // Select 32k IR.
-    // Delay at least 100µs for 32kHz IRQ to stabilize.
-    fll_delay();
-    // Configure OSC for very high freq, low power mode.
-    MCG->C2 = (MCG->C2 & ~(MCG_C2_RANGE_MASK | MCG_C2_HGO_MASK)) | MCG_C2_RANGE(2);
-    OSC0->CR |= OSC_CR_ERCLKEN_MASK; // Enable OSC.
-    MCG->C2 |= MCG_C2_EREFS_MASK; // Select OSC as ext ref.
-
-    // Wait for the oscillator to stabilize.
-    while (!(MCG->S & MCG_S_OSCINIT0_MASK))
-    {
-    }
-
-    // Divide 16MHz xtal by 512 = 31.25kHz
-    CLOCK_SetFbeMode(4, kMCG_Dmx32Default, kMCG_DrsMid, fll_delay);
-
-    // Set dividers before switching to SYSPLL.
-    SIM->CLKDIV1 = SIM_CLKDIV1_OUTDIV1(0)       // System/core  /1 = 120MHz
-                    | SIM_CLKDIV1_OUTDIV2(1)    // Bus          /2 = 60Mhz
-                    | SIM_CLKDIV1_OUTDIV3(4)    // FlexBus      /5 = 24Mhz
-                    | SIM_CLKDIV1_OUTDIV4(4);   // Flash        /5 = 24MHz
-
-    // 120MHz SYSPLL
-    mcg_pll_config_t pllConfig;
-    pllConfig.enableMode = 0;
-    pllConfig.prdiv = 2 - 1;
-    pllConfig.vdiv = 30 - 16;
-    CLOCK_SetPbeMode(kMCG_PllClkSelPll0, &pllConfig);
-    CLOCK_SetPeeMode();
-
-    // Enable USB clock source and init phy. This turns on the 480MHz PLL.
-    CLOCK_EnableUsbhs0Clock(kCLOCK_UsbSrcPll0, CLOCK_GetFreq(kCLOCK_PllFllSelClk));
-    USB_EhciPhyInit(0, CPU_XTAL_CLK_HZ);
+    // For the interface, switch to 150 MHz before enabling USB. The bootloader will stay at 96 MHz
+    // so it can always write internal flash.
+#if defined(DAPLINK_IF)
+    BOARD_BootClockPLL150M();
 #endif
-    SystemCoreClockUpdate();
+
+    NVIC_ClearPendingIRQ(USB1_IRQn);
+    NVIC_ClearPendingIRQ(USB1_NEEDCLK_IRQn);
+
+    /* reset the IP to make sure it's in reset state. */
+    RESET_PeripheralReset(kUSB1H_RST_SHIFT_RSTn);
+    RESET_PeripheralReset(kUSB1D_RST_SHIFT_RSTn);
+    RESET_PeripheralReset(kUSB1_RST_SHIFT_RSTn);
+    RESET_PeripheralReset(kUSB1RAM_RST_SHIFT_RSTn);
+
+    // Enable VBUS pin.
+    init_vbus_pin();
+
+    // Switch IP to device mode. First enable the USB1 host clock.
+    CLOCK_EnableClock(kCLOCK_Usbh1);
+    // Put PHY powerdown under software control
+    USBHSH->PORTMODE = USBHSH_PORTMODE_SW_PDCOM_MASK;
+    // According to reference mannual, device mode setting has to be set by access usb host register
+    USBHSH->PORTMODE |= USBHSH_PORTMODE_DEV_ENABLE_MASK;
+    // Disable usb1 host clock
+    CLOCK_DisableClock(kCLOCK_Usbh1);
+
+    // Enable clocks.
+    CLOCK_EnableUsbhs0PhyPllClock(kCLOCK_UsbPhySrcExt, BOARD_XTAL0_CLK_HZ);
+    CLOCK_EnableUsbhs0DeviceClock(kCLOCK_UsbSrcUnused, 0U);
+
+    // Init PHY.
+    USB_EhciPhyInit(kUSB_ControllerLpcIp3511Hs0, BOARD_XTAL0_CLK_HZ, NULL);
 }
 
 void hic_power_target(void)
@@ -147,21 +211,7 @@ void hic_power_target(void)
     // to prevent the target from effecting the state
     // of the reset line / reset button
     if (!daplink_is_bootloader()) {
-#ifdef LPC55_FIXME
-        // configure pin as GPIO
-        PIN_POWER_EN_PORT->PCR[PIN_POWER_EN_BIT] = PORT_PCR_MUX(1);
-        // force always on logic 1
-        PIN_POWER_EN_GPIO->PSOR = 1UL << PIN_POWER_EN_BIT;
-        PIN_POWER_EN_GPIO->PDDR |= 1UL << PIN_POWER_EN_BIT;
-
-        // Let the voltage rails stabilize.  This is especailly important
-        // during software resets, since the target's 3.3v rail can take
-        // 20-50ms to drain.  During this time the target could be driving
-        // the reset pin low, causing the bootloader to think the reset
-        // button is pressed.
-        // Note: With optimization set to -O2 the value 5115 delays for ~1ms @ 20.9Mhz core
-        busy_wait(5115 * 50);
-#endif
+        // Nothing to do for MCU-Link schematic.
     }
 }
 

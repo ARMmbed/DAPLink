@@ -3,8 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
- * Copyright (c) 2016-2017 NXP
+ * Copyright (c) 2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,6 +18,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#define BOARD_XTAL0_CLK_HZ 16000000U /*!< Board xtal frequency in Hz */
+#define BOARD_XTAL32K_CLK_HZ 32768U  /*!< Board xtal32K frequency in Hz */
+
+#define BOARD_BOOTCLOCKFROHF96M_CORE_CLOCK 96000000U /*!< Core clock frequency: 96000000Hz */
+#define BOARD_BOOTCLOCKPLL150M_CORE_CLOCK 150000000U /*!< Core clock frequency: 150000000Hz */
 
 #if defined(__cplusplus)
 extern "C" {
