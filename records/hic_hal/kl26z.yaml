@@ -35,7 +35,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\freescale\kl26z"
+                - --predefine="-Isource/hic_hal/freescale/kl26z"
         sources:
             hic_hal:
                 - source/hic_hal/freescale/kl26z/armcc

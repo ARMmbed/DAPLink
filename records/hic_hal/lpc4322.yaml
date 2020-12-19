@@ -26,7 +26,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\nxp\lpc4322"
+                - --predefine="-Isource/hic_hal/nxp/lpc4322"
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc

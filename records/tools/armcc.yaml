@@ -21,17 +21,11 @@ tool_specific:
             ld_flags:
                 - --bestdebug
                 - --summary_stderr
-                - --info summarysizes
-                - --map
                 - --load_addr_map_info
                 - --xref
                 - --callgraph
                 - --symbols
-                - --info sizes
-                - --info totals
-                - --info unused
-                - --info veneers
-                - --list "$@.map"
+                - --info summarysizes,sizes,totals,unused,veneers
             pre_build_script:
                 - tools/pre_build_script.py
             post_build_script:

@@ -30,7 +30,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\nuvoton\m48ssidae"
+                - --predefine="-Isource/hic_hal/nuvoton/m48ssidae"
         sources:
             hic_hal:
                 - source/hic_hal/nuvoton/m48ssidae/armcc

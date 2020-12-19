@@ -27,7 +27,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\atmel\sam3u2c"
+                - --predefine="-Isource/hic_hal/atmel/sam3u2c"
         sources:
             hic_hal:
                 - source/hic_hal/atmel/sam3u2c/armcc

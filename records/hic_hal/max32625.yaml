@@ -24,7 +24,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\maxim\max32625"
+                - --predefine="-Isource/hic_hal/maxim/max32625"
         sources:
             hic_hal:
                 - source/hic_hal/maxim/max32625/armcc

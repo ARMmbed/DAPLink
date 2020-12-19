@@ -24,7 +24,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\nxp\lpc11u35"
+                - --predefine="-Isource/hic_hal/nxp/lpc11u35"
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc11u35/armcc

@@ -41,7 +41,7 @@ tool_specific:
     armcc:
         misc:
             ld_flags:
-                - --predefine="-Isource\hic_hal\freescale\k26f"
+                - --predefine="-Isource/hic_hal/freescale/k26f"
             c_flags:
                 - --no_unaligned_access
                 - --diag_suppress=66 # disable warning about enums not fitting in signed 32-bit
