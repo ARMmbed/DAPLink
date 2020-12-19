@@ -54,3 +54,18 @@ jobs:
         echo Installing $gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux in {{ runner.temp }}/arm-gcc
         mkdir -p ${{ runner.temp }}/arm-gcc
         tar jvxf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
+
+    - name: Install dependencies
+      run:  |
+        sudo apt install ccache ninja-build
+        for i in ${{ runner.temp }}/arm-gcc/bin/* ; ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
+        ccache -M 1Ti
+
+    - name: Compile
+      run:  |
+        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:$PATH
+        python tools/progen_compile.py
+
+    - name: Display results
+      run:  |
+        - (find projectfiles -name *.elf | xargs ls -l; ccache -s) | tee log.txt
