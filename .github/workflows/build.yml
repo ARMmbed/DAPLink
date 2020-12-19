@@ -58,14 +58,14 @@ jobs:
     - name: Install dependencies
       run:  |
         sudo apt install ccache ninja-build
-        for i in ${{ runner.temp }}/arm-gcc/bin/* ; ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
+        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
         ccache -M 1Ti
 
     - name: Compile
       run:  |
         export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:$PATH
-        python tools/progen_compile.py
+        python tools/progen_compile.py --release --parallel
 
     - name: Display results
       run:  |
-        - (find projectfiles -name *.elf | xargs ls -l; ccache -s) | tee log.txt
+        - (ls -lR firmware_*; ccache -s) | tee log.txt
