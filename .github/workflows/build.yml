@@ -22,14 +22,6 @@ jobs:
         key:  ${{ runner.os }}-${{ env.cache-name }}
         restore-keys: ${{ runner.os }}-${{ env.cache-name }}
 
-    - name: Cache CCache
-      id:   ccache
-      uses: actions/cache@v2
-      with:
-        path: ~/.ccache
-        key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
-        restore-keys: ${{ runner.os }}-ccache-
-
     - name: Cache Python modules
       uses: actions/cache@v2
       with:
@@ -62,7 +54,16 @@ jobs:
         for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
         ccache -M 1Ti
         export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
-        arm-none-eabi-gcc -v
+        arm-none-eabi-gcc -v | tee log.txt
+        (git status; git log -1 )>> log.txt
+
+    - name: Cache CCache
+      id:   ccache
+      uses: actions/cache@v2
+      with:
+        path: ~/.ccache
+        key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
+        restore-keys: ${{ runner.os }}-ccache-
 
     - name: Compile
       run:  |
