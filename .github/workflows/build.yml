@@ -50,10 +50,13 @@ jobs:
 
     - name: Install dependencies
       run:  |
-        sudo apt install ccache ninja-build
-        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
-        ccache -M 1Ti
+        sudo apt install -y ccache ninja-build
         export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
+        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
+        ccache --set-config=cache_dir="$GITHUB_WORKSPACE"
+        ccache --set-config=cache_dir="$GITHUB_WORKSPACE/.ccache"
+        ccache --set-config=max_size=2Ti
+        ccache -z -s
         arm-none-eabi-gcc -v | tee log.txt
         (git status; git log -1 )>> log.txt
 
@@ -61,7 +64,7 @@ jobs:
       id:   ccache
       uses: actions/cache@v2
       with:
-        path: ~/.ccache
+        path: .ccache
         key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
         restore-keys: ${{ runner.os }}-ccache-
 
