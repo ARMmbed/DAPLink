@@ -22,6 +22,14 @@ jobs:
         key:  ${{ runner.os }}-${{ env.cache-name }}
         restore-keys: ${{ runner.os }}-${{ env.cache-name }}
 
+    - name: Cache CCache
+      id:   ccache
+      uses: actions/cache@v2
+      with:
+        path: ~/.ccache
+        key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
+        restore-keys: ${{ runner.os }}-ccache-
+
     - name: Cache Python modules
       uses: actions/cache@v2
       with:
@@ -38,15 +46,11 @@ jobs:
         pip3 install --user -r requirements.txt
         pip3 install --user git+https://github.com/mbrossard/project_generator.git@development
 
-    - name: Install dependencies
-      run:  |
-        sudo apt install ccache ninja
-
     - name: Install Embedded Arm Toolchain
       if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
       run:  |
-        curl -O -S https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+        curl -O -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
         md5sum gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+        echo Installing $gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux in {{ runner.temp }}/arm-gcc
         mkdir -p ${{ runner.temp }}/arm-gcc
         tar jvxf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
-
