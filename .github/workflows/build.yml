@@ -44,7 +44,7 @@ jobs:
     - name: Install Python module
       run:  |
         pip3 install --user -r requirements.txt
-        pip3 uninstall --user -y project-generator
+        pip3 uninstall -y project-generator
         pip3 install --user git+https://github.com/mbrossard/project_generator.git@development
 
     - name: Install Embedded Arm Toolchain
