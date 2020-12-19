@@ -1,0 +1,30 @@
+name: Build DAPLink
+
+on:
+  push:
+    branches: [ development ]
+
+  pull_request:
+    branches: [ development ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Cache Embedded Arm Toolchain
+      id:   cache-arm-gcc
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-arm-gcc-9-2020-q2
+      with:
+        path: ${{ runner.temp }}/arm-gcc
+        key:  ${{ runner.os }}-build-${{ env.cache-name }}
+        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}
+
+    - name: Install Embedded Arm Toolchain
+      if:   steps.cache-arm-none-eabi-gcc.outputs.cache-hit != 'true'
+      uses: fiam/arm-none-eabi-gcc@v1.0.2
+      with:
+        release: 9-2020-q2
+        directory: ${{ runner.temp }}/arm-gcc
