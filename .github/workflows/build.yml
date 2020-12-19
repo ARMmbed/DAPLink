@@ -16,15 +16,15 @@ jobs:
       id:   cache-arm-gcc
       uses: actions/cache@v2
       env:
-        cache-name: cache-arm-gcc-9-2020-q2
+        cache-name: arm-gcc-9-2020-q2
       with:
         path: ${{ runner.temp }}/arm-gcc
-        key:  ${{ runner.os }}-build-${{ env.cache-name }}
-        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}
+        key:  ${{ runner.os }}-${{ env.cache-name }}
+        restore-keys: ${{ runner.os }}-${{ env.cache-name }}
 
     - name: Install Embedded Arm Toolchain
-      if:   steps.cache-arm-none-eabi-gcc.outputs.cache-hit != 'true'
-      uses: fiam/arm-none-eabi-gcc@v1.0.2
-      with:
-        release: 9-2020-q2
-        directory: ${{ runner.temp }}/arm-gcc
+      if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
+      run:  |
+        curl -O -S https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+        mkdir -p ${{ runner.temp }}/arm-gcc
+        tar jvxf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
