@@ -61,15 +61,14 @@ jobs:
         sudo apt install ccache ninja-build
         for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
         ccache -M 1Ti
+        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
+        arm-none-eabi-gcc -v
 
     - name: Compile
       run:  |
-        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
-        python tools/progen_compile.py --release --parallel
-
-    - name: Display results
-      run:  |
-        - (ls -lR firmware_*; ccache -s) | tee log.txt
+        export PATH="/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH"
+        python tools/progen_compile.py --release --parallel -v -v --ignore-failures
+        (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
 
     - name: Upload test artifacts
       uses: actions/upload-artifact@v2
