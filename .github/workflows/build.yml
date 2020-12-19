@@ -58,7 +58,7 @@ jobs:
     - name: Install dependencies
       run:  |
         sudo apt install ccache ninja-build
-        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
+        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
         ccache -M 1Ti
 
     - name: Compile
@@ -69,3 +69,10 @@ jobs:
     - name: Display results
       run:  |
         - (ls -lR firmware_*; ccache -s) | tee log.txt
+
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: firmware-package
+        path: |
+          firmware*/*.zip
