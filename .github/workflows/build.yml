@@ -44,6 +44,7 @@ jobs:
     - name: Install Python module
       run:  |
         pip3 install --user -r requirements.txt
+        pip3 uninstall --user -y project-generator
         pip3 install --user git+https://github.com/mbrossard/project_generator.git@development
 
     - name: Install Embedded Arm Toolchain
@@ -63,7 +64,7 @@ jobs:
 
     - name: Compile
       run:  |
-        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:$PATH
+        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
         python tools/progen_compile.py --release --parallel
 
     - name: Display results
