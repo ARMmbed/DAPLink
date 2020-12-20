@@ -211,6 +211,7 @@ typedef struct {
   uint8_t     fast_clock;                       // Fast Clock Flag
   uint8_t     padding[2];
   uint32_t   clock_delay;                       // Clock Delay
+  uint32_t nominal_clock;                       // Nominal requested clock frequency in Hertz.
   uint32_t     timestamp;                       // Last captured Timestamp
   struct {                                      // Transfer Configuration
     uint8_t   idle_cycles;                      // Idle cycles after transfer
