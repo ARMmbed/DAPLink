@@ -33,7 +33,7 @@ LR_IROM1 DAPLINK_ROM_APP_START DAPLINK_ROM_APP_SIZE {
   RW_IRAM1 DAPLINK_RAM_APP_START DAPLINK_RAM_APP_SIZE {  ; RW data
    .ANY (ram_func)
    .ANY (+RW +ZI)
-   main.o (+RW +ZI)
+   main_*.o (+RW +ZI)
    startup_*.o (+RW +ZI)
    .ANY (RAM1)
   }
