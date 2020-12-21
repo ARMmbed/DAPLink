@@ -46,6 +46,11 @@
 #include "flash_manager.h"
 #endif
 
+/* Avoids the semihosting issue */
+#if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+__asm("  .global __ARM_use_no_argv\n");
+#endif
+
 // Event flags for main task
 // Timers events
 #define FLAGS_MAIN_90MS         (1 << 0)

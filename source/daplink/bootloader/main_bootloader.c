@@ -38,6 +38,11 @@
 #define MSC_LED_DEF GPIO_LED_ON
 #endif
 
+/* Avoids the semihosting issue */
+#if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+__asm("  .global __ARM_use_no_argv\n");
+#endif
+
 #if defined(__CC_ARM)
 __asm void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 {
