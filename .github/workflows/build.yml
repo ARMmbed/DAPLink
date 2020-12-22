@@ -1,11 +1,9 @@
 name: Build DAPLink
-
 on:
-  push:
-    branches: [ development ]
-
-  pull_request:
-    branches: [ development ]
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
 
 jobs:
   build:
