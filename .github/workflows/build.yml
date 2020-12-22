@@ -77,7 +77,7 @@ jobs:
     - name: Upload test artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: firmware-dev-{{github.run_number}}
+        name: firmware-dev-${{github.run_number}}
         path: |
           firmware*/*
           !firmware*/*.zip
