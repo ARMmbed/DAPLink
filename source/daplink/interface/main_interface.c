@@ -51,6 +51,18 @@
 __asm("  .global __ARM_use_no_argv\n");
 #endif
 
+#if  defined(__CC_ARM) || \
+    (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050))
+#ifndef __MICROLIB
+/* Avoids early implicit call to osKernelInitialize() */
+void _platform_post_stackheap_init (void) {}
+#endif
+#elif defined(__GNUC__)
+/* Avoids early implicit call to osKernelInitialize() */
+void software_init_hook (void) {}
+void __libc_init_array (void) {}
+#endif
+
 // Event flags for main task
 // Timers events
 #define FLAGS_MAIN_90MS         (1 << 0)
