@@ -57,30 +57,30 @@ __isr_vector:
     .long    0                     /* Reserved */
     .long    0                     /* Reserved */
     .long    0                     /* Reserved */
-    .long    DAPLINK_BUILD_KEY     /* Build type - BL/IF*/
-    .long    DAPLINK_HIC_ID        /* Compatibility*/
-    .long    DAPLINK_VERSION       /* Version*/
+    .long    DAPLINK_BUILD_KEY     /* Build type - BL/IF */
+    .long    DAPLINK_HIC_ID        /* Compatibility */
+    .long    DAPLINK_VERSION       /* Version */
     .long    SVC_Handler           /* SVCall Handler */
     .long    0                     /* Reserved */
-    .long    0                     /* Reserved */
+    .long    g_board_info          /* Ptr to Board info, family info other target details */
     .long    PendSV_Handler        /* PendSV Handler */
     .long    SysTick_Handler       /* SysTick Handler */
 
 /* LPC11xx interrupts */
-    .long   WAKEUP_IRQHandler         /* 16  0 Wake-up on  pin  PIO0_0             */
-    .long   WAKEUP_IRQHandler         /* 17  1 Wake-up on  pin  PIO0_1             */
-    .long   WAKEUP_IRQHandler         /* 18  2 Wake-up on  pin  PIO0_2             */
-    .long   WAKEUP_IRQHandler         /* 19  3 Wake-up on  pin  PIO0_3             */
-    .long   WAKEUP_IRQHandler         /* 20  4 Wake-up on  pin  PIO0_4             */
-    .long   WAKEUP_IRQHandler         /* 21  5 Wake-up on  pin  PIO0_5             */
-    .long   WAKEUP_IRQHandler         /* 22  6 Wake-up on  pin  PIO0_6             */
-    .long   WAKEUP_IRQHandler         /* 23  7 Wake-up on  pin  PIO0_7             */
-    .long   WAKEUP_IRQHandler         /* 24  8 Wake-up on  pin  PIO0_8             */
-    .long   WAKEUP_IRQHandler         /* 25  9 Wake-up on  pin  PIO0_9             */
-    .long   WAKEUP_IRQHandler         /* 26 10 Wake-up on  pin  PIO0_10            */
-    .long   WAKEUP_IRQHandler         /* 27 11 Wake-up on  pin  PIO0_11            */
-    .long   WAKEUP_IRQHandler         /* 28 12 Wake-up on  pin  PIO1_0             */
-    .long   Default_Handler           /* 29 13                                     */
+    .long   FLEX_INT0_IRQHandler      /* 16  0 Wake-up on  pin  PIO0_0             */
+    .long   FLEX_INT1_IRQHandler      /* 17  1 Wake-up on  pin  PIO0_1             */
+    .long   FLEX_INT2_IRQHandler      /* 18  2 Wake-up on  pin  PIO0_2             */
+    .long   FLEX_INT3_IRQHandler      /* 19  3 Wake-up on  pin  PIO0_3             */
+    .long   FLEX_INT4_IRQHandler      /* 20  4 Wake-up on  pin  PIO0_4             */
+    .long   FLEX_INT5_IRQHandler      /* 21  5 Wake-up on  pin  PIO0_5             */
+    .long   FLEX_INT6_IRQHandler      /* 22  6 Wake-up on  pin  PIO0_6             */
+    .long   FLEX_INT7_IRQHandler      /* 23  7 Wake-up on  pin  PIO0_7             */
+    .long   GINT0_IRQHandler          /* 24  8 Wake-up on  pin  PIO0_8             */
+    .long   GINT1_IRQHandler          /* 25  9 Wake-up on  pin  PIO0_9             */
+    .long   Reserved_IRQHandler       /* 26 10 Reserved                            */
+    .long   Reserved_IRQHandler       /* 27 11 Reserved                            */
+    .long   Reserved_IRQHandler       /* 28 12 Reserved                            */
+    .long   Reserved_IRQHandler       /* 29 13 Reserved                            */
     .long   SSP1_IRQHandler           /* 30 14 SSP1                                */
     .long   I2C_IRQHandler            /* 31 15 I2C0 SI (state change)              */
     .long   TIMER16_0_IRQHandler      /* 32 16 CT16B0 16 bit timer 0               */
@@ -89,17 +89,17 @@ __isr_vector:
     .long   TIMER32_1_IRQHandler      /* 35 19 CT32B1 32 bit timer 1               */
     .long   SSP0_IRQHandler           /* 36 20 SSP                                 */
     .long   UART_IRQHandler           /* 37 21 UART                                */
-    .long   Default_Handler           /* 38 22                                     */
-    .long   Default_Handler           /* 39 23                                     */
+    .long   USB_IRQHandler            /* 38 22 USB IRQ                             */
+    .long   USB_FIQHandler            /* 39 23 USB IRQ                             */
     .long   ADC_IRQHandler            /* 40 24 ADC end of conversion               */
     .long   WDT_IRQHandler            /* 41 25 Watchdog interrupt (WDINT)          */
     .long   BOD_IRQHandler            /* 42 26 BOD Brown-out detect                */
-    .long   Default_Handler           /* 43 27                                     */
-    .long   PIOINT3_IRQHandler        /* 44 28 PIO_3  GPIO interrupt status of port 3 */
-    .long   PIOINT2_IRQHandler        /* 45 29 PIO_2  GPIO interrupt status of port 2 */
-    .long   PIOINT1_IRQHandler        /* 46 30 PIO_1  GPIO interrupt status of port 1 */
-    .long   PIOINT0_IRQHandler        /* 47 31 PIO_0  GPIO interrupt status of port 0 */
-    
+    .long   FMC_IRQHandler            /* 43 27 IP2111 Flash Memory Controller      */
+    .long   Reserved_IRQHandler       /* 44 28 Reserved                            */
+    .long   Reserved_IRQHandler       /* 45 29 Reserved                            */
+    .long   USBWakeup_IRQHandler      /* 46 30 USB wake up                         */
+    .long   Reserved_IRQHandler       /* 47 31 Reserved                            */
+
     .size    __isr_vector, . - __isr_vector
 
     .section .text.Reset_Handler
@@ -132,6 +132,11 @@ Reset_Handler:
     blt    .Lflash_to_ram_loop
 .Lflash_to_ram_loop_end:
 
+	/* Power on RAM1 and USBRAM area */
+	ldr     r0, =0x40048080 /* System clock control */
+	ldr     r1, =0x0C00485F /* boot default + RAM1, USBRAM */
+	str     r1, [r0]
+
     ldr    r0, =SystemInit
     blx    r0
     ldr    r0, =_start
@@ -159,13 +164,23 @@ Reset_Handler:
     def_default_handler     PendSV_Handler
     def_default_handler     SysTick_Handler
     def_default_handler     Default_Handler
+    def_default_handler     Reserved_IRQHandler
 
     .macro    def_irq_default_handler    handler_name
     .weak     \handler_name
     .set      \handler_name, Default_Handler
     .endm
-    
-    def_irq_default_handler    WAKEUP_IRQHandler
+
+    def_irq_default_handler    FLEX_INT0_IRQHandler
+    def_irq_default_handler    FLEX_INT1_IRQHandler
+    def_irq_default_handler    FLEX_INT2_IRQHandler
+    def_irq_default_handler    FLEX_INT3_IRQHandler
+    def_irq_default_handler    FLEX_INT4_IRQHandler
+    def_irq_default_handler    FLEX_INT5_IRQHandler
+    def_irq_default_handler    FLEX_INT6_IRQHandler
+    def_irq_default_handler    FLEX_INT7_IRQHandler
+    def_irq_default_handler    GINT0_IRQHandler
+    def_irq_default_handler    GINT1_IRQHandler
     def_irq_default_handler    SSP1_IRQHandler
     def_irq_default_handler    I2C_IRQHandler
     def_irq_default_handler    TIMER16_0_IRQHandler
@@ -174,12 +189,12 @@ Reset_Handler:
     def_irq_default_handler    TIMER32_1_IRQHandler
     def_irq_default_handler    SSP0_IRQHandler
     def_irq_default_handler    UART_IRQHandler
+    def_irq_default_handler    USB_IRQHandler
+    def_irq_default_handler    USB_FIQHandler
     def_irq_default_handler    ADC_IRQHandler
     def_irq_default_handler    WDT_IRQHandler
     def_irq_default_handler    BOD_IRQHandler
-    def_irq_default_handler    PIOINT3_IRQHandler
-    def_irq_default_handler    PIOINT2_IRQHandler
-    def_irq_default_handler    PIOINT1_IRQHandler
-    def_irq_default_handler    PIOINT0_IRQHandler
+    def_irq_default_handler    FMC_IRQHandler
+    def_irq_default_handler    USBWakeup_IRQHandler
 
     .end
