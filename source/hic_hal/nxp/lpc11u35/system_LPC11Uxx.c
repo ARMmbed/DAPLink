@@ -54,7 +54,7 @@
 //
 //     <h> WD Oscillator Setting (WDTOSCCTRL)
 //       <o.0..4> DIVSEL: Select Divider for Fclkana
-//              <i> wd_osc_clk = Fclkana / (2 � (1 + DIVSEL))
+//              <i> wd_osc_clk = Fclkana / (2 * (1 + DIVSEL))
 //            <0-31>
 //       <o.5..8> FREQSEL: Select WD Oscillator Analog Output Frequency (Fclkana)
 //            <1=> 0.5 MHz
@@ -120,7 +120,7 @@
 //   </e>
 //
 //   <e> USB Clock Configuration
-#define USB_CLOCK_SETUP       0
+#define USB_CLOCK_SETUP       1
 //     <h> USB PLL Control (USBPLLCTRL)
 //              <i> F_clkout = M * F_clkin = F_CCO / (2 * P)
 //              <i> F_clkin must be in the range of  10 MHz to  25 MHz
