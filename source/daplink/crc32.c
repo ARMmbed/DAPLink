@@ -21,6 +21,7 @@
  */
 
 #include "crc.h"
+#include "compiler.h"
 
 #define FALSE	0
 #define TRUE	!FALSE
@@ -105,7 +106,7 @@ reflect(unsigned long data, unsigned char nBits)
  * Returns:		The CRC of the message.
  *
  *********************************************************************/
-uint32_t
+__WEAK uint32_t
 crc32(const void *data, int nBytes)
 {
     crc            remainder = INITIAL_REMAINDER;
@@ -154,7 +155,7 @@ crc32(const void *data, int nBytes)
  * Returns:		The CRC of the message.
  *
  *********************************************************************/
-uint32_t
+__WEAK uint32_t
 crc32_continue(uint32_t prev_crc, const void *data, int nBytes)
 {
     crc            remainder = REFLECT_REMAINDER(prev_crc ^ FINAL_XOR_VALUE);
