@@ -44,20 +44,20 @@
 //   <i> Defines the combined global dynamic memory size.
 //   <i> Default: 32768
 #ifndef OS_DYNAMIC_MEM_SIZE
-#define OS_DYNAMIC_MEM_SIZE         32768
+#define OS_DYNAMIC_MEM_SIZE         0 // DAPLINK. Default was: 32768
 #endif
  
 //   <o>Kernel Tick Frequency [Hz] <1-1000000>
 //   <i> Defines base time unit for delays and timeouts.
 //   <i> Default: 1000 (1ms tick)
 #ifndef OS_TICK_FREQ
-#define OS_TICK_FREQ                1000
+#define OS_TICK_FREQ                10000 // DAPLINK. Default was: 1000
 #endif
  
 //   <e>Round-Robin Thread switching
 //   <i> Enables Round-Robin Thread switching.
 #ifndef OS_ROBIN_ENABLE
-#define OS_ROBIN_ENABLE             1
+#define OS_ROBIN_ENABLE             0 // DAPLINK. Default was: 1
 #endif
  
 //     <o>Round-Robin Timeout <1-1000>
@@ -76,7 +76,7 @@
 //   <i> RTOS Functions called from ISR store requests to this buffer.
 //   <i> Default: 16 entries
 #ifndef OS_ISR_FIFO_QUEUE
-#define OS_ISR_FIFO_QUEUE           16
+#define OS_ISR_FIFO_QUEUE           4 // DAPLINK. Default was: 16
 #endif
  
 //   <q>Object Memory usage counters
@@ -100,7 +100,7 @@
 //     <i> Defines maximum number of user threads that can be active at the same time.
 //     <i> Applies to user threads with system provided memory for control blocks.
 #ifndef OS_THREAD_NUM
-#define OS_THREAD_NUM               1
+#define OS_THREAD_NUM               0 // DAPLINK. Default was: 1
 #endif
  
 //     <o>Number of user Threads with default Stack size <0-1000>
@@ -124,14 +124,14 @@
 //   <i> Defines stack size for threads with zero stack size specified.
 //   <i> Default: 3072
 #ifndef OS_STACK_SIZE
-#define OS_STACK_SIZE               3072
+#define OS_STACK_SIZE               72 // DAPLINK. Default was: 3072
 #endif
  
 //   <o>Idle Thread Stack size [bytes] <72-1073741824:8>
 //   <i> Defines stack size for Idle thread.
 //   <i> Default: 512
 #ifndef OS_IDLE_THREAD_STACK_SIZE
-#define OS_IDLE_THREAD_STACK_SIZE   512
+#define OS_IDLE_THREAD_STACK_SIZE   72 // DAPLINK. Default was: 512
 #endif
  
 //   <o>Idle Thread TrustZone Module Identifier
@@ -179,7 +179,7 @@
 //     <i> Defines maximum number of objects that can be active at the same time.
 //     <i> Applies to objects with system provided memory for control blocks.
 #ifndef OS_TIMER_NUM
-#define OS_TIMER_NUM                1
+#define OS_TIMER_NUM                0 // DAPLINK. Default was: 1
 #endif
  
 //   </e>
@@ -200,7 +200,7 @@
 //   <i> May be set to 0 when timers are not used.
 //   <i> Default: 512
 #ifndef OS_TIMER_THREAD_STACK_SIZE
-#define OS_TIMER_THREAD_STACK_SIZE  512
+#define OS_TIMER_THREAD_STACK_SIZE  128 // 512
 #endif
  
 //   <o>Timer Thread TrustZone Module Identifier
@@ -274,7 +274,7 @@
 //     <i> Defines maximum number of objects that can be active at the same time.
 //     <i> Applies to objects with system provided memory for control blocks.
 #ifndef OS_SEMAPHORE_NUM
-#define OS_SEMAPHORE_NUM            1
+#define OS_SEMAPHORE_NUM            0 // DAPLINK. Default was: 1
 #endif
  
 //   </e>
@@ -294,7 +294,7 @@
 //     <i> Defines maximum number of objects that can be active at the same time.
 //     <i> Applies to objects with system provided memory for control blocks.
 #ifndef OS_MEMPOOL_NUM
-#define OS_MEMPOOL_NUM              1
+#define OS_MEMPOOL_NUM              0 // DAPLINK. Default was: 1
 #endif
  
 //     <o>Data Storage Memory size [bytes] <0-1073741824:8>
@@ -322,7 +322,7 @@
 //     <i> Defines maximum number of objects that can be active at the same time.
 //     <i> Applies to objects with system provided memory for control blocks.
 #ifndef OS_MSGQUEUE_NUM
-#define OS_MSGQUEUE_NUM             1
+#define OS_MSGQUEUE_NUM             0 // DAPLINK. Default was: 1
 #endif
  
 //     <o>Data Storage Memory size [bytes] <0-1073741824:8>
@@ -349,7 +349,7 @@
 //     <q>Start recording
 //     <i> Start event recording after initialization.
 #ifndef OS_EVR_START
-#define OS_EVR_START                1
+#define OS_EVR_START                0 // DAPLINK. Default was: 1
 #endif
  
 //     <h>Global Event Filter Setup
