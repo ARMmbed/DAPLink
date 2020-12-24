@@ -1,21 +1,87 @@
 common:
     macros:
         - OS_TICK=10000
-    includes:
-        - source/rtos
-    sources:
-        rtos:
-            - source/rtos/cm3
-            - source/rtos/rt_Event.c
-            - source/rtos/rt_List.c
-            - source/rtos/rt_Mailbox.c
-            - source/rtos/rt_MemBox.c
-            - source/rtos/rt_Mutex.c
-            - source/rtos/rt_Robin.c
-            - source/rtos/rt_Semaphore.c
-            - source/rtos/rt_System.c
-            - source/rtos/rt_Task.c
-            - source/rtos/rt_Time.c
-            - source/rtos/rt_Timer.c
-            - source/rtos/RTX_Config.c
-            - source/rtos/cmsis_os2_port.c
+
+tool_specific:
+    uvision:
+        includes:
+            - source/rtos
+        sources:
+            rtos:
+                - source/rtos/cm3
+                - source/rtos/ARM/SVC_Table.s
+                - source/rtos/rt_Event.c
+                - source/rtos/rt_List.c
+                - source/rtos/rt_Mailbox.c
+                - source/rtos/rt_MemBox.c
+                - source/rtos/rt_Mutex.c
+                - source/rtos/rt_Robin.c
+                - source/rtos/rt_Semaphore.c
+                - source/rtos/rt_System.c
+                - source/rtos/rt_Task.c
+                - source/rtos/rt_Time.c
+                - source/rtos/rt_Timer.c
+                - source/rtos/RTX_Config.c
+                - source/rtos/cmsis_os2_port.c
+    make_armcc:
+        includes:
+            - source/rtos
+        sources:
+            rtos:
+                - source/rtos/cm3
+                - source/rtos/ARM/SVC_Table.s
+                - source/rtos/rt_Event.c
+                - source/rtos/rt_List.c
+                - source/rtos/rt_Mailbox.c
+                - source/rtos/rt_MemBox.c
+                - source/rtos/rt_Mutex.c
+                - source/rtos/rt_Robin.c
+                - source/rtos/rt_Semaphore.c
+                - source/rtos/rt_System.c
+                - source/rtos/rt_Task.c
+                - source/rtos/rt_Time.c
+                - source/rtos/rt_Timer.c
+                - source/rtos/RTX_Config.c
+                - source/rtos/cmsis_os2_port.c
+    make_armclang:
+        includes:
+            - source/rtos2/Include
+            - source/rtos2/RTX/Include
+            - source/rtos2/RTX/Config
+        sources:
+            rtos:
+                - source/rtos2/RTX/Source/ARM/irq_cm3.s
+                - source/rtos2/RTX/Config/RTX_Config.c
+                - source/rtos2/RTX/Source/rtx_delay.c
+                - source/rtos2/RTX/Source/rtx_evr.c
+                - source/rtos2/RTX/Source/rtx_kernel.c
+                - source/rtos2/RTX/Source/rtx_lib.c
+                - source/rtos2/RTX/Source/rtx_memory.c
+                - source/rtos2/RTX/Source/rtx_mempool.c
+                - source/rtos2/RTX/Source/rtx_msgqueue.c
+                - source/rtos2/RTX/Source/rtx_mutex.c
+                - source/rtos2/RTX/Source/rtx_system.c
+                - source/rtos2/RTX/Source/rtx_thread.c
+                - source/rtos2/RTX/Source/rtx_timer.c
+                - source/rtos2/Source/os_systick.c
+    make_gcc_arm:
+        includes:
+            - source/rtos2/Include
+            - source/rtos2/RTX/Include
+            - source/rtos2/RTX/Config
+        sources:
+            rtos:
+                - source/rtos2/RTX/Source/GCC/irq_cm3.S
+                - source/rtos2/RTX/Config/RTX_Config.c
+                - source/rtos2/RTX/Source/rtx_delay.c
+                - source/rtos2/RTX/Source/rtx_evr.c
+                - source/rtos2/RTX/Source/rtx_kernel.c
+                - source/rtos2/RTX/Source/rtx_lib.c
+                - source/rtos2/RTX/Source/rtx_memory.c
+                - source/rtos2/RTX/Source/rtx_mempool.c
+                - source/rtos2/RTX/Source/rtx_msgqueue.c
+                - source/rtos2/RTX/Source/rtx_mutex.c
+                - source/rtos2/RTX/Source/rtx_system.c
+                - source/rtos2/RTX/Source/rtx_thread.c
+                - source/rtos2/RTX/Source/rtx_timer.c
+                - source/rtos2/Source/os_systick.c
