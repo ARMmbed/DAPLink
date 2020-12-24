@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-#include <fsl_clock.h>
-#include <fsl_iocon.h>
+#include "fsl_clock.h"
+#include "fsl_iocon.h"
 #include "pin_mux.h"
 
 uint32_t USART0_GetFreq(void)
