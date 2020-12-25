@@ -221,7 +221,7 @@ void hic_power_target(void)
 bool flash_is_readable(uint32_t addr, uint32_t length)
 {
     // Make sure the core clock is less than 100 MHz, or flash commands won't work.
-    util_assert(SystemCoreClock > 100000000);
+    util_assert(SystemCoreClock < 100000000);
 
     // Return true if the address is within internal flash and the flash sector is not erased.
     if (!(addr >= DAPLINK_ROM_START && addr < (DAPLINK_ROM_START + DAPLINK_ROM_SIZE))) {
