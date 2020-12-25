@@ -63,6 +63,7 @@ tool_specific:
                 - -march=armv8-m.main+fp+dsp
                 - -mfloat-abi=hard
                 - -mfpu=fpv5-sp-d16
+                - -Wl,--defsym=__stack_size__=0x800
         linker_file:
             - source/hic_hal/nxp/lpc55xx/gcc/lpc55xx.ld
         includes:
