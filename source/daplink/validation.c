@@ -41,7 +41,7 @@ uint8_t validate_bin_nvic(const uint8_t *buf)
 
 uint8_t validate_bin_nvic_base(const uint8_t *buf)
 {
-    if (!g_board_info.target_cfg) {
+    if (g_board_info.target_cfg) {
         uint32_t i = 4, nvic_val = 0;
         uint8_t in_range = 0;
         // test the initial SP value
