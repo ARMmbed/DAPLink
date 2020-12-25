@@ -160,6 +160,8 @@ void BOARD_BootClockPLL150M(void)
 void sdk_init(void)
 {
     BOARD_BootClockFROHF96M();
+
+    hic_crc_init();
 }
 
 //! - Configure the VBUS pin.

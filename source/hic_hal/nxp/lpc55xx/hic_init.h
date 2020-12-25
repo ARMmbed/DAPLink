@@ -32,6 +32,9 @@ extern "C" {
 //! @brief Set some system-wide hardware settings.
 void hic_init(void);
 
+//! @brief Init CRC peripheral.
+void hic_crc_init(void);
+
 //! @brief Enable clocks required for USB operation.
 void hic_enable_usb_clocks(void);
 
