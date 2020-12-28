@@ -170,9 +170,10 @@ extern BOOL gpio_reset_pin_is_input;
 #define PIN_RESET_TXE_IN_BIT  6
 #define PIN_RESET_TXE         (1<<PIN_RESET_TXE_IN_BIT)
 
-// ISP Control Pin          P2_11:  GPIO1[11]
-#define ISPCTRL_PORT        1
-#define ISPCTRL_BIT         11
+// ISP Control Pin            P2_11:  GPIO1[11]
+#define PORT_ISPCTRL          1
+#define PIN_ISPCTRL_IN_BIT    11
+#define PIN_ISPCTRL           (1<<PIN_ISPCTRL_IN_BIT)
 
 #define X_SET(str)     LPC_GPIO_PORT->SET[PORT_##str] = PIN_##str
 #define X_CLR(str)     LPC_GPIO_PORT->CLR[PORT_##str] = PIN_##str
