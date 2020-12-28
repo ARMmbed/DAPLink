@@ -175,6 +175,11 @@ extern BOOL gpio_reset_pin_is_input;
 #define PIN_ISPCTRL_IN_BIT    11
 #define PIN_ISPCTRL           (1<<PIN_ISPCTRL_IN_BIT)
 
+// Connected LED              P1_1: GPIO0[8]
+#define PORT_LED_CONNECTED    0
+#define PIN_LED_CONNECTED_IN_BIT   8
+#define PIN_LED_CONNECTED     (1<<PIN_LED_CONNECTED_IN_BIT)
+
 // Power Enable               P3_1: GPIO5[8]
 #define PORT_POWER_EN         5
 #define PIN_POWER_EN_BIT      8
@@ -470,6 +475,11 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
+    if (bit) {
+        X_SET(LED_CONNECTED);
+    } else {
+        X_CLR(LED_CONNECTED);
+    }
 }
 
 /** Debug Unit: Set status Target Running LED.

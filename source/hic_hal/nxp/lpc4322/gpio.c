@@ -28,9 +28,6 @@
 
 BOOL gpio_reset_pin_is_input  = __TRUE;
 
-// Connected LED            P1_1: GPIO0[8]
-#define LED_CONNECTED_PORT  0
-#define LED_CONNECTED_BIT   8
 
 // LPC43xx peripheral register bit masks (used by macros)
 #define CCU_CLK_CFG_RUN     (1UL << 0)
