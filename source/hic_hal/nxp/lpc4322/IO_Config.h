@@ -71,6 +71,7 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC4322);
 #define X_DIR_OUT(str) LPC_GPIO_PORT->DIR[PORT_##str] |= (PIN_##str)
 #define X_DIR_IN(str)  LPC_GPIO_PORT->DIR[PORT_##str] &= ~(PIN_##str)
 #define X_BYTE(str)    LPC_GPIO_PORT->B[(PORT_##str << 5) + PIN_##str##_IN_BIT]
+#define X_WORD(str)    LPC_GPIO_PORT->W[(PORT_##str << 5) + PIN_##str##_IN_BIT]
 
 
 #endif
