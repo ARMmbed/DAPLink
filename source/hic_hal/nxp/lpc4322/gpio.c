@@ -61,6 +61,7 @@ void gpio_init(void)
     scu_pinmux(2, 11, GPIO_NOPULL, FUNC0);  /* P2_11 ISPCTRL:   GPIO1[11] */
     scu_pinmux(2, 5, GPIO_PUP,    FUNC4);   /* P2_5  nRESET:    GPIO5[5]  */
     scu_pinmux(2, 6, GPIO_NOPULL, FUNC4);   /* P2_6  nRESET_OE: GPIO5[6]  */
+    scu_pinmux(3, 1, GPIO_NOPULL, FUNC4);   /* P3_1  POWER_EN:  GPIO5[8]  */
 
     /* Configure: LED as output LOW (turned off)*/
     X_DIR_OUT(LED_CONNECTED);
@@ -81,6 +82,10 @@ void gpio_init(void)
     /* Use Pin Interrupt 0 */
     LPC_SCU->PINTSEL0 &= ~0xff;
     LPC_SCU->PINTSEL0 |= (PORT_nRESET << 5) | (PIN_nRESET_IN_BIT);
+
+    /* Configure: POWER_EN as output LOW */
+    X_DIR_OUT(POWER_EN);
+    X_CLR(POWER_EN);
 
 #if (SWO_UART != 0)
     /* Configure: SWO as input */
@@ -138,4 +143,9 @@ uint8_t gpio_get_reset_btn_fwrd(void)
 
 void gpio_set_board_power(bool powerEnabled)
 {
+    if (powerEnabled) {
+        X_SET(POWER_EN);
+    } else {
+        X_CLR(POWER_EN);
+    }
 }

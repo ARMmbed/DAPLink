@@ -158,8 +158,6 @@ typedef unsigned int    BOOL;
 // State of Reset Ouput Enable buffer
 extern bool gpio_reset_pin_is_input;
 
-
-
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_PortIO_gr CMSIS-DAP Hardware I/O Pin Access

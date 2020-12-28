@@ -67,6 +67,11 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC4322);
 #define PIN_ISPCTRL_IN_BIT    11
 #define PIN_ISPCTRL           (1<<PIN_ISPCTRL_IN_BIT)
 
+// Power Enable               P3_1: GPIO5[8]
+#define PORT_POWER_EN         5
+#define PIN_POWER_EN_BIT      8
+#define PIN_POWER_EN          (1<<PIN_POWER_EN_BIT)
+
 #define X_SET(str)     LPC_GPIO_PORT->SET[PORT_##str] = PIN_##str
 #define X_CLR(str)     LPC_GPIO_PORT->CLR[PORT_##str] = PIN_##str
 #define X_DIR_OUT(str) LPC_GPIO_PORT->DIR[PORT_##str] |= (PIN_##str)
