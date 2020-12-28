@@ -108,7 +108,9 @@ typedef unsigned int    BOOL;
 #define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n)
 
 /// SWO Streaming Trace.
+#if !defined(SWO_STREAM)
 #define SWO_STREAM              0               ///< SWO Streaming Trace: 1 = available, 0 = not available.
+#endif
 
 /// Clock frequency of the Test Domain Timer. Timer value is returned with \ref TIMESTAMP_GET.
 #define TIMESTAMP_CLOCK         1000000U      ///< Timestamp clock in Hz (0 = timestamps not supported).
