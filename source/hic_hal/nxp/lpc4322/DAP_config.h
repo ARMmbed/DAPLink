@@ -440,6 +440,11 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
+    if (bit) {
+        X_SET(LED_CONNECTED);
+    } else {
+        X_CLR(LED_CONNECTED);
+    }
 }
 
 /** Debug Unit: Set status Target Running LED.

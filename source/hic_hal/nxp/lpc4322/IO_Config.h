@@ -67,6 +67,11 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC4322);
 #define PIN_ISPCTRL_IN_BIT    11
 #define PIN_ISPCTRL           (1<<PIN_ISPCTRL_IN_BIT)
 
+// Connected LED              P1_1: GPIO0[8]
+#define PORT_LED_CONNECTED    0
+#define PIN_LED_CONNECTED_IN_BIT   8
+#define PIN_LED_CONNECTED     (1<<PIN_LED_CONNECTED_IN_BIT)
+
 // Power Enable               P3_1: GPIO5[8]
 #define PORT_POWER_EN         5
 #define PIN_POWER_EN_BIT      8
