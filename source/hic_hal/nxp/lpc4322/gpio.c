@@ -57,27 +57,34 @@ void gpio_init(void)
 
     /* Configure I/O pins: function number, input buffer enabled,  */
     /*                     no pull-up/down                         */
-    scu_pinmux(1, 1, GPIO_NOPULL, FUNC0);   /* LED:      GPIO0[8]  */
-    scu_pinmux(2, 11, GPIO_NOPULL, FUNC0);  /* ISPCTRL:  GPIO1[11]  */
-    scu_pinmux(2, 5, GPIO_PUP,    FUNC4);   /* nRESET:    GPIO5[5] */
-    scu_pinmux(2, 6, GPIO_NOPULL, FUNC4);   /* nRESET_OE: GPIO5[6] */
-    /* Configure: LED as output (turned off) */
-    LPC_GPIO_PORT->CLR[LED_CONNECTED_PORT]  = (1 << LED_CONNECTED_BIT);
-    LPC_GPIO_PORT->DIR[LED_CONNECTED_PORT] |= (1 << LED_CONNECTED_BIT);
-    /* Configure: ISPCTRL as output and high */
-    LPC_GPIO_PORT->SET[ISPCTRL_PORT]  = (1 << ISPCTRL_BIT);
-    LPC_GPIO_PORT->DIR[ISPCTRL_PORT] |= (1 << ISPCTRL_BIT);
-    /* configure Reset Button as input, Reset Output Enable as output LOW */
-    LPC_GPIO_PORT->DIR[PORT_nRESET]    &= ~(1 << PIN_nRESET_IN_BIT);
-    LPC_GPIO_PORT->CLR[PORT_RESET_TXE]  = (1 << PIN_RESET_TXE_IN_BIT);
-    LPC_GPIO_PORT->DIR[PORT_RESET_TXE] |= (1 << PIN_RESET_TXE_IN_BIT);
+    scu_pinmux(1, 1, GPIO_NOPULL, FUNC0);   /* P1_1  LED:       GPIO0[8]  */
+    scu_pinmux(2, 11, GPIO_NOPULL, FUNC0);  /* P2_11 ISPCTRL:   GPIO1[11] */
+    scu_pinmux(2, 5, GPIO_PUP,    FUNC4);   /* P2_5  nRESET:    GPIO5[5]  */
+    scu_pinmux(2, 6, GPIO_NOPULL, FUNC4);   /* P2_6  nRESET_OE: GPIO5[6]  */
+
+    /* Configure: LED as output LOW (turned off)*/
+    X_DIR_OUT(LED_CONNECTED);
+    X_CLR(LED_CONNECTED);
+
+    /* Configure: ISPCTRL as output HIGH */
+    X_DIR_OUT(ISPCTRL);
+    X_SET(ISPCTRL);
+
+    /* Configure: Reset Button */
+    X_DIR_IN(nRESET);
+    X_CLR(nRESET);
+
+    /* Reset Output Enable as output LOW */
+    X_DIR_OUT(RESET_TXE);
+    X_CLR(RESET_TXE);
+
     /* Use Pin Interrupt 0 */
     LPC_SCU->PINTSEL0 &= ~0xff;
     LPC_SCU->PINTSEL0 |= (PORT_nRESET << 5) | (PIN_nRESET_IN_BIT);
 
 #if (SWO_UART != 0)
     /* Configure: SWO as input */
-    LPC_GPIO_PORT->DIR[PORT_SWO] &= ~(1 << PIN_SWO_IN_BIT);
+    X_DIR_IN(SWO);
 #endif
 
     busy_wait(10000);
@@ -86,42 +93,42 @@ void gpio_init(void)
 void gpio_set_hid_led(gpio_led_state_t state)
 {
     if (state) {
-        LPC_GPIO_PORT->SET[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
+        X_SET(LED_CONNECTED);
     } else {
-        LPC_GPIO_PORT->CLR[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
+        X_CLR(LED_CONNECTED);
     }
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
     if (state) {
-        LPC_GPIO_PORT->SET[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
+        X_SET(LED_CONNECTED);
     } else {
-        LPC_GPIO_PORT->CLR[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
+        X_CLR(LED_CONNECTED);
     }
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
     if (state) {
-        LPC_GPIO_PORT->SET[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
+        X_SET(LED_CONNECTED);
     } else {
-        LPC_GPIO_PORT->CLR[LED_CONNECTED_PORT] = (1 << LED_CONNECTED_BIT);
+        X_CLR(LED_CONNECTED);
     }
 }
 
 void gpio_set_isp_pin(uint8_t state)
 {
     if (state) {
-        LPC_GPIO_PORT->SET[ISPCTRL_PORT] = (1 << ISPCTRL_BIT);
+        X_SET(ISPCTRL);
     } else {
-        LPC_GPIO_PORT->CLR[ISPCTRL_PORT] = (1 << ISPCTRL_BIT);
+        X_CLR(ISPCTRL);
     }
 }
 
 uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return LPC_GPIO_PORT->W[PORT_nRESET * 32 + PIN_nRESET_IN_BIT] ? 0 : 1;
+    return X_WORD(nRESET) ? 0 : 1;
 }
 
 uint8_t gpio_get_reset_btn_fwrd(void)
