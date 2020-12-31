@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/kl27z_bl.c
