@@ -1,4 +1,4 @@
-name: Build DAPLink
+name: Build DAPLink (Linux)
 on:
   workflow_dispatch:
     inputs:
@@ -42,7 +42,7 @@ jobs:
       run:  |
         curl -O -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
         md5sum gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-        echo Installing $gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux in {{ runner.temp }}/arm-gcc
+        echo Installing gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux in ${{ runner.temp }}/arm-gcc
         mkdir -p ${{ runner.temp }}/arm-gcc
         tar jvxf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
 
