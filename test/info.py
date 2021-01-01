@@ -29,8 +29,9 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
-    ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("kl26z_artemis_dk_if",                         False,      0x8000,     "hex"       ),
+    ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
+    ("kl27z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc4322_lpc54114xpresso_if",                  False,      0x10000,    "bin"       ),
@@ -283,6 +284,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9017,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio_emw3166_if',                  None,               'WIO_EMW3166'                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9900,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
+    (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbit'                              ),
     (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
     (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
@@ -309,6 +311,7 @@ HIC_STRING_TO_ID = {
     'max32625': 0x97969906,
     'stm32f103xb': 0x97969908,
     'k26f': 0x97969909,
+    'kl27z': 0x9796990B,
     'm48ssidae': 0x97969921,
 }
 

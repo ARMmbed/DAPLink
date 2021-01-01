@@ -25,6 +25,7 @@
 #if defined (INTERFACE_K20D5) \
     || defined (INTERFACE_K26F) \
     || defined (INTERFACE_KL26Z) \
+    || defined (INTERFACE_KL27Z) \
     || defined (INTERFACE_LPC55XX)
 #include "fsl_device_registers.h"
 #elif defined (INTERFACE_LPC11U35)
