@@ -141,7 +141,7 @@ for project in projects:
     if not os.path.exists(hex):
         # Build failed
         if args.ignore_failures:
-            logger.warnig("Missing file %s (build failed)" % (hex))
+            logger.warning("Missing file %s (build failed)" % (hex))
             continue
         else:
             logger.error("Missing file %s (build failed)" % (hex))
