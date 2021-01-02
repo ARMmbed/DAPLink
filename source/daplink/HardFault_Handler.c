@@ -70,13 +70,13 @@ __NO_RETURN void _fault_handler(uint32_t _lr)
     while (1); // Wait for reset
 }
 
-#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+#if defined(__CC_ARM) // armcc
 void HardFault_Handler()
 {
     register unsigned int _lr __asm("lr");
     _fault_handler(_lr);
 }
-#else
+#else // gcc and armclang
 void HardFault_Handler()
 {
     asm volatile (

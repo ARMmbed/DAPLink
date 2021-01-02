@@ -38,20 +38,12 @@
 #define MSC_LED_DEF GPIO_LED_ON
 #endif
 
-/* Avoids the semihosting issue */
 #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+/* Avoids the semihosting issue */
 __asm("  .global __ARM_use_no_argv\n");
-#endif
-
-#if  defined(__CC_ARM) || \
-    (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050))
-#ifndef __MICROLIB
-void _platform_post_stackheap_init (void) {
-}
-#endif
 #elif defined(__GNUC__)
-void software_init_hook (void) {
-}
+/* Disables part of C/C++ runtime startup/teardown */
+void __libc_init_array (void) {}
 #endif
 
 #if defined(__CC_ARM)
