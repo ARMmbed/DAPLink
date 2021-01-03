@@ -49,38 +49,12 @@ def load_project_list(path):
             print("Found yaml parse error", ex)
     return project_list
 
-
-def build_projects(file, projects, tool, build=True, clean=False, parallel=False, ignore_failures=False, verbose=False):
-    generator = generate.Generator(file)
-    cores = 1
-    if parallel:
-        try:
-            import multiprocessing
-            cores = multiprocessing.cpu_count()
-        except:
-            cores = 4
-            pass
-
-    for p_name in projects:
-        for project in generator.generate(p_name):
-            failed = False
-            if hasattr(project, 'workspace_name') and (project.workspace_name is not None):
-                logger.info("Generating %s for %s in workspace %s", tool, project.name, project.workspace_name)
-            else:
-                logger.info("Generating %s for %s", tool, project.name)
-            if clean:
-                if project.clean(tool) == -1:
-                    logger.error("Error cleaning project %s", project.name)
-                    failed = True
-            if not failed and project.generate(tool) == -1:
-                logger.error("Error generating project %s", project.name)
-                failed = True
-            if build and not failed:
-                if project.build(tool, jobs=cores, verbose=verbose) == -1:
-                    logger.error("Error building project %s", project.name)
-                    failed = True
-            if failed and not ignore_failures:
-                return -1
+def get_core_count():
+    try:
+        import multiprocessing
+        return multiprocessing.cpu_count()
+    except:
+        return 4
 
 project_list = load_project_list(PROJECTS_YAML)
 parser = argparse.ArgumentParser(description='project-generator compile support for DAPLink',
@@ -90,7 +64,9 @@ parser.add_argument('projects', help='Selectively compile only the firmware spec
                     nargs='*', type=str, default=[])
 parser.add_argument('--release', dest='release', action='store_true', help='Create a release with the yaml version file')
 parser.add_argument('--release-folder', type=str, default='firmware', help='Directory to create and place files in')
+parser.add_argument('--supported', dest='supported', action='store_true', help='Generate the images with official identifiers')
 parser.add_argument('--toolchain', '-t', type=str, help='Toolchain (default: make_gcc_arm)')
+parser.add_argument('--generator', '-g', type=str, help='CMake Toolchain Generator (default: make)')
 parser.add_argument('--clean', dest='clean', action='store_true', help='Rebuild or delete build folder before compile')
 parser.add_argument('--ignore-failures', dest='ignore_failures', action='store_true', help='Continue build even in case of failures')
 parser.add_argument('--parallel', dest='parallel', action='store_true', help='Build with multiple compilations in parallel')
@@ -99,17 +75,19 @@ parser.set_defaults(build=True)
 parser.set_defaults(clean=False)
 parser.set_defaults(ignore_failures=False)
 parser.set_defaults(parallel=False)
+parser.set_defaults(supported=False)
 parser.set_defaults(release=False)
 args = parser.parse_args()
 
 
 toolchains = ["make_gcc_arm", "make_armcc", "make_armclang", # Make options
-              "cmake_gcc_arm", "cmake_armclang", # CMake options
+              "cmake_gcc_arm", "cmake_armcc", "cmake_armclang", # CMake options
               "gcc_arm", "armcc", "armclang"] # Aliases for the make options
 toolchain = args.toolchain if args.toolchain else 'make_gcc_arm'
 if toolchain not in toolchains:
     print("Unsupported toolchain '%s' (options: %s)\n" % (toolchain, ", ".join(toolchains)))
     exit(-1)
+
 
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
@@ -121,38 +99,62 @@ if args.release:
     version_git_dir = os.path.join(daplink_dir, "source", "daplink")
     generate_version_file(version_git_dir)
 
+# Build the project(s)
+cores = get_core_count() if args.parallel else 1
 projects = args.projects if len(args.projects) > 0 else project_list
-build_projects(PROJECTS_YAML, projects, toolchain, args.build, args.clean,
-               args.parallel, args.ignore_failures, args.verbosity > 0)
-
-sys.path.append(os.path.join(daplink_dir, "test"))
-from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
-id_map = {}
-for board_id, family_id, firmware, bootloader, target in SUPPORTED_CONFIGURATIONS:
-    if firmware in id_map:
-        id_map[firmware].append((hex(board_id), hex(family_id)))
-    else:
-        id_map[firmware] = [(hex(board_id), hex(family_id))]
-for project in projects:
-    output = "projectfiles/%s/%s/build/%s" % (toolchain, project, project)
-    hex = output + ".hex"
-    crc = output + "_crc"
-
-    if not os.path.exists(hex):
-        # Build failed
-        if args.ignore_failures:
-            logger.warning("Missing file %s (build failed)" % (hex))
-            continue
+generator = generate.Generator(PROJECTS_YAML)
+for p_name in projects:
+    for project in generator.generate(p_name):
+        failed = False
+        if hasattr(project, 'workspace_name') and (project.workspace_name is not None):
+            logger.info("Generating %s for %s in workspace %s", toolchain, project.name, project.workspace_name)
         else:
-            logger.error("Missing file %s (build failed)" % (hex))
+            logger.info("Generating %s for %s", toolchain, project.name)
+        if args.clean:
+            if project.clean(toolchain) == -1:
+                logger.error("Error cleaning project %s", project.name)
+                failed = True
+        if not failed and project.generate(toolchain) == -1:
+            logger.error("Error generating project %s", project.name)
+            failed = True
+        if not failed:
+            if project.build(toolchain, jobs=cores, verbose=(args.verbosity > 0), generator=args.generator) == -1:
+                logger.error("Error building project %s", project.name)
+                failed = True
+        if failed and not args.ignore_failures:
             exit(-1)
 
-    # Do a build with board_id and family_id
-    if project in id_map:
-        for (boardid, familyid) in id_map[project]:
-            logger.debug("Building image for %s (%s, %s)" % (project, boardid, familyid))
-            post_build_script(hex, crc, boardid, familyid)
+# Generate images with boardid / familyid for supported configurations
+if args.release or args.supported:
+    sys.path.append(os.path.join(daplink_dir, "test"))
+    from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
+    id_map = {}
+    for board_id, family_id, firmware, bootloader, target in SUPPORTED_CONFIGURATIONS:
+        if firmware in id_map:
+            id_map[firmware].append((hex(board_id), hex(family_id)))
+        else:
+            id_map[firmware] = [(hex(board_id), hex(family_id))]
+    for project in projects:
+        output = "projectfiles/%s/%s/build/%s" % (toolchain, project, project)
+        hex = output + ".hex"
+        crc = output + "_crc"
 
+        if not os.path.exists(hex):
+            # Build failed
+            if args.ignore_failures:
+                logger.warning("Missing file %s (build failed)" % (hex))
+                continue
+            else:
+                logger.error("Missing file %s (build failed)" % (hex))
+                exit(-1)
+
+        # Do a build with board_id and family_id
+        if project in id_map:
+            for (boardid, familyid) in id_map[project]:
+                logger.debug("Building image for %s (%s, %s)" % (project, boardid, familyid))
+                post_build_script(hex, crc, boardid, familyid)
+
+# Build release package
 if args.release:
     release_version = 0
     with open(VERSION_YAML, 'r') as ver_yaml:
