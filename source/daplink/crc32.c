@@ -22,6 +22,7 @@
 
 #include "crc.h"
 #include "compiler.h"
+#include "util.h"
 
 #define FALSE	0
 #define TRUE	!FALSE
@@ -74,6 +75,13 @@ typedef unsigned long  crc;
 static unsigned long
 reflect(unsigned long data, unsigned char nBits)
 {
+    // util_assert(nBits <= 32);
+    if (nBits == 32) {
+        // Use bit reverse instruction intrinsic. The CMSIS intrinsic also
+        // provides an implementation for cores that don't have the instruction.
+        return __RBIT(data);
+    }
+
     unsigned long  reflection = 0x00000000;
     unsigned char  bit;
 
