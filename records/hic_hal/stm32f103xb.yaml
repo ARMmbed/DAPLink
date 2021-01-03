@@ -1,6 +1,6 @@
 common:
     target:
-        - stm32f103xb
+        - Cortex-M3
     core:
         - Cortex-M3
     macros:
@@ -38,17 +38,10 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
     armclang:
-        misc:
-            c_flags:
-                - -mcpu=cortex-m3
-            asm_flags:
-                - -mcpu=cortex-m3
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
     gcc_arm:
-        includes:
-            - source/hic_hal/stm32/stm32f103xb/gcc
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/gcc
