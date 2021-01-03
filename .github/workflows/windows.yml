@@ -51,7 +51,7 @@ jobs:
 
     - name: Compile
       run:  |
-        python tools/progen_compile.py --release --parallel -v --ignore-
+        python tools/progen_compile.py -t cmake_gcc_arm -g mingw-make --release --parallel -v --ignore-failures
       shell: cmd
 
     - name: Upload test artifacts
