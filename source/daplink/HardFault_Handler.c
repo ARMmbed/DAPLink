@@ -79,7 +79,7 @@ void HardFault_Handler()
 #else // gcc and armclang
 void HardFault_Handler()
 {
-    asm volatile (
+    __ASM volatile (
         "    mov    r0, lr              \n\t"
         "    bl     _fault_handler      \n\t"
     );
