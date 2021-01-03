@@ -29,8 +29,6 @@ tool_specific:
                 - --specs=nano.specs
                 - --specs=nosys.specs
                 - -Wl,-check-sections
-                - -Wl,--defsym=__stack_size__=0x200
-                - -Wl,--defsym=__heap_size__=0x0
                 - -Wl,-fatal-warnings
                 - -Wl,--gc-sections
                 - -Wl,--no-wchar-size-warning

@@ -1,11 +1,11 @@
 /**
- * @file    daplink.ld
- * @brief
+ * @file    lpc11u35.ld
+ * @brief   LPC11U35 linker script
  *
  * DAPLink Interface Firmware
  * Copyright 2016 Freescale Semiconductor, Inc.
  * Copyright 2016-2017 NXP
- * Copyright (c) 2019, ARM Limited
+ * Copyright (c) 2021, Arm Limited
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,12 +22,13 @@
  */
 
 #include "daplink_addr.h"
+#include "daplink_defaults.h"
 
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x0400;
-STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
+HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : DAPLINK_HEAP_SIZE;
+STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;
 
 /* Specify the memory areas */
 MEMORY
