@@ -1,11 +1,11 @@
 /******************************************************************************
  * @file     mpu_armv7.h
  * @brief    CMSIS MPU API for Armv7-M MPU
- * @version  V5.1.0
- * @date     08. March 2019
+ * @version  V5.1.2
+ * @date     25. May 2020
  ******************************************************************************/
 /*
- * Copyright (c) 2017-2019 Arm Limited. All rights reserved.
+ * Copyright (c) 2017-2020 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -190,6 +190,7 @@ typedef struct {
 */
 __STATIC_INLINE void ARM_MPU_Enable(uint32_t MPU_Control)
 {
+  __DMB();
   MPU->CTRL = MPU_Control | MPU_CTRL_ENABLE_Msk;
 #ifdef SCB_SHCSR_MEMFAULTENA_Msk
   SCB->SHCSR |= SCB_SHCSR_MEMFAULTENA_Msk;
@@ -207,6 +208,8 @@ __STATIC_INLINE void ARM_MPU_Disable(void)
   SCB->SHCSR &= ~SCB_SHCSR_MEMFAULTENA_Msk;
 #endif
   MPU->CTRL  &= ~MPU_CTRL_ENABLE_Msk;
+  __DSB();
+  __ISB();
 }
 
 /** Clear and disable the given MPU region.
@@ -220,7 +223,7 @@ __STATIC_INLINE void ARM_MPU_ClrRegion(uint32_t rnr)
 
 /** Configure an MPU region.
 * \param rbar Value for RBAR register.
-* \param rsar Value for RSAR register.
+* \param rasr Value for RASR register.
 */   
 __STATIC_INLINE void ARM_MPU_SetRegion(uint32_t rbar, uint32_t rasr)
 {
@@ -231,7 +234,7 @@ __STATIC_INLINE void ARM_MPU_SetRegion(uint32_t rbar, uint32_t rasr)
 /** Configure the given MPU region.
 * \param rnr Region number to be configured.
 * \param rbar Value for RBAR register.
-* \param rsar Value for RSAR register.
+* \param rasr Value for RASR register.
 */   
 __STATIC_INLINE void ARM_MPU_SetRegionEx(uint32_t rnr, uint32_t rbar, uint32_t rasr)
 {

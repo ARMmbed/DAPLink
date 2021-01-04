@@ -1,7 +1,7 @@
 /**************************************************************************//**
- * @file     core_armv81mml.h
- * @brief    CMSIS Armv8.1-M Mainline Core Peripheral Access Layer Header File
- * @version  V1.4.0
+ * @file     core_cm55.h
+ * @brief    CMSIS Cortex-M55 Core Peripheral Access Layer Header File
+ * @version  V1.1.0
  * @date     15. April 2020
  ******************************************************************************/
 /*
@@ -30,8 +30,8 @@
   #pragma GCC diagnostic ignored "-Wpedantic"   /* disable pedantic warning due to unnamed structs/unions */
 #endif
 
-#ifndef __CORE_ARMV81MML_H_GENERIC
-#define __CORE_ARMV81MML_H_GENERIC
+#ifndef __CORE_CM55_H_GENERIC
+#define __CORE_CM55_H_GENERIC
 
 #include <stdint.h>
 
@@ -58,19 +58,19 @@
  *                 CMSIS definitions
  ******************************************************************************/
 /**
-  \ingroup Cortex_ARMV81MML
+  \ingroup Cortex_CM55
   @{
  */
 
 #include "cmsis_version.h"
 
-/*  CMSIS ARMV81MML definitions */
-#define __ARMv81MML_CMSIS_VERSION_MAIN  (__CM_CMSIS_VERSION_MAIN)                   /*!< \deprecated [31:16] CMSIS HAL main version */
-#define __ARMv81MML_CMSIS_VERSION_SUB   (__CM_CMSIS_VERSION_SUB)                    /*!< \deprecated [15:0]  CMSIS HAL sub version */
-#define __ARMv81MML_CMSIS_VERSION       ((__ARMv81MML_CMSIS_VERSION_MAIN << 16U) | \
-                                         __ARMv81MML_CMSIS_VERSION_SUB           )  /*!< \deprecated CMSIS HAL version number */
+/*  CMSIS CM55 definitions */
+#define __CM55_CMSIS_VERSION_MAIN  (__CM_CMSIS_VERSION_MAIN)                  /*!< \deprecated [31:16] CMSIS HAL main version */
+#define __CM55_CMSIS_VERSION_SUB   (__CM_CMSIS_VERSION_SUB)                   /*!< \deprecated [15:0]  CMSIS HAL sub version */
+#define __CM55_CMSIS_VERSION       ((__CM55_CMSIS_VERSION_MAIN << 16U) | \
+                                     __CM55_CMSIS_VERSION_SUB           )     /*!< \deprecated CMSIS HAL version number */
 
-#define __CORTEX_M                      (81U)                                       /*!< Cortex-M Core */
+#define __CORTEX_M                      (55U)                                 /*!< Cortex-M Core */
 
 #if defined ( __CC_ARM )
   #error Legacy Arm Compiler does not support Armv8.1-M target architecture.
@@ -91,7 +91,7 @@
       #define __DSP_USED       1U
     #else
       #error "Compiler generates DSP (SIMD) instructions for a devices without DSP extensions (check __DSP_PRESENT)"
-      #define __DSP_USED         0U
+      #define __DSP_USED       0U
     #endif
   #else
     #define __DSP_USED         0U
@@ -188,12 +188,12 @@
 }
 #endif
 
-#endif /* __CORE_ARMV81MML_H_GENERIC */
+#endif /* __CORE_CM55_H_GENERIC */
 
 #ifndef __CMSIS_GENERIC
 
-#ifndef __CORE_ARMV81MML_H_DEPENDANT
-#define __CORE_ARMV81MML_H_DEPENDANT
+#ifndef __CORE_CM55_H_DEPENDANT
+#define __CORE_CM55_H_DEPENDANT
 
 #ifdef __cplusplus
  extern "C" {
@@ -201,9 +201,9 @@
 
 /* check device defines and use defaults */
 #if defined __CHECK_DEVICE_DEFINES
-  #ifndef __ARMv81MML_REV
-    #define __ARMv81MML_REV               0x0000U
-    #warning "__ARMv81MML_REV not defined in device header file; using default!"
+  #ifndef __CM55_REV
+    #define __CM55_REV               0x0000U
+    #warning "__CM55_REV not defined in device header file; using default!"
   #endif
 
   #ifndef __FPU_PRESENT
@@ -217,7 +217,7 @@
       #warning "__FPU_DP not defined in device header file; using default!"
     #endif
   #endif
-  
+
   #ifndef __MPU_PRESENT
     #define __MPU_PRESENT             0U
     #warning "__MPU_PRESENT not defined in device header file; using default!"
@@ -233,6 +233,11 @@
     #warning "__DCACHE_PRESENT not defined in device header file; using default!"
   #endif
   
+  #ifndef __VTOR_PRESENT
+    #define __VTOR_PRESENT             1U
+    #warning "__VTOR_PRESENT not defined in device header file; using default!"
+  #endif
+  
   #ifndef __PMU_PRESENT
     #define __PMU_PRESENT             0U
     #warning "__PMU_PRESENT not defined in device header file; using default!"
@@ -240,9 +245,9 @@
 
   #if __PMU_PRESENT != 0U
     #ifndef __PMU_NUM_EVENTCNT
-      #define __PMU_NUM_EVENTCNT      2U
+      #define __PMU_NUM_EVENTCNT      8U
       #warning "__PMU_NUM_EVENTCNT not defined in device header file; using default!"
-    #elif (__PMU_NUM_EVENTCNT > 31 || __PMU_NUM_EVENTCNT < 2)
+    #elif (__PMU_NUM_EVENTCNT > 8 || __PMU_NUM_EVENTCNT < 2)
     #error "__PMU_NUM_EVENTCNT is out of range in device header file!" */
     #endif
   #endif
@@ -257,11 +262,6 @@
     #warning "__DSP_PRESENT not defined in device header file; using default!"
   #endif
 
-  #ifndef __VTOR_PRESENT
-    #define __VTOR_PRESENT             1U
-    #warning "__VTOR_PRESENT not defined in device header file; using default!"
-  #endif
-  
   #ifndef __NVIC_PRIO_BITS
     #define __NVIC_PRIO_BITS          3U
     #warning "__NVIC_PRIO_BITS not defined in device header file; using default!"
@@ -294,7 +294,7 @@
 #define     __OM     volatile            /*! Defines 'write only' structure member permissions */
 #define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
 
-/*@} end of group ARMv81MML */
+/*@} end of group Cortex_M55 */
 
 
 
@@ -2261,6 +2261,7 @@ typedef struct
 #define PMU_AUTHSTATUS_SUNID_Pos              22U                                          /*!< PMU AUTHSTATUS: Secure Unprivileged Non-invasive Debug Position */
 #define PMU_AUTHSTATUS_SUNID_Msk             (0x3UL << PMU_AUTHSTATUS_SUNID_Pos)           /*!< PMU AUTHSTATUS: Secure Unprivileged Non-invasive Debug Mask */
 
+
 /*@} end of group CMSIS_PMU */
 #endif
 
@@ -3830,6 +3831,30 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetPriority_NS(IRQn_Type IRQn)
 
 #include "pmu_armv8.h"
 
+/**
+  \brief   Cortex-M55 PMU events
+  \note    Architectural PMU events can be found in pmu_armv8.h
+*/
+
+#define ARMCM55_PMU_ECC_ERR                          0xC000             /*!< Any ECC error */
+#define ARMCM55_PMU_ECC_ERR_FATAL                    0xC001             /*!< Any fatal ECC error */
+#define ARMCM55_PMU_ECC_ERR_DCACHE                   0xC010             /*!< Any ECC error in the data cache */
+#define ARMCM55_PMU_ECC_ERR_ICACHE                   0xC011             /*!< Any ECC error in the instruction cache */
+#define ARMCM55_PMU_ECC_ERR_FATAL_DCACHE             0xC012             /*!< Any fatal ECC error in the data cache */
+#define ARMCM55_PMU_ECC_ERR_FATAL_ICACHE             0xC013             /*!< Any fatal ECC error in the instruction cache*/
+#define ARMCM55_PMU_ECC_ERR_DTCM                     0xC020             /*!< Any ECC error in the DTCM */
+#define ARMCM55_PMU_ECC_ERR_ITCM                     0xC021             /*!< Any ECC error in the ITCM */
+#define ARMCM55_PMU_ECC_ERR_FATAL_DTCM               0xC022             /*!< Any fatal ECC error in the DTCM */
+#define ARMCM55_PMU_ECC_ERR_FATAL_ITCM               0xC023             /*!< Any fatal ECC error in the ITCM */
+#define ARMCM55_PMU_PF_LINEFILL                      0xC100             /*!< A prefetcher starts a line-fill */
+#define ARMCM55_PMU_PF_CANCEL                        0xC101             /*!< A prefetcher stops prefetching */
+#define ARMCM55_PMU_PF_DROP_LINEFILL                 0xC102             /*!< A linefill triggered by a prefetcher has been dropped because of lack of buffering */
+#define ARMCM55_PMU_NWAMODE_ENTER                    0xC200             /*!< No write-allocate mode entry */
+#define ARMCM55_PMU_NWAMODE                          0xC201             /*!< Write-allocate store is not allocated into the data cache due to no-write-allocate mode */
+#define ARMCM55_PMU_SAHB_ACCESS                      0xC300             /*!< Read or write access on the S-AHB interface to the TCM */
+#define ARMCM55_PMU_DOSTIMEOUT_DOUBLE                0xC400             /*!< Denial of Service timeout has fired twice and caused buffers to drain to allow forward progress */
+#define ARMCM55_PMU_DOSTIMEOUT_TRIPLE                0xC401             /*!< Denial of Service timeout has fired three times and blocked the LSU to force forward progress */
+
 #endif
 
 /* ##########################  FPU functions  #################################### */
@@ -4212,6 +4237,6 @@ __STATIC_INLINE int32_t ITM_CheckChar (void)
 }
 #endif
 
-#endif /* __CORE_ARMV81MML_H_DEPENDANT */
+#endif /* __CORE_CM55_H_DEPENDANT */
 
 #endif /* __CMSIS_GENERIC */
