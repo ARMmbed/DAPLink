@@ -31,9 +31,6 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
     armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource/hic_hal/stm32/stm32f103xb"
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc

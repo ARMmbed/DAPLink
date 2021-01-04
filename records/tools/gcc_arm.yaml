@@ -15,7 +15,7 @@ tool_specific:
             common_flags:
                 - -Os
                 - -g3
-#                 - -Wall
+                # - -Wall
                 - -Werror
                 - -ffunction-sections
                 - -fdata-sections

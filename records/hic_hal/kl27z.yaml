@@ -32,14 +32,13 @@ tool_specific:
         sources:
             - source/hic_hal/freescale/kl27z/armcc
     armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource\hic_hal\freescale\kl27z"
         sources:
             - source/hic_hal/freescale/kl27z/armcc
     armclang:
         sources:
             - source/hic_hal/freescale/kl27z/armcc
     gcc_arm:
+        linker_file:
+            - source/hic_hal/freescale/kinetis.ld
         sources:
             - source/hic_hal/freescale/kl27z/gcc

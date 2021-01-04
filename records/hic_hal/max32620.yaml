@@ -22,9 +22,6 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/maxim/max32620/armcc
     armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource/hic_hal/maxim/max32620"
         sources:
             hic_hal:
                 - source/hic_hal/maxim/max32620/armcc
@@ -33,8 +30,6 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/maxim/max32620/armcc
     gcc_arm:
-        includes:
-            - source/hic_hal/maxim/max32620/gcc
         sources:
             hic_hal:
                 - source/hic_hal/maxim/max32620/gcc

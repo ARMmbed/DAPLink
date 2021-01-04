@@ -24,9 +24,6 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc
     armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource/hic_hal/nxp/lpc4322"
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc
@@ -35,8 +32,6 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc
     gcc_arm:
-        includes:
-            - source/hic_hal/nxp/lpc4322/gcc
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/gcc

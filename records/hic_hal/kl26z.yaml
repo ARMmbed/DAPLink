@@ -33,9 +33,6 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/freescale/kl26z/armcc
     armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource/hic_hal/freescale/kl26z"
         sources:
             hic_hal:
                 - source/hic_hal/freescale/kl26z/armcc
@@ -46,8 +43,6 @@ tool_specific:
     gcc_arm:
         linker_file:
             - source/hic_hal/freescale/kinetis.ld
-        includes:
-            - source/hic_hal/freescale/kl26z/gcc
         sources:
             hic_hal:
                 - source/hic_hal/freescale/kl26z/gcc

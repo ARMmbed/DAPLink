@@ -11,6 +11,7 @@ tool_specific:
                 - -g
                 - -x assembler-with-cpp
                 - -masm=auto
+                - -Wa,armasm,--no_unaligned_access
             cpp_flags:
                 - --target=arm-arm-none-eabi
             c_flags:
@@ -31,6 +32,7 @@ tool_specific:
                 - -Warmcc-pragma-thumb
                 - -Wno-ignored-optimization-argument
                 - -Wno-unused-command-line-argument
+                - -mno-unaligned-access
             ld_flags:
                 - --bestdebug
                 - --summary_stderr
