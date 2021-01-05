@@ -1,7 +1,7 @@
 tool_specific:
     gcc_arm:
         macros:
-            -
+            - __PROGRAM_START
         linker_file:
             - source/daplink/daplink.ld
         misc:
