@@ -46,7 +46,7 @@
 #include "flash_manager.h"
 #endif
 
-#ifdef USE_CMSIS_RTOS2
+#ifndef USE_LEGACY_CMSIS_RTOS
 #include "rtx_os.h"
 #endif
 
@@ -111,7 +111,7 @@ void __libc_init_array (void) {}
 
 // Reference to our main task
 osThreadId_t main_task_id;
-#ifdef USE_CMSIS_RTOS2
+#ifndef USE_LEGACY_CMSIS_RTOS
 static uint32_t s_main_thread_cb[WORDS(sizeof(osRtxThread_t))];
 static uint64_t s_main_task_stack[MAIN_TASK_STACK / sizeof(uint64_t)];
 static const osThreadAttr_t k_main_thread_attr = {
@@ -238,7 +238,7 @@ void main_task(void * arg)
     // Initialize settings - required for asserts to work
     config_init();
 
-#ifndef USE_CMSIS_RTOS2
+#ifdef USE_LEGACY_CMSIS_RTOS
     // Get a reference to this task
     main_task_id = osThreadGetId();
 #endif
@@ -290,7 +290,7 @@ void main_task(void * arg)
     usb_state_count = USB_CONNECT_DELAY;
 
     // Start timer tasks
-#ifdef USE_CMSIS_RTOS2
+#ifndef USE_LEGACY_CMSIS_RTOS
     osTimerId_t tmr_id = osTimerNew(timer_task_30mS, osTimerPeriodic, NULL, &k_timer_30ms_attr);
 #else
     osTimerId_t tmr_id = osTimerNew(timer_task_30mS, osTimerPeriodic, NULL, NULL);
@@ -518,7 +518,7 @@ int main(void)
     osKernelInitialize();
 
     // Create application main thread
-#ifdef USE_CMSIS_RTOS2
+#ifndef USE_LEGACY_CMSIS_RTOS
     main_task_id = osThreadNew(main_task, NULL, &k_main_thread_attr);
 #else
     osThreadNew(main_task, NULL, NULL);

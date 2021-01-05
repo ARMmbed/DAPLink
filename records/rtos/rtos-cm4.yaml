@@ -6,6 +6,8 @@ common:
 # and the k20dx doesn't have the FP extension.
 tool_specific:
     uvision:
+        macros:
+            - USE_LEGACY_CMSIS_RTOS
         includes:
             - source/rtos
         sources:
@@ -26,6 +28,8 @@ tool_specific:
                 - source/rtos/RTX_Config.c
                 - source/rtos/cmsis_os2_port.c
     armcc:
+        macros:
+            - USE_LEGACY_CMSIS_RTOS
         includes:
             - source/rtos
         sources:
@@ -46,8 +50,6 @@ tool_specific:
                 - source/rtos/RTX_Config.c
                 - source/rtos/cmsis_os2_port.c
     armclang:
-        macros:
-            - USE_CMSIS_RTOS2
         includes:
             - source/rtos2/Include
             - source/rtos2/RTX/Include
@@ -68,8 +70,6 @@ tool_specific:
                 - source/rtos2/RTX/Source/rtx_timer.c
                 - source/rtos2/Source/os_systick.c
     gcc_arm:
-        macros:
-            - USE_CMSIS_RTOS2
         includes:
             - source/rtos2/Include
             - source/rtos2/RTX/Include
