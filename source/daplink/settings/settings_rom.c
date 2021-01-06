@@ -44,9 +44,9 @@ typedef struct __attribute__((__packed__)) cfg_setting {
     uint8_t auto_rst;
     uint8_t automation_allowed;
     uint8_t overflow_detect;
+    uint8_t detect_incompatible_target;
 
     // Add new members here
-    uint8_t detect_incompatible_target;
 
 } cfg_setting_t;
 
