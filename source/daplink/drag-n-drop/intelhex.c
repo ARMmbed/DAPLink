@@ -32,8 +32,8 @@ enum hex_record_t {
     START_SEG_ADDR_RECORD = 3,
     EXT_LINEAR_ADDR_RECORD = 4,
     START_LINEAR_ADDR_RECORD = 5,
-	CUSTOM_METADATA_RECORD = 0x0A,
-	CUSTOM_DATA_RECORD = 0x0D,
+    CUSTOM_METADATA_RECORD = 0x0A,
+    CUSTOM_DATA_RECORD = 0x0D,
 };
 
 typedef union hex_line_t hex_line_t;
