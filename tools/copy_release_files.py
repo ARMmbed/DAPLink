@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -46,7 +47,7 @@ OPTIONAL_COPY_PATTERN_LIST = [
     "%s_map.html",
 ]
 
-TOOL_DIR = { 
+TOOL_DIR = {
     'uvision' : { 'proj_dir': os.path.join('projectfiles', 'uvision') , 'rel_dir' : 'uvision_release', 'build_dir' : 'build' },
     'mbedcli' : { 'proj_dir': 'BUILD' , 'rel_dir' : 'mbedcli_release', 'build_dir' : 'ARM-CUSTOM_PROFILE' },
     'progen_arm' : { 'proj_dir': 'projectfiles/make_armcc' , 'rel_dir' : 'progen_arm_release', 'build_dir' : 'build' },
@@ -124,7 +125,7 @@ def main():
     os.mkdir(rel_dir)
 
     generate_info_files(rel_dir)
-    
+
     project_list = os.listdir(proj_dir)
     for project in project_list:
         src_dir = os.path.join(proj_dir, project, build_dir)

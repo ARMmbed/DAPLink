@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
@@ -23,7 +24,7 @@ class TargetList(list):
     def sort(self, *args, **kwargs):
         pass
 
-class InstructionList(unicode): 
+class InstructionList(unicode):
     def sort(self, *args, **kwargs):
         pass
 

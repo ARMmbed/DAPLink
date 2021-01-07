@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -119,6 +120,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("args", args.source, args.dest, args.version, args.toolchain)
-    
+
     package_release_files(args.source, args.dest, args.version, args.toolchain,
                           info.PROJECT_RELEASE_INFO, info.SUPPORTED_CONFIGURATIONS)

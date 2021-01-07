@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
@@ -28,7 +29,7 @@ class TargetList(list):
     def sort(self, *args, **kwargs):
         pass
 
-class InstructionList(list): 
+class InstructionList(list):
     def sort(self, *args, **kwargs):
         pass
 
@@ -117,11 +118,11 @@ def yml_object_parser(f, entry, level, tabs):
             else:
                 f.write('\n')
                 yml_object_parser(f, entry[key], level + 1, tabs);
-            
 
-    elif type(entry) is DefaultList:     
+
+    elif type(entry) is DefaultList:
         for target in entry:
-            if type(target) is tuple:        
+            if type(target) is tuple:
                 #print target
                 f.write(" " * level * tabs + string_writer(target[0]) + ": ");
                 value = string_writer(target[1])
@@ -134,10 +135,10 @@ def yml_object_parser(f, entry, level, tabs):
             else:
                 logger.error("Not expecting input type %s %s " % (type(target), str(target)))
 
-    elif type(entry) is TargetList:         
+    elif type(entry) is TargetList:
         #print "found TargetList"
         for target in entry:
-            if type(target) is tuple:        
+            if type(target) is tuple:
                 #print target
                 f.write(" " * (level-1) * tabs + string_writer(target[0]) + ": ");
                 value = string_writer(target[1])
@@ -150,10 +151,10 @@ def yml_object_parser(f, entry, level, tabs):
             else:
                 logger.error("Not expecting input type %s %s " % (type(target), str(target)))
 
-    elif type(entry) is InstructionList:     
-        #print "found InstructionList"        
+    elif type(entry) is InstructionList:
+        #print "found InstructionList"
         for target in entry:
-            if type(target) is tuple:    
+            if type(target) is tuple:
                 f.write(" " * level * tabs + string_writer(target[0]) + ": |\n")
                 if type(target[1]) is list:
                     for texts in target[1]:
