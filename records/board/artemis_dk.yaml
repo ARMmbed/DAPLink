@@ -1,0 +1,15 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+        - HID_LED_DEF=GPIO_LED_ON
+        - CDC_LED_DEF=GPIO_LED_ON
+        - MSC_LED_DEF=GPIO_LED_ON
+        - USB_PROD_STR="SparkFun Artemis Dev Kit CMSIS-DAP"
+    includes:
+        - source/board/override_mkl26z_reset
+    sources:
+        board:
+            - source/board/artemis_dk.c
+        family:
+            - source/family/ambiq/ama3b1kk/target.c
+            - source/family/ambiq/ama3b1kk/target_reset.c

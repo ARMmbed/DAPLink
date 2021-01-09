@@ -1,6 +1,6 @@
 /**
- * @file    max32625mbed.c
- * @brief   board ID for the Maxim Integrated's MAX32625MBED
+ * @file    target.c
+ * @brief   Target information for the kl26z
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -19,13 +19,19 @@
  * limitations under the License.
  */
 
-#include "target_family.h"
-#include "target_board.h"
+#include "target_config.h"
 
-const board_info_t g_board_info = {
-    .info_version = kBoardInfoVersion,
-    .board_id = "0415",
-    .family_id = kStub_HWReset_FamilyID,
-    .flags = kEnablePageErase,
-    .target_cfg = &target_device,
+// The file flash_blob.c must only be included in target.c
+#include "flash_blob.c"
+
+// target information
+target_cfg_t target_device = {
+    .sectors_info = (const sector_info_t *)sectors_info,
+    .sector_info_length = (sizeof(sectors_info)) / (sizeof(sector_info_t)),
+    .flash_regions[0].start = 0x0C000,
+    .flash_regions[0].end = MB(1),
+    .flash_regions[0].flags = kRegionIsDefault,
+    .flash_regions[0].flash_algo = (program_target_t *)&flash,
+    .ram_regions[0].start = 0x10000000,
+    .ram_regions[0].end = 0x10060000,
 };

@@ -68,6 +68,9 @@ __attribute__((weak))
 const target_family_descriptor_t g_renesas_family  = {0};
 __attribute__((weak))
 const target_family_descriptor_t g_toshiba_tz_family  = {0};
+__attribute__((weak))
+const target_family_descriptor_t g_ambiq_ama3b1kk  = {0};
+
 
 __attribute__((weak))
 const target_family_descriptor_t *g_families[] = {
@@ -86,6 +89,7 @@ const target_family_descriptor_t *g_families[] = {
     &g_wiznet_family,
     &g_renesas_family,
     &g_toshiba_tz_family,
+    &g_ambiq_ama3b1kk,
     0 // list terminator
 };
 

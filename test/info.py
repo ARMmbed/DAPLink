@@ -29,6 +29,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
+    ("kl26z_artemis_dk_if",                         False,      0x8000,     "hex"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("kl27z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
@@ -58,6 +59,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_mimxrt1050_evk_hyper_if",               True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_qspi_if",                True,       0x8000,     "bin"       ),
     ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
+    ('k20dx_ep_kairos_if',                           True,       0x0000,     "bin"       ),
     ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
@@ -149,6 +151,7 @@ VENDOR_ID = {
     'Renesas' : 117,
     'Wiznet': 122,
     'Realtek': 124,
+    'Ambiq' : 126,
 }
 
 def VENDOR_TO_FAMILY(x, y) : return (VENDOR_ID[x] <<8) | y
@@ -247,6 +250,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x2203,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500p_if',               None,               'WIZwiki-W7500P'                        ),
     (   0x2410,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x2600,     VENDOR_TO_FAMILY('Nordic', 2),      'k20dx_ep_agora_if',                        None,               None                                    ),
+    (   0x2601,     VENDOR_TO_FAMILY('NXP', 0),         'k20dx_ep_kairos_if',                       None,               None                                    ),
     (   0x3104,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_dipdap_sdt52832b_if',             None,               None                                    ),
     (   0x3108,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32429b_if',             None,               None                                    ),
     (   0x3105,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
@@ -293,6 +297,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'sam3u2c_if',                               None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_if',                           None,               None                                    ),
+    (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                                ),
 ]
 
 # Add new HICs here
@@ -372,6 +377,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
 
 #Hack until these targets have an image with a valid vector table
 TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
+    'Artemis_DK',
     'Microbit',
     'Nordic-nRF51-DK',
     'Nordic-nRF52-DK',
