@@ -35,7 +35,7 @@
 #define ADC_MV_TO_ADC(x)    ((x) * 0xFFF / 3300)  // Convert mV to ADC value (12bit and 3.3V reference)
 #define BATT_MIN_VOLTAGE    1500
 
-void pwr_mon_bandgap_init(void);
+static void pwr_mon_bandgap_init(void);
 static uint32_t pwr_mon_read_vbg(uint32_t channelGroup);
 static uint32_t pwr_mon_adc_to_mv(uint32_t raw_adc);
 
