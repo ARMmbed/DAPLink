@@ -167,6 +167,7 @@ __Vectors_Size 	EQU     __Vectors_End - __Vectors
 ;     <o5>  Backdoor Comparison Key 5.  <0x0-0xFF:2>
 ;     <o6>  Backdoor Comparison Key 6.  <0x0-0xFF:2>
 ;     <o7>  Backdoor Comparison Key 7.  <0x0-0xFF:2>
+#if defined(MICROBIT_LOCK_BOOTLOADER)
 BackDoorK0      EQU     0x4D ; 'M'
 BackDoorK1      EQU     0x49 ; 'I'
 BackDoorK2      EQU     0x43 ; 'C'
@@ -175,6 +176,16 @@ BackDoorK4      EQU     0x4F ; 'O'
 BackDoorK5      EQU     0x42 ; 'B'
 BackDoorK6      EQU     0x49 ; 'I'
 BackDoorK7      EQU     0x54 ; 'T'
+#else
+BackDoorK0      EQU     0xFF
+BackDoorK1      EQU     0xFF
+BackDoorK2      EQU     0xFF
+BackDoorK3      EQU     0xFF
+BackDoorK4      EQU     0xFF
+BackDoorK5      EQU     0xFF
+BackDoorK6      EQU     0xFF
+BackDoorK7      EQU     0xFF
+#endif
 ;   </h>
 ;   <h> Program flash protection bytes (FPROT)
 ;     <i> Each program flash region can be protected from program and erase operation by setting the associated PROT bit.
@@ -190,7 +201,11 @@ BackDoorK7      EQU     0x54 ; 'T'
 ;       <o.5>   FPROT3.5
 ;       <o.6>   FPROT3.6
 ;       <o.7>   FPROT3.7
+#if defined(MICROBIT_LOCK_BOOTLOADER)
 nFPROT3         EQU     0x0F ; Enable protection of the first 32 kB of flash
+#else
+nFPROT3         EQU     0x00
+#endif
 FPROT3          EQU     nFPROT3:EOR:0xFF
 ;     </h>
 ;     <h> FPROT2
@@ -281,7 +296,11 @@ FOPT          EQU     0x39
 ;     * <2=> Backdoor key access enabled
 ;       <3=> Backdoor key access disabled
 ;         <i> Backdoor Key Security Enable
+#if defined(MICROBIT_LOCK_BOOTLOADER)
 FSEC          EQU     0xBE
+#else
+FSEC          EQU     0xFE
+#endif
 ;   </h>
 ; </h>
 
