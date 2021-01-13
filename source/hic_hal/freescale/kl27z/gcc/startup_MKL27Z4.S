@@ -76,12 +76,23 @@ __isr_vector:
 
     .size    __isr_vector, . - __isr_vector
 
+#if defined(DAPLINK_BL)
+    /* TODO: Bootloader Configuration Area (BCA) used by Kinetis ROM Bootloader
+#endif
+
 /* Flash Configuration */
     .section .FlashConfig, "a"
+#if defined(MICROBIT_LOCK_BOOTLOADER)
+    .long 0x5243494D
+    .long 0x5449424F
+    .long 0xFFFFFFF0
+    .long 0xFFFF39FE
+#else
     .long 0xFFFFFFFF
     .long 0xFFFFFFFF
     .long 0xFFFFFFFF
     .long 0xFFFF3FFE
+#endif
 
     .text
     .thumb
