@@ -812,14 +812,17 @@ static uint32_t erase_storage_sector(uint32_t adr)
     return status;
 }
 
-static uint32_t program_storage_page(uint32_t adr, uint32_t sz, uint32_t *buf)
+static uint32_t program_storage_page(uint32_t adr, uint32_t sz, uint8_t *buf)
 {
-    int status = FLASH_Program(&g_flash, adr, buf, sz);
+    /* Verify data is word aligned */
+    util_assert(!((uint32_t)buf & 0x3));
+    
+    int status = FLASH_Program(&g_flash, adr, (uint32_t *) buf, sz);
     if (status == kStatus_Success)
     {
         // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
         status = FLASH_VerifyProgram(&g_flash, adr, sz,
-                              buf, kFLASH_marginValueUser,
+                              (uint32_t *) buf, kFLASH_marginValueUser,
                               NULL, NULL);
     }
     return status;
@@ -844,7 +847,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             /* Validate length field matches with I2C Write data */
             if (size == length + 8) { 
                 /* Address range and alignment validation done inside program_storage_page() */
-                status = program_storage_page(address, length, (uint32_t *) data);
+                status = program_storage_page(address, length, (uint8_t *) data);
             
                 if (0 != status) {
                     pI2cCommand->cmdId = gFlashError_c;
@@ -989,7 +992,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                     pI2cCommand->cmdId = gFlashError_c;
                 }
                 else {
-                    status = program_storage_page(FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint32_t *) &gflashConfig);
+                    status = program_storage_page(FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint8_t *) &gflashConfig);
                 }
             }
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
