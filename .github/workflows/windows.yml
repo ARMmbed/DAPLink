@@ -46,8 +46,6 @@ jobs:
     - name: Install Python module
       run:  |
         pip install -r requirements.txt
-        pip uninstall -y project-generator
-        pip install -U git+https://github.com/mbrossard/project_generator.git@development
 
     - name: Compile
       run:  |
