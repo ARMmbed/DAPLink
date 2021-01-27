@@ -1,9 +1,10 @@
 name: Build DAPLink (Linux)
 on:
+  push:
+    branches:
+      - development
+      - compilers_experimental
   workflow_dispatch:
-    inputs:
-      version:
-        required: true
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
       id:   cache-arm-gcc
       uses: actions/cache@v2
       env:
-        cache-name: arm-gcc-9-2020-q2
+        cache-name: arm-gcc-10-2020-q4
       with:
         path: ${{ runner.temp }}/arm-gcc
         key:  ${{ runner.os }}-${{ env.cache-name }}
@@ -38,11 +39,11 @@ jobs:
     - name: Install Embedded Arm Toolchain
       if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
       run:  |
-        curl -O -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-        md5sum gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-        echo Installing gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux in ${{ runner.temp }}/arm-gcc
+        curl -O -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+        md5sum gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+        echo Installing  in ${{ runner.temp }}/arm-gcc
         mkdir -p ${{ runner.temp }}/arm-gcc
-        tar jvxf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
+        tar jvxf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
 
     - name: Install dependencies
       run:  |

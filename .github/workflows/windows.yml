@@ -1,9 +1,10 @@
 name: Build DAPLink (Windows)
 on:
+  push:
+    branches:
+      - development
+      - compilers_experimental
   workflow_dispatch:
-    inputs:
-      version:
-        required: true
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
       id:   cache-arm-gcc
       uses: actions/cache@v2
       env:
-        cache-name: arm-gcc-9-2020-q2
+        cache-name: arm-gcc-10-2020-q4
       with:
         path: ${{ runner.temp }}/arm-gcc
         key:  ${{ runner.os }}-${{ env.cache-name }}
@@ -34,9 +35,9 @@ jobs:
     - name: Install Embedded Arm Toolchain
       if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
       run:  |
-        (New-Object System.Net.WebClient).DownloadFile("https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-win32.zip","gcc-arm-none-eabi-9-2020-q2-update-win32.zip");
-        echo "Installing gcc-arm-none-eabi-9-2020-q2-update-win32 in ${{ runner.temp }}\arm-gcc"
-        Expand-Archive -Path .\gcc-arm-none-eabi-9-2020-q2-update-win32.zip -DestinationPath ${{ runner.temp }}\arm-gcc -PassThru;
+        (New-Object System.Net.WebClient).DownloadFile("https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-win32.zip","gcc-arm-none-eabi-10-2020-q4-major-win32.zip");
+        echo "Installing gcc-arm-none-eabi-10-2020-q4-major-win32 in ${{ runner.temp }}\arm-gcc"
+        Expand-Archive -Path .\gcc-arm-none-eabi-10-2020-q4-major-win32.zip -DestinationPath ${{ runner.temp }}\arm-gcc -PassThru;
 
     - name: Check Embedded Arm Toolchain
       run:  |
