@@ -36,8 +36,9 @@ jobs:
       if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
       run:  |
         (New-Object System.Net.WebClient).DownloadFile("https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-win32.zip","gcc-arm-none-eabi-10-2020-q4-major-win32.zip");
-        echo "Installing gcc-arm-none-eabi-10-2020-q4-major-win32 in ${{ runner.temp }}\arm-gcc"
-        Expand-Archive -Path .\gcc-arm-none-eabi-10-2020-q4-major-win32.zip -DestinationPath ${{ runner.temp }}\arm-gcc -PassThru;
+        echo "Installing gcc-arm-none-eabi-10-2020-q4-major-win32 in ${{ runner.temp }}\arm-gcc";
+        Expand-Archive -Path .\gcc-arm-none-eabi-10-2020-q4-major-win32.zip -DestinationPath ${{ runner.temp }} -PassThru;
+        Rename-Item ${{ runner.temp }}\gcc-arm-none-eabi-10-2020-q4-major ${{ runner.temp }}\arm-gcc;
 
     - name: Check Embedded Arm Toolchain
       run:  |
