@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # DAPLink Interface Firmware
-# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -17,11 +17,10 @@
 # limitations under the License.
 #
 
-export TOOLS=../../../tools
-export DIR=../../../source/daplink
-#  Create dsion_git_tmpl.txt ${DIR}\version_git.h
+TOOLS=../../../tools
+DIR=../../../source/daplink
 
-python --version 2> nul
+# python --version
 
 #  Run python script to delete default version_git.h and create the real one
-python ${TOOLS}/pre_build_script.py
+python ${TOOLS}/pre_build_script.py --version_git_dir=${DIR}

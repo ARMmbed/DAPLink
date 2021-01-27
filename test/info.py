@@ -29,8 +29,9 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_frdmk66f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk28f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk82f_if",                           True,       0x8000,     "bin"       ),
-    ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("kl26z_artemis_dk_if",                         False,      0x8000,     "hex"       ),
+    ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
+    ("kl27z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc4322_lpc54114xpresso_if",                  False,      0x10000,    "bin"       ),
@@ -58,7 +59,7 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_mimxrt1050_evk_hyper_if",               True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_qspi_if",                True,       0x8000,     "bin"       ),
     ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
-    ('k20dx_ep_kairos_if',                           True,       0x0000,     "bin"       ),
+    ('k20dx_ep_kairos_if',                          True,       0x0000,     "bin"       ),
     ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
@@ -242,6 +243,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1236,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_ublox_evk_odin_w2_if',        'stm32f103xb_bl',    'ublox-EVK-ODIN-W2'                     ),
     (   0x1237,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'U-BLOX-EVK-NINA-B1'                    ),
     (   0x1238,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
+    (   0x1304,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_pfm_m487km_if',          'm48ssidae_bl',     None                                    ),
     (   0x1309,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m252kg_if',              'm48ssidae_bl',     None                                    ),
     (   0x1310,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m263a_if',           'm48ssidae_bl',     None                                    ),
     (   0x2201,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_if',                None,               'WIZwiki-W7500'                         ),
@@ -283,6 +285,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9017,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio_emw3166_if',                  None,               'WIO_EMW3166'                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9900,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
+    (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbit'                              ),
     (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
     (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
@@ -309,6 +312,7 @@ HIC_STRING_TO_ID = {
     'max32625': 0x97969906,
     'stm32f103xb': 0x97969908,
     'k26f': 0x97969909,
+    'kl27z': 0x9796990B,
     'm48ssidae': 0x97969921,
 }
 
@@ -358,6 +362,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0469,  # lpc11u35_mtb_stm32f439_if
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
+    0x1304,  # NuMaker-PFM-M487KM
     0x1309,  # NuMaker-M252KG
     0x1310,  # NuMaker-IoT-M263A
     0x2410,  # lpc11u35_mbed_cloud_connect_if

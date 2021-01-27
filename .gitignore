@@ -42,6 +42,7 @@ tmp/
 *.axf
 *.S19
 *.bin
+*.hex
 *.dep
 *.FLM
 

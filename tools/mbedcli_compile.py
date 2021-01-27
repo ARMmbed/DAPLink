@@ -119,6 +119,7 @@ def main():
             shutil.rmtree(release_dir, ignore_errors=True)
         print("Releasing directory: " + release_dir)
         toolchain_dir = args.toolchain+"-CUSTOM_PROFILE"
-        package_release_files(args.build_folder, release_dir, release_version, toolchain_dir)
+        package_release_files(args.build_folder, release_dir, release_version, toolchain_dir,
+                              info.PROJECT_RELEASE_INFO, info.SUPPORTED_CONFIGURATIONS)
 
 main()

@@ -31,7 +31,7 @@
  *    Return Value:    TRUE - Setup vendor request ok, FALSE - Setup vendor request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
+__WEAK BOOL USBD_EndPoint0_Setup_WebUSB_ReqToDevice(void)
 {
     U8  *pD;
     U32 len, n;

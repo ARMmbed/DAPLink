@@ -3,7 +3,7 @@
  * @brief   Implementation of error.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,10 +19,12 @@
  * limitations under the License.
  */
 
+#include <stdlib.h>
 #include "error.h"
 #include "util.h"
 #include "compiler.h"
 
+#if !DAPLINK_NO_ERROR_MESSAGES
 static const char *const error_message[] = {
 
     /* Shared errors */
@@ -48,21 +50,21 @@ static const char *const error_message[] = {
     /* Target flash errors */
 
     // ERROR_RESET
-    "The interface firmware FAILED to reset/halt the target MCU",
+    "Failed to reset/halt the target MCU",
     // ERROR_ALGO_DL
-    "The interface firmware FAILED to download the flash programming algorithms to the target MCU",
+    "Failed to download flash algorithm to target MCU",
     //ERROR_ALGO_MISSING
-    "The flash algo missing for a region",
+    "Flash algorithm missing for a region",
     // ERROR_ALGO_DATA_SEQ
-    "The interface firmware FAILED to download the flash data contents to be programmed",
+    "Failed to download the flash data contents to be programmed",
     // ERROR_INIT
-    "The interface firmware FAILED to initialize the target MCU",
+    "Failed to initialize the target MCU",
     // ERROR_UNINIT
-    "The interface firmware FAILED to uninitialize the target MCU",
+    "Failed to uninitialize the target MCU",
     // ERROR_SECURITY_BITS
-    "The interface firmware ABORTED programming. Image is trying to set security bits",
+    "Programming aborted: image would lock target MCU",
     // ERROR_UNLOCK
-    "The interface firmware FAILED to unlock the target for programming",
+    "Failed to unlock target MCU for programming",
     // ERROR_ERASE_SECTOR
     "Flash algorithm erase sector command FAILURE",
     // ERROR_ERASE_ALL
@@ -122,6 +124,10 @@ static const char *const error_message[] = {
     "The bootloader CRC did not pass.",
 
 };
+
+COMPILER_ASSERT(ERROR_COUNT == ARRAY_SIZE(error_message));
+
+#endif // DAPLINK_NO_ERROR_MESSAGES
 
 static error_type_t error_type[] = {
 
@@ -222,11 +228,12 @@ static error_type_t error_type[] = {
     ERROR_TYPE_INTERFACE,
 };
 
-COMPILER_ASSERT(ERROR_COUNT == ARRAY_SIZE(error_message));
+COMPILER_ASSERT(ERROR_COUNT == ARRAY_SIZE(error_type));
 
 const char *error_get_string(error_t error)
 {
-    const char *msg = 0;
+#if !DAPLINK_NO_ERROR_MESSAGES
+    const char *msg = NULL;
 
     if (error < ERROR_COUNT) {
         msg = error_message[error];
@@ -238,6 +245,15 @@ const char *error_get_string(error_t error)
     }
 
     return msg;
+#else // DAPLINK_NO_ERROR_MESSAGES
+    static char error_num_str[10] = "Error 00";
+#define ERROR_NUM_CHAR_INDEX (6) // offset of first '0' in error_num_str[]
+
+    error_num_str[ERROR_NUM_CHAR_INDEX+0] = '0' + ((int)error / 1000) % 10;
+    error_num_str[ERROR_NUM_CHAR_INDEX+1] = '0' + ((int)error / 100) % 10;
+    COMPILER_ASSERT(ERROR_COUNT < 100); // if this assert is hit, add a digit here
+    error_num_str[ERROR_NUM_CHAR_INDEX+2] = 0;
+#endif  // DAPLINK_NO_ERROR_MESSAGES
 }
 
 error_type_t error_get_type(error_t error)

@@ -1,6 +1,6 @@
 /**
  * @file    usbd_kinetis.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -24,6 +24,7 @@
 #include "cortex_m.h"
 #include "util.h"
 #include "string.h"
+#include "hic_init.h"
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -35,7 +36,7 @@ typedef struct __BUF_DESC {
     uint32_t   buf_addr;
 } BUF_DESC;
 
-BUF_DESC __align(512) BD[(USBD_EP_NUM + 1) * 2 * 2];
+BUF_DESC __ALIGNED(512) BD[(USBD_EP_NUM + 1) * 2 * 2];
 uint8_t EPBuf[(USBD_EP_NUM + 1) * 2 * 2][64];
 uint8_t OutEpSize[USBD_EP_NUM + 1];
 uint8_t StatQueue[(USBD_EP_NUM + 1) * 2 * 2 + 1];
@@ -43,7 +44,7 @@ uint32_t StatQueueHead = 0;
 uint32_t StatQueueTail = 0;
 uint32_t LastIstat = 0;
 uint8_t UsbSuspended = 0;
-uint8_t Ep0ZlpOut = 0; 
+uint8_t Ep0ZlpOut = 0;
 
 uint32_t Data1  = 0x55555555;
 
@@ -139,17 +140,9 @@ void USBD_IntrEna(void)
 void USBD_Init(void)
 {
     OutEpSize[0] = USBD_MAX_PACKET0;
-    /* Enable all clocks needed for USB to function                             */
-    /* Set USB clock to 48 MHz                                                  */
-    SIM->SOPT2   |=   SIM_SOPT2_USBSRC_MASK     | /* MCGPLLCLK used as src      */
-                      SIM_SOPT2_PLLFLLSEL_MASK  ; /* Select MCGPLLCLK as clock  */
-#if defined(TARGET_MK20D5)
-    SIM->CLKDIV2 &= ~(SIM_CLKDIV2_USBFRAC_MASK  | /* Clear CLKDIV2 FS values    */
-                      SIM_CLKDIV2_USBDIV_MASK);
-    SIM->CLKDIV2  =   SIM_CLKDIV2_USBDIV(0)     ; /* USB clk = (PLL*1/2)        */
-    /*         = ( 48*1/1)=48     */
-#endif // TARGET_MK20D5
-    SIM->SCGC4   |=   SIM_SCGC4_USBOTG_MASK;      /* Enable USBOTG clock        */
+
+    hic_enable_usb_clocks();
+
     USBD_IntrEna();
     USB0->USBTRC0 |= USB_USBTRC0_USBRESET_MASK;
 
@@ -182,7 +175,7 @@ void USBD_Init(void)
  *    Return Value:    None
  */
 
-void USBD_Connect(uint32_t con)
+void USBD_Connect(BOOL con)
 {
     if (con) {
         USB0->CTL  |= USB_CTL_USBENSOFEN_MASK;            /* enable USB           */
@@ -276,7 +269,7 @@ void USBD_WakeUp(void)
         USB0->CTL |=  USB_CTL_RESUME_MASK;
 
         while (i--) {
-            __nop();
+            __NOP();
         }
 
         USB0->CTL &= ~USB_CTL_RESUME_MASK;
@@ -290,7 +283,7 @@ void USBD_WakeUp(void)
  *    Return Value:    None
  */
 
-void USBD_WakeUpCfg(uint32_t cfg)
+void USBD_WakeUpCfg(BOOL cfg)
 {
     /* Not needed                                                               */
 }
@@ -316,7 +309,7 @@ void USBD_SetAddress(uint32_t  adr, uint32_t setup)
  *    Return Value:    None
  */
 
-void USBD_Configure(uint32_t cfg)
+void USBD_Configure(BOOL cfg)
 {
 }
 

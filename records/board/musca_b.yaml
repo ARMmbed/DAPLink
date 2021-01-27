@@ -2,6 +2,7 @@ common:
     macros:
         - IO_CONFIG_OVERRIDE
         - MUSCA_B_BOOT_QSPI_FLASH
+        - DAPLINK_NO_ERROR_MESSAGES
     includes:
         - source/board/override_musca_b
         - source/family/arm/musca_b

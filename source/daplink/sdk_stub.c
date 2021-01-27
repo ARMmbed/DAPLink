@@ -19,7 +19,9 @@
  * limitations under the License.
  */
 
-__weak void sdk_init()
+#include "device.h"
+
+__WEAK void sdk_init()
 {
     // Do nothing
 }

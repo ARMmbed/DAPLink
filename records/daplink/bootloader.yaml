@@ -18,10 +18,13 @@ tool_specific:
             - source/daplink/daplink.sct
         misc:
             ld_flags:
-                - --predefine="-DDAPLINK_BL"
-    make_armcc:
+                - --predefine=-DDAPLINK_BL
+    armcc:
         linker_file:
             - source/daplink/daplink.sct
         misc:
             ld_flags:
-                - --predefine="-DDAPLINK_BL"
+                - --predefine=-DDAPLINK_BL
+    armclang:
+        linker_file:
+            - source/daplink/daplink.ac6.sct

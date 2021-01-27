@@ -29,7 +29,7 @@
 #define WEBUSB_URL_TYPE                         0x03
 
 /* WebUSB Platform Capability Descriptor */
-typedef __packed struct _WEBUSB_PLATFORM_CAPABILITY_DESCRIPTOR {
+typedef __PACKED_STRUCT _WEBUSB_PLATFORM_CAPABILITY_DESCRIPTOR {
     U8  bLength;
     U8  bDescriptorType;
     U8  bDevCapabilityType;
@@ -40,7 +40,7 @@ typedef __packed struct _WEBUSB_PLATFORM_CAPABILITY_DESCRIPTOR {
     U8  iLandingPage;
 } WEBUSB_PLATFORM_CAPABILITY_DESCRIPTOR;
 
-typedef __packed struct _WEBUSB_URL_DESCRIPTOR {
+typedef __PACKED_STRUCT _WEBUSB_URL_DESCRIPTOR {
     U8  bLength;
     U8  bDescriptorType;
     U8  bScheme;

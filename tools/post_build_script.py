@@ -19,6 +19,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import sys
 import argparse
 import itertools
 import binascii
@@ -69,8 +70,13 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
     addresses.sort()
     start_end_pairs = list(ranges(addresses))
     regions = len(start_end_pairs)
-    assert regions == 1, ("Error - only 1 region allowed in "
-                          "hex file %i found." % regions)
+    if regions > 1:
+        print("Error - only 1 region allowed in hex file %i found." % regions)
+        print("Regions:")
+        for i, se in enumerate(start_end_pairs):
+            s, e = se
+            print(" %d: 0x%08x - 0x%08x" % (i, s, e))
+        exit(1)
     start, end = start_end_pairs[0]
 
     pack_flash_algo = None
@@ -110,7 +116,9 @@ def post_build_script(input_file, output_file, board_id=None, family_id=None, bi
             new_hex_file.puts(target_addr_unpack + 2,struct.pack('<1H',int(family_id, 16)))
         #board_id is in string hex
         if board_id is not None:
-            new_hex_file.puts(target_addr_unpack + 4,struct.pack('4s',"%.04X" % int(board_id, 16)))
+            board_id_str = "%.04X" % int(board_id, 16)
+            board_id_bytes = bytes(board_id_str) if sys.version_info < (3, 0) else bytes(board_id_str, 'utf8')
+            new_hex_file.puts(target_addr_unpack + 4, struct.pack('4s', board_id_bytes))
         if pack_flash_algo is not None:
             blob_header = (0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2)
             stack_size = 0x200

@@ -1,6 +1,6 @@
 /**
  * @file    daplink_addr.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -62,6 +62,10 @@
 
 #define DAPLINK_SECTOR_SIZE             0x00000100
 #define DAPLINK_MIN_WRITE_SIZE          0x00000100
+
+/* USB RAM */
+#define DAPLINK_USB_RAM_START           0x20004000
+#define DAPLINK_USB_RAM_SIZE            0x00000800
 
 /* Current build */
 

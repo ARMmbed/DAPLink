@@ -55,9 +55,6 @@ extern uint32_t __Vectors;
  */
 void SystemInit(void)
 {
-    // Set up Cortex_M3 or M4 VTOR register to point to vector table
-    SCB->VTOR = (unsigned int)&__Vectors;
-
     fpuEnable();
 
     // In case we are running from internal flash, we configure the flash

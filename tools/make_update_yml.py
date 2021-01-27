@@ -18,10 +18,7 @@
 
 import logging
 
-logging.basicConfig(format='Line: %(lineno)d %(message)s')
 logger = logging.getLogger('yaml gen')
-logger.setLevel(logging.DEBUG)
-
 
 class DefaultList(list):
     def sort(self, *args, **kwargs):
