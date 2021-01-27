@@ -1,9 +1,5 @@
 name: Build DAPLink (Windows)
 on:
-  push:
-    branches:
-      - development
-      - compilers_experimental
   workflow_dispatch:
 
 jobs:
