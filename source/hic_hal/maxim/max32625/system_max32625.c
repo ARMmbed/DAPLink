@@ -52,18 +52,17 @@
 #define LP0_POST_HOOK
 #endif
 
-/*
-* Note: When compiling on ARM Keil Toolchain only.
-* If the SystemCoreClock is left uninitialized, post Scatter load
-* the clock will default to system reset value(48MHz)
-*/
-uint32_t SystemCoreClock = RO_FREQ;
+extern void (* const __isr_vector[])(void);
+uint32_t SystemCoreClock = RO_FREQ/2;
 
 void SystemCoreClockUpdate(void)
 {
-    if (MXC_PWRSEQ->reg0 & MXC_F_PWRSEQ_REG0_PWR_RCEN_RUN) {
+#ifdef EMULATOR
+    SystemCoreClock = RO_FREQ;
+#else /* real hardware */
+    if(MXC_PWRSEQ->reg0 & MXC_F_PWRSEQ_REG0_PWR_RCEN_RUN) {
         /* 4 MHz source */
-        if (MXC_PWRSEQ->reg3 & MXC_F_PWRSEQ_REG3_PWR_RC_DIV) {
+        if(MXC_PWRSEQ->reg3 & MXC_F_PWRSEQ_REG3_PWR_RC_DIV) {
             SystemCoreClock = (4000000 / (0x1 << ((MXC_PWRSEQ->reg3 & MXC_F_PWRSEQ_REG3_PWR_RC_DIV) >>
                 MXC_F_PWRSEQ_REG3_PWR_RC_DIV_POS)));
         } else {
@@ -71,13 +70,14 @@ void SystemCoreClockUpdate(void)
         }
     } else {
         /* 96 MHz source */
-        if (MXC_PWRSEQ->reg3 & MXC_F_PWRSEQ_REG3_PWR_RO_DIV) {
+        if(MXC_PWRSEQ->reg3 & MXC_F_PWRSEQ_REG3_PWR_RO_DIV) {
             SystemCoreClock = (RO_FREQ / (0x1 << ((MXC_PWRSEQ->reg3 & MXC_F_PWRSEQ_REG3_PWR_RO_DIV) >>
                 MXC_F_PWRSEQ_REG3_PWR_RO_DIV_POS)));
         } else {
             SystemCoreClock = RO_FREQ;
         }
     }
+#endif
 }
 
 void CLKMAN_TrimRO(void)
@@ -174,11 +174,6 @@ __weak int PreInit(void)
     return 0;
 }
 
-/*
-* Note: When compiling on ARM Keil Toolchain only.
-* If any global variable is modified in this function, post Scatter load
-* it will default to its original value(E.g.: SystemCoreClock)
-*/
 /* This function can be implemented by the application to initialize the board */
 __weak int Board_Init(void)
 {
@@ -194,6 +189,15 @@ __weak int Board_Init(void)
  */
 __weak void SystemInit(void)
 {
+    /* Configure the interrupt controller to use the application vector table in */
+    /* the application space */
+#if defined ( __GNUC__ )
+    /* IAR sets the VTOR pointer prior to SystemInit and causes stack corruption to change it here. */
+    __disable_irq(); /* Disable interrupts */
+    SCB->VTOR = (uint32_t)__isr_vector; /* set the Vector Table to point at our ISR table */
+    __DSB();                        /* bus sync */
+    __enable_irq();                 /* enable interrupts */
+#endif /* __GNUC__ */
     /* Copy trim information from shadow registers into power manager registers */
     /* NOTE: Checks have been added to prevent bad/missing trim values from being loaded */
     if ((MXC_FLC->ctrl & MXC_F_FLC_CTRL_INFO_BLOCK_VALID) &&
@@ -247,7 +251,6 @@ __weak void SystemInit(void)
                                MXC_F_PWRSEQ_RETN_CTRL0_RC_POLL_FLASH);
     MXC_PWRSEQ->retn_ctrl0 &= ~(MXC_F_PWRSEQ_RETN_CTRL0_RC_USE_FLC_TWK);
 
-
     /* Set retention controller TWake cycle count to 1us to minimize the wake-up time */
     /* NOTE: flash polling (...PWRSEQ_RETN_CTRL0_RC_POLL_FLASH) must be enabled before changing POR default! */
     MXC_PWRSEQ->retn_ctrl1 = (MXC_PWRSEQ->retn_ctrl1 & ~MXC_F_PWRSEQ_RETN_CTRL1_RC_TWK) |
@@ -275,7 +278,22 @@ __weak void SystemInit(void)
     /* Perform an initial trim of the internal ring oscillator */
     CLKMAN_TrimRO();
 
+#if !defined (__CC_ARM) // Prevent Keil tools from calling these functions until post scatter load
     SystemCoreClockUpdate();
     Board_Init();
+#endif /* ! __CC_ARM */
 
 }
+
+#if defined ( __CC_ARM )
+/* Function called post memory initialization in the Keil Toolchain, which
+ * we are using to call the system core clock upddate and board initialization
+ * to prevent data corruption if they are called from SystemInit. */
+extern void $Super$$__main_after_scatterload(void);
+void $Sub$$__main_after_scatterload(void)
+{
+    SystemCoreClockUpdate();
+    Board_Init();
+    $Super$$__main_after_scatterload();
+}
+#endif /* __CC_ARM */
