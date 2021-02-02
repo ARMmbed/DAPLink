@@ -19,12 +19,13 @@
 ; *
 ; *****************************************************************************/
 
+#include "daplink_defaults.h"
 
 ; <h> Stack Configuration
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000200
+Stack_Size      EQU     DAPLINK_STACK_SIZE
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -35,7 +36,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000000
+Heap_Size       EQU     DAPLINK_HEAP_SIZE
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
