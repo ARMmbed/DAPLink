@@ -517,6 +517,14 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
         pos += util_write_string(buf + pos, "\r\n");
     }
 
+#if defined(__CC_ARM)
+    pos += util_write_string(buf + pos, "Compiler: armcc\r\n");
+#elif (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050))
+    pos += util_write_string(buf + pos, "Compiler: armclang\r\n");
+#elif defined(__GNUC__)
+    pos += util_write_string(buf + pos, "Compiler: gcc\r\n");
+#endif
+
     // GIT sha
     pos += util_write_string(buf + pos, "Git SHA: ");
     pos += util_write_string(buf + pos, GIT_COMMIT_SHA);
