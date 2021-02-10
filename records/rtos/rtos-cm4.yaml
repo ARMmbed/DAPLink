@@ -1,6 +1,6 @@
 common:
     macros:
-        - OS_TICK=10000
+        - OS_TICK_FREQ=100
 
 # Use irq_cm3 instead of irq_cm4f because DAPLink doesn't use float,
 # and the k20dx doesn't have the FP extension.
@@ -8,6 +8,7 @@ tool_specific:
     uvision:
         macros:
             - USE_LEGACY_CMSIS_RTOS
+            - OS_TICK=10000
         includes:
             - source/rtos
         sources:
@@ -30,6 +31,7 @@ tool_specific:
     armcc:
         macros:
             - USE_LEGACY_CMSIS_RTOS
+            - OS_TICK=10000
         includes:
             - source/rtos
         sources:
