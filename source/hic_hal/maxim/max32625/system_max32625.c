@@ -53,6 +53,12 @@
 #endif
 
 extern void (* const __isr_vector[])(void);
+
+/*
+* Note: When compiling on ARM Keil Toolchain only.
+* If the SystemCoreClock is left uninitialized, post Scatter load
+* the clock will default to system reset value(48MHz)
+*/
 uint32_t SystemCoreClock = RO_FREQ/2;
 
 void SystemCoreClockUpdate(void)
@@ -278,22 +284,6 @@ __weak void SystemInit(void)
     /* Perform an initial trim of the internal ring oscillator */
     CLKMAN_TrimRO();
 
-#if !defined (__CC_ARM) // Prevent Keil tools from calling these functions until post scatter load
     SystemCoreClockUpdate();
     Board_Init();
-#endif /* ! __CC_ARM */
-
 }
-
-#if defined ( __CC_ARM )
-/* Function called post memory initialization in the Keil Toolchain, which
- * we are using to call the system core clock upddate and board initialization
- * to prevent data corruption if they are called from SystemInit. */
-extern void $Super$$__main_after_scatterload(void);
-void $Sub$$__main_after_scatterload(void)
-{
-    SystemCoreClockUpdate();
-    Board_Init();
-    $Super$$__main_after_scatterload();
-}
-#endif /* __CC_ARM */
