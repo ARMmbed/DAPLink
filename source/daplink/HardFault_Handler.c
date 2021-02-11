@@ -26,7 +26,7 @@
 
 
 //hexdump logic on hardfault
-__NO_RETURN void _fault_handler(uint32_t _lr)
+__USED __NO_RETURN void _fault_handler(uint32_t _lr)
 {
     uint32_t stk_ptr;
     uint32_t * stack = (uint32_t *)__get_MSP();
