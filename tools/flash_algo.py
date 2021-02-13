@@ -22,12 +22,11 @@ import struct
 import binascii
 import argparse
 import logging
-from six.moves import StringIO
+from io import BytesIO
 import jinja2
 from collections import namedtuple
 from itertools import count
 
-from elftools.common.py3compat import bytes2str
 from elftools.elf.elffile import ELFFile
 from elftools.elf.sections import SymbolTableSection
 
@@ -130,8 +129,8 @@ class PackFlashAlgo(object):
         elif fmt == "c":
             blob = self.algo_data[:]
             pad_size = 0 if len(blob) % 4 == 0 else 4 - len(blob) % 4
-            blob = blob + "\x00" * pad_size
-            integer_list = struct.unpack("<" + "L" * (len(blob) / 4), blob)
+            blob = blob + b"\x00" * pad_size
+            integer_list = struct.unpack("<" + "L" * int(len(blob) / 4), blob)
             line_list = []
             for pos in range(0, len(integer_list), group_size):
                 group = ["0x%08x" % value for value in
@@ -166,7 +165,7 @@ class PackFlashAlgo(object):
         template = jinja2.Template(template_text)
         target_text = template.render(data_dict)
 
-        with open(output_path, "wb") as file_handle:
+        with open(output_path, "w") as file_handle:
             file_handle.write(target_text)
 
 
@@ -187,7 +186,7 @@ def _find_sections(elf, name_type_pairs):
     """Return a list of sections the same length and order of the input list"""
     sections = [None] * len(name_type_pairs)
     for section in elf.iter_sections():
-        section_name = bytes2str(section.name)
+        section_name = section.name
         section_type = section["sh_type"]
         for i, name_and_type in enumerate(name_type_pairs):
             if name_and_type != (section_name, section_type):
@@ -261,7 +260,7 @@ class PackFlashInfo(object):
         values = struct.unpack(self.FLASH_DEVICE_STRUCT, data)
 
         self.version = values[0]
-        self.name = values[1].strip("\x00")
+        self.name = values[1].strip(b"\x00")
         self.type = values[2]
         self.start = values[3]
         self.size = values[4]
@@ -311,12 +310,12 @@ class ElfFileSimple(ELFFile):
 
     def __init__(self, data):
         """Construct a ElfFileSimple from bytes or a bytearray"""
-        super(ElfFileSimple, self).__init__(StringIO.StringIO(data))
+        super(ElfFileSimple, self).__init__(BytesIO(data))
         self.symbols = self._read_symbol_table()
 
     def _read_symbol_table(self):
         """Read the symbol table into the field "symbols" for easy use"""
-        section = self.get_section_by_name(b".symtab")
+        section = self.get_section_by_name(".symtab")
         if not section:
             raise Exception("Missing symbol table")
 
@@ -325,7 +324,7 @@ class ElfFileSimple(ELFFile):
 
         symbols = {}
         for symbol in section.iter_symbols():
-            name_str = bytes2str(symbol.name)
+            name_str = symbol.name
             if name_str in symbols:
                 logging.debug("Duplicate symbol %s", name_str)
             symbols[name_str] = SymbolSimple(name_str, symbol["st_value"],
