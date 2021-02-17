@@ -26,6 +26,7 @@
     || defined (INTERFACE_K26F) \
     || defined (INTERFACE_KL26Z) \
     || defined (INTERFACE_KL27Z) \
+    || defined (INTERFACE_K22F) \
     || defined (INTERFACE_LPC55XX)
 #include "fsl_device_registers.h"
 #elif defined (INTERFACE_LPC11U35)
