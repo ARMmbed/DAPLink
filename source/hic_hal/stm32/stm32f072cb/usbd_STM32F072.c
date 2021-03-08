@@ -32,35 +32,7 @@
 #define USBD_GET_FLAG(__INTERRUPT__)    (((USB->ISTR) & (__INTERRUPT__)) == (__INTERRUPT__))
 #define USBD_CLEAR_FLAG(__INTERRUPT__)  ((USB->ISTR) &= ~(__INTERRUPT__))
 
-#define __wait_todo() util_assert(0)
-
-
-void USBD_Init(void);
-void USBD_Connect(BOOL con);
-void USBD_Reset(void);
-void USBD_WakeUpCfg(BOOL cfg);
-void USBD_SetAddress(U32 adr, U32 setup);
-void USBD_Configure(BOOL cfg);
-void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD);
-void USBD_DirCtrlEP(U32 dir);
-void USBD_EnableEP(U32 EPNum);
-void USBD_DisableEP(U32 EPNum);
-void USBD_ResetEP(U32 EPNum);
-void USBD_SetStallEP(U32 EPNum);
-void USBD_ClrStallEP(U32 EPNum);
-void USBD_ClearEPBuf(U32 EPNum);
-U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 cnt);
-U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt);
-U32 USBD_GetFrame(void);
-U32 USBD_GetError(void);
-void USBD_Handler(void);
-
-/* see stm32f1xx_ll_usb.c */
-#define PCD_ReadPMA         USB_ReadPMA
-#define PCD_WritePMA        USB_WritePMA
-
 uint16_t Buf_Offset = 0x18;
-
 
 
 static PCD_EPTypeDef *USBD_GetEP(uint16_t ep_addr)
@@ -185,7 +157,7 @@ void USBD_Reset(void)
 
 void USBD_WakeUpCfg(BOOL cfg)
 {
-    __wait_todo();
+    /* Not needed */
 }
 
 void USBD_SetAddress(U32 adr, U32 setup)
@@ -329,7 +301,7 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 cnt)
     U32 count = 0;
 
     count = MIN(cnt, PCD_GET_EP_RX_CNT(USB, ep->num));
-    PCD_ReadPMA(USB, pData, ep->pmaadress, count);
+    USB_ReadPMA(USB, pData, ep->pmaadress, count);
     PCD_SET_EP_RX_STATUS(USB, ep->num, USB_EP_RX_VALID);
 
     return count;
@@ -341,7 +313,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     U32 count = 0;
 
     count = MIN(cnt, ep->maxpacket);
-    PCD_WritePMA(USB, pData, ep->pmaadress, count);
+    USB_WritePMA(USB, pData, ep->pmaadress, count);
     PCD_SET_EP_TX_CNT(USB, ep->num, count);
     PCD_SET_EP_TX_STATUS(USB, ep->num, USB_EP_TX_VALID);
 
