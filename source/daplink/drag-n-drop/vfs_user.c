@@ -219,7 +219,7 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
             // Compare the new file's name to our table of magic filenames.
             for (int32_t i = 0; i < ARRAY_SIZE(s_magic_file_info); ++i) {
                 if (!memcmp(filename, s_magic_file_info[i].name, sizeof(vfs_filename_t))) {
-                    which_magic_file = i;
+                    which_magic_file = s_magic_file_info[i].which;
                 }
             }
 
