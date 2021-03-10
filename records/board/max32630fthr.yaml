@@ -4,3 +4,4 @@ common:
             - source/board/max32630fthr.c
         family:
             - source/family/maxim/max32630/target.c
+            - source/family/maxim/max32630/target_reset_max32630.c

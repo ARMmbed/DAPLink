@@ -59,6 +59,7 @@ __WEAK const target_family_descriptor_t g_renesas_family = {0};
 __WEAK const target_family_descriptor_t g_toshiba_tz_family = {0};
 __WEAK const target_family_descriptor_t g_ambiq_ama3b1kk = {0};
 __WEAK const target_family_descriptor_t g_maxim_max32660 = {0};
+__WEAK const target_family_descriptor_t g_maxim_max32630 = {0};
 
 //! @brief Terminator value for g_families list.
 //!
@@ -92,6 +93,7 @@ const target_family_descriptor_t *g_families[] = {
     &g_toshiba_tz_family,
     &g_ambiq_ama3b1kk,
     &g_maxim_max32660,
+    &g_maxim_max32630,
     FAMILY_LIST_TERMINATOR // list terminator
 };
 
