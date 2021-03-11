@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013-2017 ARM Limited. All rights reserved.
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -64,7 +64,7 @@
 volatile uint8_t    DAP_TransferAbort;  // Transfer Abort Flag
 
 
-// static const char DAP_FW_Ver [] = DAP_FW_VER;
+static const char DAP_FW_Ver [] = DAP_FW_VER;
 
 #if TARGET_DEVICE_FIXED
 static const char TargetDeviceVendor [] = TARGET_DEVICE_VENDOR;
@@ -89,15 +89,10 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
     case DAP_ID_SER_NUM:
       length = DAP_GetSerNumString((char *)info);
       break;
-    case DAP_ID_FW_VER: {
-// --- begin DAPLink change ---
-      length = DAP_GetFirmwareVersionString((char *)info);
-// Original:
-//       memcpy(info, DAP_FW_Ver, sizeof(DAP_FW_Ver));
-//       length = (uint8_t)sizeof(DAP_FW_Ver);
-// --- end DAPLink change ---
+    case DAP_ID_CMSIS_DAP_VER:
+      length = (uint8_t)sizeof(DAP_FW_Ver);
+      memcpy(info, DAP_FW_Ver, length);
       break;
-    }
     case DAP_ID_DEVICE_VENDOR:
 #if TARGET_DEVICE_FIXED
       length = (uint8_t)sizeof(TargetDeviceVendor);
@@ -109,6 +104,9 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
       length = (uint8_t)sizeof(TargetDeviceName);
       memcpy(info, TargetDeviceName, length);
 #endif
+      break;
+    case DAP_ID_PRODUCT_FW_VER:
+      length = DAP_ProductFirmwareVerString((char *)info);
       break;
     case DAP_ID_CAPABILITIES:
       info[0] = ((DAP_SWD  != 0)         ? (1U << 0) : 0U) |
@@ -1643,7 +1641,7 @@ uint32_t DAP_ProcessCommand(const uint8_t *request, uint8_t *response) {
 
   if ((*request >= ID_DAP_VendorExFirst) && (*request <= ID_DAP_VendorExLast)) {
     return DAP_ProcessVendorCommandEx(request, response);
-  }  
+  }
 
   *response++ = *request;
 

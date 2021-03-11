@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013-2019 ARM Limited. All rights reserved.
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -118,9 +118,11 @@
 #define DAP_ID_VENDOR                   1U
 #define DAP_ID_PRODUCT                  2U
 #define DAP_ID_SER_NUM                  3U
-#define DAP_ID_FW_VER                   4U
+#define DAP_ID_CMSIS_DAP_VER            4U
+#define DAP_ID_FW_VER                   4U      // Deprecated alias of DAP_ID_CMSIS_DAP_VER for backwards compatibility.
 #define DAP_ID_DEVICE_VENDOR            5U
 #define DAP_ID_DEVICE_NAME              6U
+#define DAP_ID_PRODUCT_FW_VER           7U
 #define DAP_ID_CAPABILITIES             0xF0U
 #define DAP_ID_TIMESTAMP_CLOCK          0xF1U
 #define DAP_ID_SWO_BUFFER_SIZE          0xFDU
