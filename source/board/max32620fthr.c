@@ -25,7 +25,7 @@
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0418",
-    .family_id = kStub_HWReset_FamilyID,
+    .family_id = kMaxim_MAX32620_FamilyID,
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
 };
