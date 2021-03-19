@@ -25,8 +25,8 @@
 #define CLK_DIV         0x00000060
 #define BRST_SIZE       0x00000020
 #define FLASH_BASE      0x00000000
-#define FLASH_SIZE      0x00200000
-#define FLASH_SECTOR    0x00002000
+#define FLASH_SIZE      MB(2)
+#define FLASH_SECTOR    KB(8)
 
 #define DEV_CFG_TARGET_ADDRESS  (0x0000025cUL)    // From flash_algo map file
 #define FLASH_ALGO_GEN_ADDER    32
@@ -64,7 +64,7 @@ const uint32_t flash_algo_blob[] = {
 * at address start + size.
 */
 static const sector_info_t sectors_info[] = {
-    {0, 0x2000},
+    {FLASH_BASE, FLASH_SECTOR},
  };
 
 const program_target_t flash = {
