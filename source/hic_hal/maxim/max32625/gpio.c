@@ -228,16 +228,22 @@ void gpio_init(void)
                      MXC_F_ADC_CTRL_ADC_REFBUF_PU |
                      MXC_F_ADC_CTRL_ADC_CHGPUMP_PU);
 
+    // Change the MUX to other pins before measuring the voltage to avoid false reading
+    MXC_SETBIT(&MXC_GPIO->out_val[SWD_DIP_SEL_PORT], SWD_DIP_SEL_PIN);  // High to connect Bn <-> Cn
+    uint16_t tmp_hdr_vio = readADC(HDR_VIO_CH);
+
+    MXC_CLRBIT(&MXC_GPIO->out_val[SWD_DIP_SEL_PORT], SWD_DIP_SEL_PIN);  // Low to connect Bn <-> An
+    uint16_t tmp_swd_vio = readADC(SWD_VIO_CH);
+
     // Set IO interface
-    if (readADC(SWD_VIO_CH) > VIO_ADC_MIN) {
+    if (tmp_swd_vio > VIO_ADC_MIN) {
         target_set_interface(IO_SWD_EXT);
-    } else if (readADC(HDR_VIO_CH) > VIO_ADC_MIN) {
+    } else if (tmp_hdr_vio > VIO_ADC_MIN) {
         target_set_interface(IO_DIP_EXT);
     } else {
         // Default to SWD interface
         target_set_interface(IO_SWD_EXT);
     }
-
 }
 
 /******************************************************************************/
