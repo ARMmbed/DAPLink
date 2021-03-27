@@ -20,7 +20,7 @@
  *      RL-ARM - USB
  *----------------------------------------------------------------------------
  *      Name:    usbreg.h
- *      Purpose: Hardware Layer Definitions for ST STM32F10x
+ *      Purpose: Hardware Layer Definitions for ST STM32F37x
  *---------------------------------------------------------------------------*/
 
 #ifndef __USBREG_H
