@@ -20,7 +20,7 @@
 *      RL-ARM - USB
 *----------------------------------------------------------------------------
 *      Name:    usbd_STM32F373.c
-*      Purpose: Hardware Layer module for ST STM32F373
+*      Purpose: Hardware Layer module for ST STM32F373CC
 *      Rev.:    V4.70
 *---------------------------------------------------------------------------*/
 
