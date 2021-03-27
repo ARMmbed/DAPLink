@@ -36,9 +36,7 @@
 
 /* start address for the initialization values of the .data section.
 defined in linker script */
-#ifndef __sidata
-#define .word	__sidata
-#endif
+.word	_sidata
 /* start address for the .data section. defined in linker script */
 .word	_sdata
 /* end address for the .data section. defined in linker script */
@@ -99,7 +97,7 @@ LoopFillZerobss:
     bl  SystemInit
 /* Call static constructors */
     bl __libc_init_array
-/* Call the applications entry point.*/
+/* Call the application's entry point.*/
 	bl	main
 
 LoopForever:
