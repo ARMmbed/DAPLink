@@ -1,0 +1,46 @@
+common:
+    target:
+        - Cortex-M4
+    core:
+        - Cortex-M3
+    macros:
+        - INTERFACE_STM32F373XC
+        - USE_HAL_DRIVER
+        - STM32F373xC
+        - DAPLINK_HIC_ID=0x46333733  # DAPLINK_HIC_ID_STM32F373XC
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=72000000
+    includes:
+        - source/hic_hal/stm32/stm32f373xc
+        - source/hic_hal/stm32/stm32f373xc/cmsis
+        - source/hic_hal/stm32/stm32f373xc/STM32F3xx_HAL_Driver
+        - source/hic_hal/stm32/stm32f373xc/STM32F3xx_HAL_Driver/Inc
+    sources:
+        hic_hal:
+            - source/hic_hal/stm32/stm32f373xc
+            - source/hic_hal/stm32/stm32f373xc/cmsis
+            - source/hic_hal/stm32/stm32f373xc/STM32F3xx_HAL_Driver/Src
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f373xc"
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f373xc/armcc
+    armcc:
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f373xc/armcc
+    armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f373xc/armcc
+    gcc_arm:
+        linker_file:
+            - source/hic_hal/stm32/stm32f373xc/gcc/STM32F373CC.ld
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f373xc/gcc
