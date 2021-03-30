@@ -30,7 +30,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
+_estack = DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE;	/* end of "RAM" Ram type memory */
 
 _Min_Heap_Size = DEFINED(__heap_size__)  ? __heap_size__  : DAPLINK_HEAP_SIZE; ;	/* required amount of heap  */
 _Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;	/* required amount of stack */
@@ -43,8 +43,8 @@ MEMORY
   m_cfgrom              (RW)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
   m_data                (RW)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
   m_cfgram              (RW)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
-  m_data_2              (RW)  : ORIGIN = DAPLINK_RAM_APP2_START, LENGTH = DAPLINK_RAM_APP2_SIZE
-  m_usb_ram             (RW)  : ORIGIN = DAPLINK_USB_RAM_START, LENGTH = DAPLINK_USB_RAM_SIZE
+  /* m_data_2           (RW)  : ORIGIN = DAPLINK_RAM_APP2_START, LENGTH = DAPLINK_RAM_APP2_SIZE */
+  /* m_usb_ram             (RW)  : ORIGIN = DAPLINK_USB_RAM_START, LENGTH = DAPLINK_USB_RAM_SIZE */
 }
 
 /* Sections */
@@ -170,7 +170,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } > m_data_2
+  } > m_data 
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :
