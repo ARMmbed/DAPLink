@@ -130,8 +130,9 @@ SECTIONS
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
+    __DATA_ROM = .;
   /* Initialized data sections into "RAM" Ram type memory */
-  .data :
+  .data : AT(__DATA_ROM)
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -145,8 +146,7 @@ SECTIONS
 
   } >m_data
   
-  
- /* __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
+  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
  * .fill __DATA_END :
  * {
  *   FILL(0xffffffff)
