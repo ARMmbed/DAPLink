@@ -1,6 +1,6 @@
 common:
     target:
-        - Cortex-M4
+        - stm32f373xc
     core:
         - Cortex-M3
     macros:
@@ -40,7 +40,7 @@ tool_specific:
                 - source/hic_hal/stm32/stm32f373xc/armcc
     gcc_arm:
         linker_file:
-            - source/hic_hal/stm32/stm32f373xc/gcc/STM32F373CC.ld
+            - source/hic_hal/stm32/stm32f373xc/gcc/stm32f373cc.ld
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f373xc/gcc
