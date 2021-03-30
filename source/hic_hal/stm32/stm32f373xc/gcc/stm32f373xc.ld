@@ -143,11 +143,12 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
+	__data_end__ = .;
 
   } >m_data
   
   __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
- / 
+ /* 
  * .fill __DATA_END :
  * {
  *   FILL(0xffffffff)
