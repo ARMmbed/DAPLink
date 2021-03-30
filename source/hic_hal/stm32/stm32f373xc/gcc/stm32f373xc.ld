@@ -145,30 +145,16 @@ SECTIONS
 
   } >m_data
   
-  __etext = .;
-  __DATA_ROM = .;
-  .data : AT(__DATA_ROM)
-  {
-    . = ALIGN(4);
-    __DATA_RAM = .;
-    __data_start__ = .;
-    *(.data)
-    *(.data*)
-    KEEP(*(.jcr*))
-    . = ALIGN(4);
-    __data_end__ = .;
-  } > m_data
   
-  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
-  
-  .fill __DATA_END :
-  {
-    FILL(0xffffffff)
-    . = ALIGN(4);
-    . += 0x0800C000 + 0x00013C00 - __DATA_END - 4;
-    LONG(0x55555555)
-  } > m_text
- 
+ /* __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
+ * .fill __DATA_END :
+ * {
+ *   FILL(0xffffffff)
+ *   . = ALIGN(4);
+ *   . += 0x0800C000 + 0x00013C00 - __DATA_END - 4;
+ *   LONG(0x55555555)
+ * } > m_text
+ */
   /* unlike the other HICs, the LPC11U35 doesn't need to have the firmware image filled
    * out to the end of memory since it doesn't use the DAPLink bootloader */
 
