@@ -165,16 +165,6 @@ SECTIONS
     *(cfgrom)
   } >m_cfgrom
   
-   /* build .bss_2 first so we don't have to exclude any sections put in here from .bss */
-  .bss_2 :
-  {
-    . = ALIGN(4);
-    *(.bss.dir_current)
-    *(.bss.mbr)
-    . = ALIGN(4);
-  } >m_data_2
-
-
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
   .bss :
