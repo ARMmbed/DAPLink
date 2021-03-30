@@ -136,7 +136,9 @@ SECTIONS
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
-    *(.data)           /* .data sections */
+    __DATA_RAM = .;
+    __data_start__ = .;
+	*(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
     *(.RamFunc)        /* .RamFunc sections */
     *(.RamFunc*)       /* .RamFunc* sections */
