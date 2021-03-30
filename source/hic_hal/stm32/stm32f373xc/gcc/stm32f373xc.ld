@@ -30,14 +30,28 @@ ENTRY(Reset_Handler)
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
 
-_Min_Heap_Size = 0x200 ;	/* required amount of heap  */
-_Min_Stack_Size = 0x400 ;	/* required amount of stack */
+_Min_Heap_Size = DAPLINK_HEAP_SIZE;	/* required amount of heap  */
+_Min_Stack_Size = DAPLINK_STACK_SIZE;	/* required amount of stack */
 
 /* Memories definition */
+/*
 MEMORY
 {
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 32K
   FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 256K
+}
+*/
+
+/* Specify the memory areas */
+MEMORY
+{
+  m_interrupts          (RX)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x400
+  m_text                (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x400, LENGTH = DAPLINK_ROM_APP_SIZE - 0x400
+  m_cfgrom              (RW)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
+  m_data                (RW)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
+  m_cfgram              (RW)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
+  m_data_2              (RW)  : ORIGIN = DAPLINK_RAM_APP2_START, LENGTH = DAPLINK_RAM_APP2_SIZE
+  m_usb_ram             (RW)  : ORIGIN = DAPLINK_USB_RAM_START, LENGTH = DAPLINK_USB_RAM_SIZE
 }
 
 /* Sections */
