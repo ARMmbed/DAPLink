@@ -31,7 +31,8 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
+/*_estack = ORIGIN(RAM) + LENGTH(RAM);*/	/* end of "RAM" Ram type memory */
+_estack = DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE;
 
 _Min_Heap_Size = DAPLINK_HEAP_SIZE;	/* required amount of heap  */
 _Min_Stack_Size = DAPLINK_STACK_SIZE;	/* required amount of stack */
