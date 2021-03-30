@@ -144,6 +144,29 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
 
   } >m_data
+  
+  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
+
+  /* unlike the other HICs, the LPC11U35 doesn't need to have the firmware image filled
+   * out to the end of memory since it doesn't use the DAPLink bootloader */
+
+  text_end = ORIGIN(m_text) + LENGTH(m_text);
+  ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
+
+  .cfgrom (NOLOAD) :
+  {
+    *(cfgrom)
+  } > m_cfgrom
+  
+   /* build .bss_2 first so we don't have to exclude any sections put in here from .bss */
+  .bss_2 :
+  {
+    . = ALIGN(4);
+    *(.bss.dir_current)
+    *(.bss.mbr)
+    . = ALIGN(4);
+  } > m_data_2
+
 
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
