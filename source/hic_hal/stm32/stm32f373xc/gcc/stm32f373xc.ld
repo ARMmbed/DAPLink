@@ -23,7 +23,6 @@
  *
  ******************************************************************************
  */
- 
 #include "daplink_addr.h"
 #include "daplink_defaults.h"
 
@@ -31,14 +30,12 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-/*_estack = ORIGIN(RAM) + LENGTH(RAM);*/	/* end of "RAM" Ram type memory */
-_estack = DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE;
+_estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
 
-_Min_Heap_Size = DAPLINK_HEAP_SIZE;	/* required amount of heap  */
-_Min_Stack_Size = DAPLINK_STACK_SIZE;	/* required amount of stack */
+_Min_Heap_Size = DEFINED(__heap_size__)  ? __heap_size__  : DAPLINK_HEAP_SIZE; ;	/* required amount of heap  */
+_Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;	/* required amount of stack */
 
-
-/* Specify the memory areas */
+/* Memories definition */
 MEMORY
 {
   m_interrupts          (RX)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x400
@@ -46,6 +43,7 @@ MEMORY
   m_cfgrom              (RW)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
   m_data                (RW)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
   m_cfgram              (RW)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
+  m_data_2              (RW)  : ORIGIN = DAPLINK_RAM_APP2_START, LENGTH = DAPLINK_RAM_APP2_SIZE
   m_usb_ram             (RW)  : ORIGIN = DAPLINK_USB_RAM_START, LENGTH = DAPLINK_USB_RAM_SIZE
 }
 
@@ -58,7 +56,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+  } >m_interrupts
 
   /* The program code and other data into "FLASH" Rom type memory */
   .text :
@@ -75,7 +73,7 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >FLASH
+  } >m_text
 
   /* Constant data into "FLASH" Rom type memory */
   .rodata :
@@ -84,13 +82,13 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
   .ARM.extab   : {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
   .ARM : {
     . = ALIGN(4);
@@ -98,7 +96,7 @@ SECTIONS
     *(.ARM.exidx*)
     __exidx_end = .;
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
   .preinit_array     :
   {
@@ -107,7 +105,7 @@ SECTIONS
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
   .init_array :
   {
@@ -117,7 +115,7 @@ SECTIONS
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
   .fini_array :
   {
@@ -127,7 +125,7 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -145,7 +143,7 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
 
-  } >RAM AT> FLASH
+  } >m_data
 
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
@@ -161,7 +159,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM
+  } >m_data
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
   ._user_heap_stack :
@@ -172,7 +170,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM
+  } > m_data_2
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :
