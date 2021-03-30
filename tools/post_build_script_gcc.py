@@ -21,7 +21,7 @@ import os
 from post_build_script import post_build_script
 
 project_dir = 'build'
-# project_dir = os.path.join(os.getcwd(), 'build')
+project_dir = os.path.join(os.getcwd(), 'build')
 project_name = os.path.basename(os.getcwd())
 infile = os.path.join(project_dir, project_name + '.hex')
 outbase = os.path.join(project_dir, project_name + '_crc')
