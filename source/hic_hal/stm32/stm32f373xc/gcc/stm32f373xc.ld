@@ -23,6 +23,9 @@
  *
  ******************************************************************************
  */
+ 
+#include "daplink_addr.h"
+#include "daplink_defaults.h"
 
 /* Entry Point */
 ENTRY(Reset_Handler)
