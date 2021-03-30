@@ -1,8 +1,8 @@
 common:
     target:
-        - stm32f373xc
+        - Cortex-M4
     core:
-        - Cortex-M3
+        - Cortex-M4
     macros:
         - INTERFACE_STM32F373XC
         - USE_HAL_DRIVER
