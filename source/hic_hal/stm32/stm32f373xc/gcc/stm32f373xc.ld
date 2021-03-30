@@ -37,14 +37,6 @@ _estack = DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE;
 _Min_Heap_Size = DAPLINK_HEAP_SIZE;	/* required amount of heap  */
 _Min_Stack_Size = DAPLINK_STACK_SIZE;	/* required amount of stack */
 
-/* Memories definition */
-/*
-MEMORY
-{
-  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 32K
-  FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 256K
-}
-*/
 
 /* Specify the memory areas */
 MEMORY
