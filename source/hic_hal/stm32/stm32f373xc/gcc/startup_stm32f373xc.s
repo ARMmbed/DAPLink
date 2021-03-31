@@ -98,7 +98,7 @@ LoopFillZerobss:
 /* Call static constructors */
     bl __libc_init_array
 /* Call the applications entry point.*/
-	bl	main_interface
+	bl	main
 
 LoopForever:
     b LoopForever
