@@ -23,14 +23,14 @@
 
 #include "flash_blob.c"
 
-/* ME03 -- MAX32630 2MiB Flash, 512KiB RAM */
+/* MAX32630 2MiB Flash, 512KiB RAM */
 target_cfg_t target_device = {
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
-    .flash_regions[0].start         = 0,
-    .flash_regions[0].end           = 0x200000,
+    .flash_regions[0].start         = FLASH_BASE,
+    .flash_regions[0].end           = FLASH_BASE + FLASH_SIZE,
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
-    .ram_regions[0].end             = 0x20080000,
+    .ram_regions[0].end             = 0x20000000 + KB(512),
 };
