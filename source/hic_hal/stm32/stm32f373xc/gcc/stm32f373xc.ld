@@ -23,28 +23,33 @@
  *
  ******************************************************************************
  */
-#include "daplink_addr.h"
+
+/* Header files where daplink specific memory region start and end addresses are defined */ 
+#include "daplink_addr.h" 
 #include "daplink_defaults.h"
 
-/* Entry Point */
+/* Reset Entry Point - first executable instruction */
 ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack */
-_estack = DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE;	/* end of "RAM" Ram type memory */
+/* Highest address of the user mode stack or the end address of device RAM + 1
+*  Stack PUSH instruction always decrements by 1 and then PUSH data 	
+*/
+_estack = DAPLINK_RAM_START + DAPLINK_RAM_SIZE;	
 
+__heap_size__ = 0x200 ;	/* required amount of heap  */
+__stack_size__ = 0x400 ;	/* required amount of stack */
 _Min_Heap_Size = DEFINED(__heap_size__)  ? __heap_size__  : DAPLINK_HEAP_SIZE; ;	/* required amount of heap  */
 _Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;	/* required amount of stack */
 
 /* Memories definition */
+/* Attributes rx - Read & Execute section, rw - Read / Write section */
 MEMORY
 {
-  m_interrupts          (RX)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x400
-  m_text                (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x400, LENGTH = DAPLINK_ROM_APP_SIZE - 0x400
-  m_cfgrom              (RW)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
-  m_data                (RW)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
-  m_cfgram              (RW)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
-  /* m_data_2           (RW)  : ORIGIN = DAPLINK_RAM_APP2_START, LENGTH = DAPLINK_RAM_APP2_SIZE */
-  /* m_usb_ram             (RW)  : ORIGIN = DAPLINK_USB_RAM_START, LENGTH = DAPLINK_USB_RAM_SIZE */
+  m_interrupts          (rx)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x400
+  m_text                (rx)  : ORIGIN = DAPLINK_ROM_APP_START + 0x400, LENGTH = DAPLINK_ROM_APP_SIZE - 0x400
+  m_cfgrom              (rw)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
+  m_data                (rw)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
+  m_cfgram              (rw)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
 }
 
 /* Sections */
@@ -136,20 +141,17 @@ SECTIONS
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
-    __DATA_RAM = .;
-    __data_start__ = .;
-	*(.data)           /* .data sections */
+    *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
     *(.RamFunc)        /* .RamFunc sections */
     *(.RamFunc*)       /* .RamFunc* sections */
 
     . = ALIGN(4);
-    _edata = .;        /* define a global symbol at data end */
-	__data_end__ = .;
+    _edata = .;        /* define a global symbol at data end */	
 
   } >m_data
   
-  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
+  __DATA_END = __DATA_ROM + (_edata - _sdata);
  
   .fill __DATA_END :
   {
@@ -159,9 +161,6 @@ SECTIONS
     LONG(0x55555555)
   } > m_text
  
-  /* unlike the other HICs, the LPC11U35 doesn't need to have the firmware image filled
-   * out to the end of memory since it doesn't use the DAPLink bootloader */
-
   text_end = ORIGIN(m_text) + LENGTH(m_text);
   ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
 
@@ -176,14 +175,12 @@ SECTIONS
   {
     /* This is used by the startup in order to initialize the .bss section */
     _sbss = .;         /* define a global symbol at bss start */
-    __bss_start__ = _sbss;
     *(.bss)
     *(.bss*)
     *(COMMON)
 
     . = ALIGN(4);
-    _ebss = .;         /* define a global symbol at bss end */
-    __bss_end__ = _ebss;
+    _ebss = .;         /* define a global symbol at bss end */    
   } >m_data
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
