@@ -25,10 +25,10 @@
 /* Device sizes */
 
 #define DAPLINK_ROM_START               0x08000000 
-#define DAPLINK_ROM_SIZE                0x00020000 // STM32F373CC Max Flash Memory Size - 256KB
+#define DAPLINK_ROM_SIZE                0x00040000 // STM32F373CC Max Flash Memory Size - 256KB
 
 #define DAPLINK_RAM_START               0x20000000
-#define DAPLINK_RAM_SIZE                0x00005000 // STM32F373CC Max Flash Memory Size - 32KB
+#define DAPLINK_RAM_SIZE                0x00008000 // STM32F373CC Max Flash Memory Size - 32KB
 
 /* ROM sizes */
 
@@ -41,7 +41,7 @@
 #define DAPLINK_ROM_IF_START            0x0800C000
 #define DAPLINK_ROM_IF_SIZE             0x00013C00
 
-#define DAPLINK_ROM_CONFIG_USER_START   0x0801FC00
+#define DAPLINK_ROM_CONFIG_USER_START   0x0803FC00
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000400
 
 /* RAM sizes */
