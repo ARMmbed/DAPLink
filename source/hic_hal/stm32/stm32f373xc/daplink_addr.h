@@ -50,7 +50,7 @@
 #define DAPLINK_RAM_APP_SIZE            0x00004F00
 
 #define DAPLINK_RAM_SHARED_START        0x20004F00
-#define DAPLINK_RAM_SHARED_SIZE         0x00000100
+#define DAPLINK_RAM_SHARED_SIZE         0x00003100
 
 /* Flash Programming Info */
 
