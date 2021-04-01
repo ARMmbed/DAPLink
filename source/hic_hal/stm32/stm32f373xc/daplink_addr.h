@@ -32,7 +32,7 @@
 
 /* ROM sizes */
 
-#define DAPLINK_ROM_BL_START            0x08000000
+#define DAPLINK_ROM_BL_START            0x08020000
 #define DAPLINK_ROM_BL_SIZE             0x0000BC00
 
 #define DAPLINK_ROM_CONFIG_ADMIN_START  0x0802BC00
