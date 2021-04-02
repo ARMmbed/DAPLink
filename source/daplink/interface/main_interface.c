@@ -246,7 +246,7 @@ void main_task(void * arg)
 	// leds
     gpio_init();
     // Turn to LED default settings
-		HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_PIN_RESET );
+	HAL_GPIO_WritePin(PIN_BIBY_LED_PORT, PIN_BIBY_LED, GPIO_PIN_RESET );
  //   gpio_set_hid_led(hid_led_value);
     while(1);
    	gpio_set_cdc_led(cdc_led_value);
