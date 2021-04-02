@@ -242,16 +242,15 @@ void main_task(void * arg)
     // Get a reference to this task
     main_task_id = osThreadGetId();
 #endif
-    // leds
+    
+	// leds
     gpio_init();
     // Turn to LED default settings
-    HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_PIN_RESET);
-	//gpio_set_hid_led(hid_led_value);
-    while(1);
-	
-	gpio_set_cdc_led(cdc_led_value);
+    gpio_set_hid_led(hid_led_value);
+   	gpio_set_cdc_led(cdc_led_value);
     gpio_set_msc_led(msc_led_value);
-    // Initialize the DAP
+    
+	// Initialize the DAP
     DAP_Setup();
 
     // make sure we have a valid board info structure.
