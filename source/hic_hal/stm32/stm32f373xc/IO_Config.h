@@ -47,7 +47,7 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define POWER_EN_PIN_PORT            GPIOB
 #define POWER_EN_PIN                 GPIO_PIN_15
 #define POWER_EN_Bit                 15
-`
+
 // nRESET OUT Pin
 #define nRESET_PIN_PORT              GPIOB
 #define nRESET_PIN                   GPIO_PIN_4
