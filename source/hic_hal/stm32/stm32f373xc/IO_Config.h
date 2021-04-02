@@ -47,7 +47,7 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define POWER_EN_PIN_PORT            GPIOB
 #define POWER_EN_PIN                 GPIO_PIN_15
 #define POWER_EN_Bit                 15
-
+`
 // nRESET OUT Pin
 #define nRESET_PIN_PORT              GPIOB
 #define nRESET_PIN                   GPIO_PIN_4
@@ -69,24 +69,24 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 //LEDs
 //USB status LED
 #define RUNNING_LED_PORT             GPIOA
-#define RUNNING_LED_PIN              GPIO_PIN_0
-#define RUNNING_LED_Bit              0
+#define RUNNING_LED_PIN              GPIO_PIN_9
+#define RUNNING_LED_Bit              9
 
 #define PIN_HID_LED_PORT             GPIOA
-#define PIN_HID_LED                  GPIO_PIN_1
-#define PIN_HID_LED_Bit              1
+#define PIN_HID_LED                  GPIO_PIN_9
+#define PIN_HID_LED_Bit              9
 
 #define PIN_CDC_LED_PORT             GPIOA
-#define PIN_CDC_LED                  GPIO_PIN_2
-#define PIN_CDC_LED_Bit              2
+#define PIN_CDC_LED                  GPIO_PIN_9
+#define PIN_CDC_LED_Bit              9
 
 #define PIN_MSC_LED_PORT             GPIOA
-#define PIN_MSC_LED                  GPIO_PIN_3
-#define PIN_MSC_LED_Bit              3
+#define PIN_MSC_LED                  GPIO_PIN_9
+#define PIN_MSC_LED_Bit              9
 
-#define PIN_BIBY_LED_PORT            GPIOA
-#define PIN_BIBY_LED                 GPIO_PIN_10
-#define PIN_BIBY_LED_Bit             10
+//#define PIN_BIBY_LED_PORT            GPIOA
+//#define PIN_BIBY_LED                 GPIO_PIN_10
+//#define PIN_BIBY_LED_Bit             10
 
 
 #endif
