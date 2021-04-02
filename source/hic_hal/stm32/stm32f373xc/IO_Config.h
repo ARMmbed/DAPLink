@@ -85,8 +85,8 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define PIN_MSC_LED_Bit              3
 
 #define PIN_BIBY_LED_PORT            GPIOA
-#define PIN_BIBY_LED                 GPIO_PIN_9
-#define PIN_BIBY_LED_Bit             9
+#define PIN_BIBY_LED                 GPIO_PIN_10
+#define PIN_BIBY_LED_Bit             10
 
 
 #endif
