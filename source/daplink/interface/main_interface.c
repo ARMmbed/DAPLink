@@ -511,6 +511,12 @@ void main_task(void * arg)
 
 int main(void)
 {
+
+	gpio_init();
+    // Turn to LED default settings
+	HAL_GPIO_WritePin(RUNNING_LED_PORT , RUNNING_LED_PIN, GPIO_PIN_RESET);
+ //   gpio_set_hid_led(hid_led_value);
+    while(1);
     // Explicitly set the vector table since the bootloader might not set
     // it to what we expect.
 #if DAPLINK_ROM_BL_SIZE > 0
@@ -519,13 +525,7 @@ int main(void)
     // initialize vendor sdk
     sdk_init();
 	
-	gpio_init();
-    // Turn to LED default settings
-	HAL_GPIO_WritePin(RUNNING_LED_PORT , RUNNING_LED_PIN, GPIO_PIN_RESET);
- //   gpio_set_hid_led(hid_led_value);
-    while(1);
-
-    // Initialize CMSIS-RTOS
+   // Initialize CMSIS-RTOS
     osKernelInitialize();
 
     // Create application main thread
