@@ -145,10 +145,10 @@ void __svc(1) USBD_IntrEna(void);
 void __SVC_1(void)
 {
 #else
-void          USBD_IntrEna(void)
+void USBD_IntrEna(void)
 {
 #endif
-	HAL_NVIC_EnableIRQ(USB_LP_IRQn)    ////Copied from  HAL_PCD_MspInit() in stm32f3xx_hal_msp.c generated from STM32Cube MX
+	HAL_NVIC_EnableIRQ(USB_LP_IRQn);    ////Copied from  HAL_PCD_MspInit() in stm32f3xx_hal_msp.c generated from STM32Cube MX
 }
 
 
