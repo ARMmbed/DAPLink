@@ -228,9 +228,9 @@ void main_task(void * arg)
     gpio_led_state_t msc_led_value = MSC_LED_DEF;
 	
 	while (1) {
-        gpio_set_hid_led = 0;
+        gpio_set_hid_led(0);
         thread_sleep_for(1000);
-		gpio_set_hid_led = 1;
+		gpio_set_hid_led(1);
 		thread_sleep_for(1000);
     }
     // USB
