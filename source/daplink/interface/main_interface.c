@@ -226,6 +226,13 @@ void main_task(void * arg)
     gpio_led_state_t hid_led_value = HID_LED_DEF;
     gpio_led_state_t cdc_led_value = CDC_LED_DEF;
     gpio_led_state_t msc_led_value = MSC_LED_DEF;
+	
+	while (1) {
+        gpio_set_hid_led = 0;
+        ThisThread::sleep_for(1000);
+		gpio_set_hid_led = 1;
+		ThisThread::sleep_for(1000);
+    }
     // USB
     uint32_t usb_state_count = USB_BUSY_TIME;
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
