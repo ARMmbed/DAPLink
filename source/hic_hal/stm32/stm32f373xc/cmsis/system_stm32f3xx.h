@@ -1,12 +1,12 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    system_stm32f3xx.h
-  * @author  MCD Application Team
-  * @brief   CMSIS Cortex-M4 Device System Source File for STM32F3xx devices.  
+  * @file    stm32f3xx_it.h
+  * @brief   This file contains the headers of the interrupt handlers.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -14,93 +14,56 @@
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
-  ******************************************************************************
+ ******************************************************************************
   */
+/* USER CODE END Header */
 
-/** @addtogroup CMSIS
-  * @{
-  */
-
-/** @addtogroup stm32f3xx_system
-  * @{
-  */  
-  
-/**
-  * @brief Define to prevent recursive inclusion
-  */
-#ifndef __SYSTEM_STM32F3XX_H
-#define __SYSTEM_STM32F3XX_H
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __STM32F3xx_IT_H
+#define __STM32F3xx_IT_H
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
-/** @addtogroup STM32F3xx_System_Includes
-  * @{
-  */
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-/**
-  * @}
-  */
+/* USER CODE END Includes */
 
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
 
-/** @addtogroup STM32F3xx_System_Exported_types
-  * @{
-  */
-  /* This variable is updated in three ways:
-      1) by calling CMSIS function SystemCoreClockUpdate()
-      3) by calling HAL API function HAL_RCC_GetHCLKFreq()
-      3) by calling HAL API function HAL_RCC_ClockConfig()
-         Note: If you use this function to configure the system clock; then there
-               is no need to call the 2 first functions listed above, since SystemCoreClock
-               variable is updated automatically.
-  */
-extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
-extern const uint8_t AHBPrescTable[16];   /*!< AHB prescalers table values */
-extern const uint8_t APBPrescTable[8];    /*!< APB prescalers table values */
+/* USER CODE END ET */
 
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
 
-/**
-  * @}
-  */
+/* USER CODE END EC */
 
-/** @addtogroup STM32F3xx_System_Exported_Constants
-  * @{
-  */
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
 
-/**
-  * @}
-  */
+/* USER CODE END EM */
 
-/** @addtogroup STM32F3xx_System_Exported_Macros
-  * @{
-  */
+/* Exported functions prototypes ---------------------------------------------*/
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+void SVC_Handler(void);
+void DebugMon_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+/* USER CODE BEGIN EFP */
 
-/**
-  * @}
-  */
-
-/** @addtogroup STM32F3xx_System_Exported_Functions
-  * @{
-  */
-  
-extern void SystemInit(void);
-extern void SystemCoreClockUpdate(void);
-/**
-  * @}
-  */
+/* USER CODE END EFP */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*__SYSTEM_STM32F3XX_H */
+#endif /* __STM32F3xx_IT_H */
 
-/**
-  * @}
-  */
-  
-/**
-  * @}
-  */  
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
