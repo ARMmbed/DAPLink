@@ -25,7 +25,7 @@
 *---------------------------------------------------------------------------*/
 
 /* Double Buffering is not supported                                         */
-
+#include "stm32f3xx_hal.h"
 #include <rl_usb.h>
 #include "stm32f3xx.h"
 #include "usbreg.h"
@@ -148,7 +148,37 @@ void __SVC_1(void)
 void          USBD_IntrEna(void)
 {
 #endif
-    NVIC_EnableIRQ(USB_LP_CAN_RX0_IRQn);
+	HAL_NVIC_EnableIRQ(USB_LP_IRQn)    ////Copied from  HAL_PCD_MspInit() in stm32f3xx_hal_msp.c generated from STM32Cube MX
+}
+
+
+//Copied from HAL_PCD_MspInit() in stm32f3xx_hal_msp.c generated from STM32Cube MX
+void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(hpcd->Instance==USB)
+  {
+  /* USER CODE BEGIN USB_MspInit 0 */
+
+  /* USER CODE END USB_MspInit 0 */
+  
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    /**USB GPIO Configuration    
+    PA11     ------> USB_DM
+    PA12     ------> USB_DP 
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF14_USB;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+   
+  /* USER CODE BEGIN USB_MspInit 1 */
+
+  /* USER CODE END USB_MspInit 1 */
+  }
+
 }
 
 
@@ -160,8 +190,19 @@ void          USBD_IntrEna(void)
 
 void USBD_Init(void)
 {
-    RCC->APB1ENR |= (1 << 23);            /* enable clock for USB               */
-    USBD_IntrEna();                       /* Enable USB Interrupts              */
+    PCD_HandleTypeDef hpcd_USB_FS;
+	
+	// Copied from main.c MX_USB_PCD_Init() generated from STM32 Cube IDE
+	hpcd_USB_FS.Instance = USB;
+	hpcd_USB_FS.Init.dev_endpoints = 8;
+	hpcd_USB_FS.Init.speed = PCD_SPEED_FULL;
+	hpcd_USB_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
+	hpcd_USB_FS.Init.low_power_enable = DISABLE;
+	hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
+	HAL_PCD_Init(&hpcd_USB_FS);
+	
+	 __HAL_RCC_USB_CLK_ENABLE(); 			/* Enable USB Clock              */
+	USBD_IntrEna();                       /* Enable USB Interrupts              */
     /* Control USB connecting via SW                                            */
     USB_CONNECT_OFF();
 }

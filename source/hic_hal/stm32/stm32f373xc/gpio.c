@@ -114,24 +114,29 @@ static void output_clock_enable(void)
 
 void gpio_init(void)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
-    // enable clock to ports
+    GPIO_InitTypeDef GPIO_InitStructure;	
+    
+	// enable clock to ports
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOD_CLK_ENABLE();
-    // Enable USB connect pin
+    
+	//port not used in board
+	//__HAL_RCC_GPIOC_CLK_ENABLE(); 
+    //__HAL_RCC_GPIOD_CLK_ENABLE(); 
+    
+	// Enable USB connect pin
     //__HAL_RCC_AFIO_CLK_ENABLE();  //biby
     // Disable JTAG to free pins for other uses
     // Note - SWD is still enabled
     //__HAL_AFIO_REMAP_SWJ_NOJTAG(); //biby
 
-    USB_CONNECT_PORT_ENABLE();
+ 	USB_CONNECT_PORT_ENABLE();
     USB_CONNECT_OFF();
     GPIO_InitStructure.Pin = USB_CONNECT_PIN;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);
+    HAL_GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);   
+         
     // configure LEDs
     HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_SET);
     GPIO_InitStructure.Pin = RUNNING_LED_PIN;
