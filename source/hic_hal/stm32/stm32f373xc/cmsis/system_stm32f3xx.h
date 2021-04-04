@@ -1,8 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    stm32f3xx_it.h
-  * @brief   This file contains the headers of the interrupt handlers.
+  * @file    system_stm32f3xx.h
+  * @author  MCD Application Team
+  * @brief   CMSIS Cortex-M4 Device Peripheral Access Layer System Source File.
   ******************************************************************************
   * @attention
   *
@@ -19,8 +20,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F3xx_IT_H
-#define __STM32F3xx_IT_H
+#ifndef __SYSTEM_STM32F3XX_H
+#define __SYSTEM_STM32F3XX_H
 
 #ifdef __cplusplus
  extern "C" {
