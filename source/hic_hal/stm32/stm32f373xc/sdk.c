@@ -53,6 +53,9 @@ void sdk_init()
 	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+	
+	SystemCoreClockUpdate();
+	HAL_Init();
 
 	/** Initializes the CPU, AHB and APB busses clocks 
 	*/
