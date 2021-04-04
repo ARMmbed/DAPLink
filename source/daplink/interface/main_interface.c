@@ -229,9 +229,9 @@ void main_task(void * arg)
 	
 	while (1) {
         gpio_set_hid_led = 0;
-        ThisThread::sleep_for(1000);
+        thread_sleep_for(1000);
 		gpio_set_hid_led = 1;
-		ThisThread::sleep_for(1000);
+		thread_sleep_for(1000);
     }
     // USB
     uint32_t usb_state_count = USB_BUSY_TIME;
