@@ -27,6 +27,14 @@
  extern "C" {
 #endif
 
+/** @addtogroup STM32F30x_System_Exported_types
+  * @{
+  */
+
+extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
+extern const uint8_t  AHBPrescTable[16];  /*!< AHB prescalers table values */
+extern const uint8_t  APBPrescTable[8];   /*!< APB prescalers table values */
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -65,6 +73,6 @@ void SysTick_Handler(void);
 }
 #endif
 
-#endif /* __STM32F3xx_IT_H */
+#endif /*__SYSTEM_STM32F3XX_H*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
