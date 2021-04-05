@@ -150,7 +150,13 @@ void gpio_init(void)
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
     HAL_GPIO_Init(CONNECTED_LED_PORT, &GPIO_InitStructure);
 
-    HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_PIN_SET);
+    GPIO_InitStructure.Pin =  PIN_HID_LED;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(PIN_HID_LED_PORT, &GPIO_InitStructure);
+	
+	HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_SET);
     GPIO_InitStructure.Pin = PIN_CDC_LED;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
