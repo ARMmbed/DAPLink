@@ -197,7 +197,7 @@ void gpio_init(void)
         //HAL_Delay(10000);
 		//gpio_set_hid_led(GPIO_LED_ON);
 		//HAL_Delay(10000);
-		HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_LED_ON);
+		HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_PIN_RESET);
     }
 	
 }
