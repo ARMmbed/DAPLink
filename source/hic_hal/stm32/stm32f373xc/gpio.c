@@ -200,7 +200,7 @@ void gpio_init(void)
     busy_wait(1000000);
 	
 	while (1) {
-        HAL_GPIO_TogglePin(PIN_HID_LED_PORT,PIN_HID_LED)
+        HAL_GPIO_TogglePin(PIN_HID_LED_PORT,PIN_HID_LED);
 		//gpio_set_hid_led(GPIO_LED_OFF);
         HAL_Delay(1000);
 		//gpio_set_hid_led(GPIO_LED_ON);
