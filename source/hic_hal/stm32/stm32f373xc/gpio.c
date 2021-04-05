@@ -191,6 +191,14 @@ void gpio_init(void)
     // button is pressed.
     // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
     busy_wait(1000000);
+	
+	while (1) {
+        gpio_set_hid_led(GPIO_LED_OFF);
+        HAL_Delay(1000);
+		gpio_set_hid_led(GPIO_LED_ON);
+		HAL_Delay(1000);
+    }
+	
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)

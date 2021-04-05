@@ -251,14 +251,6 @@ void main_task(void * arg)
    	gpio_set_cdc_led(cdc_led_value);
     gpio_set_msc_led(msc_led_value);
 	
-	while (1) {
-        gpio_set_hid_led(GPIO_LED_OFF);
-        osDelay(1000);
-		gpio_set_hid_led(GPIO_LED_ON);
-		osDelay(1000);
-    }
-		
-    
 	// Initialize the DAP
     DAP_Setup();
 
