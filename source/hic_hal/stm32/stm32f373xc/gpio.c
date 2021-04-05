@@ -197,17 +197,7 @@ void gpio_init(void)
     // the reset pin low, causing the bootloader to think the reset
     // button is pressed.
     // Note: With optimization set to -O2 the value 1000000 delays for ~85ms
-    busy_wait(1000000);
-	
-	while (1) {
-        HAL_GPIO_TogglePin(PIN_HID_LED_PORT,PIN_HID_LED);
-		//gpio_set_hid_led(GPIO_LED_OFF);
-        HAL_Delay(1000);
-		//gpio_set_hid_led(GPIO_LED_ON);
-		//HAL_Delay(10000);
-		//HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_PIN_RESET);
-    }
-	
+    busy_wait(1000000);	
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
