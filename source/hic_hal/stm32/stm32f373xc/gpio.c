@@ -193,9 +193,9 @@ void gpio_init(void)
     busy_wait(1000000);
 	
 	while (1) {
-        gpio_set_hid_led(GPIO_LED_OFF);
+        //gpio_set_hid_led(GPIO_LED_OFF);
         //HAL_Delay(10000);
-		//gpio_set_hid_led(GPIO_LED_ON);
+		gpio_set_hid_led(GPIO_LED_ON);
 		//HAL_Delay(10000);
     }
 	
