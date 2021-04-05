@@ -188,7 +188,7 @@ void gpio_init(void)
     GPIO_InitStructure.Pin = GPIO_PIN_8;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
     output_clock_enable();
 
     // Let the voltage rails stabilize.  This is especailly important
@@ -204,7 +204,7 @@ void gpio_init(void)
         //HAL_Delay(10000);
 		//gpio_set_hid_led(GPIO_LED_ON);
 		//HAL_Delay(10000);
-		HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_SET);
+		//HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, GPIO_PIN_RESET);
     }
 	
