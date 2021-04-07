@@ -1,5 +1,5 @@
 /* Flash OS Routines (Automagically Generated)
- * Copyright (c) 2009-2019 ARM Limited
+ * Copyright (c) 2019 Nuvoton Technology Corp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

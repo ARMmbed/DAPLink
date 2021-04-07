@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/numaker_m2354.c
+        family:
+            - source/family/nuvoton/m2354kjfae/target.c
+            - source/family/nuvoton/m2354kjfae/target_reset.c

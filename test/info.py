@@ -246,6 +246,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1304,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_pfm_m487km_if',          'm48ssidae_bl',     None                                    ),
     (   0x1309,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m252kg_if',              'm48ssidae_bl',     None                                    ),
     (   0x1310,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m263a_if',           'm48ssidae_bl',     None                                    ),
+    (   0x1312,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m2354_if',               'm48ssidae_bl',     None                                    ),
     (   0x2201,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_if',                None,               'WIZwiki-W7500'                         ),
     (   0x2202,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZwiki-W7500ECO'                      ),
     (   0x2203,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500p_if',               None,               'WIZwiki-W7500P'                        ),
@@ -365,6 +366,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x1304,  # NuMaker-PFM-M487KM
     0x1309,  # NuMaker-M252KG
     0x1310,  # NuMaker-IoT-M263A
+    0x1312,  # NuMaker-M2354
     0x2410,  # lpc11u35_mbed_cloud_connect_if
     0x3103,  # dipdap_sdt51822b
     0x3104,  # dipdap_sdt52832b

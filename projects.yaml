@@ -666,6 +666,10 @@ projects:
         - *module_if
         - *module_hic_m48ssidae
         - records/board/numaker_pfm_m487km.yaml
+    m48ssidae_numaker_m2354_if:
+        - *module_if
+        - *module_hic_m48ssidae
+        - records/board/numaker_m2354.yaml
     lpc4322_hani_iot_if:
         - *module_if
         - *module_hic_lpc4322
