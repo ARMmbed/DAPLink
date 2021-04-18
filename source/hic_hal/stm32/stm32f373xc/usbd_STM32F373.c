@@ -19,28 +19,26 @@
 /*----------------------------------------------------------------------------
 *      RL-ARM - USB
 *----------------------------------------------------------------------------
-*      Name:    usbd_STM32F373.c
-*      Purpose: Hardware Layer module for ST STM32F373CC
+*      Name:    usbd_STM32F103.c
+*      Purpose: Hardware Layer module for ST STM32F103
 *      Rev.:    V4.70
 *---------------------------------------------------------------------------*/
 
 /* Double Buffering is not supported                                         */
-#include "stm32f3xx_hal.h"
+
 #include <rl_usb.h>
 #include "stm32f3xx.h"
 #include "usbreg.h"
 #include "IO_Config.h"
 #include "cortex_m.h"
 #include "string.h"
-#include "stm32f3xx_hal_pcd.h"  //biby
-//#include "stm32f3xx_hal_def.h"  //biby
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
 
 #define USB_ISTR_W0C_MASK   (ISTR_PMAOVR | ISTR_ERR | ISTR_WKUP | ISTR_SUSP | ISTR_RESET | ISTR_SOF | ISTR_ESOF)
 #define VAL_MASK            0xFFFF
-#define VAL_SHIFT           16 
+#define VAL_SHIFT           16
 #define EP_NUM_MASK         0xFFFF
 #define EP_NUM_SHIFT        0
 
@@ -57,8 +55,6 @@ uint32_t StatQueueHead = 0;
 uint32_t StatQueueTail = 0;
 uint32_t LastIstr = 0;
 
-PCD_HandleTypeDef hpcd_USB_FS;
-PCD_HandleTypeDef *hpcd;
 
 inline static void stat_enque(uint32_t stat)
 {
@@ -148,40 +144,10 @@ void __svc(1) USBD_IntrEna(void);
 void __SVC_1(void)
 {
 #else
-void USBD_IntrEna(void)
+void          USBD_IntrEna(void)
 {
 #endif
-	HAL_NVIC_EnableIRQ(USB_LP_IRQn);    ////Copied from  HAL_PCD_MspInit() in stm32f3xx_hal_msp.c generated from STM32Cube MX
-}
-
-
-//Copied from HAL_PCD_MspInit() in stm32f3xx_hal_msp.c generated from STM32Cube MX
-void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  if(hpcd->Instance==USB)
-  {
-  /* USER CODE BEGIN USB_MspInit 0 */
-
-  /* USER CODE END USB_MspInit 0 */
-  
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**USB GPIO Configuration    
-    PA11     ------> USB_DM
-    PA12     ------> USB_DP 
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF14_USB;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);		
-   
-  /* USER CODE BEGIN USB_MspInit 1 */
-
-  /* USER CODE END USB_MspInit 1 */
-  }
-
+    NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 }
 
 
@@ -193,21 +159,12 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 
 void USBD_Init(void)
 {
-	// Copied from main.c MX_USB_PCD_Init() generated from STM32 Cube IDE
-	hpcd_USB_FS.Instance = USB;
-	hpcd_USB_FS.Init.dev_endpoints = 8;
-	hpcd_USB_FS.Init.speed = PCD_SPEED_FULL;
-	hpcd_USB_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
-	hpcd_USB_FS.Init.low_power_enable = DISABLE;
-	hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
-	HAL_PCD_Init(&hpcd_USB_FS);
-	
-	 __HAL_RCC_USB_CLK_ENABLE(); 			/* Enable USB Clock */
-	 USBD_IntrEna();                  /* Enable USB Interrupts */
-   /* Control USB connecting via SW */
+    RCC->APB1ENR |= (1 << 23);            /* enable clock for USB               */
+    USBD_IntrEna();                       /* Enable USB Interrupts              */
+    /* Control USB connecting via SW                                            */
     USB_CONNECT_OFF();
-	
 }
+
 
 /*
  *  USB Device Connect Function
@@ -215,42 +172,21 @@ void USBD_Init(void)
  *    Parameters:      con:   Connect/Disconnect
  *    Return Value:    None
  */
-//biby
-
-/**
-  * @brief  Connect the USB device
-  * @param  hpcd PCD handle
-  * @retval HAL status
-  */
 
 void USBD_Connect(BOOL con)
 {
     if (con) {
-       CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-       CNTR = 0;
-       ISTR = 0;                           /* Clear Interrupt Status             */
-//       CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
-			 uint32_t winterruptmask;
-			 winterruptmask = CNTR_CTRM  | CNTR_WKUPM |
-                   CNTR_SUSPM | CNTR_ERRM |
-                   CNTR_SOFM | CNTR_ESOFM |
-                   CNTR_RESETM;
-			 CNTR &= (uint16_t)(~winterruptmask);
-       USB_CONNECT_ON();
-//			 HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN , GPIO_PIN_RESET);  //green led
-//			 HAL_Delay(2000);
-    } 
-		
-		else {
-			  
+        CNTR = CNTR_FRES;                   /* Force USB Reset                    */
+        CNTR = 0;
+        ISTR = 0;                           /* Clear Interrupt Status             */
+        CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
+        USB_CONNECT_ON();
+    } else {
         CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
         USB_CONNECT_OFF();
-		}
-
- // return HAL_OK;
+    }
 }
 
-//biby
 
 /*
  *  USB Device Reset Function
@@ -260,7 +196,7 @@ void USBD_Connect(BOOL con)
 
 void USBD_Reset(void)
 {
-    NVIC_DisableIRQ(USB_LP_CAN_RX0_IRQn);
+    NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
 
     /* Double Buffering is not yet supported                                    */
     ISTR = 0;                             /* Clear Interrupt Status             */
@@ -277,8 +213,7 @@ void USBD_Reset(void)
            ((USBD_P_SOF_Event   != 0) ? CNTR_ESOFM   : 0);
 #endif
     FreeBufAddr = EP_BUF_ADDR;
-   // BTABLE = 0x00;                        /* set BTABLE Address                 */
-	  BTABLE = 0x50;  //biby
+    BTABLE = 0x00;                        /* set BTABLE Address                 */
     /* Setup Control Endpoint 0 */
     pBUF_DSCR->ADDR_TX = FreeBufAddr;
     FreeBufAddr += USBD_MAX_PACKET0;
@@ -294,7 +229,7 @@ void USBD_Reset(void)
     EPxREG(0) = EP_CONTROL | EP_RX_VALID;
     DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
 
-    NVIC_EnableIRQ(USB_LP_CAN_RX0_IRQn);
+    NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 }
 
 
@@ -630,10 +565,8 @@ U32 USBD_GetError(void)
  *  USB Device Interrupt Service Routine
  */
 
-void USB_LP_CAN_RX0_IRQHandler(void)
+void USB_LP_CAN1_RX0_IRQHandler(void)
 {
-//		HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN , GPIO_PIN_RESET);  //green led
-//		HAL_Delay(2000);
     uint32_t istr;
     uint32_t num;
     uint32_t val;
@@ -654,13 +587,13 @@ void USB_LP_CAN_RX0_IRQHandler(void)
                     && (0 == ((pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK))) {
                 if (val & EP_CTR_TX) {
                     // Drop the RX event but not TX
-                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) | 
+                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) |
                                ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
                 } else {
                     // Drop the event
                 }
             } else {
-                stat_enque(((val & VAL_MASK) << VAL_SHIFT) | 
+                stat_enque(((val & VAL_MASK) << VAL_SHIFT) |
                            ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
             }
 
@@ -674,7 +607,7 @@ void USB_LP_CAN_RX0_IRQHandler(void)
             }
         }
     }
-    
+
     USBD_SignalHandler();
 }
 

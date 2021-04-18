@@ -11966,8 +11966,8 @@ typedef struct
 
 /* Aliases for __IRQn */
 #define ADC1_2_IRQn             ADC1_IRQn
-#define USB_LP_CAN_RX0_IRQn     CAN_RX0_IRQn
-#define USB_HP_CAN_TX_IRQn      CAN_TX_IRQn
+#define USB_LP_CAN1_RX0_IRQn    CAN_RX0_IRQn
+#define USB_HP_CAN1_TX_IRQn     CAN_TX_IRQn
 #define USBWakeUp_IRQn          CEC_IRQn
 #define COMP1_2_IRQn            COMP_IRQn
 #define COMP1_2_3_IRQn          COMP_IRQn
