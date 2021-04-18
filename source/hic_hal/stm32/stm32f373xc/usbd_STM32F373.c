@@ -32,7 +32,8 @@
 #include "IO_Config.h"
 #include "cortex_m.h"
 #include "string.h"
-
+#include "stm32f3xx_hal_pcd.h"  //biby
+//#include "stm32f3xx_hal_def.h"  //biby
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -56,6 +57,8 @@ uint32_t StatQueueHead = 0;
 uint32_t StatQueueTail = 0;
 uint32_t LastIstr = 0;
 
+PCD_HandleTypeDef hpcd_USB_FS;
+PCD_HandleTypeDef *hpcd;
 
 inline static void stat_enque(uint32_t stat)
 {
@@ -172,7 +175,7 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF14_USB;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);		
    
   /* USER CODE BEGIN USB_MspInit 1 */
 
@@ -190,8 +193,6 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 
 void USBD_Init(void)
 {
-    PCD_HandleTypeDef hpcd_USB_FS;
-	
 	// Copied from main.c MX_USB_PCD_Init() generated from STM32 Cube IDE
 	hpcd_USB_FS.Instance = USB;
 	hpcd_USB_FS.Init.dev_endpoints = 8;
@@ -201,12 +202,12 @@ void USBD_Init(void)
 	hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
 	HAL_PCD_Init(&hpcd_USB_FS);
 	
-	 __HAL_RCC_USB_CLK_ENABLE(); 			/* Enable USB Clock              */
-	USBD_IntrEna();                       /* Enable USB Interrupts              */
-    /* Control USB connecting via SW                                            */
+	 __HAL_RCC_USB_CLK_ENABLE(); 			/* Enable USB Clock */
+	 USBD_IntrEna();                  /* Enable USB Interrupts */
+   /* Control USB connecting via SW */
     USB_CONNECT_OFF();
+	
 }
-
 
 /*
  *  USB Device Connect Function
@@ -214,21 +215,42 @@ void USBD_Init(void)
  *    Parameters:      con:   Connect/Disconnect
  *    Return Value:    None
  */
+//biby
+
+/**
+  * @brief  Connect the USB device
+  * @param  hpcd PCD handle
+  * @retval HAL status
+  */
 
 void USBD_Connect(BOOL con)
 {
     if (con) {
-        CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-        CNTR = 0;
-        ISTR = 0;                           /* Clear Interrupt Status             */
-        CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
-        USB_CONNECT_ON();
-    } else {
+       CNTR = CNTR_FRES;                   /* Force USB Reset                    */
+       CNTR = 0;
+       ISTR = 0;                           /* Clear Interrupt Status             */
+//       CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
+			 uint32_t winterruptmask;
+			 winterruptmask = CNTR_CTRM  | CNTR_WKUPM |
+                   CNTR_SUSPM | CNTR_ERRM |
+                   CNTR_SOFM | CNTR_ESOFM |
+                   CNTR_RESETM;
+			 CNTR &= (uint16_t)(~winterruptmask);
+       USB_CONNECT_ON();
+//			 HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN , GPIO_PIN_RESET);  //green led
+//			 HAL_Delay(2000);
+    } 
+		
+		else {
+			  
         CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
         USB_CONNECT_OFF();
-    }
+		}
+
+ // return HAL_OK;
 }
 
+//biby
 
 /*
  *  USB Device Reset Function
@@ -255,7 +277,8 @@ void USBD_Reset(void)
            ((USBD_P_SOF_Event   != 0) ? CNTR_ESOFM   : 0);
 #endif
     FreeBufAddr = EP_BUF_ADDR;
-    BTABLE = 0x00;                        /* set BTABLE Address                 */
+   // BTABLE = 0x00;                        /* set BTABLE Address                 */
+	  BTABLE = 0x50;  //biby
     /* Setup Control Endpoint 0 */
     pBUF_DSCR->ADDR_TX = FreeBufAddr;
     FreeBufAddr += USBD_MAX_PACKET0;
@@ -609,6 +632,8 @@ U32 USBD_GetError(void)
 
 void USB_LP_CAN_RX0_IRQHandler(void)
 {
+//		HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN , GPIO_PIN_RESET);  //green led
+//		HAL_Delay(2000);
     uint32_t istr;
     uint32_t num;
     uint32_t val;
