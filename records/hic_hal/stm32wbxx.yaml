@@ -1,0 +1,46 @@
+common:
+    target:
+        - Cortex-M4
+    core:
+        - Cortex-M4
+    macros:
+        - INTERFACE_STM32WBxx
+        - USE_HAL_DRIVER
+        - STM32WBxx
+        - DAPLINK_HIC_ID=0x46333733  # DAPLINK_HIC_ID_STM32WBxx
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=64000000
+    includes:
+        - source/hic_hal/stm32/stm32wbxx
+        - source/hic_hal/stm32/stm32wbxx/cmsis
+        - source/hic_hal/stm32/stm32wbxx/STM32WBxx_HAL_Driver
+        - source/hic_hal/stm32/stm32wbxx/STM32WBxx_HAL_Driver/Inc
+    sources:
+        hic_hal:
+            - source/hic_hal/stm32/stm32wbxx
+            - source/hic_hal/stm32/stm32wbxx/cmsis
+            - source/hic_hal/stm32/stm32wbxx/STM32WBxx_HAL_Driver/Src
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32wbxx"
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32wbxx/armcc
+    armcc:
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32wbxx/armcc
+    armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32wbxx/armcc
+    gcc_arm:
+        linker_file:
+            - source/hic_hal/stm32/stm32wbxx/gcc/stm32wbxx.ld
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32wbxx/gcc
