@@ -1,6 +1,6 @@
 common:
     macros:
-        - OS_TICK=10000
+        - OS_TICK_FREQ=100
     includes:
         - source/rtos2/Include
         - source/rtos2/RTX/Include
