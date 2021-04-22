@@ -52,6 +52,8 @@ void gpio_init(void)
 
     // Configure pins.
     IOCON->PIO[PIN_PIO_PORT][LED_CONNECTED] = IOCON_FUNC0 | IOCON_DIGITAL_EN;
+    IOCON->PIO[PIN_PIO_PORT][PIN_HW_VERS_6] = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_OPENDRAIN_EN;
+    IOCON->PIO[PIN_PIO_PORT][PIN_HW_VERS_7] = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_OPENDRAIN_EN;
 
     // Turn off LED.
     GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = 1;
@@ -59,6 +61,9 @@ void gpio_init(void)
     GPIO->DIRSET[PIN_PIO_PORT] = LED_CONNECTED_MASK;
     // Turn on LED.
     GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = 1;
+
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_HW_VERS_6_MASK;
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_HW_VERS_7_MASK;
 }
 
 void gpio_set_board_power(bool powerEnabled)
@@ -84,10 +89,10 @@ void gpio_set_msc_led(gpio_led_state_t state)
 
 uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return 0;
+    return GPIO->B[PIN_PIO_PORT][PIN_HW_VERS_6] ? 0 : 1;
 }
 
 uint8_t gpio_get_reset_btn_fwrd(void)
 {
-    return 0;
+    return GPIO->B[PIN_PIO_PORT][PIN_HW_VERS_7] ? 0 : 1;
 }
