@@ -69,11 +69,14 @@ jobs:
         export PATH="/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH"
         python tools/progen_compile.py --release --parallel -v -v --ignore-failures
         (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
+        mkdir bootloaders
+        cp projectfiles/make_gcc_arm/*_bl/build/*_crc.bin bootloaders
 
     - name: Upload test artifacts
       uses: actions/upload-artifact@v2
       with:
         name: firmware-dev-${{github.run_number}}
         path: |
+          bootloaders/*
           firmware*/*
           !firmware*/*.zip
