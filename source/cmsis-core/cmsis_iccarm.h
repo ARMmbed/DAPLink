@@ -1,14 +1,16 @@
 /**************************************************************************//**
  * @file     cmsis_iccarm.h
  * @brief    CMSIS compiler ICCARM (IAR Compiler for Arm) header file
- * @version  V5.1.1
- * @date     30. July 2019
+ * @version  V5.2.0
+ * @date     28. January 2020
  ******************************************************************************/
 
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2017-2019 IAR Systems
-// Copyright (c) 2017-2019 Arm Limited. All rights reserved. 
+// Copyright (c) 2017-2020 IAR Systems
+// Copyright (c) 2017-2019 Arm Limited. All rights reserved.
+//
+// SPDX-License-Identifier: Apache-2.0
 //
 // Licensed under the Apache License, Version 2.0 (the "License")
 // you may not use this file except in compliance with the License.
@@ -236,6 +238,7 @@ __packed struct  __iar_u32 { uint32_t v; };
   #endif
 #endif
 
+#undef __WEAK                           /* undo the definition from DLib_Defaults.h */
 #ifndef   __WEAK
   #if __ICCARM_V8
     #define __WEAK __attribute__((weak))
@@ -960,5 +963,7 @@ __packed struct  __iar_u32 { uint32_t v; };
 
 #pragma diag_default=Pe940
 #pragma diag_default=Pe177
+
+#define __SXTB16_RORn(ARG1, ARG2) __SXTB16(__ROR(ARG1, ARG2))
 
 #endif /* __CMSIS_ICCARM_H__ */

@@ -1,0 +1,36 @@
+common:
+    macros:
+        - OS_TICK_FREQ=100
+    includes:
+        - source/rtos2/Include
+        - source/rtos2/RTX/Include
+        - source/rtos2/RTX/Config
+    sources:
+        rtos:
+            - source/rtos2/RTX/Config/RTX_Config.c
+            - source/rtos2/RTX/Source/rtx_delay.c
+            - source/rtos2/RTX/Source/rtx_evr.c
+            - source/rtos2/RTX/Source/rtx_kernel.c
+            - source/rtos2/RTX/Source/rtx_lib.c
+            - source/rtos2/RTX/Source/rtx_memory.c
+            - source/rtos2/RTX/Source/rtx_mempool.c
+            - source/rtos2/RTX/Source/rtx_msgqueue.c
+            - source/rtos2/RTX/Source/rtx_mutex.c
+            - source/rtos2/RTX/Source/rtx_system.c
+            - source/rtos2/RTX/Source/rtx_thread.c
+            - source/rtos2/RTX/Source/rtx_timer.c
+            - source/rtos2/Source/os_systick.c
+
+# Note: For armcc, do not use NS version! We don't want the TZ context support.
+tool_specific:
+    uvision:
+        sources:
+            rtos:
+                - source/rtos2/RTX/Source/ARM/irq_armv8mml.s
+    armcc:
+        sources:
+            rtos:
+                - source/rtos2/RTX/Source/ARM/irq_armv8mml.s
+    gcc_arm:
+        sources:
+                - source/rtos2/RTX/Source/GCC/irq_armv8mml.S

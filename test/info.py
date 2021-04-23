@@ -135,6 +135,7 @@ PROJECT_RELEASE_INFO = {
     ('k26f_if',                                     False,      0x0000,     "bin"       ),
     ('lpc11u35_if',                                 False,      0x0000,     "bin"       ),
     ('lpc4322_if',                                  False,      0x0000,     "bin"       ),
+    ('lpc55s69_if',                                 False,      0x10000,    "bin"       ),
     ('max32620_if',                                 False,      0x0000,     "bin"       ),
     ('max32625_if',                                 False,      0x0000,     "bin"       ),
     ('sam3u2c_if',                                  False,      0x0000,     "bin"       ),
@@ -238,11 +239,11 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1102,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52840-DK'                    ),
     (   0x1114,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
     (   0x1120,     VENDOR_TO_FAMILY('Nordic', 1),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
-    (   0x1200,     VENDOR_TO_FAMILY('Stub', 3),        'sam3u2c_ncs36510rf_if',                   'sam3u2c_bl',        None                                    ),# TODO - Set to 'ncs36510' when non-zero flash addresses are supported
+    (   0x1200,     VENDOR_TO_FAMILY('Stub', 3),        'sam3u2c_ncs36510rf_if',                    'sam3u2c_bl',       None                                    ), # TODO - Set to 'ncs36510' when non-zero flash addresses are supported
     (   0x1234,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
-    (   0x1236,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_ublox_evk_odin_w2_if',        'stm32f103xb_bl',    'ublox-EVK-ODIN-W2'                     ),
-    (   0x1237,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_ublox_evk_nina_b1_if',            'sam3u2c_bl',        'U-BLOX-EVK-NINA-B1'                    ),
-    (   0x1238,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_nina_b1_if',                        'kl26z_bl',          'u-blox-NINA-B1'                        ),
+    (   0x1236,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_ublox_evk_odin_w2_if',         'stm32f103xb_bl',   'ublox-EVK-ODIN-W2'                     ),
+    (   0x1237,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_ublox_evk_nina_b1_if',             'sam3u2c_bl',       'U-BLOX-EVK-NINA-B1'                    ),
+    (   0x1238,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_nina_b1_if',                         'kl26z_bl',         'u-blox-NINA-B1'                        ),
     (   0x1304,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_pfm_m487km_if',          'm48ssidae_bl',     None                                    ),
     (   0x1309,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m252kg_if',              'm48ssidae_bl',     None                                    ),
     (   0x1310,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m263a_if',           'm48ssidae_bl',     None                                    ),
@@ -282,10 +283,11 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9014,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio3g_if',                        None,               None                                    ),
     (   0x9015,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wiobg96_if',                      None,               None                                    ),
     (   0x9016,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
-    (   0x9017,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio_emw3166_if',                  None,               'WIO_EMW3166'                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
+    (   0x9017,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio_emw3166_if',                  None,               'WIO_EMW3166'                           ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9900,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbit'                              ),
+    (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                               ),
     (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
     (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
@@ -294,11 +296,11 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k26f_if',                                  None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_if',                               None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc55s69_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'sam3u2c_if',                               None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_if',                           None,               None                                    ),
-    (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                                ),
 ]
 
 # Add new HICs here
@@ -314,6 +316,7 @@ HIC_STRING_TO_ID = {
     'k26f': 0x97969909,
     'kl27z': 0x9796990B,
     'm48ssidae': 0x97969921,
+    'lpc55s69': 0x4C504355,
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([

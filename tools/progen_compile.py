@@ -88,6 +88,9 @@ if toolchain not in toolchains:
     print("Unsupported toolchain '%s' (options: %s)\n" % (toolchain, ", ".join(toolchains)))
     exit(-1)
 
+# armcc does not support Cortex-M33 and lpc55s69 is not ported to armclang
+if 'armc' in toolchain:
+    project_list = filter(lambda p: not p.startswith("lpc55"), project_list)
 
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)

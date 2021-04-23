@@ -70,7 +70,7 @@ jobs:
         python tools/progen_compile.py --release --parallel -v -v --ignore-failures
         (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
         mkdir bootloaders
-        cp projectfiles/make_gcc_arm/*_bl/build/*_crc.bin bootloaders
+        cp projectfiles/make_gcc_arm/*_bl/build/*_crc.{bin,hex} bootloaders
 
     - name: Upload test artifacts
       uses: actions/upload-artifact@v2

@@ -3,7 +3,7 @@
  * @brief   Helper functions to determine if a hex or binary file is valid
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -30,6 +30,14 @@ extern "C" {
 
 uint8_t validate_bin_nvic(const uint8_t *buf);
 uint8_t validate_hexfile(const uint8_t *buf);
+
+/*!
+ * @brief Baseline implementation of NVIC validator.
+ *
+ * This version does not include the redirection to a target family validator if
+ * one is supplied in the target family struct.
+ */
+uint8_t validate_bin_nvic_base(const uint8_t *buf);
 
 #ifdef __cplusplus
 }
