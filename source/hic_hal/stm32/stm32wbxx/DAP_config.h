@@ -22,13 +22,13 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
-#include "stm32f3xx.h"
+#include "stm32wbxx.h"
 #include "stdint.h"
 #include "cmsis_os2.h"
 #include "IO_Config.h"
 #include "uart.h"
 
-#include "stm32f3xx_hal_gpio.h" //biby
+#include "stm32wbxx_hal_gpio.h" //biby
 
 //#include "debug_cm.h"
 //#include "swd_host.h"

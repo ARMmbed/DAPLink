@@ -19,7 +19,7 @@
  * limitations under the License.
  */
  
-#include "stm32f3xx.h"
+#include "stm32wbxx.h"
 #include "read_uid.h"
 
 void read_unique_id(uint32_t *id)

@@ -4,9 +4,9 @@ common:
     core:
         - Cortex-M4
     macros:
-        - INTERFACE_STM32WBxx
+        - INTERFACE_STM32WB55XX
         - USE_HAL_DRIVER
-        - STM32WBxx
+        - STM32WB55XX
         - DAPLINK_HIC_ID=0x46333733  # DAPLINK_HIC_ID_STM32WBxx
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
@@ -20,7 +20,7 @@ common:
         hic_hal:
             - source/hic_hal/stm32/stm32wbxx
             - source/hic_hal/stm32/stm32wbxx/cmsis
-            - source/hic_hal/stm32/stm32wbxx/STM32WBxx_HAL_Driver/Src
+            - source/hic_hal/stm32/stm32wbxx/STM32WBXX_HAL_Driver/Src
 
 tool_specific:
     uvision:

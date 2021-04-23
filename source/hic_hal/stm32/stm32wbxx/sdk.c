@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "stm32f3xx.h"
+#include "stm32wbxx.h"
 #include "DAP_config.h"
 #include "gpio.h"
 #include "daplink.h"

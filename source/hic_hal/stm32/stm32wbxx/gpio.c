@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "stm32f3xx.h"
+#include "stm32wbxx.h"
 #include "DAP_config.h"
 #include "gpio.h"
 #include "daplink.h"
@@ -119,10 +119,11 @@ void gpio_init(void)
 	// enable clock to ports
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
+	
     
 	//port not used in board
-	//__HAL_RCC_GPIOC_CLK_ENABLE(); 
-    //__HAL_RCC_GPIOD_CLK_ENABLE(); 
+	__HAL_RCC_GPIOC_CLK_ENABLE(); 
+    __HAL_RCC_GPIOD_CLK_ENABLE(); 
     
 	// Enable USB connect pin
     //__HAL_RCC_AFIO_CLK_ENABLE();  //biby

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file      startup_stm32wb55xx_cm4.s
+  * @file      startup_stm32wb55xx.s
   * @author    MCD Application Team
   * @brief     STM32WB55xx devices vector table GCC toolchain.
   *            This module performs:

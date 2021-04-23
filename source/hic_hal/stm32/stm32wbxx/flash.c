@@ -21,7 +21,7 @@
 
 #include "flash_hal.h"        // FlashOS Structures
 #include "target_config.h"    // target_device
-#include "stm32f3xx.h"
+#include "stm32wbxx.h"
 #include "util.h"
 #include "string.h"
 #include "target_board.h"
