@@ -67,7 +67,7 @@ uint32_t EraseChip(void)
                     FLASH_PAGE_SIZE == 0);
         memset(&erase_init, 0, sizeof(erase_init));
         erase_init.TypeErase = FLASH_TYPEERASE_PAGES;
-        erase_init.PageAddress = g_board_info.target_cfg->flash_regions[0].start;
+        erase_init.Page = g_board_info.target_cfg->flash_regions[0].start;
         erase_init.NbPages = (g_board_info.target_cfg->flash_regions[0].end - g_board_info.target_cfg->flash_regions[0].start) % FLASH_PAGE_SIZE;
         if (HAL_FLASHEx_Erase(&erase_init, &error) != HAL_OK) {
             ret = 1;
@@ -90,7 +90,7 @@ uint32_t EraseSector(uint32_t adr)
     
     memset(&erase_init, 0, sizeof(erase_init));
     erase_init.TypeErase = FLASH_TYPEERASE_PAGES;
-    erase_init.PageAddress = adr;
+    erase_init.Page = adr;
     erase_init.NbPages = 1;
     if (HAL_FLASHEx_Erase(&erase_init, &error) != HAL_OK) {
         ret = 1;
@@ -109,7 +109,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 
     util_assert(sz % 4 == 0);
     for (i = 0; i < sz / 4; i++) {
-        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, adr + i * 4, buf[i]) != HAL_OK) {
+        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, adr + i * 4, buf[i]) != HAL_OK) {
             ret = 1;
             break;
         }

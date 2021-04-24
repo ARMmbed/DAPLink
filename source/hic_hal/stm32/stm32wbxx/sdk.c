@@ -25,6 +25,7 @@
 #include "daplink.h"
 #include "util.h"
 #include "cortex_m.h"
+#include "stm32wbxx_hal_tim.h"
 
 TIM_HandleTypeDef timer;
 uint32_t time_count;
@@ -61,11 +62,11 @@ void sdk_init()
 	*/
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
 	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+//	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
 	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1; //Ashley
 	
 	HAL_RCC_OscConfig(&RCC_OscInitStruct);
 	
@@ -81,7 +82,7 @@ void sdk_init()
 	HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
 	
 	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
-	PeriphClkInit.USBClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
+	PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLLSAI1;
 	
 	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 	
@@ -160,13 +161,13 @@ void HAL_ResumeTick(void)
 static uint32_t tim2_clk_div(uint32_t apb1clkdiv)
 {
     switch (apb1clkdiv) {
-        case RCC_CFGR_PPRE1_DIV2:
+        case RCC_CFGR_PPRE2_2:
             return 1;
-        case RCC_CFGR_PPRE1_DIV4:
+        case (RCC_CFGR_PPRE2_2 | RCC_CFGR_PPRE2_0):
             return 2;
-        case RCC_CFGR_PPRE1_DIV8:
+        case(RCC_CFGR_PPRE2_2 | RCC_CFGR_PPRE2_1):
             return 4;
-        case RCC_CFGR_PPRE1_DIV16:
+        case (RCC_CFGR_PPRE2_2 | RCC_CFGR_PPRE2_1 | RCC_CFGR_PPRE2_0):
             return 8;
         default:
             return 1;
