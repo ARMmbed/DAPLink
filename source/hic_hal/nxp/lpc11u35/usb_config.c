@@ -27,15 +27,15 @@
 #define USBD_RTX_CORE_STACK         0
 #define USBD_RTX_DEVICE_STACK       0
 #define USBD_RTX_ENDPOINT0_STACK    0
+
+//   <o0.0> High-speed
+//     <i> Enable high-speed functionality (if device supports it)
+#define USBD_HS_ENABLE              0
 #if (defined(WEBUSB_INTERFACE) || defined(WINUSB_INTERFACE) || defined(BULK_ENDPOINT))
 #define USBD_BOS_ENABLE             1
 #else
 #define USBD_BOS_ENABLE             0
 #endif
-//   <o0.0> High-speed
-//     <i> Enable high-speed functionality (if device supports it)
-#define USBD_HS_ENABLE              0
-
 //   <h> Device Settings
 //     <i> These settings affect Device Descriptor
 //     <o0> Power
