@@ -56,7 +56,7 @@
 #define USBD_MAX_PACKET0            64
 #define USBD_DEVDESC_IDVENDOR       0x0D28
 #define USBD_DEVDESC_IDPRODUCT      0x0204
-#define USBD_DEVDESC_BCDDEVICE      0x0100 //was 0x0100
+#define USBD_DEVDESC_BCDDEVICE      0x0100
 
 //   <h> Configuration Settings
 //     <i> These settings affect Configuration Descriptor
