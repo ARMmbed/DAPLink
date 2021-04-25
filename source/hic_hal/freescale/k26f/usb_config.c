@@ -1,6 +1,6 @@
 /**
- * @file    usb_config.h
- * @brief
+ * @file    usb_config.c
+ * @brief   USB Device Configuration
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
