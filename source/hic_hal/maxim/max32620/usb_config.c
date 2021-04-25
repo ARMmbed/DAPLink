@@ -10,7 +10,7 @@
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -411,15 +411,15 @@
 #define USBD_EP_NUM                 MAX(USBD_EP_NUM_CALC6, USBD_EP_NUM_CALC7)
 
 #if (USBD_EP_NUM > 7)
-#error "Max32620 only have 8 individual endpoints including EP0!"
+#error "Max32620/Max32625 only have 8 individual endpoints including EP0!"
 #endif
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_MSC_ENABLE)
-#if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)  || \
+#if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)      || \
        (USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKOUT)))   || \
-      ((USBD_HID_EP_INTOUT  != 0)                   && \
-       (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)  || \
+      ((USBD_HID_EP_INTOUT  != 0)                       && \
+       (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)      || \
        (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKOUT)))
 #error "HID and Mass Storage Device Interface can not use same Endpoints!"
 #endif
