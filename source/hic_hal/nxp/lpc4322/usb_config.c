@@ -21,6 +21,15 @@
 
 #include "util.h"
 
+//*** <<< Use Configuration Wizard in Context Menu >>> ***
+
+// ****
+// NOTE: The high speed packet sizes are set to the same size as full speed in this
+//       USB configuration in order to increase the number of devices that can
+//       simultaneously be connected to a single USB controller. With the maximium
+//       high speed packet sizes, only 1 or 2 devices can be connected.
+// ****
+
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
@@ -56,7 +65,7 @@
 #define USBD_MAX_PACKET0            64
 #define USBD_DEVDESC_IDVENDOR       0x0D28
 #define USBD_DEVDESC_IDPRODUCT      0x0204
-#define USBD_DEVDESC_BCDDEVICE      0x1000
+#define USBD_DEVDESC_BCDDEVICE      0x1000 //was 0x0100
 
 //   <h> Configuration Settings
 //     <i> These settings affect Configuration Descriptor
@@ -153,12 +162,11 @@
 #define USBD_HID_EP_INTIN           1
 #define USBD_HID_EP_INTOUT          1
 
-#define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN_STACK     0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
 #define USBD_HID_HS_ENABLE          1
-#define USBD_HID_HS_WMAXPACKETSIZE  64
+#define USBD_HID_HS_WMAXPACKETSIZE  64 //| (2<<11)
 #define USBD_HID_HS_BINTERVAL       1
 #define USBD_HID_STRDESC            L"CMSIS-DAP v1"
 #define USBD_WEBUSB_STRDESC         L"WebUSB: CMSIS-DAP"
