@@ -318,6 +318,7 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
+
 #ifndef CDC_ENDPOINT
 #define CDC_ENDPOINT 0
 #else
@@ -392,6 +393,7 @@
 #define USBD_BULK_HS_ENABLE          0
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
 #define USBD_BULK_STRDESC            L"CMSIS-DAP v2"
+
 
 /* USB Device Calculations ---------------------------------------------------*/
 
@@ -470,10 +472,10 @@
 #endif
 #endif
 #endif
+
 #define USBD_ADC_CIF_NUM           (0)
 #define USBD_ADC_SIF1_NUM          (1)
 #define USBD_ADC_SIF2_NUM          (2)
-
 
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
@@ -527,7 +529,6 @@
 #define USBD_CDC_ACM_MAX_PACKET    (0)
 #define USBD_CDC_ACM_MAX_PACKET1   (0)
 #endif
-
 #if    (USBD_BULK_ENABLE)
 #if    (USBD_BULK_HS_ENABLE)
 #define USBD_BULK_MAX_PACKET       ((USBD_BULK_HS_WMAXPACKETSIZE > USBD_BULK_WMAXPACKETSIZE) ? USBD_BULK_HS_WMAXPACKETSIZE : USBD_BULK_WMAXPACKETSIZE)
@@ -537,7 +538,6 @@
 #else
 #define USBD_BULK_MAX_PACKET        (0)
 #endif
-
 #define USBD_MAX_PACKET_CALC0     ((USBD_HID_MAX_PACKET   > USBD_HID_MAX_PACKET      ) ? (USBD_HID_MAX_PACKET  ) : (USBD_HID_MAX_PACKET      ))
 #define USBD_MAX_PACKET_CALC1     ((USBD_ADC_MAX_PACKET   > USBD_CDC_ACM_MAX_PACKET  ) ? (USBD_ADC_MAX_PACKET  ) : (USBD_CDC_ACM_MAX_PACKET  ))
 #define USBD_MAX_PACKET_CALC2     ((USBD_MAX_PACKET_CALC0 > USBD_MAX_PACKET_CALC1    ) ? (USBD_MAX_PACKET_CALC0) : (USBD_MAX_PACKET_CALC1    ))

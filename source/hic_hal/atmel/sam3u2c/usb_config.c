@@ -317,6 +317,7 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
+
 #ifndef CDC_ENDPOINT
 #define CDC_ENDPOINT 0
 #else
