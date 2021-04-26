@@ -20,7 +20,7 @@ common:
             - source/family/nordic/target_reset_nrf51.c
 ```
 
-This assumes there is already target support present in the codebase. If adding a new target family is needed, additional steps in [Porting target family guide](PORT_TARGET_FAMILY.md) will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. To get a BOARD ID email support@mbed.org
+This assumes there is already target support present in the codebase. If adding a new target family is needed, additional steps in [Porting target family guide](PORT_TARGET_FAMILY.md) will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. If you're developing a custom or non-official Mbed platform, then can use any BOARD ID and the `mbedls` [mocking feature](https://github.com/ARMmbed/mbed-os-tools/blob/master/packages/mbed-ls/README.md#mocking-renaming-platforms).
 ```c
 /**
  * @file   myboard.c
@@ -107,7 +107,7 @@ You may need to update one or more other dictionaries. See comments in the code 
 See [Automated Tests](AUTOMATED_TESTS.md) for more information related to automated testing.
 
 # Post-build Board ID and Family ID
-Board ID and Family ID can be overwritten by `tools/post_build_scpript.py`. This is helpful for supporting existing families and adding board IDs to the database without the need to compile DAPLink. Board ID can uniquely identify the target board while family ID can select which target family to support.
+Board ID and Family ID can be overwritten by `tools/post_build_script.py`. This is helpful for supporting existing families and adding board IDs to the database without the need to compile DAPLink. Board ID can uniquely identify the target board while family ID can select which target family to support.
 ```
 usage: post_build_script.py [-h] [--board-id BOARD_ID] [--family-id FAMILY_ID]
                             [--bin-offset BIN_OFFSET]

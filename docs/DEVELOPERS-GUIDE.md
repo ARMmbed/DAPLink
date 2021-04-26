@@ -133,7 +133,7 @@ There are three defined ways in which DAPLink can be extended. These are adding 
 DAPLink has an extensive set of automated tests written in Python. They are used for regression testing, but you can use them to validate your DAPLink port. Details are [here](AUTOMATED_TESTS.md)
 
 An option to search for the daplink firmware build in uvision and mbedcli build folders.
-`python test/run_test.py --projecttool mbedcli ...` or `python test/run_test.py --projecttool uvision ...`.
+`python test/run_test.py --project-tool mbedcli ...` or `python test/run_test.py --project-tool uvision ...`.
 
 ## Release
 

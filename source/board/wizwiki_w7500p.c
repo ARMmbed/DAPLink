@@ -22,8 +22,9 @@
 #include "cmsis_os2.h"
 #include "target_family.h"
 #include "target_board.h"
+#include "swd_host.h"
 
-static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
+static uint8_t target_set_state_by_board(target_state_t state)
 {
     if( state == RESET_PROGRAM )
     {
@@ -40,7 +41,7 @@ static uint8_t target_set_state_by_board(TARGET_RESET_STATE state)
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "2203",
     .family_id = kWiznet_W7500_FamilyID,
     .target_set_state = target_set_state_by_board,

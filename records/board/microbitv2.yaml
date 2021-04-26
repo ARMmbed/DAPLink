@@ -1,0 +1,12 @@
+common:
+    macros:
+        - HID_LED_DEF=GPIO_LED_ON
+        - CDC_LED_DEF=GPIO_LED_ON
+        - MSC_LED_DEF=GPIO_LED_ON
+        - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
+    sources:
+        board:
+            - source/board/microbitv2/microbitv2.c
+        target:
+            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/target_reset_nrf52.c

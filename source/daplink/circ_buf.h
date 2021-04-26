@@ -22,8 +22,8 @@
 #ifndef CIRC_BUF_H
 #define CIRC_BUF_H
 
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

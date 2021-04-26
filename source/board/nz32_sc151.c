@@ -23,7 +23,7 @@
 #include "target_board.h"
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "6660",
     .family_id = kStub_HWReset_FamilyID,
     .daplink_url_name =       "NZ32-SC151 ",

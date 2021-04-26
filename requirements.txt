@@ -1,10 +1,9 @@
-project_generator==0.9.13
+project_generator==0.10.*
 mbed-ls==1.6.2
 pyserial
-pyOCD==0.16.0
+pyOCD==0.28.*
 requests
 intelhex
-six
 enum34
 pyusb
 mbed-cli==1.8.2

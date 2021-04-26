@@ -22,8 +22,8 @@
 #ifndef INFO_H
 #define INFO_H
 
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

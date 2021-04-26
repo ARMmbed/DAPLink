@@ -29,7 +29,6 @@
 #include "compiler.h"
 #include "crc.h"
 #include "info.h"
-#include "macro.h"
 
 // Application start must be aligned to page write
 COMPILER_ASSERT(DAPLINK_ROM_APP_START % DAPLINK_MIN_WRITE_SIZE == 0);

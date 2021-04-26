@@ -19,13 +19,12 @@
  * limitations under the License.
  */
 
-#include "target_reset.h"
 #include "swd_host.h"
 #include "DAP_config.h"
 #include "target_family.h"
 #include "target_board.h"
 
-static void swd_set_target_reset(uint8_t asserted)
+static void swd_set_target_reset_nrf(uint8_t asserted)
 {
     uint32_t ap_index_return;
 
@@ -65,5 +64,5 @@ const target_family_descriptor_t g_nordic_nrf52 = {
     .family_id = kNordic_Nrf52_FamilyID,
     .default_reset_type = kSoftwareReset,
     .soft_reset_type = SYSRESETREQ,
-    .swd_set_target_reset = swd_set_target_reset,
+    .swd_set_target_reset = swd_set_target_reset_nrf,
 };

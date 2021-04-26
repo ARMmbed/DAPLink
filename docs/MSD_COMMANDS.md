@@ -50,6 +50,10 @@ own right.
 
 ``msd_on.act`` Mass storage device can be enabled back by this file command on bootloader mode only if there is a target flash algo.
 
+``page_off.act`` This file temporary enables page programming and chip erasing until the next restart occurred for drag and drop.
+
+``page_on.act`` This file temporary enables page programming and sector erasing until the next restart occurred for drag and drop.
+
 ### Configuration Commands
 
 ``auto_rst.cfg`` This file will turn on Auto Reset mode. In this mode, 

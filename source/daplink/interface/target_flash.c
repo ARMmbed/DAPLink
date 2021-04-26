@@ -4,6 +4,8 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,10 +21,9 @@
  * limitations under the License.
  */
 #ifdef DRAG_N_DROP_SUPPORT
-#include "string.h"
+#include <string.h>
 
 #include "target_config.h"
-#include "target_reset.h"
 #include "gpio.h"
 #include "target_config.h"
 #include "intelhex.h"
@@ -32,6 +33,8 @@
 #include "settings.h"
 #include "target_family.h"
 #include "target_board.h"
+
+#define DEFAULT_PROGRAM_PAGE_MIN_SIZE   (256u)
 
 typedef enum {
     STATE_CLOSED,
@@ -90,7 +93,7 @@ static program_target_t * get_flash_algo(uint32_t addr)
             }
         }
     }
-    
+
     //could not find a flash algo for the region; use default
     if (default_region) {
         flash_start = default_region->start;
@@ -108,13 +111,15 @@ static error_t flash_func_start(flash_func_t func)
     {
         // Finish the currently active function.
         if (FLASH_FUNC_NOP != last_flash_func &&
-            0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->uninit, last_flash_func, 0, 0, 0)) {
+            ((flash->algo_flags & kAlgoSingleInitType) == 0 || FLASH_FUNC_NOP == func ) &&
+            0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->uninit, last_flash_func, 0, 0, 0, FLASHALGO_RETURN_BOOL)) {
             return ERROR_UNINIT;
         }
 
         // Start a new function.
         if (FLASH_FUNC_NOP != func &&
-            0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->init, flash_start, 0, func, 0)) {
+            ((flash->algo_flags & kAlgoSingleInitType) == 0 || FLASH_FUNC_NOP == last_flash_func ) &&
+            0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->init, flash_start, 0, func, 0, FLASHALGO_RETURN_BOOL)) {
             return ERROR_INIT;
         }
 
@@ -140,9 +145,9 @@ static error_t target_flash_set(uint32_t addr)
         if (0 == swd_write_memory(new_flash_algo->algo_start, (uint8_t *)new_flash_algo->algo_blob, new_flash_algo->algo_size)) {
             return ERROR_ALGO_DL;
         }
-        
+
         current_flash_algo = new_flash_algo;
-        
+
     }
     return ERROR_SUCCESS;
 }
@@ -151,13 +156,13 @@ static error_t target_flash_init()
 {
     if (g_board_info.target_cfg) {
         last_flash_func = FLASH_FUNC_NOP;
-        
+
         current_flash_algo = NULL;
-        
+
         if (0 == target_set_state(RESET_PROGRAM)) {
             return ERROR_RESET;
         }
-        
+
         //get default region
         region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
         for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
@@ -172,7 +177,7 @@ static error_t target_flash_init()
     } else {
         return ERROR_FAILURE;
     }
-    
+
 }
 
 static error_t target_flash_uninit(void)
@@ -192,7 +197,7 @@ static error_t target_flash_uninit(void)
         // Check to see if anything needs to be done after programming.
         // This is usually a no-op for most targets.
         target_set_state(POST_FLASH_RESET);
-      
+
         state = STATE_CLOSED;
         swd_off();
         return ERROR_SUCCESS;
@@ -206,11 +211,11 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
     if (g_board_info.target_cfg) {
         error_t status = ERROR_SUCCESS;
         program_target_t * flash = current_flash_algo;
-        
+
         if (!flash) {
             return ERROR_INTERNAL;
         }
-        
+
         // check if security bits were set
         if (g_target_family && g_target_family->security_bits_set){
             if (1 == g_target_family->security_bits_set(addr, (uint8_t *)buf, size)) {
@@ -223,7 +228,7 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
         if (status != ERROR_SUCCESS) {
             return status;
         }
-        
+
         while (size > 0) {
             uint32_t write_size = MIN(size, flash->program_buffer_size);
 
@@ -238,7 +243,8 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                                         addr,
                                         write_size,
                                         flash->program_buffer,
-                                        0)) {
+                                        0,
+                                        FLASHALGO_RETURN_BOOL)) {
                 return ERROR_WRITE;
             }
 
@@ -249,12 +255,19 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
                     if (status != ERROR_SUCCESS) {
                         return status;
                     }
+                    flash_algo_return_t return_type;
+                    if ((flash->algo_flags & kAlgoVerifyReturnsAddress) != 0) {
+                        return_type = FLASHALGO_RETURN_POINTER;
+                    } else {
+                        return_type = FLASHALGO_RETURN_BOOL;
+                    }
                     if (!swd_flash_syscall_exec(&flash->sys_call_s,
                                         flash->verify,
                                         addr,
                                         write_size,
                                         flash->program_buffer,
-                                        0)) {
+                                        0,
+                                        return_type)) {
                         return ERROR_WRITE_VERIFY;
                     }
                 } else {
@@ -278,11 +291,11 @@ static error_t target_flash_program_page(uint32_t addr, const uint8_t *buf, uint
             addr += write_size;
             buf += write_size;
             size -= write_size;
-            
+
         }
 
         return ERROR_SUCCESS;
-        
+
     } else {
         return ERROR_FAILURE;
     }
@@ -297,7 +310,7 @@ static error_t target_flash_erase_sector(uint32_t addr)
         if (!flash) {
             return ERROR_INTERNAL;
         }
-        
+
         // Check to make sure the address is on a sector boundary
         if ((addr % target_flash_erase_sector_size(addr)) != 0) {
             return ERROR_ERASE_SECTOR;
@@ -308,8 +321,8 @@ static error_t target_flash_erase_sector(uint32_t addr)
         if (status != ERROR_SUCCESS) {
             return status;
         }
-        
-        if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, addr, 0, 0, 0)) {
+
+        if (0 == swd_flash_syscall_exec(&flash->sys_call_s, flash->erase_sector, addr, 0, 0, 0, FLASHALGO_RETURN_BOOL)) {
             return ERROR_ERASE_SECTOR;
         }
 
@@ -326,7 +339,12 @@ static error_t target_flash_erase_chip(void)
         region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
 
         for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
-            status = target_flash_set(flash_region->start); 
+            program_target_t *new_flash_algo = get_flash_algo(flash_region->start);
+            if ((new_flash_algo != NULL) && ((new_flash_algo->algo_flags & kAlgoSkipChipErase) != 0)) {
+                // skip flash region
+                continue;
+            }
+            status = target_flash_set(flash_region->start);
             if (status != ERROR_SUCCESS) {
                 return status;
             }
@@ -334,7 +352,7 @@ static error_t target_flash_erase_chip(void)
             if (status != ERROR_SUCCESS) {
                 return status;
             }
-            if (0 == swd_flash_syscall_exec(&current_flash_algo->sys_call_s, current_flash_algo->erase_chip, 0, 0, 0, 0)) {
+            if (0 == swd_flash_syscall_exec(&current_flash_algo->sys_call_s, current_flash_algo->erase_chip, 0, 0, 0, 0, FLASHALGO_RETURN_BOOL)) {
                 return ERROR_ERASE_ALL;
             }
         }
@@ -353,7 +371,7 @@ static error_t target_flash_erase_chip(void)
 static uint32_t target_flash_program_page_min_size(uint32_t addr)
 {
     if (g_board_info.target_cfg){
-        uint32_t size = 256;
+        uint32_t size = DEFAULT_PROGRAM_PAGE_MIN_SIZE;
         if (size > target_flash_erase_sector_size(addr)) {
             size = target_flash_erase_sector_size(addr);
         }
@@ -366,7 +384,7 @@ static uint32_t target_flash_program_page_min_size(uint32_t addr)
 static uint32_t target_flash_erase_sector_size(uint32_t addr)
 {
     if (g_board_info.target_cfg){
-        if(g_board_info.target_cfg->sector_info_length > 0) { 
+        if(g_board_info.target_cfg->sector_info_length > 0) {
             int sector_index = g_board_info.target_cfg->sector_info_length - 1;
             for (; sector_index >= 0; sector_index--) {
                 if (addr >= g_board_info.target_cfg->sectors_info[sector_index].start) {

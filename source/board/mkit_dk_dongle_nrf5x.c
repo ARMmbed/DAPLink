@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "sam3u2c.h"
 #include "DAP_config.h"
 #include "target_config.h"
@@ -37,6 +37,7 @@ const char *board_id_nrf52840_dk = "1102";
 extern target_cfg_t target_device_nrf52;
 extern target_cfg_t target_device_nrf52840;
 static uint8_t device_type;
+
 static void set_target_device(uint32_t device)
 {
     device_type = device;
@@ -52,27 +53,27 @@ static void set_target_device(uint32_t device)
 }
 
 
-static void prerun_board_config(void)
+static void nrf_prerun_board_config(void)
 {
     // Work around for setting the correct board id based on GPIOs
     uint8_t bit1;
     uint8_t bit2;
     uint8_t bit3;
-    
+
     PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
     PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2
     PIOB->PIO_PER = (1 << 3); // Enable PIO pin PB3
     PIOB->PIO_ODR = (1 << 1); // Disabe output
     PIOB->PIO_ODR = (1 << 2); // Disabe output
     PIOB->PIO_ODR = (1 << 3); // Disabe output
-    PIOB->PIO_PUER = (1 << 1); // Enable pull-up 
+    PIOB->PIO_PUER = (1 << 1); // Enable pull-up
     PIOB->PIO_PUER = (1 << 2); // Enable pull-up
     PIOB->PIO_PUER = (1 << 3); // Enable pull-up
-    
+
     bit1 = (PIOB->PIO_PDSR >> 1) & 1; // Read PB1
     bit2 = (PIOB->PIO_PDSR >> 2) & 1; // Read PB2
     bit3 = (PIOB->PIO_PDSR >> 3) & 1; // Read PB3
-    
+
     /* pins translate to board-ids as follow
      *
      *  PB3|PB2|PB1|BOARD ID| BOARD
@@ -87,7 +88,7 @@ static void prerun_board_config(void)
      *   1 | 1 | 0 |    undefined
      */
 
-    
+
     if (bit3) {
         set_target_device(0);
         target_device.rt_family_id = kNordic_Nrf51_FamilyID;
@@ -115,13 +116,13 @@ static void prerun_board_config(void)
             target_device.rt_board_id = board_id_nrf52840_dk;  // 1102
         }
     }
-    
-    PIOB->PIO_PUDR = (1 << 1); // Disable pull-up 
+
+    PIOB->PIO_PUDR = (1 << 1); // Disable pull-up
     PIOB->PIO_PUDR = (1 << 2); // Disable pull-up
     PIOB->PIO_PUDR = (1 << 3); // Disable pull-up
 }
 
-static void swd_set_target_reset(uint8_t asserted){
+static void nrf_swd_set_target_reset(uint8_t asserted){
     if (asserted && device_type == 0) {
         PIOA->PIO_OER = PIN_SWDIO;
         PIOA->PIO_OER = PIN_SWCLK;
@@ -131,9 +132,9 @@ static void swd_set_target_reset(uint8_t asserted){
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .flags = kEnablePageErase,
-    .prerun_board_config = prerun_board_config,
-    .swd_set_target_reset = swd_set_target_reset,
+    .prerun_board_config = nrf_prerun_board_config,
+    .swd_set_target_reset = nrf_swd_set_target_reset,
     .target_cfg = &target_device,
 };

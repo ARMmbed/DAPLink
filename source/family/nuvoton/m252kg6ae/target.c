@@ -31,7 +31,10 @@ target_cfg_t target_device = {
     .flash_regions[0].start         = 0x00000000,
     .flash_regions[0].end           = 0x00040000,
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *)&flash,
+    .flash_regions[0].flash_algo    = (program_target_t *)&M251_AP_256_flash,
+    .flash_regions[1].start         = 0x00100000,
+    .flash_regions[1].end           = 0x00101000,
+    .flash_regions[1].flash_algo    = (program_target_t *)&M251_LD_4_flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20008000,
 };

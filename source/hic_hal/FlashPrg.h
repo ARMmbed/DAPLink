@@ -1,6 +1,6 @@
 /**
  * @file    FlashPrg.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,7 +22,7 @@
 #ifndef FLASHPRG_H
 #define FLASHPRG_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

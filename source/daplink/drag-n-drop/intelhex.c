@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "intelhex.h"
 
@@ -136,7 +136,7 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
             default:
                 if (low_nibble) {
                     line.buf[idx] |= ctoh((uint8_t)(*hex_blob)) & 0xf;
-                    if (++idx >= (line.byte_count + 5)) { //all data in                        
+                    if (++idx >= (line.byte_count + 5)) { //all data in
                         if (0 == validate_checksum(&line)) {
                             status = HEX_PARSE_CKSUM_FAIL;
                             goto hex_parser_exit;
@@ -201,7 +201,7 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                         break;
                                 }
                             }
-                        }                        
+                        }
                     }
                 } else {
                     if (idx < sizeof(hex_line_t)) {

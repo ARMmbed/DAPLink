@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2013-2016 ARM Limited. All rights reserved.
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -32,8 +34,8 @@
 #include "main.h"
 #include "uart.h"
 #include "settings.h"
-#include "target_reset.h"
 #include "target_family.h"
+#include "flash_manager.h"
 #include <string.h>
 
 
@@ -159,7 +161,25 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         break;
     }
 #endif
-    case ID_DAP_Vendor13: break;
+    case ID_DAP_Vendor13: {
+        // switching between chip erase and page erase
+        //              COMMAND(OUT Packet)
+        //              BYTE 0 1000 1110 0x8D
+        //              BYTE 1 Desired Mode:
+        //                                              0x00 - Chip Erase
+        //                                              nonzero - Page Erase
+        //              RESPONSE(IN Packet)
+        //              BYTE 0 
+        //                                              0x00 - OK
+        *response = DAP_OK;
+        if (0x00U == *request) {
+            flash_manager_set_page_erase(false);
+        } else {
+            flash_manager_set_page_erase(true);
+        }
+        num += (1U << 16) | 1U; // increment request and response count each by 1
+        break;
+    }
     case ID_DAP_Vendor14: break;
     case ID_DAP_Vendor15: break;
     case ID_DAP_Vendor16: break;

@@ -1,27 +1,24 @@
-/**
- * @file    SW_DP.c
- * @brief   SWD driver
+/*
+ * Copyright (c) 2013-2017 ARM Limited. All rights reserved.
  *
- * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * Licensed under the Apache License, Version 2.0 (the License); you may
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  * ----------------------------------------------------------------------
  *
- * $Date:        20. May 2015
- * $Revision:    V1.10
+ * $Date:        1. December 2017
+ * $Revision:    V2.0.0
  *
  * Project:      CMSIS-DAP Source
  * Title:        SW_DP.c CMSIS-DAP SW DP I/O
@@ -89,6 +86,46 @@ void SWJ_Sequence (uint32_t count, const uint8_t *data) {
 #endif
 
 
+// Generate SWD Sequence
+//   info:   sequence information
+//   swdo:   pointer to SWDIO generated data
+//   swdi:   pointer to SWDIO captured data
+//   return: none
+#if (DAP_SWD != 0)
+void SWD_Sequence (uint32_t info, const uint8_t *swdo, uint8_t *swdi) {
+  uint32_t val;
+  uint32_t bit;
+  uint32_t n, k;
+
+  n = info & SWD_SEQUENCE_CLK;
+  if (n == 0U) {
+    n = 64U;
+  }
+
+  if (info & SWD_SEQUENCE_DIN) {
+    while (n) {
+      val = 0U;
+      for (k = 8U; k && n; k--, n--) {
+        SW_READ_BIT(bit);
+        val >>= 1;
+        val  |= bit << 7;
+      }
+      val >>= k;
+      *swdi++ = (uint8_t)val;
+    }
+  } else {
+    while (n) {
+      val = *swdo++;
+      for (k = 8U; k && n; k--, n--) {
+        SW_WRITE_BIT(val);
+        val >>= 1;
+      }
+    }
+  }
+}
+#endif
+
+
 #if (DAP_SWD != 0)
 
 
@@ -97,7 +134,7 @@ void SWJ_Sequence (uint32_t count, const uint8_t *data) {
 //   data:    DATA[31:0]
 //   return:  ACK[2:0]
 #define SWD_TransferFunction(speed)     /**/                                    \
-uint8_t SWD_Transfer##speed (uint32_t request, uint32_t *data) {                \
+static uint8_t SWD_Transfer##speed (uint32_t request, uint32_t *data) {         \
   uint32_t ack;                                                                 \
   uint32_t bit;                                                                 \
   uint32_t val;                                                                 \
@@ -176,6 +213,10 @@ uint8_t SWD_Transfer##speed (uint32_t request, uint32_t *data) {                
       }                                                                         \
       SW_WRITE_BIT(parity);             /* Write Parity Bit */                  \
     }                                                                           \
+    /* Capture Timestamp */                                                     \
+    if (request & DAP_TRANSFER_TIMESTAMP) {                                     \
+      DAP_Data.timestamp = TIMESTAMP_GET();                                     \
+    }                                                                           \
     /* Idle cycles */                                                           \
     n = DAP_Data.transfer.idle_cycles;                                          \
     if (n) {                                                                    \
@@ -222,11 +263,11 @@ uint8_t SWD_Transfer##speed (uint32_t request, uint32_t *data) {                
 
 #undef  PIN_DELAY
 #define PIN_DELAY() PIN_DELAY_FAST()
-SWD_TransferFunction(Fast);
+SWD_TransferFunction(Fast)
 
 #undef  PIN_DELAY
 #define PIN_DELAY() PIN_DELAY_SLOW(DAP_Data.clock_delay)
-SWD_TransferFunction(Slow);
+SWD_TransferFunction(Slow)
 
 
 // SWD Transfer I/O

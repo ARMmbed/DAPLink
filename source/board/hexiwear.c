@@ -42,7 +42,7 @@ static void prerun_board_config(void);
 
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0214",
     .family_id = kNXP_RapidIot_FamilyID,
     .flags = kEnablePageErase,

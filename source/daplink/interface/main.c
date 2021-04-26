@@ -19,18 +19,15 @@
  * limitations under the License.
  */
 
-#include "string.h"
-#include "stdio.h"
-#include "stdint.h"
+#include <string.h>
+#include <stdio.h>
 
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main.h"
-#include "board.h"
 #include "gpio.h"
 #include "uart.h"
 #include "tasks.h"
-#include "target_reset.h"
 #include "swd_host.h"
 #include "info.h"
 #include "settings.h"
@@ -213,6 +210,9 @@ void main_task(void * arg)
     gpio_set_msc_led(msc_led_value);
     // Initialize the DAP
     DAP_Setup();
+
+    // make sure we have a valid board info structure.
+    util_assert(g_board_info.info_version == kBoardInfoVersion);
 
     // do some init with the target before USB and files are configured
     if (g_board_info.prerun_board_config) {

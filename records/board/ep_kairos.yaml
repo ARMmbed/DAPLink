@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/ep_kairos.c
+        family:
+            - source/family/nxp/lpc55S6X/target.c
+            - source/family/nxp/lpc55S6X/target_reset.c

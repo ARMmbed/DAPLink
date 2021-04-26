@@ -29,7 +29,7 @@
 #include "IO_Config_Override.h"
 #endif
 
-// This GPIO configuration is only valid for the LPC11U35 HIC
+// This GPIO configuration is only valid for the SAM3U2C HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
 
 // DAP LED

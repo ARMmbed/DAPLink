@@ -18,13 +18,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
- #include "string.h"
- 
+
+#include <string.h>
+
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 #include "util.h"
-#include "macro.h"
 #include "DAP_queue.h"
 
 static U8 *ptrDataIn;
@@ -66,7 +65,7 @@ void USBD_BULK_EP_BULKIN_Event(U32 event)
  */
 
 void USBD_BULK_EP_BULKOUT_Event(U32 event)
-{    
+{
     U16 bytes_rece;
     uint8_t * rbuf;
 

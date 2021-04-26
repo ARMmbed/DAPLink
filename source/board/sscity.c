@@ -23,7 +23,7 @@
 #include "target_board.h"
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "1019",
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_drive_name = 		"MBED       ",

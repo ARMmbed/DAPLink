@@ -39,7 +39,7 @@ target_cfg_t target_device = {  // Default is nRF51
 
 target_cfg_t target_device_nrf52 = {
     .sectors_info                   = sectors_info_nrf52,
-    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sectors_info_nrf52)),
+    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(512),
     .flash_regions[0].flags         = kRegionIsDefault,
@@ -51,7 +51,7 @@ target_cfg_t target_device_nrf52 = {
 
 target_cfg_t target_device_nrf52840 = {
     .sectors_info                   = sectors_info_nrf52,
-    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sectors_info_nrf52)),
+    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(1024),
     .flash_regions[0].flags         = kRegionIsDefault,
@@ -63,7 +63,7 @@ target_cfg_t target_device_nrf52840 = {
 
 target_cfg_t target_device_nrf52840_256 = {
     .sectors_info                   = sectors_info_nrf52,
-    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sectors_info_nrf52)),
+    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(1024),
     .flash_regions[0].flags         = kRegionIsDefault,
@@ -75,7 +75,7 @@ target_cfg_t target_device_nrf52840_256 = {
 
 target_cfg_t target_device_nrf52_64 = {
     .sectors_info                   = sectors_info_nrf52,
-    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sectors_info_nrf52)),
+    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(512),
     .flash_regions[0].flags         = kRegionIsDefault,

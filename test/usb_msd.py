@@ -21,7 +21,7 @@ import struct
 import numbers
 import time
 import usb.util
-
+import six
 
 class USBMsd(object):
     """Wrapper class for a MSD usb device"""
@@ -248,6 +248,7 @@ class Struct(object):
         self.name = name
         self.format_str = format_str
         self.field_list = field_list
+        self.fmt_dict = {k: fmt_list[i] for i, k in enumerate(field_list)}
         self.value_dict = value_dict
         self.size = struct_size
 
@@ -271,7 +272,10 @@ class Struct(object):
         """Return a byte representation of this structure"""
         value_list = []
         for field in self.field_list:
-            value_list.append(self.value_dict[field])
+            value = self.value_dict[field]
+            if self.fmt_dict[field].endswith('s'):
+                value = six.ensure_binary(value)
+            value_list.append(value)
         return struct.pack(self.format_str, *value_list)
 
 

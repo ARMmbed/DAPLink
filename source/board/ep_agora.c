@@ -22,11 +22,12 @@
 #include "target_board.h"
 #include "target_family.h"
 
-extern target_cfg_t target_device_nrf52840_256;
+extern target_cfg_t target_device_nrf52840;
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0002,
+    .info_version = kBoardInfoVersion,
+    .flags = kEnablePageErase,
     .board_id = "2600",
     .family_id = kNordic_Nrf52_FamilyID,
-    .target_cfg = &target_device_nrf52840_256,
+    .target_cfg = &target_device_nrf52840,
 };

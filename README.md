@@ -1,10 +1,19 @@
 [![DAPLink](/docs/images/daplink-website-logo-link.png)](https://armmbed.github.io/DAPLink/)
 
+**Note:** The master branch requires an Arm Compiler 5 or Keil MDK license to build. See the
+[experimental_compilers](https://github.com/ARMmbed/DAPLink/tree/experimental_compilers) branch for gcc and Arm
+Compiler 6 support. As soon as testing is complete, gcc will become the default compiler and AC5 support will be
+dropped.
+
+----
+
 Arm Mbed DAPLink is an open-source software project that enables programming and debugging application software running on Arm Cortex CPUs. Commonly referred to as interface firmware, DAPLink runs on a secondary MCU that is attached to the SWD or JTAG port of the application MCU. This configuration is found on nearly all development boards. Enumerating as a USB composite device, it creates a bridge between your development computer and the CPU debug access port. DAPLink enables developers with:
+
 * MSC - drag-n-drop programming flash memory
 * CDC - virtual com port for log, trace and terminal emulation
-* HID - CMSIS-DAP compliant debug channel
-* WEBUSB HID - CMSIS-DAP compliant debug channel
+* CMSIS-DAPv2 WinUSB (driver-less vendor-specific bulk) - CMSIS compliant debug channel
+* CMSIS-DAPv1 HID - CMSIS compliant debug channel
+* WebUSB CMSIS-DAP HID - CMSIS compliant debug channel
 
 More features are planned and will show up gradually over time. The project is constantly under heavy development by Arm, its partners, numerous hardware vendors and the open-source community around the world. DAPLink has superseded the mbed CMSIS-DAP interface firmware project. You are free to use and contribute. Enjoy!
 
@@ -38,4 +47,4 @@ Information for setting up a development environment, running the tests or creat
 DAPLink is licensed with the permissive Apache 2.0 license. See the [LICENSE](LICENSE) file for the
 full text of the license.
 
-Copyright © 2006-2019 Arm Ltd
+Copyright © 2006-2021 Arm Ltd

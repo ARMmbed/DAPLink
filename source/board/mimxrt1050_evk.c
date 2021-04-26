@@ -23,10 +23,9 @@
 #include "target_family.h"
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0227",
     .family_id = kNXP_Mimxrt_FamilyID,
-    .flags = kEnablePageErase,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name = 		"RT1050-EVK",
     .daplink_target_url = "http://www.nxp.com/imxrt1050evk",

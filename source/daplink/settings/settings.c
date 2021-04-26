@@ -4,6 +4,8 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright 2019, Cypress Semiconductor Corporation 
+ * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,7 +21,7 @@
  * limitations under the License.
  */
 
-#include "string.h"
+#include <string.h>
 
 #include "settings.h"
 #include "target_config.h"
@@ -48,16 +50,16 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     char assert_file_name[64 + 1];
     uint16_t assert_line;
     uint8_t assert_source;
-    
+
     // Additional debug information on faults
     uint8_t  valid_dumps;
     uint32_t hexdump[ALLOWED_HEXDUMP];  //Alignments checked
-    
+
     // Disable msd support
     uint8_t disable_msd;
-    
-    //Add new entries from here
 
+    //Add new entries from here
+    uint8_t page_erase_enable;
 } cfg_ram_t;
 
 // Configuration RAM
@@ -93,6 +95,7 @@ void config_init()
     config_ram.valid_dumps = config_ram_copy.valid_dumps;
     memcpy(config_ram.hexdump, config_ram_copy.hexdump, sizeof(config_ram_copy.hexdump[0]) * config_ram_copy.valid_dumps);
     config_ram.disable_msd = config_ram_copy.disable_msd;
+    config_ram.page_erase_enable = config_ram_copy.page_erase_enable;
     config_rom_init();
 }
 
@@ -214,7 +217,7 @@ uint8_t config_ram_get_hexdumps(uint32_t **hexdumps)
     if (config_ram.valid_dumps == 0) {
         return 0;
     }
-    
+
     //prevent memcopy check alignment
     *hexdumps = config_ram.hexdump;
     return config_ram.valid_dumps;
@@ -230,3 +233,12 @@ uint8_t config_ram_get_disable_msd(void)
     return config_ram.disable_msd;
 }
 
+void config_ram_set_page_erase(bool page_erase_enable)
+{
+    config_ram.page_erase_enable = page_erase_enable;
+}
+
+bool config_ram_get_page_erase(void)
+{
+    return config_ram.page_erase_enable;
+}

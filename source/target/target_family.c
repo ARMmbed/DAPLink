@@ -25,22 +25,22 @@
 #include "target_family.h"
 #include "target_board.h"
 
-// Stub families 
-const target_family_descriptor_t g_hw_reset_family = { 
-    .family_id = kStub_HWReset_FamilyID, 
-    .default_reset_type = kHardwareReset, 
-}; 
- 
-const target_family_descriptor_t g_sw_vectreset_family = { 
-    .family_id = kStub_SWVectReset_FamilyID, 
-    .default_reset_type = kSoftwareReset, 
-    .soft_reset_type = VECTRESET, 
-}; 
- 
-const target_family_descriptor_t g_sw_sysresetreq_family = { 
-    .family_id = kStub_SWSysReset_FamilyID, 
-    .default_reset_type = kSoftwareReset, 
-    .soft_reset_type = SYSRESETREQ, 
+// Stub families
+const target_family_descriptor_t g_hw_reset_family = {
+    .family_id = kStub_HWReset_FamilyID,
+    .default_reset_type = kHardwareReset,
+};
+
+const target_family_descriptor_t g_sw_vectreset_family = {
+    .family_id = kStub_SWVectReset_FamilyID,
+    .default_reset_type = kSoftwareReset,
+    .soft_reset_type = VECTRESET,
+};
+
+const target_family_descriptor_t g_sw_sysresetreq_family = {
+    .family_id = kStub_SWSysReset_FamilyID,
+    .default_reset_type = kSoftwareReset,
+    .soft_reset_type = SYSRESETREQ,
 };
 
 //Weakly define family
@@ -68,9 +68,12 @@ __attribute__((weak))
 const target_family_descriptor_t g_renesas_family  = {0};
 __attribute__((weak))
 const target_family_descriptor_t g_toshiba_tz_family  = {0};
+__attribute__((weak))
+const target_family_descriptor_t g_ambiq_ama3b1kk  = {0};
+
 
 __attribute__((weak))
-const target_family_descriptor_t *g_families[] = { 
+const target_family_descriptor_t *g_families[] = {
     &g_hw_reset_family,
     &g_sw_vectreset_family,
     &g_sw_sysresetreq_family,
@@ -86,8 +89,9 @@ const target_family_descriptor_t *g_families[] = {
     &g_wiznet_family,
     &g_renesas_family,
     &g_toshiba_tz_family,
-    0 // list terminator 
-}; 
+    &g_ambiq_ama3b1kk,
+    0 // list terminator
+};
 
 __attribute__((weak))
 const target_family_descriptor_t *g_target_family = NULL;
@@ -100,7 +104,7 @@ void init_family(void)
     if (g_target_family != NULL){ //already set
         return;
     }
-    
+
     while (g_families[index]!=0) {
         if (g_families[index]->family_id && (g_families[index]->family_id == family_id)) {
             g_target_family = g_families[index];
@@ -108,23 +112,18 @@ void init_family(void)
         }
         index++;
     }
-    
+
     if(g_target_family == NULL){ //default family
         g_target_family = &g_hw_reset_family;
     }
 }
 
-uint8_t target_family_valid(void)
-{
-    return (g_target_family != NULL);
-}
-
-uint8_t target_set_state(TARGET_RESET_STATE state)
+uint8_t target_set_state(target_state_t state)
 {
     if (g_board_info.target_set_state) { //target specific
         g_board_info.target_set_state(state);
     }
-    if (g_target_family) { 
+    if (g_target_family) {
         if (g_target_family->target_set_state) {
             //customize target state
             return g_target_family->target_set_state(state);
@@ -140,7 +139,7 @@ uint8_t target_set_state(TARGET_RESET_STATE state)
                 return swd_set_target_state_sw(state);
             }else {
                 return 1;
-            } 
+            }
         }
     }else{
         return 0;

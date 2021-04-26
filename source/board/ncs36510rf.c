@@ -24,7 +24,7 @@ static void prerun_board_config()
 }
 
 const board_info_t g_board_info = {
-    .infoVersion = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "1200",
     .family_id = kStub_SWSysReset_FamilyID,
     .prerun_board_config = prerun_board_config,

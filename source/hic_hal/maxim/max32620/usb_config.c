@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "util.h"
+
 /*------------------------------------------------------------------------------
  *      USB Device Configuration
  *----------------------------------------------------------------------------*/
@@ -393,7 +396,7 @@
 
 #define USBD_IF_NUM_MAX             (USBD_BULK_ENABLE+USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
 #define USBD_MULTI_IF               (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE|USBD_BULK_ENABLE))
-#define MAX(x, y)                   (((x) < (y)) ? (y) : (x))
+// #define MAX(x, y)                   (((x) < (y)) ? (y) : (x))
 #define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
 #define USBD_EP_NUM_CALC1           MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
 #define USBD_EP_NUM_CALC2           MAX((USBD_ADC_ENABLE    *(USBD_ADC_EP_ISOOUT    )), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_INTIN)))
@@ -403,7 +406,7 @@
 #define USBD_EP_NUM_CALC6           MAX(USBD_EP_NUM_CALC4, USBD_EP_NUM_CALC5)
 #define USBD_EP_NUM_CALC7           MAX((USBD_BULK_ENABLE*(USBD_BULK_EP_BULKIN)), (USBD_BULK_ENABLE*(USBD_BULK_EP_BULKOUT)))
 #define USBD_EP_NUM                 MAX(USBD_EP_NUM_CALC6, USBD_EP_NUM_CALC7)
- 
+
 #if (USBD_EP_NUM > 7)
 #error "Max32620 only have 8 individual endpoints including EP0!"
 #endif
@@ -480,7 +483,7 @@
 #define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 #define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
 #define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_BULK_ENABLE)
- 
+
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)
 #define USBD_HID_MAX_PACKET       ((USBD_HID_HS_WMAXPACKETSIZE > USBD_HID_WMAXPACKETSIZE) ? USBD_HID_HS_WMAXPACKETSIZE : USBD_HID_WMAXPACKETSIZE)
@@ -538,7 +541,7 @@
 #define USBD_MAX_PACKET_CALC1     ((USBD_ADC_MAX_PACKET   > USBD_CDC_ACM_MAX_PACKET  ) ? (USBD_ADC_MAX_PACKET  ) : (USBD_CDC_ACM_MAX_PACKET  ))
 #define USBD_MAX_PACKET_CALC2     ((USBD_MAX_PACKET_CALC0 > USBD_MAX_PACKET_CALC1    ) ? (USBD_MAX_PACKET_CALC0) : (USBD_MAX_PACKET_CALC1    ))
 #define USBD_MAX_PACKET_CALC3     ((USBD_BULK_MAX_PACKET > USBD_CDC_ACM_MAX_PACKET1 ) ? (USBD_BULK_MAX_PACKET) : (USBD_CDC_ACM_MAX_PACKET1 ))
-#define USBD_MAX_PACKET           ((USBD_MAX_PACKET_CALC3 > USBD_MAX_PACKET_CALC2    ) ? (USBD_MAX_PACKET_CALC3) : (USBD_MAX_PACKET_CALC2    )) 
+#define USBD_MAX_PACKET           ((USBD_MAX_PACKET_CALC3 > USBD_MAX_PACKET_CALC2    ) ? (USBD_MAX_PACKET_CALC3) : (USBD_MAX_PACKET_CALC2    ))
 
 /*------------------------------------------------------------------------------
  *      USB Config Functions

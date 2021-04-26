@@ -19,8 +19,7 @@
  * limitations under the License.
  */
 
-#include "stdbool.h"
-#include "ctype.h"
+#include <ctype.h>
 
 #include "main.h"
 #include "cmsis_os2.h"
@@ -34,7 +33,6 @@
 #include "util.h"
 #include "version_git.h"
 #include "IO_Config.h"
-#include "target_reset.h"
 #include "file_stream.h"
 #include "error.h"
 
@@ -636,7 +634,7 @@ static void transfer_reset_file_info()
           file_transfer_state = default_transfer_state;
           abort_remount();
     }
-    
+
 }
 
 // Update the tranfer state with new information

@@ -21,7 +21,6 @@
 
 #include "error.h"
 #include "util.h"
-#include "macro.h"
 #include "compiler.h"
 
 static const char *const error_message[] = {
@@ -223,7 +222,7 @@ static error_type_t error_type[] = {
     ERROR_TYPE_INTERFACE,
 };
 
-COMPILER_ASSERT(ERROR_COUNT == ELEMENTS_IN_ARRAY(error_message));
+COMPILER_ASSERT(ERROR_COUNT == ARRAY_SIZE(error_message));
 
 const char *error_get_string(error_t error)
 {
