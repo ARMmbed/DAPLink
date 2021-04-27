@@ -81,6 +81,9 @@ module:
     hic_m48ssidae: &module_hic_m48ssidae
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/m48ssidae.yaml
+    hic_stm32f072cb: &module_hic_stm32f072cb
+        - records/rtos/rtos-cm0.yaml
+        - records/hic_hal/stm32f072cb.yaml
 
 projects:
     kl26z_bl:
