@@ -92,16 +92,16 @@ static void _USBD_ConfigEP(uint16_t ep_addr, uint8_t ep_type, uint16_t ep_buf_si
     
     switch (ep_type)
     {
-    case PCD_EP_TYPE_CTRL:
+    case EP_TYPE_CTRL:
       PCD_SET_EPTYPE(USB, ep->num, USB_EP_CONTROL);
       break;
-    case PCD_EP_TYPE_BULK:
+    case EP_TYPE_BULK:
       PCD_SET_EPTYPE(USB, ep->num, USB_EP_BULK);
       break;
-    case PCD_EP_TYPE_INTR:
+    case EP_TYPE_INTR:
       PCD_SET_EPTYPE(USB, ep->num, USB_EP_INTERRUPT);
       break;
-    case PCD_EP_TYPE_ISOC:
+    case EP_TYPE_ISOC:
       PCD_SET_EPTYPE(USB, ep->num, USB_EP_ISOCHRONOUS);
       break;
     default:
@@ -171,22 +171,22 @@ void USBD_Reset(void)
         PCD_EPTypeDef *ep = USBD_GetEP(index | 0x80);
         ep->is_in = 1;
         ep->num = index;
-        ep->type = PCD_EP_TYPE_CTRL;
+        ep->type = EP_TYPE_CTRL;
         ep->maxpacket = 0;
         ep->xfer_buff = 0;
         ep->xfer_len = 0;
         ep = USBD_GetEP(index);
         ep->is_in = 0;
         ep->num = index;
-        ep->type = PCD_EP_TYPE_CTRL;
+        ep->type = EP_TYPE_CTRL;
         ep->maxpacket = 0;
         ep->xfer_buff = 0;
         ep->xfer_len = 0;
     }
 
     Buf_Offset = USBD_BTABLE_SIZE;
-    _USBD_ConfigEP(0x00, PCD_EP_TYPE_CTRL, USBD_MAX_PACKET0);
-    _USBD_ConfigEP(0x80, PCD_EP_TYPE_CTRL, USBD_MAX_PACKET0);
+    _USBD_ConfigEP(0x00, EP_TYPE_CTRL, USBD_MAX_PACKET0);
+    _USBD_ConfigEP(0x80, EP_TYPE_CTRL, USBD_MAX_PACKET0);
     USBD_EnableEP(0x00);
     USBD_EnableEP(0x80);
     USB_EnableInt(USB);
@@ -231,16 +231,16 @@ void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
     switch (pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK)
     {
     case USB_ENDPOINT_TYPE_CONTROL:
-        type = PCD_EP_TYPE_CTRL;
+        type = EP_TYPE_CTRL;
         break;
     case USB_ENDPOINT_TYPE_ISOCHRONOUS:
-        type = PCD_EP_TYPE_ISOC;
+        type = EP_TYPE_ISOC;
         break;
     case USB_ENDPOINT_TYPE_BULK:
-        type = PCD_EP_TYPE_BULK;
+        type = EP_TYPE_BULK;
         break;
     case USB_ENDPOINT_TYPE_INTERRUPT:
-        type = PCD_EP_TYPE_INTR;
+        type = EP_TYPE_INTR;
         break;
     }
     

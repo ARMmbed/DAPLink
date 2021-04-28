@@ -123,7 +123,6 @@ HAL_StatusTypeDef HAL_RS485Ex_Init(UART_HandleTypeDef *huart, uint32_t Polarity,
 void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart);
 
 #endif /* USART_CR1_UESM */
-
 /**
   * @}
   */
@@ -140,6 +139,11 @@ HAL_StatusTypeDef HAL_UARTEx_DisableStopMode(UART_HandleTypeDef *huart);
 
 #endif/* USART_CR1_UESM */
 HAL_StatusTypeDef HAL_MultiProcessorEx_AddressLength_Set(UART_HandleTypeDef *huart, uint32_t AddressLength);
+
+
+HAL_StatusTypeDef HAL_UARTEx_ReceiveToIdle(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint16_t *RxLen, uint32_t Timeout);
+HAL_StatusTypeDef HAL_UARTEx_ReceiveToIdle_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+HAL_StatusTypeDef HAL_UARTEx_ReceiveToIdle_DMA(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
 
 
 /**
@@ -472,7 +476,7 @@ HAL_StatusTypeDef HAL_MultiProcessorEx_AddressLength_Set(UART_HandleTypeDef *hua
   do {                                                                \
     if ((__HANDLE__)->Init.WordLength == UART_WORDLENGTH_9B)          \
     {                                                                 \
-      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)          \
+      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)              \
       {                                                               \
         (__HANDLE__)->Mask = 0x01FFU ;                                \
       }                                                               \
@@ -483,7 +487,7 @@ HAL_StatusTypeDef HAL_MultiProcessorEx_AddressLength_Set(UART_HandleTypeDef *hua
     }                                                                 \
     else if ((__HANDLE__)->Init.WordLength == UART_WORDLENGTH_8B)     \
     {                                                                 \
-      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)          \
+      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)              \
       {                                                               \
         (__HANDLE__)->Mask = 0x00FFU ;                                \
       }                                                               \
@@ -494,7 +498,7 @@ HAL_StatusTypeDef HAL_MultiProcessorEx_AddressLength_Set(UART_HandleTypeDef *hua
     }                                                                 \
     else if ((__HANDLE__)->Init.WordLength == UART_WORDLENGTH_7B)     \
     {                                                                 \
-      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)          \
+      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)              \
       {                                                               \
         (__HANDLE__)->Mask = 0x007FU ;                                \
       }                                                               \
@@ -514,7 +518,7 @@ HAL_StatusTypeDef HAL_MultiProcessorEx_AddressLength_Set(UART_HandleTypeDef *hua
   do {                                                                \
     if ((__HANDLE__)->Init.WordLength == UART_WORDLENGTH_9B)          \
     {                                                                 \
-      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)          \
+      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)              \
       {                                                               \
         (__HANDLE__)->Mask = 0x01FFU ;                                \
       }                                                               \
@@ -525,7 +529,7 @@ HAL_StatusTypeDef HAL_MultiProcessorEx_AddressLength_Set(UART_HandleTypeDef *hua
     }                                                                 \
     else if ((__HANDLE__)->Init.WordLength == UART_WORDLENGTH_8B)     \
     {                                                                 \
-      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)          \
+      if ((__HANDLE__)->Init.Parity == HAL_UART_PARITY_NONE)              \
       {                                                               \
         (__HANDLE__)->Mask = 0x00FFU ;                                \
       }                                                               \
