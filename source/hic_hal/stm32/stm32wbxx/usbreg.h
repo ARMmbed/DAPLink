@@ -29,10 +29,10 @@
 
 #define REG(x)  (*((volatile unsigned int *)(x)))
 	
-#define PERIPH_BASE           0x40000000UL /*!< Peripheral base address in the alias region */
+//#define PERIPH_BASE           0x40000000UL /*!< Peripheral base address in the alias region */
 #define APB1PERIPH_BASE       PERIPH_BASE
 
-#define USB_BASE               (APB1PERIPH_BASE + 0x00005C00UL) /*!< USB_IP Peripheral Registers base address */
+//#define USB_BASE               (APB1PERIPH_BASE + 0x00005C00UL) /*!< USB_IP Peripheral Registers base address */
 #define USB_PMA_ADDR           (APB1PERIPH_BASE + 0x00006000UL) /*!< USB_IP Packet Memory Area base address */
 
 /* Common Registers */

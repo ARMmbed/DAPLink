@@ -50,11 +50,12 @@ _Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;
 /* Specify the memory areas */
 MEMORY
 {
-FLASH (rx)                 : ORIGIN = 0x08000000, LENGTH = 512K
-RAM1 (xrw)                 : ORIGIN = 0x20000004, LENGTH = 0x2FFFC
-RAM_SHARED (xrw)           : ORIGIN = 0x20030000, LENGTH = 10K
+  m_interrupts          (rx)  : ORIGIN = DAPLINK_ROM_CONFIG_ADMIN_START, LENGTH = 0x400
+  m_text                (rx)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = DAPLINK_ROM_APP_SIZE
+  m_cfgrom              (rw)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
+  m_data                (rw)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
+  m_cfgram              (rw)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
 }
-
 /* Define output sections */
 SECTIONS
 {
@@ -64,7 +65,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+  } >m_interrupts
 
   /* The program code and other data goes into FLASH */
   .text :
@@ -81,7 +82,7 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >FLASH
+  } >m_text
 
   /* Constant data goes into FLASH */
   .rodata :
@@ -90,42 +91,43 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH
+  } >m_text
 
-  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
+  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >m_text
   .ARM : {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  } >FLASH
+  }  >m_text
 
   .preinit_array     :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  } >FLASH
+  } >m_text
   .init_array :
   {
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
-  } >FLASH
+  } >m_text
   .fini_array :
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  } >FLASH
+  } >m_text
 
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
-  /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data :
-  {
+    __DATA_ROM = .;
+  /* Initialized data sections into "RAM" Ram type memory */
+  .data : AT(__DATA_ROM)
+    {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
     *(.data)           /* .data sections */
@@ -135,9 +137,29 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM1 AT> FLASH
+  }  >m_data
 
   /* Uninitialized data section */
+   
+  __DATA_END = __DATA_ROM + (_edata - _sdata);
+ 
+  .fill __DATA_END :
+  {
+    FILL(0xffffffff)
+    . = ALIGN(4);
+    . += 0x0800C000 + 0x00013C00 - __DATA_END - 4;
+    LONG(0x55555555)
+  } > m_text
+
+ text_end = ORIGIN(m_text) + LENGTH(m_text);
+  ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
+
+  .cfgrom (NOLOAD) :
+  {
+    *(cfgrom)
+  } >m_cfgrom
+  
+  /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
   .bss :
   {
@@ -151,7 +173,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM1
+  } >m_data
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -162,7 +184,11 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM1
+  } > m_data 
+ .cfgram (NOLOAD) :
+  {
+    *(cfgram)
+  } >m_cfgram
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
@@ -173,7 +199,4 @@ SECTIONS
   }
 
   .ARM.attributes 0       : { *(.ARM.attributes) }
-   MAPPING_TABLE (NOLOAD) : { *(MAPPING_TABLE) } >RAM_SHARED
-   MB_MEM1 (NOLOAD)       : { *(MB_MEM1) } >RAM_SHARED
-   MB_MEM2 (NOLOAD)       : { _sMB_MEM2 = . ; *(MB_MEM2) ; _eMB_MEM2 = . ; } >RAM_SHARED
 }

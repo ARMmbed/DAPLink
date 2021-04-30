@@ -44,10 +44,6 @@ defined in linker script */
 .word	_sbss
 /* end address for the .bss section. defined in linker script */
 .word	_ebss
-/* start address for the .MB_MEM2 section. defined in linker script */
-.word _sMB_MEM2
-/* end address for the .MB_MEM2 section. defined in linker script */
-.word _eMB_MEM2
 
 /* INIT_BSS macro is used to fill the specified region [start : end] with zeros */
 .macro INIT_BSS start, end
@@ -101,7 +97,7 @@ Reset_Handler:
 
 /* Zero fill the bss segments. */
   INIT_BSS _sbss, _ebss
-  INIT_BSS _sMB_MEM2, _eMB_MEM2
+ /* INIT_BSS _sMB_MEM2, _eMB_MEM2 */
 
 /* Call static constructors */
   bl __libc_init_array

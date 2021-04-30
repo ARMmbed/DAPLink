@@ -24,7 +24,7 @@
 #include "gpio.h"
 #include "daplink.h"
 #include "util.h"
-#include "stm32wbxx_hal_tim.h"
+#include "stm32wbxx_hal_tim.h" //Ashley
 
 static TIM_HandleTypeDef timer;
 
@@ -111,7 +111,7 @@ static void output_clock_enable(void)
     }
 
     return;
-}
+} 
 
 void gpio_init(void)
 {
