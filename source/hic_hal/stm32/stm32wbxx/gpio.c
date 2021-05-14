@@ -24,7 +24,7 @@
 #include "gpio.h"
 #include "daplink.h"
 #include "util.h"
-#include "stm32wbxx_hal_tim.h" //Ashley
+//#include "stm32wbxx_hal_tim.h" //Ashley
 
 static TIM_HandleTypeDef timer;
 
@@ -41,11 +41,11 @@ static void busy_wait(uint32_t cycles)
 static uint32_t tim1_clk_div(uint32_t apb2clkdiv)
 {
     switch (apb2clkdiv) {
-        case RCC_CFGR_PPRE2_2 :
+        case LL_RCC_APB2_DIV_2 :
             return 1;
-        case (RCC_CFGR_PPRE2_2 | RCC_CFGR_PPRE2_0):
+        case (LL_RCC_APB2_DIV_4):
             return 2;
-        case (RCC_CFGR_PPRE2_2 | RCC_CFGR_PPRE2_1):
+        case (LL_RCC_APB2_DIV_8 ):
             return 4;
         default: // RCC_CFGR_PPRE2_DIV1
             return 1;

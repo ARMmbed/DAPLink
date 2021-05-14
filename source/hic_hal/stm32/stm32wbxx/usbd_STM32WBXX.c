@@ -147,7 +147,7 @@ void __SVC_1(void)
 void          USBD_IntrEna(void)
 {
 #endif
-//    NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn); //Ashley
+   NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
 }
 
 
@@ -196,7 +196,7 @@ void USBD_Connect(BOOL con)
 
 void USBD_Reset(void)
 {
- //   NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn); //Ashley
+    NVIC_DisableIRQ(USB_LP_IRQn); //Ashley
 
     /* Double Buffering is not yet supported                                    */
     ISTR = 0;                             /* Clear Interrupt Status             */

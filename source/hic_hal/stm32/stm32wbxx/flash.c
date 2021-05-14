@@ -109,7 +109,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 
     util_assert(sz % 4 == 0);
     for (i = 0; i < sz / 4; i++) {
-        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, adr + i * 4, buf[i]) != HAL_OK) {
+        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, adr + i * 4, buf[i]) != HAL_OK) {
             ret = 1;
             break;
         }

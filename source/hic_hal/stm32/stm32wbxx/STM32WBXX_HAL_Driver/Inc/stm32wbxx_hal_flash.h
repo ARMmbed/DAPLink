@@ -231,6 +231,7 @@ typedef struct
   * @{
   */
 #define FLASH_TYPEPROGRAM_DOUBLEWORD    FLASH_CR_PG     /*!< Program a double-word (64-bit) at a specified address.*/
+#define FLASH_TYPEPROGRAM_WORD          (0x02U)
 #define FLASH_TYPEPROGRAM_FAST          FLASH_CR_FSTPG  /*!< Fast program a 64 row double-word (64-bit) at a specified address.
                                                              And another 64 row double-word (64-bit) will be programmed */
 /**
