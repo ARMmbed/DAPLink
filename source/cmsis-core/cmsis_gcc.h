@@ -175,7 +175,7 @@ __STATIC_FORCEINLINE __NO_RETURN void __cmsis_start(void)
 #endif
 
 #ifndef __VECTOR_TABLE
-#define __VECTOR_TABLE            __Vectors
+#define __VECTOR_TABLE            __isr_vector
 #endif
 
 #ifndef __VECTOR_TABLE_ATTRIBUTE
