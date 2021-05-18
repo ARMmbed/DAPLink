@@ -32,6 +32,8 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc
     gcc_arm:
+        linker_file:
+            - source/hic_hal/nxp/lpc4322/gcc/lpc4322.ld
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/gcc
