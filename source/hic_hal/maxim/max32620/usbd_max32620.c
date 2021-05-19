@@ -403,7 +403,12 @@ U32 USBD_ReadEP (U32 EPNum, U8 *pData, U32 size)
             cnt = size;
         }
     setup_waiting = 0;
+#if defined ( __GNUC__)
+    ((U32 *)pData)[0] = MXC_USB->setup0;
+    ((U32 *)pData)[1] = MXC_USB->setup1;
+#else
     memcpy(pData, (void*)&MXC_USB->setup0, cnt);
+#endif /* __GNUC__ */
     sup = (USB_SETUP_PACKET*)pData;
 
     if ( (sup->bmRequestType.Dir == REQUEST_HOST_TO_DEVICE) && (sup->wLength > 0) ) {
