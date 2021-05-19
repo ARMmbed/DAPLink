@@ -149,6 +149,12 @@
 #define WEBUSB_INTERFACE 1
 #endif
 
+#ifndef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#define WINUSB_INTERFACE 1
+#endif
+
 #define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           1
 #define USBD_HID_EP_INTOUT          1
