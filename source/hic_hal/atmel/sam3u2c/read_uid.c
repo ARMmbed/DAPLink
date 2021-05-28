@@ -40,7 +40,11 @@ void read_unique_id(uint32_t *id)
     id[3] = unique_id[3];
 }
 
+#if defined (  __GNUC__  )
+__attribute__((long_call, section(".data")))
+#else
 __attribute__((section("ram_func")))
+#endif
 void create_unique_id(void)
 {
     cortex_int_state_t state;
