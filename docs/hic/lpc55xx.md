@@ -18,6 +18,8 @@ to one core, 320 KB Flash and 256 KB RAM.
 | SRAM     | 256 KB | 0x2000_0000 | 0x2004_0000 |
 | USB RAM  |  16 KB | 0x4010_0000 | 0x4010_4000 |
 
+Bootloader size is 64 KB
+
 ## DAPLink default pin assignment 
 
 Reference design is based on [MCU-Link](https://www.nxp.com/design/development-boards/lpcxpresso-boards/mcu-link-debug-probe:MCU-LINK).

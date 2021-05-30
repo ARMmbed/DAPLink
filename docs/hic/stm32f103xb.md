@@ -14,23 +14,25 @@ Based on STM32F103CBT6 chip ([Datasheet](https://www.st.com/resource/en/datashee
 | Flash    | 128 KB | 0x0800_0000 | 0x0802_0000 |
 | SRAM     | 20 KB  | 0x2000_0000 | 0x2000_5000 |
 
+Bootloader size is 48 KB
+
 ## DAPLink default pin assignment 
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|
 | SWD/JTAG    |
 | SWCLK / TCK |  O  | PB13    |  26 |
-| SWDIO / TDO |  O  | PB14    |  27 |
-| SWDIO / TDO |  I  | PB12    |  25 |
+| SWDIO / TMS |  O  | PB14    |  27 |
+| SWDIO / TMS |  I  | PB12    |  25 |
 | SWO / TDO   |  I  | PA10    |  31 |
 | nRESET      |  O  | PB0     |  18 |
 | UART (CDC)  |
 | UART RX     |  I  | PA2     |  12 |
 | UART TX     |  O  | PA3     |  13 |
 | Button      |
-| Button      |  I  | PB15    |  28 |
+| NF-RST But. |  I  | PB15    |  28 |
 | LEDs        |
-| Connect LED |  O  | PB6     |  42 |
+| Connect. LED|  O  | PB6     |  42 |
 | HID LED     |  O  | PA9     |  30 |
 | CDC LED     |  O  | PA9     |  30 |
 | MSC LED     |  O  | PA9     |  30 |

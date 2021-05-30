@@ -14,14 +14,16 @@ Based on MKL26Z128VFM4 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet
 | Flash    | 128 KB | 0x0000_0000 | 0x0002_0000 |
 | SRAM     |  16 KB | 0x1FFF_F000 | 0x2000_3000 |
 
+Bootloader size is 32 KB
+
 ## DAPLink default pin assignment 
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|
-| SWD/JTAG    |
-| SWCLK / TCK |  O  | PTC5    |  26 |
-| SWDIO / TMS | I/O | PTC6    |  27 |
-| SWO / TDO   |  I  | PTC7    |  28 |
+| SWD         |
+| SWCLK       |  O  | PTC5    |  26 |
+| SWDIO       | I/O | PTC6    |  27 |
+| SWO         |  I  | PTC7    |  28 |
 | nRESET      |  O  | PTC8    |  22 |
 | UART        |
 | UART RX     |  I  | PTC3    |  24 |

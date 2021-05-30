@@ -14,6 +14,8 @@ Based on ATSAM3U2C chip ([Datasheet](https://ww1.microchip.com/downloads/en/Devi
 | Flash    | 128 KB | 0x0000_0000 | 0x0001_0000 |
 | SRAM     |  32 KB | 0x2007_C000 | 0x2008_3FFF |
 
+Bootloader size is 32 KB
+
 ## DAPLink default pin assignment 
 
 | Signal      | I/O | Symbol  | Pin |

@@ -14,6 +14,8 @@ Based on MKL27Z256VFM4 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet
 | Flash    | 128 KB | 0x0000_0000 | 0x0002_0000 |
 | SRAM     |  32 KB | 0x1FFF_E000 | 0x2000_6000 |
 
+Bootloader size is 32 KB
+
 ## DAPLink default pin assignment 
 
 | Signal      | I/O | Symbol  | Pin |

@@ -14,6 +14,8 @@ Based on MK20DX128VFM5 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet
 | Flash    | 128 KB | 0x0000_0000 | 0x0002_0000 |
 | SRAM     |  16 KB | 0x1FFF_E000 | 0x2000_0000 |
 
+Bootloader size is 32 KB
+
 ## DAPLink default pin assignment 
 
 | Signal      | I/O | Symbol  | Pin |
