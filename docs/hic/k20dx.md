@@ -1,6 +1,6 @@
 # k20dx HIC
 
-Based on MK20DX128VFM5 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet/K20P32M50SF0.pdf):
+Based on MK20DX128VFM5 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet/K20P32M50SF0.pdf)):
 - Cortex-M4 50 Mhz
 - 160 KB Flash
 - 16 KB RAM
