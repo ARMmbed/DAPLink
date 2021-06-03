@@ -22,13 +22,11 @@
 #ifndef DAPLINK_ADDR_H
 #define DAPLINK_ADDR_H
 
-#include "pre_stm32f0.h"
+#define DAPLINK_ROM_START               0x08000000
+#define DAPLINK_ROM_SIZE                0x00020000  // 128 Kb
 
-#define DAPLINK_ROM_START               STM32F0_ROM_START
-#define DAPLINK_ROM_SIZE                STM32F0_ROM_SIZE
-
-#define DAPLINK_RAM_START               STM32F0_RAM_START
-#define DAPLINK_RAM_SIZE                STM32F0_RAM_SIZE
+#define DAPLINK_RAM_START               0x20000000
+#define DAPLINK_RAM_SIZE                0x00004000  //  16 Kb
 
 /* ROM sizes */
 /* stm32f072 can use STDFU */
@@ -54,7 +52,7 @@
 #define DAPLINK_RAM_SHARED_SIZE         0x00000100
 
 /* Flash Programming Info */
-#define DAPLINK_SECTOR_SIZE             STM32F0_SECTOR_SIZE
+#define DAPLINK_SECTOR_SIZE             0x800
 #define DAPLINK_MIN_WRITE_SIZE          2
 
 /* Current build */
