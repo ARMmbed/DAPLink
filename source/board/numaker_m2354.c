@@ -1,9 +1,9 @@
 /**
- * @file    numaker_pfm_m487km.c
- * @brief   board ID for the NuMaker-PFM-M487KM board
+ * @file    numaker_m2354.c
+ * @brief   board ID for the NuMaker-M2354 board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2020 Nuvoton Technology Corp. All Rights Reserved
+ * Copyright (c) 2021 Nuvoton Technology Corp. All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,7 +24,7 @@
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id    = "1304",
+    .board_id    = "1312",
     .family_id   = kStub_SWSysReset_FamilyID,
     .flags       = kEnablePageErase,
     .target_cfg  = &target_device,
