@@ -1,0 +1,5 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_stm32f072b_disco

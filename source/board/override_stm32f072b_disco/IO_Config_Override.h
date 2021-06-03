@@ -1,9 +1,9 @@
 /**
- * @file    IO_Config.h
- * @brief
+ * @file    IO_Config_Override.c
+ * @brief   Alternative IO for STM32F02CB based Hardware Interface Circuit
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,14 +19,6 @@
  * limitations under the License.
  */
 
-// Override all defines if IO_CONFIG_OVERRIDE is defined
-#ifdef IO_CONFIG_OVERRIDE
-#include "IO_Config_Override.h"
-#ifndef __IO_CONFIG_H__
-#define __IO_CONFIG_H__
-#endif
-#endif
-
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
@@ -34,7 +26,52 @@
 #include "compiler.h"
 #include "daplink.h"
 
+// This GPIO configuration is only valid for the STM32F072CB HIC
+COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F072CB);
+
 #define __HAL_RCC_USB_GPIO_CLK_ENABLE __HAL_RCC_GPIOA_CLK_ENABLE
+
+/*
+ * - #RESET (PA1  / Pin 11) - 
+ * - SWCLK  (PA2  / Pin 12) = PA5
+ * - SWO    (PA3  / Pin 13) = PA15
+ * - SWDIO  (PA4  / Pin 14) -
+ * - TXD    (PA9  / Pin 30) -
+ * - RXD    (PA10 / Pin 31) -
+ * - CTS    (PA7  / Pin 17) X
+ * - RTS    (PA6  / Pin 16) X 
+ */
+
+// LED_RED    / LD3 : PC6
+// LED_ORANGE / LD4 : PC8
+// LED_GREEN  / LD5 : PC9
+// LED_BLUE   / LD6 : PC7
+
+#define USER_BUTTON_PIN                GPIO_PIN_0                       /* PA0 */
+#define USER_BUTTON_GPIO_PORT          GPIOA
+#define USER_BUTTON_GPIO_CLK_ENABLE()  __HAL_RCC_GPIOA_CLK_ENABLE()
+#define USER_BUTTON_GPIO_CLK_DISABLE() __HAL_RCC_GPIOA_CLK_DISABLE()
+#define USER_BUTTON_EXTI_IRQn          EXTI0_1_IRQn
+
+#define LED3_PIN                         GPIO_PIN_6
+#define LED3_GPIO_PORT                   GPIOC
+#define LED3_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOC_CLK_ENABLE()
+#define LED3_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOC_CLK_DISABLE()
+
+#define LED4_PIN                         GPIO_PIN_8
+#define LED4_GPIO_PORT                   GPIOC
+#define LED4_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOC_CLK_ENABLE()
+#define LED4_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOC_CLK_DISABLE()
+
+#define LED5_PIN                         GPIO_PIN_9
+#define LED5_GPIO_PORT                   GPIOC
+#define LED5_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOC_CLK_ENABLE()
+#define LED5_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOC_CLK_DISABLE()
+
+#define LED6_PIN                         GPIO_PIN_7
+#define LED6_GPIO_PORT                   GPIOC
+#define LED6_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOC_CLK_ENABLE()
+#define LED6_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOC_CLK_DISABLE()
 
 //==============================================================================
 // Debug Port I/O Pins
@@ -100,8 +137,6 @@
         __HAL_RCC_GPIOC_CLK_ENABLE();   \
     } while (0)
 
-#endif
-
 //==============================================================================
 // GOBtl Button GPIO Pin
 //==============================================================================
@@ -122,3 +157,4 @@
 #define USART_RX_PIN		GPIO_PIN_10
 #define USART_IRQn			USART1_IRQn
 
+#endif
