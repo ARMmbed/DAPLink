@@ -94,3 +94,27 @@ uint8_t validate_hexfile(const uint8_t *buf)
         return ((buf[0] == ':') && ((buf[8] == '0') || (buf[8] == '2') || (buf[8] == '3') || (buf[8] == '4') || (buf[8] == '5'))) ? 1 : 0;
     }
 }
+
+uint8_t validate_uf2file(const uint8_t *buf)
+{
+#if 0
+    if (g_target_family && g_target_family->validate_uf2file) {
+        return g_target_family->validate_uf2file(buf);
+    }
+#endif
+    // look here for known uf2 record
+    // First magic number, UF2 signature
+    if ((buf[0] != 0x55) || (buf[1] != 0x46) || (buf[2] != 0x32) || (buf[3] != 0x0A)) {
+        return 0;
+    }
+    // Second magic number, 0x9E5D5157
+    if ((buf[4] != 0x57) || (buf[5] != 0x51) || (buf[6] != 0x5D) || (buf[7] != 0x9E)) {
+        return 0;
+    }
+    // Final magic number, 0x0AB16F30
+    if ((buf[508] != 0x30) || (buf[509] != 0x6F) || (buf[510] != 0xB1) || (buf[511] != 0x0A)) {
+        return 0;
+    }
+    // TODO validate check sum , assuming 512-byte granularity .
+    return 1;
+}

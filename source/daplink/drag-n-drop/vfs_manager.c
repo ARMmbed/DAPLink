@@ -138,6 +138,7 @@ static uint32_t time_usb_idle;
 
 static osMutexId_t sync_mutex;
 static osThreadId_t sync_thread = 0;
+static bool sync_at_first_call = false;
 
 // Synchronization functions
 static void sync_init(void);
@@ -352,12 +353,17 @@ void usbd_msc_write_sect(uint32_t sector, uint8_t *buf, uint32_t num_of_sectors)
 
 static void sync_init(void)
 {
-    sync_thread = osThreadGetId();
+    sync_at_first_call = true;
+    sync_thread = 0;
     sync_mutex = osMutexNew(NULL);
 }
 
 static void sync_assert_usb_thread(void)
 {
+    if (sync_at_first_call) {
+        sync_at_first_call = false;
+        sync_thread = osThreadGetId();
+    }
     util_assert(osThreadGetId() == sync_thread);
 }
 
