@@ -47,7 +47,7 @@ uint8_t validate_bin_nvic_base(const uint8_t *buf)
         // test the initial SP value
         memcpy(&nvic_val, buf + 0, sizeof(nvic_val));
 
-        region_info_t * region = g_board_info.target_cfg->ram_regions;
+        const region_info_t * region = g_board_info.target_cfg->ram_regions;
         for (; region->start != 0 || region->end != 0; ++region) {
             if (1 == test_range(nvic_val, region->start, region->end)) {
                 in_range = 1;
@@ -65,7 +65,7 @@ uint8_t validate_bin_nvic_base(const uint8_t *buf)
         for (; i <= 12; i += 4) {
             in_range = 0;
             memcpy(&nvic_val, buf + i, sizeof(nvic_val));
-            region_info_t * region = g_board_info.target_cfg->flash_regions;
+            const region_info_t * region = g_board_info.target_cfg->flash_regions;
             for (; region->start != 0 || region->end != 0; ++region) {
                 if (1 == test_range(nvic_val, region->start, region->end)) {
                     in_range = 1;

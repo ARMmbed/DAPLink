@@ -153,7 +153,7 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
             }
         } else if (FLASH_DECODER_TYPE_TARGET == type) {
             if (g_board_info.target_cfg) {
-                region_info_t * region = g_board_info.target_cfg->flash_regions;
+                const region_info_t * region = g_board_info.target_cfg->flash_regions;
                 for (; region->start != 0 || region->end != 0; ++region) {
                     if (kRegionIsDefault == region->flags) {
                         flash_start_local = region->start;
@@ -396,7 +396,7 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
         case FLASH_DECODER_TYPE_TARGET:
             //only if we are sure it is a bin for the target; without check unordered hex files will cause to terminate flashing
             if (flash_type_target_bin && g_board_info.target_cfg) {
-                region_info_t * region = g_board_info.target_cfg->flash_regions;
+                const region_info_t * region = g_board_info.target_cfg->flash_regions;
                 for (; region->start != 0 || region->end != 0; ++region) {
                     if (addr >= region->start &&  addr<=region->end) {
                         end_addr = region->end;

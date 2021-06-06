@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/generic_nrf52840.c
+        family:
+            - source/family/nordic/nrf52/target.c
+            - source/family/nordic/target_reset_nrf52.c
