@@ -10,6 +10,7 @@
     '0250': 0250_lpc11u35_96b_nitrogen_0x0000.bin
     0249: 0249_lpc11u35_96b_nitrogen_0x0000.bin
     0248: 0248_lpc11u35_96b_nitrogen_0x0000.bin
+    '0247': 0247_lpc11u35_96b_nitrogen_0x0000.bin
   instructions: lpc11u35
 - name: CC3220SF
   product_code: '3300'
@@ -31,6 +32,7 @@
     '0250': 0250_lpc11u35_dipdap_sdt32429b_0x0000.bin
     0249: 0249_lpc11u35_dipdap_sdt32429b_0x0000.bin
     0248: 0248_lpc11u35_dipdap_sdt32429b_0x0000.bin
+    '0247': 0247_lpc11u35_dipdap_sdt32429b_0x0000.bin
   instructions: lpc11u35
 - name: DIPDAP_SDT32439B
   product_code: '3110'
@@ -43,6 +45,7 @@
     '0250': 0250_lpc11u35_dipdap_sdt32439b_0x0000.bin
     0249: 0249_lpc11u35_dipdap_sdt32439b_0x0000.bin
     0248: 0248_lpc11u35_dipdap_sdt32439b_0x0000.bin
+    '0247': 0247_lpc11u35_dipdap_sdt32439b_0x0000.bin
   instructions: lpc11u35
 - name: DIPDAP_SDT51822B
   product_code: '3103'
@@ -55,6 +58,7 @@
     '0250': 0250_lpc11u35_dipdap_sdt51822b_0x0000.bin
     0249: 0249_lpc11u35_dipdap_sdt51822b_0x0000.bin
     0248: 0248_lpc11u35_dipdap_sdt51822b_0x0000.bin
+    '0247': 0247_lpc11u35_dipdap_sdt51822b_0x0000.bin
   instructions: lpc11u35
 - name: DIPDAP_SDT52832B
   product_code: '3104'
@@ -67,6 +71,7 @@
     '0250': 0250_lpc11u35_dipdap_sdt52832b_0x0000.bin
     0249: 0249_lpc11u35_dipdap_sdt52832b_0x0000.bin
     0248: 0248_lpc11u35_dipdap_sdt52832b_0x0000.bin
+    '0247': 0247_lpc11u35_dipdap_sdt52832b_0x0000.bin
   instructions: lpc11u35
 - name: DIPDAP_SDT64B
   product_code: '3105'
@@ -79,6 +84,7 @@
     '0250': 0250_lpc11u35_dipdap_sdt64b_0x0000.bin
     0249: 0249_lpc11u35_dipdap_sdt64b_0x0000.bin
     0248: 0248_lpc11u35_dipdap_sdt64b_0x0000.bin
+    '0247': 0247_lpc11u35_dipdap_sdt64b_0x0000.bin
   instructions: lpc11u35
 - name: EA-LPC4088
   product_code: '1060'
@@ -91,6 +97,7 @@
     '0250': 0250_lpc11u35_lpc4088qsb_0x0000.bin
     0249: 0249_lpc11u35_lpc4088qsb_0x0000.bin
     0248: 0248_lpc11u35_lpc4088qsb_0x0000.bin
+    '0247': 0247_lpc11u35_lpc4088qsb_0x0000.bin
   instructions: lpc11u35
 - name: EA-LPC4088-Display-Module
   product_code: '1062'
@@ -103,6 +110,7 @@
     '0250': 0250_lpc11u35_lpc4088dm_0x0000.bin
     0249: 0249_lpc11u35_lpc4088dm_0x0000.bin
     0248: 0248_lpc11u35_lpc4088dm_0x0000.bin
+    '0247': 0247_lpc11u35_lpc4088dm_0x0000.bin
   instructions: lpc11u35
 - name: FF1705_L151
   product_code: '8080'
@@ -115,6 +123,7 @@
     '0250': 0250_lpc11u35_ff1705_l151_0x0000.bin
     0249: 0249_lpc11u35_ff1705_l151_0x0000.bin
     0248: 0248_lpc11u35_ff1705_l151_0x0000.bin
+    '0247': 0247_lpc11u35_ff1705_l151_0x0000.bin
   instructions: lpc11u35
 - name: FF_LPC546XX
   product_code: '8081'
@@ -127,6 +136,7 @@
     '0250': 0250_lpc11u35_ff_lpc546xx_0x0000.bin
     0249: 0249_lpc11u35_ff_lpc546xx_0x0000.bin
     0248: 0248_lpc11u35_ff_lpc546xx_0x0000.bin
+    '0247': 0247_lpc11u35_ff_lpc546xx_0x0000.bin
   instructions: lpc11u35
 - name: FRDM-K20D50M
   product_code: '0230'
@@ -139,6 +149,7 @@
     '0250': 0250_k20dx_frdmk20dx_0x8000.bin
     0249: 0249_k20dx_frdmk20dx_0x8000.bin
     0248: 0248_k20dx_frdmk20dx_0x8000.bin
+    '0247': 0247_k20dx_frdmk20dx_0x8000.bin
   instructions: default
 - name: FRDM-K22F
   product_code: '0231'
@@ -151,6 +162,7 @@
     '0250': 0250_k20dx_frdmk22f_0x8000.bin
     0249: 0249_k20dx_frdmk22f_0x8000.bin
     0248: 0248_k20dx_frdmk22f_0x8000.bin
+    '0247': 0247_k20dx_frdmk22f_0x8000.bin
   instructions: default
 - name: FRDM-K64F
   product_code: '0240'
@@ -163,6 +175,7 @@
     '0250': 0250_k20dx_frdmk64f_0x5000.bin
     0249: 0249_k20dx_frdmk64f_0x5000.bin
     0248: 0248_k20dx_frdmk64f_0x5000.bin
+    '0247': 0247_k20dx_frdmk64f_0x5000.bin
   instructions: default
 - name: FRDM-K66F
   product_code: '0311'
@@ -175,6 +188,7 @@
     '0250': 0250_k20dx_frdmk66f_0x8000.bin
     0249: 0249_k20dx_frdmk66f_0x8000.bin
     0248: 0248_k20dx_frdmk66f_0x8000.bin
+    '0247': 0247_k20dx_frdmk66f_0x8000.bin
   instructions: default
 - name: FRDM-K82F
   product_code: '0217'
@@ -187,6 +201,7 @@
     '0250': 0250_k20dx_frdmk82f_0x8000.bin
     0249: 0249_k20dx_frdmk82f_0x8000.bin
     0248: 0248_k20dx_frdmk82f_0x8000.bin
+    '0247': 0247_k20dx_frdmk82f_0x8000.bin
   instructions: default
 - name: FRDM-KL05Z
   product_code: '0210'
@@ -199,6 +214,7 @@
     '0250': 0250_k20dx_frdmkl05z_0x8000.bin
     0249: 0249_k20dx_frdmkl05z_0x8000.bin
     0248: 0248_k20dx_frdmkl05z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl05z_0x8000.bin
   instructions: default
 - name: FRDM-KL27Z
   product_code: '0261'
@@ -211,6 +227,7 @@
     '0250': 0250_k20dx_frdmkl27z_0x8000.bin
     0249: 0249_k20dx_frdmkl27z_0x8000.bin
     0248: 0248_k20dx_frdmkl27z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl27z_0x8000.bin
   instructions: default
 - name: FRDM-KL43Z
   product_code: '0262'
@@ -223,6 +240,7 @@
     '0250': 0250_k20dx_frdmkl43z_0x8000.bin
     0249: 0249_k20dx_frdmkl43z_0x8000.bin
     0248: 0248_k20dx_frdmkl43z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl43z_0x8000.bin
   instructions: default
 - name: FRDM-KL46Z
   product_code: '0220'
@@ -235,6 +253,7 @@
     '0250': 0250_k20dx_frdmkl46z_0x8000.bin
     0249: 0249_k20dx_frdmkl46z_0x8000.bin
     0248: 0248_k20dx_frdmkl46z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl46z_0x8000.bin
   instructions: default
 - name: FRDM-KL82Z
   product_code: 0218
@@ -247,6 +266,7 @@
     '0250': 0250_k20dx_frdmkl82z_0x5000.bin
     0249: 0249_k20dx_frdmkl82z_0x5000.bin
     0248: 0248_k20dx_frdmkl82z_0x5000.bin
+    '0247': 0247_k20dx_frdmkl82z_0x5000.bin
   instructions: default
 - name: FRDM-KW24D512
   product_code: '0250'
@@ -259,6 +279,7 @@
     '0250': 0250_k20dx_frdmkw24d_0x8000.bin
     0249: 0249_k20dx_frdmkw24d_0x8000.bin
     0248: 0248_k20dx_frdmkw24d_0x8000.bin
+    '0247': 0247_k20dx_frdmkw24d_0x8000.bin
   instructions: default
 - name: FRDM-KW41Z
   product_code: '0201'
@@ -271,6 +292,7 @@
     '0250': 0250_k20dx_frdmkw41z_0x8000.bin
     0249: 0249_k20dx_frdmkw41z_0x8000.bin
     0248: 0248_k20dx_frdmkw41z_0x8000.bin
+    '0247': 0247_k20dx_frdmkw41z_0x8000.bin
   instructions: default
 - name: FRDMK28F
   product_code: '0224'
@@ -283,6 +305,7 @@
     '0250': 0250_k20dx_frdmk28f_0x8000.bin
     0249: 0249_k20dx_frdmk28f_0x8000.bin
     0248: 0248_k20dx_frdmk28f_0x8000.bin
+    '0247': 0247_k20dx_frdmk28f_0x8000.bin
   instructions: default
 - name: FRDMK32W042
   product_code: '0225'
@@ -301,6 +324,7 @@
     '0250': 0250_k20dx_frdmke15z_0x8000.bin
     0249: 0249_k20dx_frdmke15z_0x8000.bin
     0248: 0248_k20dx_frdmke15z_0x8000.bin
+    '0247': 0247_k20dx_frdmke15z_0x8000.bin
   instructions: default
 - name: FRDMKL02Z
   product_code: '0204'
@@ -313,6 +337,7 @@
     '0250': 0250_k20dx_frdmkl02z_0x8000.bin
     0249: 0249_k20dx_frdmkl02z_0x8000.bin
     0248: 0248_k20dx_frdmkl02z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl02z_0x8000.bin
   instructions: default
 - name: FRDMKL26Z
   product_code: '0260'
@@ -325,6 +350,7 @@
     '0250': 0250_k20dx_frdmkl26z_0x8000.bin
     0249: 0249_k20dx_frdmkl26z_0x8000.bin
     0248: 0248_k20dx_frdmkl26z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl26z_0x8000.bin
   instructions: default
 - name: FRDMKL28Z
   product_code: '0205'
@@ -337,6 +363,7 @@
     '0250': 0250_k20dx_frdmkl28z_0x8000.bin
     0249: 0249_k20dx_frdmkl28z_0x8000.bin
     0248: 0248_k20dx_frdmkl28z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl28z_0x8000.bin
   instructions: default
 - name: GR_LYCHEE
   product_code: '5501'
@@ -349,6 +376,7 @@
     '0250': 0250_lpc11u35_gr_lychee_0x0000.bin
     0249: 0249_lpc11u35_gr_lychee_0x0000.bin
     0248: 0248_lpc11u35_gr_lychee_0x0000.bin
+    '0247': 0247_lpc11u35_gr_lychee_0x0000.bin
   instructions: lpc11u35
 - name: GR_PEACH
   product_code: '5500'
@@ -361,6 +389,7 @@
     '0250': 0250_lpc11u35_gr_peach_0x0000.bin
     0249: 0249_lpc11u35_gr_peach_0x0000.bin
     0248: 0248_lpc11u35_gr_peach_0x0000.bin
+    '0247': 0247_lpc11u35_gr_peach_0x0000.bin
   instructions: lpc11u35
 - name: HEXIWEAR
   product_code: '0214'
@@ -373,6 +402,7 @@
     '0250': 0250_k20dx_hexiwear_0x8000.bin
     0249: 0249_k20dx_hexiwear_0x8000.bin
     0248: 0248_k20dx_hexiwear_0x8000.bin
+    '0247': 0247_k20dx_hexiwear_0x8000.bin
   instructions: default
 - name: HVPKE18F
   product_code: '0216'
@@ -385,6 +415,7 @@
     '0250': 0250_k20dx_hvpke18f_0x8000.bin
     0249: 0249_k20dx_hvpke18f_0x8000.bin
     0248: 0248_k20dx_hvpke18f_0x8000.bin
+    '0247': 0247_k20dx_hvpke18f_0x8000.bin
   instructions: default
 - name: KL25Z
   product_code: '0200'
@@ -397,6 +428,7 @@
     '0250': 0250_k20dx_frdmkl25z_0x8000.bin
     0249: 0249_k20dx_frdmkl25z_0x8000.bin
     0248: 0248_k20dx_frdmkl25z_0x8000.bin
+    '0247': 0247_k20dx_frdmkl25z_0x8000.bin
   instructions: default
 - name: LPC1114FN28
   product_code: '1114'
@@ -409,6 +441,7 @@
     '0250': 0250_lpc11u35_ssci1114_0x0000.bin
     0249: 0249_lpc11u35_ssci1114_0x0000.bin
     0248: 0248_lpc11u35_ssci1114_0x0000.bin
+    '0247': 0247_lpc11u35_ssci1114_0x0000.bin
   instructions: lpc11u35
 - name: LPCXpresso54114
   product_code: '1054'
@@ -421,6 +454,7 @@
     '0250': 0250_lpc4322_lpc54114xpresso_0x10000.bin
     0249: 0249_lpc4322_lpc54114xpresso_0x10000.bin
     0248: 0248_lpc4322_lpc54114xpresso_0x10000.bin
+    '0247': 0247_lpc4322_lpc54114xpresso_0x10000.bin
   instructions: default
 - name: LPCXpresso54608
   product_code: '1056'
@@ -433,6 +467,7 @@
     '0250': 0250_lpc4322_lpc54608xpresso_0x10000.bin
     0249: 0249_lpc4322_lpc54608xpresso_0x10000.bin
     0248: 0248_lpc4322_lpc54608xpresso_0x10000.bin
+    '0247': 0247_lpc4322_lpc54608xpresso_0x10000.bin
   instructions: default
 - name: LPCXpresso55S69
   product_code: '0236'
@@ -453,6 +488,7 @@
     '0250': 0250_lpc11u35_lpc824xpresso_0x0000.bin
     0249: 0249_lpc11u35_lpc824xpresso_0x0000.bin
     0248: 0248_lpc11u35_lpc824xpresso_0x0000.bin
+    '0247': 0247_lpc11u35_lpc824xpresso_0x0000.bin
   instructions: lpc11u35
 - name: MAX32620
   product_code: 0418
@@ -485,6 +521,7 @@
     '0250': 0250_lpc11u35_mbed_cloud_connect_0x0000.bin
     0249: 0249_lpc11u35_mbed_cloud_connect_0x0000.bin
     0248: 0248_lpc11u35_mbed_cloud_connect_0x0000.bin
+    '0247': 0247_lpc11u35_mbed_cloud_connect_0x0000.bin
   instructions: lpc11u35
 - name: MIMXRT1020_EVK_QSPI
   product_code: '0226'
@@ -541,6 +578,7 @@
     '0250': 0250_lpc11u35_mtb_laird_bl652_0x0000.bin
     0249: 0249_lpc11u35_mtb_laird_bl652_0x0000.bin
     0248: 0248_lpc11u35_mtb_laird_bl652_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_laird_bl652_0x0000.bin
   instructions: lpc11u35
 - name: MTB_LAIRD_BL654
   product_code: '0465'
@@ -579,6 +617,7 @@
     '0250': 0250_lpc11u35_mtb_murata_abz_078_0x0000.bin
     0249: 0249_lpc11u35_mtb_murata_abz_078_0x0000.bin
     0248: 0248_lpc11u35_mtb_murata_abz_078_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_murata_abz_078_0x0000.bin
   instructions: lpc11u35
 - name: MTB_MURATA_BL241
   product_code: '0466'
@@ -599,6 +638,7 @@
     '0250': 0250_lpc11u35_mtb_mxchip_emw3166_0x0000.bin
     0249: 0249_lpc11u35_mtb_mxchip_emw3166_0x0000.bin
     0248: 0248_lpc11u35_mtb_mxchip_emw3166_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_mxchip_emw3166_0x0000.bin
   instructions: lpc11u35
 - name: MTB_NINA_B112
   product_code: '0455'
@@ -611,6 +651,7 @@
     '0250': 0250_lpc11u35_mtb_nina_b112_0x0000.bin
     0249: 0249_lpc11u35_mtb_nina_b112_0x0000.bin
     0248: 0248_lpc11u35_mtb_nina_b112_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_nina_b112_0x0000.bin
   instructions: lpc11u35
 - name: MTB_RAK811
   product_code: '0457'
@@ -623,6 +664,7 @@
     '0250': 0250_lpc11u35_mtb_rak811_0x0000.bin
     0249: 0249_lpc11u35_mtb_rak811_0x0000.bin
     0248: 0248_lpc11u35_mtb_rak811_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_rak811_0x0000.bin
   instructions: lpc11u35
 - name: MTB_STM32F439
   product_code: 0469
@@ -668,6 +710,7 @@
     '0250': 0250_lpc11u35_mtb_usi_wm_bn_bm_22_0x0000.bin
     0249: 0249_lpc11u35_mtb_usi_wm_bn_bm_22_0x0000.bin
     0248: 0248_lpc11u35_mtb_usi_wm_bn_bm_22_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_usi_wm_bn_bm_22_0x0000.bin
   instructions: lpc11u35
 - name: MTB_WISE1510
   product_code: 0458
@@ -680,6 +723,7 @@
     '0250': 0250_lpc11u35_mtb_wise1510_0x0000.bin
     0249: 0249_lpc11u35_mtb_wise1510_0x0000.bin
     0248: 0248_lpc11u35_mtb_wise1510_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_wise1510_0x0000.bin
   instructions: lpc11u35
 - name: MTB_WISE1530
   product_code: 0459
@@ -692,6 +736,7 @@
     '0250': 0250_lpc11u35_mtb_wise1530_0x0000.bin
     0249: 0249_lpc11u35_mtb_wise1530_0x0000.bin
     0248: 0248_lpc11u35_mtb_wise1530_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_wise1530_0x0000.bin
   instructions: lpc11u35
 - name: MTB_WISE1570
   product_code: '0460'
@@ -704,6 +749,7 @@
     '0250': 0250_lpc11u35_mtb_wise1570_0x0000.bin
     0249: 0249_lpc11u35_mtb_wise1570_0x0000.bin
     0248: 0248_lpc11u35_mtb_wise1570_0x0000.bin
+    '0247': 0247_lpc11u35_mtb_wise1570_0x0000.bin
   instructions: lpc11u35
 - name: MtConnect04S
   product_code: c005
@@ -716,6 +762,7 @@
     '0250': 0250_lpc11u35_mtconnect04s_0x0000.bin
     0249: 0249_lpc11u35_mtconnect04s_0x0000.bin
     0248: 0248_lpc11u35_mtconnect04s_0x0000.bin
+    '0247': 0247_lpc11u35_mtconnect04s_0x0000.bin
   instructions: lpc11u35
 - name: NCS36510RF
   product_code: '1200'
@@ -728,6 +775,7 @@
     '0250': 0250_sam3u2c_ncs36510rf_0x8000.bin
     0249: 0249_sam3u2c_ncs36510rf_0x8000.bin
     0248: 0248_sam3u2c_ncs36510rf_0x8000.bin
+    '0247': 0247_sam3u2c_ncs36510rf_0x8000.bin
   instructions: default
 - name: NXP-LPC800-MAX
   product_code: '1050'
@@ -740,6 +788,7 @@
     '0250': 0250_lpc11u35_lpc812xpresso_0x0000.bin
     0249: 0249_lpc11u35_lpc812xpresso_0x0000.bin
     0248: 0248_lpc11u35_lpc812xpresso_0x0000.bin
+    '0247': 0247_lpc11u35_lpc812xpresso_0x0000.bin
   instructions: lpc11u35
 - name: NZ32_SC151
   product_code: '6660'
@@ -752,6 +801,7 @@
     '0250': 0250_lpc11u35_nz32_sc151_0x0000.bin
     0249: 0249_lpc11u35_nz32_sc151_0x0000.bin
     0248: 0248_lpc11u35_nz32_sc151_0x0000.bin
+    '0247': 0247_lpc11u35_nz32_sc151_0x0000.bin
   instructions: lpc11u35
 - name: Nordic-nRF51-DK
   product_code: '1100'
@@ -764,6 +814,7 @@
     '0250': 0250_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0249: 0249_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0248: 0248_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
+    '0247': 0247_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
   instructions: default
 - name: Nordic-nRF51-Dongle
   product_code: '1120'
@@ -776,6 +827,7 @@
     '0250': 0250_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0249: 0249_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0248: 0248_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
+    '0247': 0247_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
   instructions: default
 - name: Nordic-nRF51822
   product_code: '1070'
@@ -788,6 +840,7 @@
     '0250': 0250_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0249: 0249_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0248: 0248_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
+    '0247': 0247_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
   instructions: default
 - name: Nordic-nRF52-DK
   product_code: '1101'
@@ -800,6 +853,7 @@
     '0250': 0250_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0249: 0249_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0248: 0248_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
+    '0247': 0247_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
   instructions: default
 - name: Nordic-nRF52840-DK
   product_code: '1102'
@@ -812,6 +866,7 @@
     '0250': 0250_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0249: 0249_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
     0248: 0248_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
+    '0247': 0247_sam3u2c_mkit_dk_dongle_nrf5x_0x5000.bin
   instructions: default
 - name: RAPID_IOT
   product_code: 0228
@@ -824,6 +879,7 @@
     '0250': 0250_k20dx_rapid_iot_0x8000.bin
     0249: 0249_k20dx_rapid_iot_0x8000.bin
     0248: 0248_k20dx_rapid_iot_0x8000.bin
+    '0247': 0247_k20dx_rapid_iot_0x8000.bin
   instructions: default
 - name: REALTEK-RTL8195AM
   product_code: '4600'
@@ -846,6 +902,7 @@
     '0250': 0250_lpc11u35_ro359b_0x0000.bin
     0249: 0249_lpc11u35_ro359b_0x0000.bin
     0248: 0248_lpc11u35_ro359b_0x0000.bin
+    '0247': 0247_lpc11u35_ro359b_0x0000.bin
   instructions: lpc11u35
 - name: RedBearLab-BLE-Nano
   product_code: '1095'
@@ -858,6 +915,7 @@
     '0250': 0250_k20dx_rblnano_0x5000.bin
     0249: 0249_k20dx_rblnano_0x5000.bin
     0248: 0248_k20dx_rblnano_0x5000.bin
+    '0247': 0247_k20dx_rblnano_0x5000.bin
   instructions: default
 - name: RedBearLab-nRF51822
   product_code: '1090'
@@ -870,6 +928,7 @@
     '0250': 0250_k20dx_rbl_0x5000.bin
     0249: 0249_k20dx_rbl_0x5000.bin
     0248: 0248_k20dx_rbl_0x5000.bin
+    '0247': 0247_k20dx_rbl_0x5000.bin
   instructions: default
 - name: SSCI_CHIBI
   product_code: '1021'
@@ -882,6 +941,7 @@
     '0250': 0250_lpc11u35_ssci_chibi_0x0000.bin
     0249: 0249_lpc11u35_ssci_chibi_0x0000.bin
     0248: 0248_lpc11u35_ssci_chibi_0x0000.bin
+    '0247': 0247_lpc11u35_ssci_chibi_0x0000.bin
   instructions: lpc11u35
 - name: Seeed-Arch-BLE
   product_code: '9009'
@@ -894,6 +954,7 @@
     '0250': 0250_lpc11u35_archble_0x0000.bin
     0249: 0249_lpc11u35_archble_0x0000.bin
     0248: 0248_lpc11u35_archble_0x0000.bin
+    '0247': 0247_lpc11u35_archble_0x0000.bin
   instructions: lpc11u35
 - name: Seeed-Arch-Link
   product_code: '9013'
@@ -906,6 +967,7 @@
     '0250': 0250_lpc11u35_archlink_0x0000.bin
     0249: 0249_lpc11u35_archlink_0x0000.bin
     0248: 0248_lpc11u35_archlink_0x0000.bin
+    '0247': 0247_lpc11u35_archlink_0x0000.bin
   instructions: lpc11u35
 - name: Seeed-Arch-Max
   product_code: '9011'
@@ -918,6 +980,7 @@
     '0250': 0250_lpc11u35_archmax_0x0000.bin
     0249: 0249_lpc11u35_archmax_0x0000.bin
     0248: 0248_lpc11u35_archmax_0x0000.bin
+    '0247': 0247_lpc11u35_archmax_0x0000.bin
   instructions: lpc11u35
 - name: Seeed-Tiny-BLE
   product_code: '9012'
@@ -930,6 +993,7 @@
     '0250': 0250_lpc11u35_tiny_0x0000.bin
     0249: 0249_lpc11u35_tiny_0x0000.bin
     0248: 0248_lpc11u35_tiny_0x0000.bin
+    '0247': 0247_lpc11u35_tiny_0x0000.bin
   instructions: lpc11u35
 - name: Seeeduino-Arch-Pro
   product_code: '9004'
@@ -942,6 +1006,7 @@
     '0250': 0250_lpc11u35_archpro_0x0000.bin
     0249: 0249_lpc11u35_archpro_0x0000.bin
     0248: 0248_lpc11u35_archpro_0x0000.bin
+    '0247': 0247_lpc11u35_archpro_0x0000.bin
   instructions: lpc11u35
 - name: Switch-Science-mbed-LPC824
   product_code: '1018'
@@ -954,6 +1019,7 @@
     '0250': 0250_lpc11u35_ssci824_0x0000.bin
     0249: 0249_lpc11u35_ssci824_0x0000.bin
     0248: 0248_lpc11u35_ssci824_0x0000.bin
+    '0247': 0247_lpc11u35_ssci824_0x0000.bin
   instructions: lpc11u35
 - name: Switch-Science-mbed-TY51822r3
   product_code: '1019'
@@ -966,6 +1032,7 @@
     '0250': 0250_lpc11u35_sscity_0x0000.bin
     0249: 0249_lpc11u35_sscity_0x0000.bin
     0248: 0248_lpc11u35_sscity_0x0000.bin
+    '0247': 0247_lpc11u35_sscity_0x0000.bin
   instructions: lpc11u35
 - name: TWRKE18F
   product_code: '0206'
@@ -978,6 +1045,7 @@
     '0250': 0250_k20dx_twrke18f_0x8000.bin
     0249: 0249_k20dx_twrke18f_0x8000.bin
     0248: 0248_k20dx_twrke18f_0x8000.bin
+    '0247': 0247_k20dx_twrke18f_0x8000.bin
   instructions: default
 - name: TWRKL28Z72M
   product_code: '0203'
@@ -990,6 +1058,7 @@
     '0250': 0250_k20dx_twrkl28z72m_0x8000.bin
     0249: 0249_k20dx_twrkl28z72m_0x8000.bin
     0248: 0248_k20dx_twrkl28z72m_0x8000.bin
+    '0247': 0247_k20dx_twrkl28z72m_0x8000.bin
   instructions: default
 - name: U-BLOX-EVK-NINA-B1
   product_code: '1237'
@@ -1002,6 +1071,7 @@
     '0250': 0250_sam3u2c_ublox_evk_nina_b1_0x5000.bin
     0249: 0249_sam3u2c_ublox_evk_nina_b1_0x5000.bin
     0248: 0248_sam3u2c_ublox_evk_nina_b1_0x5000.bin
+    '0247': 0247_sam3u2c_ublox_evk_nina_b1_0x5000.bin
   instructions: default
 - name: VBLUNO51
   product_code: c006
@@ -1014,6 +1084,7 @@
     '0250': 0250_lpc11u35_vbluno51_0x0000.bin
     0249: 0249_lpc11u35_vbluno51_0x0000.bin
     0248: 0248_lpc11u35_vbluno51_0x0000.bin
+    '0247': 0247_lpc11u35_vbluno51_0x0000.bin
   instructions: lpc11u35
 - name: WIO3G
   product_code: '9014'
@@ -1042,6 +1113,7 @@
     '0250': 0250_lpc11u35_wizwiki_w7500_0x0000.bin
     0249: 0249_lpc11u35_wizwiki_w7500_0x0000.bin
     0248: 0248_lpc11u35_wizwiki_w7500_0x0000.bin
+    '0247': 0247_lpc11u35_wizwiki_w7500_0x0000.bin
   instructions: lpc11u35
 - name: WIZwiki-W7500ECO
   product_code: '2202'
@@ -1054,6 +1126,7 @@
     '0250': 0250_lpc11u35_wizwiki_w7500_eco_0x0000.bin
     0249: 0249_lpc11u35_wizwiki_w7500_eco_0x0000.bin
     0248: 0248_lpc11u35_wizwiki_w7500_eco_0x0000.bin
+    '0247': 0247_lpc11u35_wizwiki_w7500_eco_0x0000.bin
   instructions: lpc11u35
 - name: WIZwiki-W7500P
   product_code: '2203'
@@ -1066,6 +1139,7 @@
     '0250': 0250_lpc11u35_wizwiki_w7500p_0x0000.bin
     0249: 0249_lpc11u35_wizwiki_w7500p_0x0000.bin
     0248: 0248_lpc11u35_wizwiki_w7500p_0x0000.bin
+    '0247': 0247_lpc11u35_wizwiki_w7500p_0x0000.bin
   instructions: lpc11u35
 - name: XDOT_L151
   product_code: '0350'
@@ -1078,6 +1152,7 @@
     '0250': 0250_k20dx_xdot_l151_0x8000.bin
     0249: 0249_k20dx_xdot_l151_0x8000.bin
     0248: 0248_k20dx_xdot_l151_0x8000.bin
+    '0247': 0247_k20dx_xdot_l151_0x8000.bin
   instructions: default
 - name: mbed-6LoWPAN-Border-Router-ETHERNET
   product_code: '7404'
@@ -1090,6 +1165,7 @@
     '0250': 0250_lpc11u35_6lowpan_borderrouterethernet_0x0000.bin
     0249: 0249_lpc11u35_6lowpan_borderrouterethernet_0x0000.bin
     0248: 0248_lpc11u35_6lowpan_borderrouterethernet_0x0000.bin
+    '0247': 0247_lpc11u35_6lowpan_borderrouterethernet_0x0000.bin
   instructions: lpc11u35
 - name: mbed-6LoWPAN-Border-Router-HAT
   product_code: '7402'
@@ -1102,6 +1178,7 @@
     '0250': 0250_lpc11u35_6lowpan_borderrouterhat_0x0000.bin
     0249: 0249_lpc11u35_6lowpan_borderrouterhat_0x0000.bin
     0248: 0248_lpc11u35_6lowpan_borderrouterhat_0x0000.bin
+    '0247': 0247_lpc11u35_6lowpan_borderrouterhat_0x0000.bin
   instructions: lpc11u35
 - name: mbed-6LoWPAN-Border-Router-USB
   product_code: '7403'
@@ -1114,6 +1191,7 @@
     '0250': 0250_lpc11u35_6lowpan_borderrouterusb_0x0000.bin
     0249: 0249_lpc11u35_6lowpan_borderrouterusb_0x0000.bin
     0248: 0248_lpc11u35_6lowpan_borderrouterusb_0x0000.bin
+    '0247': 0247_lpc11u35_6lowpan_borderrouterusb_0x0000.bin
   instructions: lpc11u35
 - name: mbed-HRM1017
   product_code: '1017'
@@ -1126,6 +1204,7 @@
     '0250': 0250_lpc11u35_hrm1017_0x0000.bin
     0249: 0249_lpc11u35_hrm1017_0x0000.bin
     0248: 0248_lpc11u35_hrm1017_0x0000.bin
+    '0247': 0247_lpc11u35_hrm1017_0x0000.bin
   instructions: lpc11u35
 - name: u-blox-C027
   product_code: '1234'
@@ -1138,6 +1217,7 @@
     '0250': 0250_lpc11u35_c027_0x0000.bin
     0249: 0249_lpc11u35_c027_0x0000.bin
     0248: 0248_lpc11u35_c027_0x0000.bin
+    '0247': 0247_lpc11u35_c027_0x0000.bin
   instructions: lpc11u35
 - name: u-blox-NINA-B1
   product_code: '1238'
@@ -1150,4 +1230,5 @@
     '0250': 0250_kl26z_nina_b1_0x8000.bin
     0249: 0249_kl26z_nina_b1_0x8000.bin
     0248: 0248_kl26z_nina_b1_0x8000.bin
+    '0247': 0247_kl26z_nina_b1_0x8000.bin
   instructions: default
