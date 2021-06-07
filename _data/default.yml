@@ -1,6 +1,6 @@
 ---
 website: http://os.mbed.com/platforms
-fw_version: '0253'
+fw_version: '0254'
 image_format: .bin
 instructions:
   default:

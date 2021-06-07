@@ -23,7 +23,7 @@ function select_daplink_board(board) {
     $("#update-instructions-osx").html(osxvalue);
 
     //  Output file name
-    var fw_name = board_info.fw_name;
+    var fw_name = board_info.fw_versions[0][1];
     $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+fw_name +'">' +fw_name +'</a>');
 
     // Set default tab based on browser
@@ -65,15 +65,6 @@ var _daplink_board_options = {
 	    "name": "{{thing.name}}", 
 	    "code": "{{thing.product_code}}",
 	    "logoURL": "{{thing.logoURL}}",
-	    "fw_name": {% if thing.fw_name != nil %}
-	      {%- if thing.image_format == nil -%}
-	        "{{site.data.default.fw_version}}_{{thing.fw_name}}{{site.data.default.image_format}}",
-	      {%- else -%}
-	        "{{site.data.default.fw_version}}_{{thing.fw_name}}{{thing.image_format}}",
-	      {%- endif -%}
-	    {%- else -%}
-	      "None",
-	    {% endif %}
 	    "fw_versions": [{% for v in thing.fw_versions %}
 		["{{v[0]}}", "{{v[1]}}"],{% endfor %}
 	    ],
