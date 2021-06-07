@@ -44,70 +44,52 @@ function select_daplink_board(board) {
 };
 
 var _daplink_board_options = {
-	data:[
-		{% for thing in site.data.update %} 
-		{
-			"name": "{{thing.name}}", 
-			"code": "{{thing.product_code}}",
-			"logoURL": "{{thing.logoURL}}",
-			//  assemble name of firmware file
-			"fw_name":  {% if thing.fw_name != nil%}
-							{%if thing.image_format == nil %}
-							"{{site.data.update[0].default.fw_version}}_{{thing.fw_name}}{{site.data.update[0].default.image_format}}",
-							{% else %}
-							"{{site.data.update[0].default.fw_version}}_{{thing.fw_name}}{{thing.image_format}}",
-							{%endif%}
-						{%else%}
-							"None",
-						{%endif%}
-			// load instructions if they exist, otherwise load default instructions (at index 0)
-			"windows_instructions": {% if thing.instructions.windows == nil %}
-								{{site.data.update[0].default.instructions.windows | markdownify | jsonify}},
-								{% else %}
-								{{thing.instructions.windows | markdownify | jsonify}},
-								{% endif %}
-			"linux_instructions": {% if thing.instructions.linux == nil %}
-								// "test data of awesome"
-								{{site.data.update[0].default.instructions.linux | markdownify | jsonify}},
-								{% else %}
-								{{thing.instructions.linux | markdownify | jsonify}},
-								{% endif %}
-			"osx_instructions": {% if thing.instructions.osx == nil %}
-								// "test data of awesome"
-								{{site.data.update[0].default.instructions.osx | markdownify | jsonify}}
-								{% else %}
-								{{thing.instructions.osx | markdownify | jsonify}}
-								{% endif %}
-		},
-  		{% endfor %}
- ],
-
-	getValue: "name",
-
-	list: {
-		match: {
-			enabled: true
-		},
-		sort:{
-			enabled:true
-		},
-		maxNumberOfElements: 8,
-
-		showAnimation: {
-			type: "slide",
-			time: 300
-		},
-		hideAnimation: {
-			type: "slide",
-			time: 300
-		},
-		onChooseEvent: function(){
-            select_daplink_board($("#update-search").val());
-		}
+    data:[
+	{%- for thing in site.data.firmwares -%} 
+	{
+	    "name": "{{thing.name}}", 
+	    "code": "{{thing.product_code}}",
+	    "logoURL": "{{thing.logoURL}}",
+	    "fw_name": {%- if thing.fw_name != nil -%}
+	      {%- if thing.image_format == nil -%}
+	        "{{site.data.default.fw_version}}_{{thing.fw_name}}{{site.data.default.image_format}}",
+	      {%- else -%}
+	        "{{site.data.default.fw_version}}_{{thing.fw_name}}{{thing.image_format}}",
+	      {%- endif -%}
+	    {%- else -%}
+	      "None",
+	    {%- endif -%}
+	    "windows_instructions": {{site.data.default.instructions[thing.instructions].windows | markdownify | jsonify}},
+	    "linux_instructions": {{site.data.default.instructions[thing.instructions].linux | markdownify | jsonify}},
+	    "osx_instructions": {{site.data.default.instructions[thing.instructions].osx | markdownify | jsonify}}
 	},
+  	{%- endfor -%}
+    ],
 
+    getValue: "name",
+
+    list: {
+	match: {
+	    enabled: true
+	},
+	sort:{
+	    enabled:true
+	},
+	maxNumberOfElements: 8,
+	
+	showAnimation: {
+	    type: "slide",
+	    time: 300
+	},
+	hideAnimation: {
+	    type: "slide",
+	    time: 300
+	},
+	onChooseEvent: function(){
+	    select_daplink_board($("#update-search").val());
+	}
+    },
 	theme: "round"
-
 };
 
 $("#update-search").easyAutocomplete(_daplink_board_options);
