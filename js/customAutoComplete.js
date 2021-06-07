@@ -10,7 +10,7 @@ function select_daplink_board(board) {
     if (!board_info) return;
 
     // Display instructions if not already shown
-    if($('#update-instructions').css('display') == 'none'){
+    if($('#update-instructions').css('display') == 'none') {
         $('#update-instructions').fadeIn();
     }
 
@@ -41,16 +41,31 @@ function select_daplink_board(board) {
     if (navigator.appVersion.indexOf("Linux")!=-1){
         $('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
     };
+
+    if (board_info.fw_versions.length > 1) {
+	var $dropdown = $('<select />');
+	$.each(board_info.fw_versions, function() {
+            $dropdown.append($('<option />').val(this[1]).text(this[0]));
+	});
+	$dropdown.change(function() {
+	    $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+ this.value +'">' + this.value +'</a>');
+	});
+	$('#version-select').html($('<p>Version: </p>').append($dropdown));
+    } else {
+    }
 };
+
+function select_version(version) {
+    
+}
 
 var _daplink_board_options = {
     data:[
-	{%- for thing in site.data.firmwares -%} 
-	{
+	{% for thing in site.data.firmwares %}{
 	    "name": "{{thing.name}}", 
 	    "code": "{{thing.product_code}}",
 	    "logoURL": "{{thing.logoURL}}",
-	    "fw_name": {%- if thing.fw_name != nil -%}
+	    "fw_name": {% if thing.fw_name != nil %}
 	      {%- if thing.image_format == nil -%}
 	        "{{site.data.default.fw_version}}_{{thing.fw_name}}{{site.data.default.image_format}}",
 	      {%- else -%}
@@ -58,12 +73,14 @@ var _daplink_board_options = {
 	      {%- endif -%}
 	    {%- else -%}
 	      "None",
-	    {%- endif -%}
+	    {% endif %}
+	    "fw_versions": [{% for v in thing.fw_versions %}
+		["{{v[0]}}", "{{v[1]}}"],{% endfor %}
+	    ],
 	    "windows_instructions": {{site.data.default.instructions[thing.instructions].windows | markdownify | jsonify}},
 	    "linux_instructions": {{site.data.default.instructions[thing.instructions].linux | markdownify | jsonify}},
 	    "osx_instructions": {{site.data.default.instructions[thing.instructions].osx | markdownify | jsonify}}
-	},
-  	{%- endfor -%}
+	},{% endfor %}
     ],
 
     getValue: "name",
