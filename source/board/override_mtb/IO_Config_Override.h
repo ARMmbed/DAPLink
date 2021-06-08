@@ -92,7 +92,7 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC11U35);
 #define PIN_SWDIO_TMS_IOCON_INIT        (FUNC_0 | PULL_UP_ENABLED)
 
 // TDI Pin                              PIO0_17
-#define PIN_TDI_PORT                    17
+#define PIN_TDI_PORT                    0
 #define PIN_TDI_BIT                     17
 #define PIN_TDI                         (1 << PIN_TDI_BIT)
 #define PIN_TDI_IOCON                   LPC_IOCON->PIO0_17
