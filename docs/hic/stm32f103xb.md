@@ -20,13 +20,13 @@ Bootloader size is 48 KB
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|
-| SWD/JTAG    |
+| SWD / JTAG  |
 | SWCLK / TCK |  O  | PB13    |  26 |
 | SWDIO / TMS |  O  | PB14    |  27 |
 | SWDIO / TMS |  I  | PB12    |  25 |
 | SWO / TDO   |  I  | PA10    |  31 |
 | nRESET      |  O  | PB0     |  18 |
-| UART (CDC)  |
+| UART        |
 | UART RX     |  I  | PA2     |  12 |
 | UART TX     |  O  | PA3     |  13 |
 | Button      |

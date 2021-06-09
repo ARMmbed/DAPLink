@@ -26,7 +26,7 @@ Reference design is based on [MCU-Link](https://www.nxp.com/design/development-b
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|
-| SWD/JTAG    |
+| SWD / JTAG  |
 | SWCLK / TCK |  O  | PIO0_0  |  36 |
 | SWDIO / TMS | I/O | PIO0_2  |  52 |
 | SWO / TDO   |  I  | PIO0_3  |  53 |
