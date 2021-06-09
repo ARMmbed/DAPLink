@@ -650,6 +650,10 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
+    max32625_max32665hsp_if:
+        - *module_if
+        - *module_hic_max32625
+        - records/board/max32665hsp.yaml
     lpc11u35_wio_emw3166_if:
         - *module_if
         - *module_hic_lpc11u35
