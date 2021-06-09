@@ -2,7 +2,7 @@ name: Build DAPLink (Linux)
 on:
   push:
     branches:
-      - experimental_compilers
+      - develop
   workflow_dispatch:
 
 jobs:
