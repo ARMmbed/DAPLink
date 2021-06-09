@@ -1,9 +1,8 @@
-# Warning: Experimental branch
+# Warning: Development branch
 
-This is is an experimental branch:
-- It adds support for the GCC (`gcc_arm`) and ARMC6 (`armclang`) compilers.
+This is is a development branch:
+- It adds support for the GCC (`gcc_arm`) and ARMC6 (`armclang`) compilers, ARMC5 (`armcc`) will be deprecated.
 - It focuses on `progen` support using `make` and `cmake`.
-- It will be frequently rebased.
 
 ## Setup
 
@@ -27,7 +26,7 @@ Get the sources and create a virtual environment
 ```
 $ git clone https://github.com/ARMmbed/DAPLink
 $ cd DAPLink
-$ git checkout experimental_compilers
+$ git checkout develop
 $ virtualenv venv
 ```
 
