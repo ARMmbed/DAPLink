@@ -10,7 +10,7 @@ function select_daplink_board(board) {
     if (!board_info) return;
 
     // Display instructions if not already shown
-    if($('#update-instructions').css('display') == 'none'){
+    if($('#update-instructions').css('display') == 'none') {
         $('#update-instructions').fadeIn();
     }
 
@@ -23,7 +23,7 @@ function select_daplink_board(board) {
     $("#update-instructions-osx").html(osxvalue);
 
     //  Output file name
-    var fw_name = board_info.fw_name;
+    var fw_name = board_info.fw_versions[0][1];
     $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+fw_name +'">' +fw_name +'</a>');
 
     // Set default tab based on browser
@@ -41,73 +41,63 @@ function select_daplink_board(board) {
     if (navigator.appVersion.indexOf("Linux")!=-1){
         $('.nav-tabs a[href="#update-instructions-linux"]').tab('show');
     };
+
+    if (board_info.fw_versions.length > 1) {
+	var $dropdown = $('<select />');
+	$.each(board_info.fw_versions, function() {
+            $dropdown.append($('<option />').val(this[1]).text(this[0]));
+	});
+	$dropdown.change(function() {
+	    $('#file-name').html('Firmware File: <a href= "{{site.baseurl}}/firmware/'+ this.value +'">' + this.value +'</a>');
+	});
+	$('#version-select').html($('<p>Version: </p>').append($dropdown));
+    } else {
+    }
 };
 
+function select_version(version) {
+    
+}
+
 var _daplink_board_options = {
-	data:[
-		{% for thing in site.data.update %} 
-		{
-			"name": "{{thing.name}}", 
-			"code": "{{thing.product_code}}",
-			"logoURL": "{{thing.logoURL}}",
-			//  assemble name of firmware file
-			"fw_name":  {% if thing.fw_name != nil%}
-							{%if thing.image_format == nil %}
-							"{{site.data.update[0].default.fw_version}}_{{thing.fw_name}}{{site.data.update[0].default.image_format}}",
-							{% else %}
-							"{{site.data.update[0].default.fw_version}}_{{thing.fw_name}}{{thing.image_format}}",
-							{%endif%}
-						{%else%}
-							"None",
-						{%endif%}
-			// load instructions if they exist, otherwise load default instructions (at index 0)
-			"windows_instructions": {% if thing.instructions.windows == nil %}
-								{{site.data.update[0].default.instructions.windows | markdownify | jsonify}},
-								{% else %}
-								{{thing.instructions.windows | markdownify | jsonify}},
-								{% endif %}
-			"linux_instructions": {% if thing.instructions.linux == nil %}
-								// "test data of awesome"
-								{{site.data.update[0].default.instructions.linux | markdownify | jsonify}},
-								{% else %}
-								{{thing.instructions.linux | markdownify | jsonify}},
-								{% endif %}
-			"osx_instructions": {% if thing.instructions.osx == nil %}
-								// "test data of awesome"
-								{{site.data.update[0].default.instructions.osx | markdownify | jsonify}}
-								{% else %}
-								{{thing.instructions.osx | markdownify | jsonify}}
-								{% endif %}
-		},
-  		{% endfor %}
- ],
+    data:[
+	{% for thing in site.data.firmwares %}{
+	    "name": "{{thing.name}}", 
+	    "code": "{{thing.product_code}}",
+	    "logoURL": "{{thing.logoURL}}",
+	    "fw_versions": [{% for v in thing.fw_versions %}
+		["{{v[0]}}", "{{v[1]}}"],{% endfor %}
+	    ],
+	    "windows_instructions": {{site.data.default.instructions[thing.instructions].windows | markdownify | jsonify}},
+	    "linux_instructions": {{site.data.default.instructions[thing.instructions].linux | markdownify | jsonify}},
+	    "osx_instructions": {{site.data.default.instructions[thing.instructions].osx | markdownify | jsonify}}
+	},{% endfor %}
+    ],
 
-	getValue: "name",
+    getValue: "name",
 
-	list: {
-		match: {
-			enabled: true
-		},
-		sort:{
-			enabled:true
-		},
-		maxNumberOfElements: 8,
-
-		showAnimation: {
-			type: "slide",
-			time: 300
-		},
-		hideAnimation: {
-			type: "slide",
-			time: 300
-		},
-		onChooseEvent: function(){
-            select_daplink_board($("#update-search").val());
-		}
+    list: {
+	match: {
+	    enabled: true
 	},
-
+	sort:{
+	    enabled:true
+	},
+	maxNumberOfElements: 8,
+	
+	showAnimation: {
+	    type: "slide",
+	    time: 300
+	},
+	hideAnimation: {
+	    type: "slide",
+	    time: 300
+	},
+	onChooseEvent: function(){
+	    select_daplink_board($("#update-search").val());
+	}
+    },
 	theme: "round"
-
 };
 
 $("#update-search").easyAutocomplete(_daplink_board_options);

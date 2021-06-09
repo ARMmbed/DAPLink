@@ -2,6 +2,9 @@ branches:
   only:
   - gh-pages
 
+dist: focal
+sudo: false
 language: ruby
 cache: bundler
-script: "bundle exec jekyll build --verbose --trace"
+script:
+  - bundle exec jekyll build --verbose --trace
