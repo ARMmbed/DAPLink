@@ -95,7 +95,7 @@ The following command combines generation and compilation:
 [![DAPLink](/docs/images/daplink-website-logo-link.png)](https://armmbed.github.io/DAPLink/)
 
 **Note:** The master branch requires an Arm Compiler 5 or Keil MDK license to build. See the
-[experimental_compilers](https://github.com/ARMmbed/DAPLink/tree/experimental_compilers) branch for gcc and Arm
+[develop](https://github.com/ARMmbed/DAPLink/tree/develop) branch for gcc and Arm
 Compiler 6 support. As soon as testing is complete, gcc will become the default compiler and AC5 support will be
 dropped.
 
