@@ -28,7 +28,7 @@ ERROR_TIMEOUT_SECONDS = 10.0
 
 
 def _same(d1, d2):
-    #Do a string or bytearray compare 
+    #Do a string or bytearray compare
     if d1 != d2:
         return False
     return True
@@ -43,7 +43,7 @@ standard_baud = [
     #56000, #TODO - uncomment once daplink-validation supports 56000 on nrf5x
     57600,
     115200,
-    ]
+]
 timing_test_baud = standard_baud[3:]
 
 
@@ -65,7 +65,7 @@ class SerialTester(object):
     """Helper object to buffer serial and setup baud"""
 
     def __init__(self, port):
-        self.raw_serial = serial.Serial(port=port,bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=None, xonxoff=False, rtscts=False, write_timeout=None, dsrdtr=False, inter_byte_timeout=None, exclusive=None)
+        self.raw_serial = serial.Serial(port=port, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=None, xonxoff=False, rtscts=False, write_timeout=None, dsrdtr=False, inter_byte_timeout=None, exclusive=None)
         self.raw_serial.write_timeout = ERROR_TIMEOUT_SECONDS
         self._queue = queue.Queue()
         self._write_thread = threading.Thread(target=self._serial_main)
@@ -238,6 +238,10 @@ def test_serial(workspace, parent_test):
                         test_pass = False
                         test_info.info("fail size - %s" % data_size)
                         break
+
+                # Break if already failed
+                if not test_pass:
+                    break
 
             if test_pass:
                 test_info.info("Pass")

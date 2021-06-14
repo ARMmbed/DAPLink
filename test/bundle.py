@@ -1,6 +1,6 @@
 #
 # DAPLink Interface Firmware
-# Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+# Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,12 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
-from __future__ import absolute_import
+
 import os
-import info
-import re
-import firmware
+from firmware import DAPLinkFirmware
 
 
 def load_bundle_from_release(directory):
@@ -37,7 +34,7 @@ def load_bundle_from_project(tool='uvision'):
     """
     progen_toolchains = ['make_gcc_arm', 'make_armclang', 'make_armcc',
                          'cmake_gcc_arm', 'cmake_armclang', 'cmake_armcc']
-    assert (tool in progen_toolchains or tool == 'uvision' or tool == 'mbedcli'), 'Input tool %s is not supported' % (tool) 
+    assert (tool in progen_toolchains or tool == 'uvision' or tool == 'mbedcli'), 'Input tool %s is not supported' % (tool)
 
     self_path = os.path.abspath(__file__)
     test_dir = os.path.dirname(self_path)
@@ -55,7 +52,24 @@ def load_bundle_from_project(tool='uvision'):
     return ProjectFirmwareBundle(project_dir, build_folder)
 
 
-class ReleaseFirmwareBundle(firmware.FirmwareBundle):
+class FirmwareBundle(object):
+
+    def get_firmware_list(self):
+        """Return the firmware objects associated with this bundle"""
+        raise NotImplementedError()
+
+    @property
+    def build_sha(self):
+        """The GIT SHA this build was created at as a string or None"""
+        raise NotImplementedError()
+
+    @property
+    def build_local_mods(self):
+        """True if this was a clean build, False otherwise"""
+        raise NotImplementedError()
+
+
+class ReleaseFirmwareBundle(FirmwareBundle):
     """Class to abstract access a formal build as a bundle"""
 
     def __init__(self, directory):
@@ -86,18 +100,18 @@ class ReleaseFirmwareBundle(firmware.FirmwareBundle):
         raise NotImplementedError()
 
 
-class ProjectFirmwareBundle(firmware.FirmwareBundle):
+class ProjectFirmwareBundle(FirmwareBundle):
     """Class to abstract access to daplink's build directory as a bundle"""
 
     def __init__(self, project_dir, build_folder):
 
         if not os.path.exists(project_dir):
-            print ("Error: DAPLink project folder %s missing" % project_dir)
+            print("Error: DAPLink project folder %s missing" % project_dir)
             exit(-1)
 
         project_dir_list = os.listdir(project_dir)
         if not project_dir_list:
-            print ("Error: DAPLink projects not build yet at %s" % project_dir)
+            print("Error: DAPLink projects not build yet at %s" % project_dir)
             exit(-1)
 
         firmware_list = []
@@ -119,85 +133,3 @@ class ProjectFirmwareBundle(firmware.FirmwareBundle):
     @property
     def build_local_mods(self):
         raise NotImplementedError()
-
-
-class DAPLinkFirmware(firmware.Firmware):
-    """Class to abstract access to a daplink firmware image"""
-
-    _IF_RE = re.compile("^([a-z0-9]+)([_a-z0-9]*)_if$")
-    _BL_RE = re.compile("^([a-z0-9]+)_bl$")
-
-    def __init__(self, name, bundle, directory):
-        self._name = name
-        self._bundle = bundle
-        self._directory = directory
-        self._valid = False
-
-        # Set type
-        self._type = None
-        string_hic = None
-        match = self._IF_RE.match(name)
-        if match:
-            string_hic = match.group(1)
-            self._type = self.TYPE.INTERFACE
-        match = self._BL_RE.match(name)
-        if match:
-            string_hic = match.group(1)
-            self._type = self.TYPE.BOOTLOADER
-        if self._type is None:
-            assert False, 'Bad project name "%s"' % name
-
-        # Set HIC
-        assert string_hic in info.HIC_STRING_TO_ID, 'Unknown HIC "%s" must ' \
-            'be added to HIC_STRING_TO_ID in info.py' % string_hic
-        self._hic_id = info.HIC_STRING_TO_ID[string_hic]
-
-        # Check firmware name and type
-        assert self._type in self.TYPE, "Invalid type %s" % self._type
-        if self._type is self.TYPE.INTERFACE:
-            if name not in info.FIRMWARE_SET:
-                print('Warning: board "%s" no entry in SUPPORTED_CONFIGURATIONS in info.py' % name)
-
-        # Set file paths
-        self._bin_path = self._directory + os.sep + '%s_crc.bin' % name
-        self._hex_path = self._directory + os.sep + '%s_crc.hex' % name
-        self._bin_path = os.path.abspath(self._bin_path)
-        self._hex_path = os.path.abspath(self._hex_path)
-        if not os.path.isfile(self._bin_path):
-            return  # Failure
-        if not os.path.isfile(self._hex_path):
-            return  # Failure
-
-        self._valid = True
-
-    def __str__(self):
-        return "Name=%s" % (self.name)
-
-    @property
-    def valid(self):
-        """Set to True if the firmware is valid"""
-        return self._valid
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def hic_id(self):
-        return self._hic_id
-
-    @property
-    def type(self):
-        return self._type
-
-    @property
-    def bin_path(self):
-        return self._bin_path
-
-    @property
-    def hex_path(self):
-        return self._hex_path
-
-    @property
-    def elf_path(self):
-        return self._elf_path

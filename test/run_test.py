@@ -67,17 +67,17 @@ import shutil
 import argparse
 import subprocess
 from enum import Enum
-from hid_test import test_hid
-from serial_test import test_serial
-from msd_test import test_mass_storage
-from usb_test import test_usb
-from daplink_board import get_all_attached_daplink_boards
+from tests.test_hid import test_hid
+from tests.test_serial import test_serial
+from tests.test_msd import test_mass_storage
+from tests.test_usb import test_usb
+from board import get_all_attached_daplink_boards
 from project_generator.generate import Generator
 from test_info import TestInfo
-from daplink_firmware import load_bundle_from_project, load_bundle_from_release
+from bundle import load_bundle_from_release, load_bundle_from_project
 from firmware import Firmware
 from target import load_target_bundle, build_target_bundle
-from test_daplink import daplink_test
+from tests.test_daplink import daplink_test
 import info
 
 DEFAULT_TEST_DIR = './test_results'
@@ -226,7 +226,7 @@ class TestManager(object):
                            test_configuration.bl_firmware)
             test_info.info("Target: %s" % test_configuration.target)
 
-            
+
             if self._load_if:
                 if_path = test_configuration.if_firmware.hex_path
                 board.load_interface(if_path, test_info)
@@ -587,7 +587,7 @@ def main():
             print("  images can be built with the RESTful Compile API.")
             print("NOTE: you can skip the endpoint tests altogether ")
             print("with --notestendpt")
-            
+
             exit(-1)
 
         if args.targetdir is not None:

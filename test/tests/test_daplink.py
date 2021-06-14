@@ -28,8 +28,8 @@ try:
 except ImportError:
     from io import StringIO
 
-from msd_test import (MassStorageTester, MOCK_DIR_LIST, MOCK_FILE_LIST,
-                      MOCK_DIR_LIST_AFTER, MOCK_FILE_LIST_AFTER)
+from tests.test_msd import (MassStorageTester, MOCK_DIR_LIST, MOCK_FILE_LIST,
+                            MOCK_DIR_LIST_AFTER, MOCK_FILE_LIST_AFTER)
 
 TRIGGER_ASSERT_FILE_NAME = "ASSERT.ACT"
 ASSERT_FILE_NAME = "ASSERT.TXT"
@@ -135,7 +135,7 @@ def daplink_test(workspace, parent_test):
                                     len(section_list))
     start, length = section_list[0]
 
-    bin_data = bytearray(intel_hex.tobinarray(start=start, size=length))    
+    bin_data = bytearray(intel_hex.tobinarray(start=start, size=length))
     sio = StringIO()
     intel_hex.tofile(sio, format='hex')
     hex_data = sio.getvalue()

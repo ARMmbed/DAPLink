@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
- 
+
 from __future__ import absolute_import
 from __future__ import print_function
 import six
@@ -184,6 +184,7 @@ class TestInfoStub(TestInfo):
     @staticmethod
     def _print_msg(msg):
         print(get_timestamp_tag() + "%s"%(msg,))
+
 
 def get_timestamp_tag():
     return "[{:0<17f}] ".format(time.time())

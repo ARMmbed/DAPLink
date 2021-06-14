@@ -29,6 +29,7 @@ from test_info import TestInfo
 from pyocd.core.helpers import ConnectHelper
 from pyocd.core.memory_map import MemoryType
 
+
 def _same(d1, d2):
     assert type(d1) is bytearray
     assert type(d2) is bytearray
@@ -38,6 +39,7 @@ def _same(d1, d2):
     if len(d1) != len(d2):
         return False
     return True
+
 
 MOCK_DIR_LIST = [
     "test",
@@ -64,6 +66,7 @@ MOCK_FILE_LIST_AFTER = [
     ("test2/file12", "asdofahweaw"),
     ("file2.jpg", "file contents here")
 ]
+
 
 class MassStorageTester(object):
 

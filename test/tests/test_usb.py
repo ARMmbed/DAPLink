@@ -20,13 +20,14 @@
 from __future__ import print_function
 
 import os
+import sys
 import usb.core
 import functools
 import threading
 import time
-from usb_cdc import USBCdc
-from usb_hid import USBHid
-from usb_msd import USBMsd, Fat
+from tests.usb_cdc import USBCdc
+from tests.usb_hid import USBHid
+from tests.usb_msd import USBMsd, Fat
 
 DISMOUNT_TIME_S = 10.00
 
@@ -95,6 +96,8 @@ def test_usb(workspace, parent_test, force=False):
 def main():
     """Run the usb test as a stand alone program"""
 
+    tests_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(tests_dir)
     import test_info
     import mock
 
