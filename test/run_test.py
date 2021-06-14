@@ -29,8 +29,9 @@ optional arguments:
                         Directory with firmware images to test
   --firmware {k20dx_k64f_if,lpc11u35_sscity_if,...} (run script with --help to see full list)
                         Firmware to test
-  --project-tool TOOL    choices=['uvision', 'mbedcli'],'Tool used to compile the project',
-                        default='uvision'
+  --project-tool {make_gcc_arm,make_armclang,make_armcc,cmake_gcc_arm,cmake_armclang,cmake_armcc,uvision,mbedcli}
+                        Tool used to compile the project
+                        default='make_gcc_arm'
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
   --notestendpt         Dont test the interface USB endpoints.
@@ -521,6 +522,9 @@ def main():
     firmware_choices = [firmware for firmware in firmware_list if
                         firmware.endswith('_if')]
 
+    progen_toolchains = ['make_gcc_arm', 'make_armclang', 'make_armcc',
+                         'cmake_gcc_arm', 'cmake_armclang', 'cmake_armcc']
+    toolchains = ['uvision', 'mbedcli']
     description = 'DAPLink validation and testing tool'
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--targetdir',
@@ -533,9 +537,9 @@ def main():
     parser.add_argument('--firmwaredir',
                         help='Directory with firmware images to test',
                         default=None)
-    parser.add_argument('--project-tool', choices=['uvision', 'mbedcli'],
+    parser.add_argument('--project-tool', choices=progen_toolchains + toolchains,
                         help='Tool used to compile the project',
-                        default='uvision')
+                        default='make_gcc_arm')
     parser.add_argument('--firmware', help='Firmware to test', action='append',
                         choices=firmware_choices, default=[], required=False)
     parser.add_argument('--logdir', help='Directory to log test results to',

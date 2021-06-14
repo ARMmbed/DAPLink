@@ -35,7 +35,9 @@ def load_bundle_from_project(tool='uvision'):
     Note - This does not build the project.  It only returns the
     firmware that has already been built.
     """
-    assert (tool == 'uvision' or tool == 'mbedcli'), 'Input tool %s is not supported' % (tool) 
+    progen_toolchains = ['make_gcc_arm', 'make_armclang', 'make_armcc',
+                         'cmake_gcc_arm', 'cmake_armclang', 'cmake_armcc']
+    assert (tool in progen_toolchains or tool == 'uvision' or tool == 'mbedcli'), 'Input tool %s is not supported' % (tool) 
 
     self_path = os.path.abspath(__file__)
     test_dir = os.path.dirname(self_path)
@@ -43,7 +45,7 @@ def load_bundle_from_project(tool='uvision'):
     assert os.path.basename(test_dir) == 'test', 'The script "%s" must be ' \
         'located in the "test" directory of daplink to work correctly.'
 
-    if tool == 'uvision':
+    if tool in progen_toolchains or tool == 'uvision':
         project_dir = os.path.join(daplink_dir, 'projectfiles', tool)
         build_folder = 'build'
     elif tool == 'mbedcli':
