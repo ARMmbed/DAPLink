@@ -91,9 +91,9 @@ class SerialTester(object):
         self.raw_serial.timeout = 1.0
 
         # Reset the target
+        self.raw_serial.sendBreak()
         self.raw_serial.reset_output_buffer()
         self.raw_serial.reset_input_buffer()
-        self.raw_serial.sendBreak()
 
         # Wait until the target is initialized
         expected_resp = "{init}"
