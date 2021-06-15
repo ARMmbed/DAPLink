@@ -89,13 +89,13 @@ VERB_ALL = 'All'            # All errors
 VERB_LEVELS = [VERB_MINIMAL, VERB_NORMAL, VERB_VERBOSE, VERB_ALL]
 
 
-def test_endpoints(workspace, parent_test):
+def test_endpoints(workspace, parent_test, quick=False):
     """Run tests to validate DAPLINK fimrware"""
     test_info = parent_test.create_subtest('test_endpoints')
-    test_hid(workspace, test_info)
-    test_serial(workspace, test_info)
-    test_mass_storage(workspace, test_info)
-    test_usb(workspace, test_info)
+    test_hid(workspace, test_info, quick)
+    test_serial(workspace, test_info, quick)
+    test_mass_storage(workspace, test_info, quick)
+    test_usb(workspace, test_info, False, quick)
 
 
 class TestConfiguration(object):
@@ -207,7 +207,7 @@ class TestManager(object):
         assert self._firmware_filter is None
         self._firmware_filter = set(name_list)
 
-    def run_tests(self):
+    def run_tests(self, quick=False):
         """Run all configurations"""
         # Tests can only be run once per TestManager instance
         assert self._state is self._STATE.CONFIGURED
@@ -239,10 +239,10 @@ class TestManager(object):
             board.set_check_fs_on_remount(True)
 
             if self._test_daplink:
-                daplink_test(test_configuration, test_info)
+                daplink_test(test_configuration, test_info, quick)
 
             if self._test_ep:
-                test_endpoints(test_configuration, test_info)
+                test_endpoints(test_configuration, test_info, quick)
 
             if test_info.get_failed():
                 all_tests_pass = False
@@ -550,6 +550,8 @@ def main():
                         'USB endpoints.', default=False, action='store_true')
     parser.add_argument('--loadbl', help='Load bootloader before test.',
                         default=False, action='store_true')
+    parser.add_argument('--quick', help='Run shorter test sequences',
+                        default=False, action='store_true')
     parser.add_argument('--testdl', help='Run DAPLink specific tests. '
                         'The DAPLink test tests bootloader updates so use'
                         'with caution',
@@ -686,7 +688,7 @@ def main():
         exit(0)
 
     # Run tests
-    tester.run_tests()
+    tester.run_tests(args.quick)
 
     # Print test results
     tester.print_results(args.verbose)

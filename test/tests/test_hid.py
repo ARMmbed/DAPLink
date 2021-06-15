@@ -35,7 +35,7 @@ from pyocd.utility.conversion import float32_to_u32
 # TODO - test ram/rom transfer speeds
 
 
-def test_hid(workspace, parent_test):
+def test_hid(workspace, parent_test, quick=False):
     test_info = parent_test.create_subtest("HID test")
     board = workspace.board
     with ConnectHelper.session_with_chosen_probe(unique_id=board.get_unique_id()) as session:

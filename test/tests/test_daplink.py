@@ -124,7 +124,7 @@ class DLMassStorageTester(MassStorageTester):
         return actual_crc32 == expected_crc32
 
 
-def daplink_test(workspace, parent_test):
+def daplink_test(workspace, parent_test, quick=False):
     board = workspace.board
     interface = workspace.if_firmware
     test_info = parent_test.create_subtest('daplink_test')

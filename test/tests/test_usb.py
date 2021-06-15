@@ -32,7 +32,7 @@ from tests.usb_msd import USBMsd, Fat
 DISMOUNT_TIME_S = 10.00
 
 
-def test_usb(workspace, parent_test, force=False):
+def test_usb(workspace, parent_test, force=False, quick=False):
     """Run raw USB tests
 
     Requirements:

@@ -33,8 +33,9 @@ def _same(d1, d2):
         return False
     return True
 
+
 # http://digital.ni.com/public.nsf/allkb/D37754FFA24F7C3F86256706005B9BE7
-standard_baud = [
+standard_test_baud_rates = [
     9600,
     14400,
     19200,
@@ -44,7 +45,9 @@ standard_baud = [
     57600,
     115200,
 ]
-timing_test_baud = standard_baud[3:]
+standard_timing_baud_rates = standard_test_baud_rates[3:]
+quick_test_baud_rates = [9600, 115200]
+quick_timing_baud_rates = [115200]
 
 
 def calc_timeout(length, baud):
@@ -161,7 +164,7 @@ class SerialTester(object):
             self._queue.task_done()
 
 
-def test_serial(workspace, parent_test):
+def test_serial(workspace, parent_test, quick=False):
     """Test the serial port endpoint
 
     Requirements:
@@ -183,13 +186,15 @@ def test_serial(workspace, parent_test):
     # whole time.  Use the property 'baudrate' to change the baud
     # instead of opening a new instance.
 
+    test_baud_rates = quick_test_baud_rates if quick else standard_test_baud_rates
+    timing_baud_rates = quick_timing_baud_rates if quick else standard_timing_baud_rates
     with SerialTester(port) as sp:
 
         # Generate a 4KB block of dummy data
         # and test supported baud rates
         test_data = [i for i in range(0, 256)] * 4 * 4
         test_data = bytearray(test_data)
-        for baud in standard_baud:
+        for baud in test_baud_rates:
 
             test_info.info("Testing baud %i" % baud)
             success = sp.new_session_with_baud(baud, test_info)
@@ -215,7 +220,7 @@ def test_serial(workspace, parent_test):
         # 4. Read back all data
         test_data = [i for i in range(0, 256)] * 4 * 4
         test_data = bytearray(test_data)
-        for baud in timing_test_baud:
+        for baud in timing_baud_rates:
 
             test_info.info("Timing test baud %i" % baud)
             success = sp.new_session_with_baud(baud, test_info)
@@ -255,7 +260,7 @@ def test_serial(workspace, parent_test):
         test_data = bytearray(test_data)
         sp.new_session_with_baud(115200, test_info)
         sp.set_read_timeout(0)
-        for baud in standard_baud:
+        for baud in test_baud_rates:
             sp.raw_serial.baudrate = baud
             sp.write(test_data)
             xfer_time = float(len(test_data) * 10) / float(baud)
@@ -266,7 +271,7 @@ def test_serial(workspace, parent_test):
         sp.flush()
         sp.raw_serial.baudrate = 115200
         sp.set_read_timeout(1.0)
-        sp.read(128 * len(standard_baud))
+        sp.read(128 * len(test_baud_rates))
 
         # Generate a 8 KB block of dummy data
         # and test a large block transfer

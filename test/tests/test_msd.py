@@ -304,7 +304,7 @@ class MassStorageTester(object):
                 test_info.failure('Data does not match')
 
 
-def test_mass_storage(workspace, parent_test):
+def test_mass_storage(workspace, parent_test, quick=False):
     """Test the mass storage endpoint
 
     Requirements:
@@ -346,7 +346,7 @@ def test_mass_storage(workspace, parent_test):
         test.run()
 
     # Test loading a binary file with flushes
-    if not bad_vector_table:
+    if not bad_vector_table and not quick:
         test = MassStorageTester(board, test_info, "Load binary with flushes")
         test.set_programming_data(bin_file_contents, 'image.bin')
         test.set_expected_data(bin_file_contents, start)
@@ -360,14 +360,15 @@ def test_mass_storage(workspace, parent_test):
     test.run()
 
     # Test loading a hex file with flushes
-    test = MassStorageTester(board, test_info, "Load hex with flushes")
-    test.set_programming_data(hex_file_contents, 'image.hex')
-    test.set_expected_data(bin_file_contents, start)
-    test.set_flush_size(0x1000)
-    test.run()
+    if not quick:
+        test = MassStorageTester(board, test_info, "Load hex with flushes")
+        test.set_programming_data(hex_file_contents, 'image.hex')
+        test.set_expected_data(bin_file_contents, start)
+        test.set_flush_size(0x1000)
+        test.run()
 
     # Test loading a binary smaller than a sector
-    if not bad_vector_table:
+    if not bad_vector_table and not quick:
         test = MassStorageTester(board, test_info, "Load .bin smaller than sector")
         test_data_size = 0x789
         test_data = bin_file_contents[0:0 + test_data_size]
@@ -385,7 +386,7 @@ def test_mass_storage(workspace, parent_test):
 
     # Test loading a blank binary with a vector table but padded with 0xFF.
     #    A blank image can lock some devices.
-    if not bad_vector_table:
+    if not bad_vector_table and not quick:
         test = MassStorageTester(board, test_info, "Load blank binary + vector table")
         test.set_programming_data(vectors_and_pad, 'image.bin')
         if locked_when_erased:
@@ -408,7 +409,7 @@ def test_mass_storage(workspace, parent_test):
     #        when a binary file is loaded, since there is no way to
     #        tell where the end of the file is.
 
-    if page_erase_supported:
+    if page_erase_supported and not quick:
         # Test page erase, a.k.a. sector erase by generating iHex with discrete addresses,
         # programing the device then comparing device memory against expected content.
         test = MassStorageTester(board, test_info, "Sector Erase")
