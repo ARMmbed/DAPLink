@@ -55,7 +55,7 @@
 
   .section .init, "ax"
   .align 0
-  
+
 /************************************************************************************
  * Default Exception Handlers                                                       *
  ************************************************************************************/
@@ -114,7 +114,7 @@ Dummy_Handler:
 /************************************************************************************
  * Default Interrupt Handlers                                                       *
  ************************************************************************************/
- 
+
 .weak POWER_CLOCK_IRQHandler
 .thumb_set POWER_CLOCK_IRQHandler, Dummy_Handler
 
@@ -204,19 +204,18 @@ Dummy_Handler:
   .thumb_func
 nRFInitialize:
   b afterInitialize
- 
- 
+
+
 /************************************************************************************
  * Vector Table                                                                     *
  ************************************************************************************/
 
-  .section .vectors, "ax"
+  .section .isr_vector, "ax"
   .align 0
-  .global _vectors
-  .extern __stack_end__
+  .global __isr_vector
 
-_vectors:
-  .word __stack_end__
+__isr_vector:
+  .word __StackTop
   .word Reset_Handler
   .word NMI_Handler
   .word HardFault_Handler
@@ -224,12 +223,12 @@ _vectors:
   .word BusFault_Handler
   .word UsageFault_Handler
   .word 0                           /*Reserved */
-  .word 0                           /*Reserved */
-  .word 0                           /*Reserved */
-  .word 0                           /*Reserved */
+  .word DAPLINK_BUILD_KEY           /* Build type - BL/IF*/
+  .word DAPLINK_HIC_ID              /* Compatibility*/
+  .word DAPLINK_VERSION             /* Version*/
   .word SVC_Handler
   .word DebugMon_Handler
-  .word 0                           /*Reserved */
+  .word g_board_info                /* Ptr to Board info, family info other target details*/
   .word PendSV_Handler
   .word SysTick_Handler
 

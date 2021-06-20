@@ -87,10 +87,10 @@
   .syntax unified
 
   .global Reset_Handler
-#ifdef INITIALIZE_USER_SECTIONS  
+#ifdef INITIALIZE_USER_SECTIONS
   .global InitializeUserMemorySections
 #endif
-  .extern _vectors
+  .extern __isr_vector
   .extern nRFInitialize
   .global afterInitialize
 
@@ -101,7 +101,7 @@
   .equ FPU_CPACR_REG, 0xE000ED88
 
 #ifndef STACK_INIT_VAL
-#define STACK_INIT_VAL __RAM1_segment_end__
+#define STACK_INIT_VAL __StackTop
 #endif
 
 Reset_Handler:
@@ -111,7 +111,7 @@ Reset_Handler:
 
 .thumb_func
 afterInitialize:
-  
+
 #ifndef NO_STACK_INIT
   /* Initialise main stack */
   ldr r0, =STACK_INIT_VAL
@@ -153,7 +153,7 @@ afterInitialize:
 #ifdef VECTORS_IN_RAM
   ldr r1, =_vectors_ram
 #else
-  ldr r1, =_vectors
+  ldr r1, =__isr_vector
 #endif
   str r1, [r0]
 #endif
@@ -171,7 +171,7 @@ afterInitialize:
   /* Jump to program start */
   b _start
 
-#ifdef INITIALIZE_USER_SECTIONS  
+#ifdef INITIALIZE_USER_SECTIONS
   .thumb_func
 InitializeUserMemorySections:
   ldr r0, =__start_nrf_sections
