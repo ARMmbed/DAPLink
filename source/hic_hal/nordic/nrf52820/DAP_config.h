@@ -30,9 +30,9 @@
 
 
 //**************************************************************************************************
-/** 
+/**
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
-\ingroup DAP_ConfigIO_gr 
+\ingroup DAP_ConfigIO_gr
 @{
 Provides definitions about the hardware and configuration of the Debug Unit.
 
@@ -59,7 +59,7 @@ This information includes:
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
 /// Port write operations in the Debug Unit by a Cortex-M MCU. Most Cortex-M processors
 /// require 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
-/// a Cortex-M0+ processor with high-speed peripheral I/O only 1 processor cycle might be 
+/// a Cortex-M0+ processor with high-speed peripheral I/O only 1 processor cycle might be
 /// required.
 #define IO_PORT_WRITE_CYCLES    2U              ///< I/O Cycles: 2=default, 1=Cortex-M0+ fast I/0.
 
@@ -127,44 +127,17 @@ This information includes:
 #define TARGET_DEVICE_NAME      "Cortex-M4"     ///< String indicating the Target Device
 #endif
 
-/** Get Vendor ID string.
-\param str Pointer to buffer to store the string.
-\return String length.
-*/
-__STATIC_INLINE uint8_t DAP_GetVendorString (char *str) {
-  (void)str;
-  return (0U);
-}
-
-/** Get Product ID string.
-\param str Pointer to buffer to store the string.
-\return String length.
-*/
-__STATIC_INLINE uint8_t DAP_GetProductString (char *str) {
-  (void)str;
-  return (0U);
-}
-
-/** Get Serial Number string.
-\param str Pointer to buffer to store the string.
-\return String length.
-*/
-__STATIC_INLINE uint8_t DAP_GetSerNumString (char *str) {
-  (void)str;
-  return (0U);
-}
-
 ///@}
 
 
 //**************************************************************************************************
-/** 
+/**
 \defgroup DAP_Config_PortIO_gr CMSIS-DAP Hardware I/O Pin Access
-\ingroup DAP_ConfigIO_gr 
+\ingroup DAP_ConfigIO_gr
 @{
 
 Standard I/O Pins of the CMSIS-DAP Hardware Debug Port support standard JTAG mode
-and Serial Wire Debug (SWD) mode. In SWD mode only 2 pins are required to implement the debug 
+and Serial Wire Debug (SWD) mode. In SWD mode only 2 pins are required to implement the debug
 interface of a device. The following I/O Pins are provided:
 
 JTAG I/O Pin                 | SWD I/O Pin          | CMSIS-DAP Hardware pin mode
@@ -172,19 +145,19 @@ JTAG I/O Pin                 | SWD I/O Pin          | CMSIS-DAP Hardware pin mod
 TCK: Test Clock              | SWCLK: Clock         | Output Push/Pull
 TMS: Test Mode Select        | SWDIO: Data I/O      | Output Push/Pull; Input (for receiving data)
 TDI: Test Data Input         |                      | Output Push/Pull
-TDO: Test Data Output        |                      | Input             
+TDO: Test Data Output        |                      | Input
 nTRST: Test Reset (optional) |                      | Output Open Drain with pull-up resistor
 nRESET: Device Reset         | nRESET: Device Reset | Output Open Drain with pull-up resistor
 
 
 DAP Hardware I/O Pin Access Functions
 -------------------------------------
-The various I/O Pins are accessed by functions that implement the Read, Write, Set, or Clear to 
-these I/O Pins. 
+The various I/O Pins are accessed by functions that implement the Read, Write, Set, or Clear to
+these I/O Pins.
 
 For the SWDIO I/O Pin there are additional functions that are called in SWD I/O mode only.
-This functions are provided to achieve faster I/O that is possible with some advanced GPIO 
-peripherals that can independently write/read a single I/O pin without affecting any other pins 
+This functions are provided to achieve faster I/O that is possible with some advanced GPIO
+peripherals that can independently write/read a single I/O pin without affecting any other pins
 of the same I/O port. The following SWDIO I/O Pin functions are provided:
  - \ref PIN_SWDIO_OUT_ENABLE to enable the output mode from the DAP hardware.
  - \ref PIN_SWDIO_OUT_DISABLE to enable the input mode to the DAP hardware.
@@ -199,16 +172,16 @@ of the same I/O port. The following SWDIO I/O Pin functions are provided:
 Configures the DAP Hardware I/O pins for JTAG mode:
  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
  - TDO to input mode.
-*/ 
+*/
 __STATIC_INLINE void PORT_JTAG_SETUP (void) {
   ;
 }
- 
+
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
  - TDI, nTRST to HighZ mode (pins are unused in SWD mode).
-*/ 
+*/
 __STATIC_INLINE void PORT_SWD_SETUP (void) {
   ;
 }
@@ -288,7 +261,7 @@ Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE  (void) {
-  ; 
+  ;
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -342,7 +315,7 @@ __STATIC_FORCEINLINE uint32_t PIN_nTRST_IN   (void) {
            - 1: release JTAG TRST Test Reset.
 */
 __STATIC_FORCEINLINE void     PIN_nTRST_OUT  (uint32_t bit) {
-  ; 
+  ;
 }
 
 // nRESET Pin I/O------------------------------------------
@@ -367,7 +340,7 @@ __STATIC_FORCEINLINE void     PIN_nRESET_OUT (uint32_t bit) {
 
 
 //**************************************************************************************************
-/** 
+/**
 \defgroup DAP_Config_LEDs_gr CMSIS-DAP Hardware Status LEDs
 \ingroup DAP_ConfigIO_gr
 @{
@@ -397,13 +370,13 @@ __STATIC_INLINE void LED_RUNNING_OUT (uint32_t bit) {}
 
 
 //**************************************************************************************************
-/** 
+/**
 \defgroup DAP_Config_Timestamp_gr CMSIS-DAP Timestamp
 \ingroup DAP_ConfigIO_gr
 @{
 Access function for Test Domain Timer.
 
-The value of the Test Domain Timer in the Debug Unit is returned by the function \ref TIMESTAMP_GET. By 
+The value of the Test Domain Timer in the Debug Unit is returned by the function \ref TIMESTAMP_GET. By
 default, the DWT timer is used.  The frequency of this timer is configured with \ref TIMESTAMP_CLOCK.
 
 */
@@ -419,7 +392,7 @@ __STATIC_INLINE uint32_t TIMESTAMP_GET (void) {
 
 
 //**************************************************************************************************
-/** 
+/**
 \defgroup DAP_Config_Initialization_gr CMSIS-DAP Initialization
 \ingroup DAP_ConfigIO_gr
 @{
@@ -428,7 +401,7 @@ CMSIS-DAP Hardware I/O and LED Pins are initialized with the function \ref DAP_S
 */
 
 /** Setup of the Debug Unit I/O pins and LEDs (called when Debug Unit is initialized).
-This function performs the initialization of the CMSIS-DAP Hardware I/O Pins and the 
+This function performs the initialization of the CMSIS-DAP Hardware I/O Pins and the
 Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled and set:
  - I/O clock system enabled.
  - all I/O pins: input buffer enabled, output pins are set to HighZ mode.
@@ -441,7 +414,7 @@ __STATIC_INLINE void DAP_SETUP (void) {
 
 /** Reset Target Device with custom specific I/O pin or command sequence.
 This function allows the optional implementation of a device specific reset sequence.
-It is called when the command \ref DAP_ResetTarget and is for example required 
+It is called when the command \ref DAP_ResetTarget and is for example required
 when a device needs a time-critical unlock sequence that enables the debug port.
 \return 0 = no device specific reset sequence is implemented.\n
         1 = a device specific reset sequence is implemented.
