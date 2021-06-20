@@ -81,6 +81,9 @@ module:
     hic_m48ssidae: &module_hic_m48ssidae
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/m48ssidae.yaml
+    hic_nrf52820: &module_hic_nrf52820
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/nrf52820.yaml
 
 projects:
     # HIC bootloaders and all target interfaces
@@ -158,6 +161,15 @@ projects:
     max32625_if:
         - *module_if
         - *module_hic_max32625
+        - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
+    nrf52820_bl:
+        - *module_bl
+        - records/hic_hal/nrf52820.yaml
+        - records/board/nrf52820_bl.yaml
+    nrf52820_if:
+        - *module_if
+        - *module_hic_nrf52820
         - records/family/all_family.yaml
         - records/usb/usb-bulk.yaml
     sam3u2c_bl:

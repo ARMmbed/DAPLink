@@ -42,6 +42,8 @@
 #include "stm32f1xx.h"
 #elif defined (INTERFACE_M48SSIDAE)
 #include "M480.h"
+#elif defined (INTERFACE_NRF52820)
+#include "nrf52820.h"
 #else
 #error "CMSIS core headers needed"
 #endif
