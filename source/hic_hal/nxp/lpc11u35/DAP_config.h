@@ -42,7 +42,7 @@ Provides definitions about:
 // Configure JTAG option
 #if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E)
 // LPC43xx multicore targets require JTAG to debug slave cores
-#define CONF_JTAG
+#define DAP_JTAG 1
 #endif
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
@@ -59,14 +59,14 @@ Provides definitions about:
 
 /// Indicate that Serial Wire Debug (SWD) communication mode is available at the Debug Access Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#ifndef DAP_SWD
 #define DAP_SWD                 1               ///< SWD Mode:  1 = available, 0 = not available
+#endif
 
 /// Indicate that JTAG communication mode is available at the Debug Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
-#if defined(CONF_JTAG)
-#define DAP_JTAG                1               ///< JTAG Mode: 1 = available
-#else
-#define DAP_JTAG                0               ///< JTAG Mode: 0 = not available
+#ifndef DAP_JTAG
+#define DAP_JTAG                0               ///< JTAG Mode: 1 = available, 0 = not available
 #endif
 
 /// Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
@@ -75,7 +75,13 @@ Provides definitions about:
 
 /// Default communication mode on the Debug Access Port.
 /// Used for the command \ref DAP_Connect when Port Default mode is selected.
+#if (DAP_SWD == 1)
 #define DAP_DEFAULT_PORT        1               ///< Default JTAG/SWJ Port Mode: 1 = SWD, 2 = JTAG.
+#elif (DAP_JTAG == 1)
+#define DAP_DEFAULT_PORT        2               ///< Default JTAG/SWJ Port Mode: 1 = SWD, 2 = JTAG.
+#else 
+#error Must enable DAP_SWD and/or DAP_JTAG
+#endif
 
 /// Default communication speed on the Debug Access Port for SWD and JTAG mode.
 /// Used to initialize the default SWD/JTAG clock frequency.
@@ -173,6 +179,28 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 __STATIC_INLINE void PORT_JTAG_SETUP(void)
 {
 #if (DAP_JTAG != 0)
+    LPC_GPIO->SET[PIN_SWCLK_PORT] = PIN_SWCLK;
+    LPC_GPIO->SET[PIN_SWDIO_PORT] = PIN_SWDIO;
+#if !defined(PIN_nRESET_FET_DRIVE)
+    /* Open drain logic (for ordinary board).
+     * nRESET line should be pulled up by the board.
+     * To output high level (reset release signal),
+     * set as input direction. */
+    LPC_GPIO->DIR[PIN_nRESET_PORT] &= ~PIN_nRESET;
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
+#else
+    /* FET drive logic (for special board like as blueninja)
+     * This setting treats nRESET line as positive logic.
+     * High level indicates that reset signal is asserted.
+     * Low level indicates that reset signal is deasserted. */
+    LPC_GPIO->DIR[PIN_nRESET_PORT] |= PIN_nRESET;
+    LPC_GPIO->CLR[PIN_nRESET_PORT] = PIN_nRESET;
+#endif
+    // SWCLK and TCK are aliases for the same line.
+    LPC_GPIO->DIR[PIN_SWCLK_PORT] |= PIN_SWCLK;
+    // SWDIO and TMS are aliases for the same line.
+    LPC_GPIO->DIR[PIN_SWDIO_PORT] |= PIN_SWDIO;
+
     LPC_GPIO->SET[PIN_TDI_PORT]  =  PIN_TDI;
     LPC_GPIO->DIR[PIN_TDI_PORT] |=  PIN_TDI;
     LPC_GPIO->DIR[PIN_TDO_PORT] &= ~PIN_TDO;
@@ -392,7 +420,16 @@ __STATIC_FORCEINLINE void     PIN_nTRST_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 {
+#if !defined(PIN_nRESET_FET_DRIVE)
+    // open drain logic
     return LPC_GPIO->B[PIN_nRESET_BIT + PIN_nRESET_PORT * 32] & 0x1;
+#else
+    /* FET drive logic (for special board like as blueninja)
+     * This setting treats nRESET line as positive logic.
+     * High level indicates that reset signal is asserted.
+     * Low level indicates that reset signal is deasserted. */
+    return (LPC_GPIO->B[PIN_nRESET_BIT + PIN_nRESET_PORT * 32] & 0x1) == 1 ? 0 : 1;
+#endif
 }
 
 /** nRESET I/O pin: Set Output.
