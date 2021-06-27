@@ -25,9 +25,47 @@
 #define __IO_CONFIG_H__
 
 #include "daplink.h"
-#include "LPC43xx.h"
+#include "device.h"
 
 // This GPIO configuration is only valid for the LPC4322 HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC4322);
+
+// Debug Port I/O Pins
+
+// SWCLK Pin                  P1_17: GPIO0[12]
+#define PORT_SWCLK            0
+#define PIN_SWCLK_IN_BIT      12
+#define PIN_SWCLK             (1<<PIN_SWCLK_IN_BIT)
+
+// SWDIO Pin                  P1_6:  GPIO1[9]
+#define PORT_SWDIO            1
+#define PIN_SWDIO_IN_BIT      9
+#define PIN_SWDIO             (1<<PIN_SWDIO_IN_BIT)
+
+// SWDIO Output Enable Pin    P1_5:  GPIO1[8]
+#define PORT_SWDIO_TXE        1
+#define PIN_SWDIO_TXE_IN_BIT  8
+#define PIN_SWDIO_TXE         (1<<PIN_SWDIO_TXE_IN_BIT)
+
+// nRESET Pin                 P2_5:  GPIO5[5]
+#define PORT_nRESET           5
+#define PIN_nRESET_IN_BIT     5
+#define PIN_nRESET            (1<<PIN_nRESET_IN_BIT)
+
+// nRESET Output Enable Pin   P2_6:  GPIO5[6]
+#define PORT_RESET_TXE        5
+#define PIN_RESET_TXE_IN_BIT  6
+#define PIN_RESET_TXE         (1<<PIN_RESET_TXE_IN_BIT)
+
+// ISP Control Pin          P2_11:  GPIO1[11]
+#define ISPCTRL_PORT        1
+#define ISPCTRL_BIT         11
+
+#define X_SET(str)     LPC_GPIO_PORT->SET[PORT_##str] = PIN_##str
+#define X_CLR(str)     LPC_GPIO_PORT->CLR[PORT_##str] = PIN_##str
+#define X_DIR_OUT(str) LPC_GPIO_PORT->DIR[PORT_##str] |= (PIN_##str)
+#define X_DIR_IN(str)  LPC_GPIO_PORT->DIR[PORT_##str] &= ~(PIN_##str)
+#define X_BYTE(str)    LPC_GPIO_PORT->B[(PORT_##str << 5) + PIN_##str##_IN_BIT]
+
 
 #endif
