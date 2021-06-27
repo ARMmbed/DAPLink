@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
 #include "LPC43xx.h"
 #include "lpc43xx_scu.h"
 #include "gpio.h"
@@ -26,7 +27,7 @@
 #include "DAP_config.h" // For the nRESET and RESET_TXE port/pin info
 #include "IO_Config.h"
 
-BOOL gpio_reset_pin_is_input  = __TRUE;
+bool gpio_reset_pin_is_input  = true;
 
 // Connected LED            P1_1: GPIO0[8]
 #define LED_CONNECTED_PORT  0

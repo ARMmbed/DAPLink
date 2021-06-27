@@ -3,7 +3,7 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,7 +19,6 @@
  * limitations under the License.
  */
 
-
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
@@ -30,12 +29,22 @@
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
 \ingroup DAP_ConfigIO_gr
 @{
-Provides definitions about:
+Provides definitions about the hardware and configuration of the Debug Unit.
+
+This information includes:
  - Definition of Cortex-M processor parameters used in CMSIS-DAP Debug Unit.
+ - Debug Unit Identification strings (Vendor, Product, Serial Number).
  - Debug Unit communication packet size.
- - Debug Access Port communication mode (JTAG or SWD).
+ - Debug Access Port supported modes and settings (JTAG/SWD and SWO).
  - Optional information about a connected Target Device (for Evaluation Boards).
 */
+
+#ifdef _RTE_
+#include "RTE_Components.h"
+#include CMSIS_device_header
+#else
+#include "device.h"                             // Debug Unit Cortex-M Processor Header File
+#endif
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
@@ -44,9 +53,9 @@ Provides definitions about:
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
 /// Port write operations in the Debug Unit by a Cortex-M MCU. Most Cortex-M processors
-/// requrie 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
+/// require 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
 /// a Cortex-M0+ processor with high-speed peripheral I/O only 1 processor cycle might be
-/// requrired.
+/// required.
 #define IO_PORT_WRITE_CYCLES    1               ///< I/O Cycles: 2=default, 1=Cortex-M0+ fast I/0
 
 /// Indicate that Serial Wire Debug (SWD) communication mode is available at the Debug Access Port.
@@ -73,12 +82,17 @@ Provides definitions about:
 #endif
 
 /// Maximum Package Size for Command and Response data.
-/// This configuration settings is used to optimized the communication performance with the
-/// debugger and depends on the USB peripheral. Change setting to 1024 for High-Speed USB.
-#define DAP_PACKET_SIZE         64              ///< USB: 64 = Full-Speed, 1024 = High-Speed.
+/// This configuration settings is used to optimize the communication performance with the
+/// debugger and depends on the USB peripheral. Typical vales are 64 for Full-speed USB HID or WinUSB,
+/// 1024 for High-speed USB HID and 512 for High-speed USB WinUSB.
+#ifndef HID_ENDPOINT            //HID end points currently set limits to 64
+#define DAP_PACKET_SIZE         512              ///< Specifies Packet Size in bytes.
+#else
+#define DAP_PACKET_SIZE         64              ///< Specifies Packet Size in bytes.
+#endif
 
 /// Maximum Package Buffers for Command and Response data.
-/// This configuration settings is used to optimized the communication performance with the
+/// This configuration settings is used to optimize the communication performance with the
 /// debugger and depends on the USB peripheral. For devices with limited RAM or USB buffer the
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
 #define DAP_PACKET_COUNT        5              ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
@@ -87,33 +101,48 @@ Provides definitions about:
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
 #define SWO_UART                0               ///< SWO UART:  1 = available, 0 = not available
 
+/// USART Driver instance number for the UART SWO.
+#define SWO_UART_DRIVER         0               ///< USART Driver instance number (Driver_USART#).
+
 /// Maximum SWO UART Baudrate
 #define SWO_UART_MAX_BAUDRATE   10000000U       ///< SWO UART Maximum Baudrate in Hz
 
 /// Indicate that Manchester Serial Wire Output (SWO) trace is available.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
-#define SWO_MANCHESTER          0               ///< SWO Manchester:  1 = available, 0 = not available
+#define SWO_MANCHESTER          0               ///< SWO Manchester:  1 = available, 0 = not available.
 
 /// SWO Trace Buffer Size.
-#define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n)
+#define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n).
 
 /// SWO Streaming Trace.
 #define SWO_STREAM              0               ///< SWO Streaming Trace: 1 = available, 0 = not available.
 
 /// Clock frequency of the Test Domain Timer. Timer value is returned with \ref TIMESTAMP_GET.
 #define TIMESTAMP_CLOCK         0U      ///< Timestamp clock in Hz (0 = timestamps not supported).
+// DAPLink: disabled because we use DWT for timestamps and M0+ doesn't have a DWT.
 
+/// Indicate that UART Communication Port is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define DAP_UART                0               ///< DAP UART:  1 = available, 0 = not available.
+
+/// USART Driver instance number for the UART Communication Port.
+#define DAP_UART_DRIVER         1               ///< USART Driver instance number (Driver_USART#).
+
+/// UART Receive Buffer Size.
+#define DAP_UART_RX_BUFFER_SIZE 1024U           ///< Uart Receive Buffer Size in bytes (must be 2^n).
+
+/// UART Transmit Buffer Size.
+#define DAP_UART_TX_BUFFER_SIZE 1024U           ///< Uart Transmit Buffer Size in bytes (must be 2^n).
+
+/// Indicate that UART Communication via USB COM Port is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define DAP_UART_USB_COM_PORT   1               ///< USB COM Port:  1 = available, 0 = not available.
 
 /// Debug Unit is connected to fixed Target Device.
 /// The Debug Unit may be part of an evaluation board and always connected to a fixed
-/// known device.  In this case a Device Vendor and Device Name string is stored which
-/// may be used by the debugger or IDE to configure device parameters.
-#define TARGET_DEVICE_FIXED     0               ///< Target Device: 1 = known, 0 = unknown;
-
-#if TARGET_DEVICE_FIXED
-#define TARGET_DEVICE_VENDOR    ""              ///< String indicating the Silicon Vendor
-#define TARGET_DEVICE_NAME      ""              ///< String indicating the Target Device
-#endif
+/// known device. In this case a Device Vendor, Device Name, Board Vendor and Board Name strings
+/// are stored and may be used by the debugger or IDE to configure device parameters.
+#define TARGET_FIXED            0               ///< Target: 1 = known, 0 = unknown;
 
 ///@}
 

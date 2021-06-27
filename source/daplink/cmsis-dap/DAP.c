@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
+ * Copyright (c) 2013-2021 ARM Limited. All rights reserved.
  * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  *
@@ -63,10 +63,6 @@ volatile uint8_t    DAP_TransferAbort;  // Transfer Abort Flag
 
 static const char DAP_FW_Ver [] = DAP_FW_VER;
 
-#if TARGET_DEVICE_FIXED
-static const char TargetDeviceVendor [] = TARGET_DEVICE_VENDOR;
-static const char TargetDeviceName   [] = TARGET_DEVICE_NAME;
-#endif
 
 
 // Get DAP Information
@@ -86,24 +82,24 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
     case DAP_ID_SER_NUM:
       length = DAP_GetSerNumString((char *)info);
       break;
-    case DAP_ID_CMSIS_DAP_VER:
+    case DAP_ID_DAP_FW_VER:
       length = (uint8_t)sizeof(DAP_FW_Ver);
       memcpy(info, DAP_FW_Ver, length);
       break;
     case DAP_ID_DEVICE_VENDOR:
-#if TARGET_DEVICE_FIXED
-      length = (uint8_t)sizeof(TargetDeviceVendor);
-      memcpy(info, TargetDeviceVendor, length);
-#endif
+      length = DAP_GetTargetDeviceVendorString((char *)info);
       break;
     case DAP_ID_DEVICE_NAME:
-#if TARGET_DEVICE_FIXED
-      length = (uint8_t)sizeof(TargetDeviceName);
-      memcpy(info, TargetDeviceName, length);
-#endif
+      length = DAP_GetTargetDeviceNameString((char *)info);
+      break;
+    case DAP_ID_BOARD_VENDOR:
+      length = DAP_GetTargetBoardVendorString((char *)info);
+      break;
+    case DAP_ID_BOARD_NAME:
+      length = DAP_GetTargetBoardNameString((char *)info);
       break;
     case DAP_ID_PRODUCT_FW_VER:
-      length = DAP_ProductFirmwareVerString((char *)info);
+      length = DAP_GetProductFirmwareVersionString((char *)info);
       break;
     case DAP_ID_CAPABILITIES:
       info[0] = ((DAP_SWD  != 0)         ? (1U << 0) : 0U) |
@@ -112,8 +108,11 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
                 ((SWO_MANCHESTER != 0)   ? (1U << 3) : 0U) |
                 /* Atomic Commands  */     (1U << 4)       |
                 ((TIMESTAMP_CLOCK != 0U) ? (1U << 5) : 0U) |
-                ((SWO_STREAM != 0U)      ? (1U << 6) : 0U);
-      length = 1U;
+                ((SWO_STREAM != 0U)      ? (1U << 6) : 0U) |
+                ((DAP_UART != 0U)        ? (1U << 7) : 0U);
+
+      info[1] = ((DAP_UART_USB_COM_PORT != 0) ? (1U << 0) : 0U);
+      length = 2U;
       break;
     case DAP_ID_TIMESTAMP_CLOCK:
 #if (TIMESTAMP_CLOCK != 0U)
@@ -121,6 +120,24 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
       info[1] = (uint8_t)(TIMESTAMP_CLOCK >>  8);
       info[2] = (uint8_t)(TIMESTAMP_CLOCK >> 16);
       info[3] = (uint8_t)(TIMESTAMP_CLOCK >> 24);
+      length = 4U;
+#endif
+      break;
+    case DAP_ID_UART_RX_BUFFER_SIZE:
+#if (DAP_UART != 0)
+      info[0] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >>  0);
+      info[1] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >>  8);
+      info[2] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >> 16);
+      info[3] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >> 24);
+      length = 4U;
+#endif
+      break;
+    case DAP_ID_UART_TX_BUFFER_SIZE:
+#if (DAP_UART != 0)
+      info[0] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >>  0);
+      info[1] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >>  8);
+      info[2] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >> 16);
+      info[3] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >> 24);
       length = 4U;
 #endif
       break;
@@ -1741,6 +1758,24 @@ uint32_t DAP_ProcessCommand(const uint8_t *request, uint8_t *response) {
       break;
     case ID_DAP_SWO_Data:
       num = SWO_Data(request, response);
+      break;
+#endif
+
+#if (DAP_UART != 0)
+    case ID_DAP_UART_Transport:
+      num = UART_Transport(request, response);
+      break;
+    case ID_DAP_UART_Configure:
+      num = UART_Configure(request, response);
+      break;
+    case ID_DAP_UART_Control:
+      num = UART_Control(request, response);
+      break;
+    case ID_DAP_UART_Status:
+      num = UART_Status(response);
+      break;
+    case ID_DAP_UART_Transfer:
+      num = UART_Transfer(request, response);
       break;
 #endif
 
