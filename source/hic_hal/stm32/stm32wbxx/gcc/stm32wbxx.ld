@@ -6,7 +6,7 @@
 **  Author      : STM32CubeIDE
 **
 **  Abstract    : Linker script for STM32WB55xG Device
-**                      1024Kbytes FLASH
+**                     1024Kbytes FLASH
 **                      256Kbytes RAM
 **
 **                Set heap size, stack size and stack location according
@@ -36,18 +36,21 @@
 #include "daplink_addr.h" 
 #include "daplink_defaults.h"
 
-/* Entry Point */
+/* Reset Entry Point - first executable instruction */
 ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack */
-_estack = 0x20030000;    /* end of RAM */
-/* Generate a link error if heap and stack don't fit into RAM */
-_Min_Heap_Size = 0x200 ;  /* required amount of heap  */
-_Min_Stack_Size = 0x400 ; /* required amount of stack */
+/* Highest address of the user mode stack or the end address of device RAM + 1
+*  Stack PUSH instruction always decrements by 1 and then PUSH data 	
+*/
+_estack = DAPLINK_RAM_START + DAPLINK_RAM_SIZE;	
+
+__heap_size__ = 0x200 ;	/* required amount of heap  */
+__stack_size__ = 0x400 ;	/* required amount of stack */
 _Min_Heap_Size = DEFINED(__heap_size__)  ? __heap_size__  : DAPLINK_HEAP_SIZE; ;	/* required amount of heap  */
 _Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;	/* required amount of stack */
 
-/* Specify the memory areas */
+/* Memories definition */
+/* Attributes rx - Read & Execute section, rw - Read / Write section */
 MEMORY
 {
   m_interrupts          (rx)  : ORIGIN = DAPLINK_ROM_CONFIG_ADMIN_START, LENGTH = 0x400
@@ -56,10 +59,11 @@ MEMORY
   m_data                (rw)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
   m_cfgram              (rw)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
 }
-/* Define output sections */
+
+/* Sections */
 SECTIONS
 {
-  /* The startup code goes first into FLASH */
+  /* The startup code into "FLASH" Rom type memory */
   .isr_vector :
   {
     . = ALIGN(4);
@@ -67,7 +71,7 @@ SECTIONS
     . = ALIGN(4);
   } >m_interrupts
 
-  /* The program code and other data goes into FLASH */
+  /* The program code and other data into "FLASH" Rom type memory */
   .text :
   {
     . = ALIGN(4);
@@ -84,7 +88,7 @@ SECTIONS
     _etext = .;        /* define a global symbols at end of code */
   } >m_text
 
-  /* Constant data goes into FLASH */
+  /* Constant data into "FLASH" Rom type memory */
   .rodata :
   {
     . = ALIGN(4);
@@ -93,41 +97,56 @@ SECTIONS
     . = ALIGN(4);
   } >m_text
 
-  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >m_text
+  .ARM.extab   : {
+    . = ALIGN(4);
+    *(.ARM.extab* .gnu.linkonce.armextab.*)
+    . = ALIGN(4);
+  } >m_text
+
   .ARM : {
+    . = ALIGN(4);
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  }  >m_text
+    . = ALIGN(4);
+  } >m_text
 
   .preinit_array     :
   {
+    . = ALIGN(4);
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
+    . = ALIGN(4);
   } >m_text
+
   .init_array :
   {
+    . = ALIGN(4);
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
+    . = ALIGN(4);
   } >m_text
+
   .fini_array :
   {
+    . = ALIGN(4);
     PROVIDE_HIDDEN (__fini_array_start = .);
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
+    . = ALIGN(4);
   } >m_text
 
-  /* used by the startup to initialize data */
+  /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
     __DATA_ROM = .;
   /* Initialized data sections into "RAM" Ram type memory */
   .data : AT(__DATA_ROM)
-    {
+  {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
     *(.data)           /* .data sections */
@@ -136,11 +155,10 @@ SECTIONS
     *(.RamFunc*)       /* .RamFunc* sections */
 
     . = ALIGN(4);
-    _edata = .;        /* define a global symbol at data end */
-  }  >m_data
+    _edata = .;        /* define a global symbol at data end */	
 
-  /* Uninitialized data section */
-   
+  } >m_data
+  
   __DATA_END = __DATA_ROM + (_edata - _sdata);
  
   .fill __DATA_END :
@@ -150,8 +168,8 @@ SECTIONS
     . += 0x0800C000 + 0x00013C00 - __DATA_END - 4;
     LONG(0x55555555)
   } > m_text
-
- text_end = ORIGIN(m_text) + LENGTH(m_text);
+ 
+  text_end = ORIGIN(m_text) + LENGTH(m_text);
   ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
 
   .cfgrom (NOLOAD) :
@@ -163,19 +181,17 @@ SECTIONS
   . = ALIGN(4);
   .bss :
   {
-    /* This is used by the startup in order to initialize the .bss secion */
+    /* This is used by the startup in order to initialize the .bss section */
     _sbss = .;         /* define a global symbol at bss start */
-    __bss_start__ = _sbss;
     *(.bss)
     *(.bss*)
     *(COMMON)
 
     . = ALIGN(4);
-    _ebss = .;         /* define a global symbol at bss end */
-    __bss_end__ = _ebss;
+    _ebss = .;         /* define a global symbol at bss end */    
   } >m_data
 
-  /* User_heap_stack section, used to check that there is enough RAM left */
+  /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
   ._user_heap_stack :
   {
     . = ALIGN(8);
@@ -185,12 +201,13 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } > m_data 
- .cfgram (NOLOAD) :
+
+  .cfgram (NOLOAD) :
   {
     *(cfgram)
   } >m_cfgram
 
-  /* Remove information from the standard libraries */
+  /* Remove information from the compiler libraries */
   /DISCARD/ :
   {
     libc.a ( * )
@@ -198,5 +215,5 @@ SECTIONS
     libgcc.a ( * )
   }
 
-  .ARM.attributes 0       : { *(.ARM.attributes) }
+  .ARM.attributes 0 : { *(.ARM.attributes) }
 }
