@@ -45,24 +45,29 @@ defined in linker script */
 /* end address for the .bss section. defined in linker script */
 .word	_ebss
 
-/* INIT_BSS macro is used to fill the specified region [start : end] with zeros */
-.macro INIT_BSS start, end
-  ldr r0, =\start
-  ldr r1, =\end
-  movs r3, #0
-  bl LoopFillZerobss
-.endm
+.equ  BootRAM,        0xF1E0F85F
+/**
+ * @brief  This is the code that gets called when the processor first
+ *          starts execution following a reset event. Only the absolutely
+ *          necessary set is performed, after which the application
+ *          supplied main() routine is called.
+ * @param  None
+ * @retval : None
+*/
 
-/* INIT_DATA macro is used to copy data in the region [start : end] starting from 'src' */
-.macro INIT_DATA start, end, src
-  ldr r0, =\start
-  ldr r1, =\end
-  ldr r2, =\src
-  movs r3, #0
-  bl LoopCopyDataInit
-.endm
+    .section	.text.Reset_Handler
+	.weak	Reset_Handler
+	.type	Reset_Handler, %function
+Reset_Handler:
+  ldr   sp, =_estack    /* Atollic update: set stack pointer */
 
-.section  .text.data_initializers
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+  ldr r1, =_edata
+  ldr r2, =_sidata
+  movs r3, #0
+  b LoopCopyDataInit
+
 CopyDataInit:
   ldr r4, [r2, r3]
   str r4, [r0, r3]
@@ -71,41 +76,31 @@ CopyDataInit:
 LoopCopyDataInit:
   adds r4, r0, r3
   cmp r4, r1
-  bcc  CopyDataInit
-  bx lr
+  bcc CopyDataInit
+  
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+  ldr r4, =_ebss
+  movs r3, #0
+  b LoopFillZerobss
 
 FillZerobss:
-  str  r3, [r0]
-  adds r0, r0, #4
+  str  r3, [r2]
+  adds r2, r2, #4
 
 LoopFillZerobss:
-  cmp r0, r1
+  cmp r2, r4
   bcc FillZerobss
-  bx lr
 
-  .section .text.Reset_Handler
-  .weak Reset_Handler
-  .type Reset_Handler, %function
-Reset_Handler:
-  ldr   r0, =_estack
-  mov   sp, r0          /* set stack pointer */
 /* Call the clock system intitialization function.*/
-  bl  SystemInit
-
-/* Copy the data segment initializers from flash to SRAM */
-  INIT_DATA _sdata, _edata, _sidata
-
-/* Zero fill the bss segments. */
-  INIT_BSS _sbss, _ebss
- /* INIT_BSS _sMB_MEM2, _eMB_MEM2 */
-
+    bl  SystemInit
 /* Call static constructors */
-  bl __libc_init_array
-/* Call the application s entry point.*/
+    bl __libc_init_array
+/* Call the application's entry point.*/
 	bl	main
 
 LoopForever:
-  b LoopForever
+    b LoopForever
     
 .size	Reset_Handler, .-Reset_Handler
 
@@ -115,9 +110,9 @@ LoopForever:
  *         the system state for examination by a debugger.
  *
  * @param  None
- * @retval None
+ * @retval : None
 */
-  .section .text.Default_Handler,"ax",%progbits
+    .section	.text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
 	b	Infinite_Loop
