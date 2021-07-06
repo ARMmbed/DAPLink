@@ -520,7 +520,7 @@ int main(void)
    // Initialize CMSIS-RTOS
     osKernelInitialize();
 	
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);
     HAL_Delay(10000);
 
 

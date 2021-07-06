@@ -64,9 +64,7 @@
    */
   /*#define USE_HAL_DRIVER */
 #endif /* USE_HAL_DRIVER */
-
-   #define STM32WB55xx
-
+ #define STM32WB55xx
 /**
   * @brief CMSIS Device version number
   */

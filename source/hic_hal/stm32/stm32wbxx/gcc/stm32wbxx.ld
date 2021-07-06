@@ -53,6 +53,7 @@ _Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;
 /* Attributes rx - Read & Execute section, rw - Read / Write section */
 MEMORY
 {
+  RAM_SHARED            (xrw) : ORIGIN = 0x20030000, LENGTH = 10K
   m_interrupts          (rx)  : ORIGIN = DAPLINK_ROM_CONFIG_ADMIN_START, LENGTH = 0x400
   m_text                (rx)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = DAPLINK_ROM_APP_SIZE
   m_cfgrom              (rw)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
@@ -214,6 +215,9 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
+   .ARM.attributes 0       : { *(.ARM.attributes) }
+   MAPPING_TABLE (NOLOAD) : { *(MAPPING_TABLE) } >RAM_SHARED
+   MB_MEM1 (NOLOAD)       : { *(MB_MEM1) } >RAM_SHARED
+   MB_MEM2 (NOLOAD)       : { _sMB_MEM2 = . ; *(MB_MEM2) ; _eMB_MEM2 = . ; } >RAM_SHARED
 
-  .ARM.attributes 0 : { *(.ARM.attributes) }
 }
