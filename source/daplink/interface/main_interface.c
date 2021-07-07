@@ -248,9 +248,11 @@ void main_task(void * arg)
     gpio_init();
 	
 	// Turn to LED default settings	
-    gpio_set_hid_led(hid_led_value);
-   	gpio_set_cdc_led(cdc_led_value);
-    gpio_set_msc_led(msc_led_value);
+    //gpio_set_hid_led(hid_led_value);
+   	//gpio_set_cdc_led(cdc_led_value);
+    //gpio_set_msc_led(msc_led_value);
+	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
+    while(1);
 	
 	// Initialize the DAP
     DAP_Setup();
@@ -520,10 +522,6 @@ int main(void)
    // Initialize CMSIS-RTOS
     osKernelInitialize();
 	
-	HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);
-    HAL_Delay(10000);
-
-
     // Create application main thread
 #ifndef USE_LEGACY_CMSIS_RTOS
     main_task_id = osThreadNew(main_task, NULL, &k_main_thread_attr);
