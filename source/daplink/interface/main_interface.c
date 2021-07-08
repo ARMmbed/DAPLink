@@ -236,7 +236,18 @@ void main_task(void * arg)
     uint8_t power_on = 1;
 #endif
 
-    // Initialize settings - required for asserts to work
+    GPIO_InitTypeDef GPIO_InitStructure;
+	
+	__HAL_RCC_GPIOC_CLK_ENABLE(); 
+	GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
+    while(1);
+	
+	
+	// Initialize settings - required for asserts to work
     config_init();
 
 #ifdef USE_LEGACY_CMSIS_RTOS
@@ -511,16 +522,7 @@ void main_task(void * arg)
 
 int main(void)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
-	
-	__HAL_RCC_GPIOC_CLK_ENABLE(); 
-	GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
-    while(1);
-	
+  
 #if DAPLINK_ROM_BL_SIZE > 0
     SCB->VTOR = SCB_VTOR_TBLOFF_Msk & DAPLINK_ROM_IF_START;
 #endif
