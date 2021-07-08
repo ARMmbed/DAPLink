@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <stdio.h>
-
+#include "stm32wbxx.h"
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main_interface.h"
