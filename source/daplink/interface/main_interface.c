@@ -251,8 +251,7 @@ void main_task(void * arg)
     //gpio_set_hid_led(hid_led_value);
    	//gpio_set_cdc_led(cdc_led_value);
     //gpio_set_msc_led(msc_led_value);
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
-    while(1);
+	
 	
 	// Initialize the DAP
     DAP_Setup();
@@ -518,6 +517,13 @@ int main(void)
 #endif
     // initialize vendor sdk
     sdk_init();
+	
+	GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
+    while(1);
 	
    // Initialize CMSIS-RTOS
     osKernelInitialize();
