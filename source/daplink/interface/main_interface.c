@@ -511,7 +511,7 @@ void main_task(void * arg)
 
 int main(void)
 {
-
+    GPIO_InitTypeDef GPIO_InitStructure;
 #if DAPLINK_ROM_BL_SIZE > 0
     SCB->VTOR = SCB_VTOR_TBLOFF_Msk & DAPLINK_ROM_IF_START;
 #endif
