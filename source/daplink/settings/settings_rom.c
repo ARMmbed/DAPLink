@@ -20,12 +20,14 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 
 #include "settings.h"
 #include "target_config.h"
 #include "compiler.h"
 #include "cortex_m.h"
 #include "FlashPrg.h"
+#include "gpio.h"
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
@@ -130,16 +132,26 @@ void config_rom_init()
     // Fill in the ram copy with the defaults
     memcpy(&config_rom_copy, &config_default, sizeof(config_rom_copy));
 
-    // Read settings from flash if the key is valid
+    //Read settings from flash if the key is valid
     if (CFG_KEY == config_rom.key) {
+		
+	GPIO_InitTypeDef GPIO_InitStructure;
+	__HAL_RCC_GPIOC_CLK_ENABLE(); 
+    GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
+    while(1);
+	
         uint32_t size = MIN(config_rom.size, sizeof(config_rom));
-        memcpy(&config_rom_copy, (void *)&config_rom, size);
+		memcpy(&config_rom_copy, (void *)&config_rom, size);
     }
 
     // Fill in special values
     config_rom_copy.key = CFG_KEY;
     config_rom_copy.size = sizeof(config_rom);
-
+	
     // Write settings back to flash if they are out of date
     // Note - program_cfg only programs data in bootloader mode
     if (config_needs_update()) {

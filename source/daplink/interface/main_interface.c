@@ -238,7 +238,7 @@ void main_task(void * arg)
 
     // Initialize settings - required for asserts to work
     config_init();
-
+	
 #ifdef USE_LEGACY_CMSIS_RTOS
     // Get a reference to this task
     main_task_id = osThreadGetId();
@@ -251,8 +251,7 @@ void main_task(void * arg)
     //gpio_set_hid_led(hid_led_value);
    	//gpio_set_cdc_led(cdc_led_value);
     //gpio_set_msc_led(msc_led_value);
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
-    while(1);
+
 	
 	// Initialize the DAP
     DAP_Setup();
