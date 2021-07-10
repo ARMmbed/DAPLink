@@ -4,9 +4,9 @@ common:
     core:
         - Cortex-M4
     macros:
-        - INTERFACE_STM32WB55XX
+        - INTERFACE_STM32WBXX
         - USE_HAL_DRIVER
-        - STM32WB55XX
+        - STM32WBXX
         - DAPLINK_HIC_ID=0x46333733  # DAPLINK_HIC_ID_STM32WBXX
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
