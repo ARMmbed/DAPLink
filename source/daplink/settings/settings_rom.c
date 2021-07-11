@@ -131,7 +131,15 @@ void config_rom_init()
     Init(0, 0, 0);
     // Fill in the ram copy with the defaults
     memcpy(&config_rom_copy, &config_default, sizeof(config_rom_copy));
-
+	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	__HAL_RCC_GPIOC_CLK_ENABLE(); 
+    GPIO_InitStructure.Pin = PIN_CDC_LED;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
+	HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);
+	
     //Read settings from flash if the key is valid
     if (CFG_KEY == config_rom.key) {
 		
@@ -142,7 +150,6 @@ void config_rom_init()
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
     HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
 	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
-    while(1);
 	
         uint32_t size = MIN(config_rom.size, sizeof(config_rom));
 		memcpy(&config_rom_copy, (void *)&config_rom, size);
