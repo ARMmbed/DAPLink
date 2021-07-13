@@ -1,6 +1,6 @@
 /**
- * @file    IO_Config.h
- * @brief   IO Configuration for nrf52820 HIC
+ * @file    IO_Config_Override.c
+ * @brief   Alternative IO Configuration for nrf52820 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021, Arm Limited, All Rights Reserved
@@ -19,14 +19,6 @@
  * limitations under the License.
  */
 
-// Override all defines if IO_CONFIG_OVERRIDE is defined
-#ifdef IO_CONFIG_OVERRIDE
-#include "IO_Config_Override.h"
-#ifndef __IO_CONFIG_H__
-#define __IO_CONFIG_H__
-#endif
-#endif
-
 #ifndef __IO_CONFIG_H__
 #define __IO_CONFIG_H__
 
@@ -39,32 +31,38 @@
 // This GPIO configuration is only valid for the nrf52820 HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 
+#define LED_1          NRF_GPIO_PIN_MAP(0, 13)
+#define LED_2          NRF_GPIO_PIN_MAP(0, 14)
+#define LED_3          NRF_GPIO_PIN_MAP(0, 15)
+#define LED_4          NRF_GPIO_PIN_MAP(0, 16)
+#define BUTTON_1       NRF_GPIO_PIN_MAP(0, 11)
+
 // SWDCLK (Output)
-#define PIN_SWDCLK     NRF_GPIO_PIN_MAP(0, 1)
+#define PIN_SWDCLK     NRF_GPIO_PIN_MAP(0, 1) // FIXME: Needs to change
 
 // SWDIO (Input/Output)
-#define PIN_SWDIO      NRF_GPIO_PIN_MAP(0, 0)
+#define PIN_SWDIO      NRF_GPIO_PIN_MAP(0, 0) // FIXME: Needs to change
 
 // nRESET Pin
-#undef PIN_nRESET
+#define PIN_nRESET     NRF_GPIO_PIN_MAP(0, 6) // FIXME: Needs to change
 
 // Target Running LED (Output)
-#undef LED_RUNNING
+#define LED_RUNNING    LED_1
 
 // Connected LED (Output)
-#undef LED_CONNECTED
+#define LED_CONNECTED  LED_2
 
 // HID LED
-#define LED_HID        NRF_GPIO_PIN_MAP(0, 7)
+#define LED_HID        LED_2
 
 // MSC LED
-#define LED_MSC        NRF_GPIO_PIN_MAP(0, 7)
+#define LED_MSC        LED_3
 
 // CDC LED
-#define LED_CDC        NRF_GPIO_PIN_MAP(0, 7)
+#define LED_CDC        LED_4
 
-// Reset button (SW_RESET)
-#define RESET_BUTTON      NRF_GPIO_PIN_MAP(0, 6)
+// Reset button
+#define RESET_BUTTON      BUTTON_1
 #define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
 
 #endif

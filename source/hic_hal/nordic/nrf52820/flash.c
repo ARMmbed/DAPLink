@@ -1,6 +1,6 @@
 /**
  * @file    flash.c
- * @brief   Flash access functions for stm32f723ie HIC
+ * @brief   Flash access functions for nrf52833 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021, Arm Limited, All Rights Reserved

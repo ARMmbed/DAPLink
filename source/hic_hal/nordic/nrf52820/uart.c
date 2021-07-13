@@ -1,6 +1,6 @@
 /**
  * @file    uart.c
- * @brief   UART Function for nrf52833 HIC
+ * @brief   UART Function for nrf52820 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021, Arm Limited, All Rights Reserved

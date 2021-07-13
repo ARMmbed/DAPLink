@@ -28,6 +28,7 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
+#include "IO_Config.h"
 
 //**************************************************************************************************
 /**
@@ -357,14 +358,22 @@ It is recommended to provide the following LEDs for status indication:
            - 1: Connect LED ON: debugger is connected to CMSIS-DAP Debug Unit.
            - 0: Connect LED OFF: debugger is not connected to CMSIS-DAP Debug Unit.
 */
-__STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {}
+__STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {
+#ifdef LED_CONNECTED
+    nrf_gpio_pin_write(LED_CONNECTED, bit ? 0 : 1);
+#endif
+}
 
 /** Debug Unit: Set status Target Running LED.
 \param bit status of the Target Running LED.
            - 1: Target Running LED ON: program execution in target started.
            - 0: Target Running LED OFF: program execution in target stopped.
 */
-__STATIC_INLINE void LED_RUNNING_OUT (uint32_t bit) {}
+__STATIC_INLINE void LED_RUNNING_OUT (uint32_t bit) {
+#ifdef LED_RUNNING
+    nrf_gpio_pin_write(LED_RUNNING, bit ? 0 : 1);
+#endif
+}
 
 ///@}
 
