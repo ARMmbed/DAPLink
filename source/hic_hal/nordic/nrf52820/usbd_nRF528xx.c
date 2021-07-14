@@ -215,7 +215,11 @@ void USBD_Init (void) {
  *    Return Value:    None
  */
 
+#ifdef   __DAPLINK
+void USBD_Connect (BOOL con) {
+#else
 void USBD_Connect (uint32_t con) {
+#endif
   if (con != 0U) {                      /* Connect */
     NRF_USBD->USBPULLUP |=  USBD_USBPULLUP_CONNECT_Msk;
   } else {                              /* Disconnect */
@@ -294,7 +298,11 @@ void USBD_WakeUp (void) {
  *    Return Value:    None
  */
 
+#ifdef   __DAPLINK
+void USBD_WakeUpCfg (BOOL cfg) {
+#else
 void USBD_WakeUpCfg (uint32_t cfg) {
+#endif
   /* Not needed */
 }
 
@@ -315,8 +323,11 @@ void USBD_SetAddress (uint32_t adr, uint32_t setup) {
  *    Parameters:      cfg:   Device Configure/Deconfigure
  *    Return Value:    None
  */
-
+#ifdef   __DAPLINK
+void USBD_Configure (BOOL cfg) {
+#else
 void USBD_Configure (uint32_t cfg) {
+#endif
   /* Not needed */
 }
 
@@ -675,7 +686,7 @@ void USBD_IRQHandler (void) {
   USBD_SignalHandler();
 }
 
-void USB_Handler (void) {
+void USBD_Handler (void) {
 #else
 void USBD_IRQHandler (void) {
 #endif
