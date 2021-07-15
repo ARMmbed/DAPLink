@@ -1,0 +1,11 @@
+common:
+    macros:
+        # - TARGET_NRF52
+        # - TARGET_NRF52_64
+        - TARGET_NRF52840
+    sources:
+        board:
+            - source/board/nrf52820_if.c
+        target:
+            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/target_reset_nrf52.c
