@@ -166,7 +166,9 @@ SECTIONS
   {
     FILL(0xffffffff)
     . = ALIGN(4);
-    . += 0x0800C000 + 0x00013C00 - __DATA_END - 4;
+    . += DAPLINK_ROM_APP_START + DAPLINK_ROM_APP_SIZE - __DATA_END - 4;
+	/* Need some contents in this section or it won't be copied to bin or hex. The CRC will
+     * be placed here by post_build_script.py. */    
     LONG(0x55555555)
   } > m_text
  
