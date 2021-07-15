@@ -1,5 +1,6 @@
 common:
     macros:
         - IO_CONFIG_OVERRIDE
+        - DEVELOP_IN_NRF52833
     includes:
         - source/board/override_nrf52833_dk

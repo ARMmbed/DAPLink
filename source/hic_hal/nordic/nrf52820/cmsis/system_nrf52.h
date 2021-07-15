@@ -20,8 +20,8 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
 
 */
 
-#ifndef SYSTEM_NRF52820_H
-#define SYSTEM_NRF52820_H
+#ifndef SYSTEM_NRF52_H
+#define SYSTEM_NRF52_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,4 +58,4 @@ extern void SystemCoreClockUpdate (void);
 }
 #endif
 
-#endif /* SYSTEM_NRF52820_H */
+#endif /* SYSTEM_NRF52_H */
