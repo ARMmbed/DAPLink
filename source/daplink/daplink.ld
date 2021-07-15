@@ -162,15 +162,17 @@ SECTIONS
   
   __DATA_END = __DATA_ROM + (_edata - _sdata);
  
+ /*
   .fill __DATA_END :
   {
     FILL(0xffffffff)
     . = ALIGN(4);
     . += DAPLINK_ROM_APP_START + DAPLINK_ROM_APP_SIZE - __DATA_END - 4;
 	/* Need some contents in this section or it won't be copied to bin or hex. The CRC will
-     * be placed here by post_build_script.py. */    
+     * be placed here by post_build_script.py. */
+  
     LONG(0x55555555)
-  } > m_text
+  } > m_text */
  
   text_end = ORIGIN(m_text) + LENGTH(m_text);
   ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
