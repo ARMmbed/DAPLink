@@ -238,7 +238,7 @@ void main_task(void * arg)
 
     // Initialize settings - required for asserts to work
     config_init();
-	
+
 #ifdef USE_LEGACY_CMSIS_RTOS
     // Get a reference to this task
     main_task_id = osThreadGetId();
@@ -246,7 +246,7 @@ void main_task(void * arg)
     
 	// leds
     gpio_init();
-	
+		
 	// Turn to LED default settings	
     //gpio_set_hid_led(hid_led_value);
    	//gpio_set_cdc_led(cdc_led_value);
@@ -527,8 +527,7 @@ int main(void)
     main_task_id = osThreadNew(main_task, NULL, &k_main_thread_attr);
 #else
     osThreadNew(main_task, NULL, NULL);
-#endif
-
+#endif	
     // Start thread execution
     osKernelStart();
 

@@ -38,10 +38,10 @@
 #define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x0000C000
 
 #define DAPLINK_ROM_IF_START            0x0800C000 // Start address of Interface Firmware in Flash Memory
-#define DAPLINK_ROM_IF_SIZE             0x000EF400 // Max Size of Interface Firmware 
+#define DAPLINK_ROM_IF_SIZE             0x000F0000 // Max Size of Interface Firmware
 
-#define DAPLINK_ROM_CONFIG_USER_START   0x080FB400 // Start address of Initialized User Data in Flash Memory
-#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00004C00 // Size of Initialized User Data in Flash Memory
+#define DAPLINK_ROM_CONFIG_USER_START   0x080FC000 // Start address of Initialized User Data in Flash Memory
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00004000 // Size of Initialized User Data in Flash Memory
 
 /* RAM sizes */
 
