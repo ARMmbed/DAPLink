@@ -28,7 +28,7 @@ tool_specific:
     uvision:
         misc:
             ld_flags:
-                - --predefine="-I..\..\..\source\hic_hal\nrf52820\nrfx"
+                - --predefine="-I..\..\..\source\hic_hal\nordic\nrf52820"
         sources:
             hic_hal:
                 - source/hic_hal/nordic/nrf52820/armcc

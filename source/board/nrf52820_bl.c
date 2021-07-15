@@ -40,7 +40,7 @@ static const sector_info_t sectors_info[] = {
     {DAPLINK_ROM_IF_START, 0x1000},
 };
 
-// m48ssidae target information
+// nrf52820 target information
 target_cfg_t target_device = {
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
