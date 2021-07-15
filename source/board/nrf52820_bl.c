@@ -26,8 +26,8 @@
 #include "target_family.h"
 
 // Warning - changing the interface start will break backwards compatibility
-COMPILER_ASSERT(DAPLINK_ROM_IF_START == 0x00010000);
-COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(188));
+COMPILER_ASSERT(DAPLINK_ROM_IF_START == 0x00008000);
+COMPILER_ASSERT(DAPLINK_ROM_IF_SIZE == KB(92));
 
 /**
 * List of start and size for each size of flash sector
