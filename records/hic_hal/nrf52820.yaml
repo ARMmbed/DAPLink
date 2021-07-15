@@ -22,6 +22,7 @@ common:
             - source/hic_hal/nordic/nrf52820
             - source/hic_hal/nordic/nrf52820/cmsis
             - source/hic_hal/nordic/nrf52820/nrfx
+            - source/hic_hal/nordic/nrf52820/nrfx/hal
 
 tool_specific:
     uvision:

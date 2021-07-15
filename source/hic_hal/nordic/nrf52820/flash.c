@@ -1,6 +1,6 @@
 /**
  * @file    flash.c
- * @brief   Flash access functions for nrf52833 HIC
+ * @brief   Flash access functions for nrf52820 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021, Arm Limited, All Rights Reserved
@@ -21,27 +21,31 @@
 
 #include "target_config.h"
 
+#include "nrf_nvmc.h"
+
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
-    return 0;
+    return 0; // Not needed
 }
 
 uint32_t UnInit(uint32_t fnc)
 {
-    return 0;
+    return 0; // Not needed
 }
 
 uint32_t EraseChip(void)
 {
-    return 0;
+    return 0; // Not used in DAPLink
 }
 
 uint32_t EraseSector(uint32_t adr)
 {
+    nrf_nvmc_page_erase(adr);
     return 0;
 }
 
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
+    nrf_nvmc_write_words(adr, buf, sz / 4);
     return 0;
 }
