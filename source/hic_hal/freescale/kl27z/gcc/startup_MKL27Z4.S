@@ -21,8 +21,8 @@
 
     .section .isr_vector, "a"
     .align 2
-    .globl __Vectors
-__Vectors:
+    .globl __isr_vector
+__isr_vector:
     .long   __StackTop                                      /* Top of Stack */
     .long   Reset_Handler                                   /* Reset Handler */
     .long   NMI_Handler                                     /* NMI Handler*/
@@ -36,7 +36,7 @@ __Vectors:
     .long   DAPLINK_VERSION                                 /* Version*/
     .long   SVC_Handler                                     /* SVCall Handler*/
     .long   0                                               /* Reserved*/
-    .long   0                                               /* Reserved*/
+    .long   g_board_info                                    /* Ptr to Board info, family info other target details*/
     .long   PendSV_Handler                                  /* PendSV Handler*/
     .long   SysTick_Handler                                 /* SysTick Handler*/
 
@@ -74,7 +74,7 @@ __Vectors:
     .long   PORTA_IRQHandler                                /* PORTA Pin detect*/
     .long   PORTC_PORTD_IRQHandler                          /* Single interrupt vector for PORTC; PORTD Pin detect*/
 
-    .size    __Vectors, . - __Vectors
+    .size    __isr_vector, . - __isr_vector
 
 /* Flash Configuration */
     .section .FlashConfig, "a"
@@ -97,7 +97,7 @@ Reset_Handler:
     cpsid   i               /* Mask interrupts */
     .equ    VTOR, 0xE000ED08
     ldr     r0, =VTOR
-    ldr     r1, =__Vectors
+    ldr     r1, =__isr_vector
     str     r1, [r0]
     ldr     r2, [r1]
     msr     msp, r2
