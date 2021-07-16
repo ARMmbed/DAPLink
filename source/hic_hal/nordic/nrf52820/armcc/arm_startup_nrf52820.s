@@ -1,19 +1,19 @@
 ; Copyright (c) 2009-2020 ARM Limited. All rights reserved.
-; 
+;
 ;     SPDX-License-Identifier: Apache-2.0
-; 
+;
 ; Licensed under the Apache License, Version 2.0 (the License); you may
 ; not use this file except in compliance with the License.
 ; You may obtain a copy of the License at
-; 
+;
 ;     www.apache.org/licenses/LICENSE-2.0
-; 
+;
 ; Unless required by applicable law or agreed to in writing, software
 ; distributed under the License is distributed on an AS IS BASIS, WITHOUT
 ; WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-; 
+;
 ; NOTICE: This file has been modified by Nordic Semiconductor ASA.
 
                 IF :DEF: __STARTUP_CONFIG
@@ -32,7 +32,7 @@ Stack_Size      EQU __STACK_SIZE
                 ELSE
 Stack_Size      EQU 2048
                 ENDIF
-                
+
                 IF :DEF: __STARTUP_CONFIG
 Stack_Align     EQU __STARTUP_CONFIG_STACK_ALIGNEMENT
                 ELSE
@@ -74,12 +74,12 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     BusFault_Handler
                 DCD     UsageFault_Handler
                 DCD     0                         ; Reserved
-                DCD     DAPLINK_BUILD_KEY         ; Build type - BL/IF
-                DCD     DAPLINK_HIC_ID            ; Compatibility
-                DCD     DAPLINK_VERSION           ; Version
+                DCD     DAPLINK_BUILD_KEY         ; DAPLINK: Build type (BL/IF)
+                DCD     DAPLINK_HIC_ID            ; DAPLINK: Compatibility
+                DCD     DAPLINK_VERSION           ; DAPLINK: Version
                 DCD     SVC_Handler
                 DCD     DebugMon_Handler
-                DCD     g_board_info              ; Ptr to Board info, family info other target details
+                DCD     g_board_info              ; DAPLINK: Pointer to board/family/target info
                 DCD     PendSV_Handler
                 DCD     SysTick_Handler
 
