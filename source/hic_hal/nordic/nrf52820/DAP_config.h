@@ -184,7 +184,20 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - TDI, nTRST to HighZ mode (pins are unused in SWD mode).
 */
 __STATIC_INLINE void PORT_SWD_SETUP (void) {
-  ;
+  nrf_gpio_cfg(PIN_SWDCLK, NRF_GPIO_PIN_DIR_OUTPUT,
+               NRF_GPIO_PIN_INPUT_DISCONNECT, NRF_GPIO_PIN_NOPULL,
+               NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
+  nrf_gpio_pin_set(PIN_SWDCLK);
+  nrf_gpio_cfg(PIN_SWDIO, NRF_GPIO_PIN_DIR_OUTPUT,
+               NRF_GPIO_PIN_INPUT_CONNECT, NRF_GPIO_PIN_NOPULL,
+               NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
+  nrf_gpio_pin_set(PIN_SWDIO);
+#ifdef PIN_nRESET
+  nrf_gpio_cfg(PIN_nRESET, NRF_GPIO_PIN_DIR_OUTPUT,
+               NRF_GPIO_PIN_INPUT_DISCONNECT, NRF_GPIO_PIN_NOPULL,
+               NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
+  nrf_gpio_pin_set(PIN_nRESET);
+#endif
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -192,7 +205,11 @@ Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
 __STATIC_INLINE void PORT_OFF (void) {
-  ;
+  nrf_gpio_cfg_input(PIN_SWDCLK, NRF_GPIO_PIN_NOPULL);
+  nrf_gpio_cfg_input(PIN_SWDIO, NRF_GPIO_PIN_NOPULL);
+#ifdef PIN_nRESET
+  nrf_gpio_cfg_input(PIN_nRESET, NRF_GPIO_PIN_NOPULL);
+#endif
 }
 
 
@@ -202,21 +219,21 @@ __STATIC_INLINE void PORT_OFF (void) {
 \return Current status of the SWCLK/TCK DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN  (void) {
-  return (0U);
+  return nrf_gpio_pin_out_read(PIN_SWDCLK);
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
 Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_SET (void) {
-  ;
+  nrf_gpio_pin_set(PIN_SWDCLK);
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
 Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR (void) {
-  ;
+  nrf_gpio_pin_clear(PIN_SWDCLK);
 }
 
 
@@ -226,35 +243,39 @@ __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR (void) {
 \return Current status of the SWDIO/TMS DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN  (void) {
-  return (0U);
+  return nrf_gpio_pin_read(PIN_SWDIO) & 0x1;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
 Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_SET (void) {
-  ;
+  nrf_gpio_pin_set(PIN_SWDIO);
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
 Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR (void) {
-  ;
+  nrf_gpio_pin_clear(PIN_SWDIO);
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
 \return Current status of the SWDIO DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN      (void) {
-  return (0U);
+  return nrf_gpio_pin_read(PIN_SWDIO) & 0x1;
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
 \param bit Output value for the SWDIO DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT     (uint32_t bit) {
-  ;
+  if (bit & 0x1) {
+    nrf_gpio_pin_set(PIN_SWDIO);
+  } else {
+    nrf_gpio_pin_clear(PIN_SWDIO);
+  }
 }
 
 /** SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
@@ -262,7 +283,7 @@ Configure the SWDIO DAP hardware I/O pin to output mode. This function is
 called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE  (void) {
-  ;
+  nrf_gpio_pin_dir_set(PIN_SWDIO, NRF_GPIO_PIN_DIR_OUTPUT);
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -270,7 +291,7 @@ Configure the SWDIO DAP hardware I/O pin to input mode. This function is
 called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE (void) {
-  ;
+  nrf_gpio_pin_dir_set(PIN_SWDIO, NRF_GPIO_PIN_DIR_INPUT);
 }
 
 
