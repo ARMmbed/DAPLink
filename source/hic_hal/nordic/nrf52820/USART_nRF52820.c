@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2013-2021 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2013-2021 Arm Limited (or its affiliates). All
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -47,7 +47,7 @@
 #define ARM_USART_DRV_VERSION    ARM_DRIVER_VERSION_MAJOR_MINOR(1, 0)  /* driver version */
 
 /* Driver Version */
-static const ARM_DRIVER_VERSION driver_version = { 
+static const ARM_DRIVER_VERSION driver_version = {
     ARM_USART_API_VERSION,
     ARM_USART_DRV_VERSION
 };
@@ -90,7 +90,7 @@ static void    *ptr_tx_data  = NULL;    // Pointer to data for transmission
 static uint32_t tx_num       = 0U;      // Number of bytes requested for transmission
 static uint32_t rx_num       = 0U;      // Number of bytes requested for reception
 static uint32_t tx_cnt       = 0U;      // Number of transmitted bytes
-static uint32_t tx_buf[32/4];           // Intermediate RAM buffer for transmission 
+static uint32_t tx_buf[32/4];           // Intermediate RAM buffer for transmission
                                         // (EasyDMA cannot transmit from flash directly)
 
 /* Function prototypes */
@@ -230,8 +230,8 @@ static int32_t USART_PowerControl (ARM_POWER_STATE state) {
     return ARM_DRIVER_ERROR;
   }
 
-  if ((state != ARM_POWER_OFF)  && 
-      (state != ARM_POWER_FULL) && 
+  if ((state != ARM_POWER_OFF)  &&
+      (state != ARM_POWER_FULL) &&
       (state != ARM_POWER_LOW)) {
     return ARM_DRIVER_ERROR_PARAMETER;
   }
@@ -254,7 +254,7 @@ static int32_t USART_PowerControl (ARM_POWER_STATE state) {
       USART_Control(ARM_USART_ABORT_RECEIVE, 0U);
 
       /* Clear variables */
-      memset(&usart_status, 0, sizeof(ARM_USART_STATUS));
+      memset((void *) &usart_status, 0, sizeof(ARM_USART_STATUS));
       ptr_tx_data = NULL;
       tx_num      = 0U;
       rx_num      = 0U;
@@ -273,7 +273,7 @@ static int32_t USART_PowerControl (ARM_POWER_STATE state) {
       }
 
       /* Clear variables */
-      memset(&usart_status, 0, sizeof(ARM_USART_STATUS));
+      memset((void *) &usart_status, 0, sizeof(ARM_USART_STATUS));
       ptr_tx_data = NULL;
       tx_num      = 0U;
       rx_num      = 0U;
@@ -408,7 +408,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
         case ARM_USART_DATA_BITS_7:
         case ARM_USART_DATA_BITS_9:
         default:
-          return ARM_USART_ERROR_DATA_BITS;      
+          return ARM_USART_ERROR_DATA_BITS;
       }
 
       /* Configure parity */
@@ -425,7 +425,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
           NRF_UARTE0->CONFIG &= ~UARTE_CONFIG_PARITY_Msk;
           break;
         default:
-          return ARM_USART_ERROR_PARITY;      
+          return ARM_USART_ERROR_PARITY;
       }
 
       /* Configure stop bits */
@@ -439,7 +439,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
         case ARM_USART_STOP_BITS_1_5:
         case ARM_USART_STOP_BITS_0_5:
         default:
-          return ARM_USART_ERROR_STOP_BITS;      
+          return ARM_USART_ERROR_STOP_BITS;
       }
 
       /* Configure flow control */
@@ -483,7 +483,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
         case ARM_USART_FLOW_CONTROL_CTS:
         case ARM_USART_FLOW_CONTROL_RTS:
         default:
-          return ARM_USART_ERROR_FLOW_CONTROL;      
+          return ARM_USART_ERROR_FLOW_CONTROL;
       }
 
       /* Ignore clock polarity and clock phase setting */
@@ -692,8 +692,8 @@ static int32_t USART_SetModemControl (ARM_USART_MODEM_CONTROL control) {
       if ((flow_control == ARM_USART_FLOW_CONTROL_NONE) ||
           (flow_control == ARM_USART_FLOW_CONTROL_CTS)) {
 #if (RTE_USART0_RTS_EN != 0U)
-        if ((rts_gpio_cnf == 0U)  || 
-            (rts_gpio_cnf > 328U) || 
+        if ((rts_gpio_cnf == 0U)  ||
+            (rts_gpio_cnf > 328U) ||
            ((NRF_GPIOTE->CONFIG[rts_gpio_cnf-1U] & 1) != 1U)) {
           /* If RTS pin is not configured as GPIO Output */
           return ARM_DRIVER_ERROR;
@@ -711,8 +711,8 @@ static int32_t USART_SetModemControl (ARM_USART_MODEM_CONTROL control) {
       if ((flow_control == ARM_USART_FLOW_CONTROL_NONE) ||
           (flow_control == ARM_USART_FLOW_CONTROL_CTS)) {
 #if (RTE_USART0_RTS_EN != 0U)
-        if ((rts_gpio_cnf == 0U)  || 
-            (rts_gpio_cnf > 328U) || 
+        if ((rts_gpio_cnf == 0U)  ||
+            (rts_gpio_cnf > 328U) ||
             ((NRF_GPIOTE->CONFIG[rts_gpio_cnf-1U] & 1) != 1U)) {
           /* If RTS pin is not configured as GPIO Output */
           return ARM_DRIVER_ERROR;
@@ -748,8 +748,8 @@ static ARM_USART_MODEM_STATUS USART_GetModemStatus (void) {
   if ((flow_control == ARM_USART_FLOW_CONTROL_NONE) ||
       (flow_control == ARM_USART_FLOW_CONTROL_RTS)) {
 #if (RTE_USART0_CTS_EN != 0U)
-    if ((cts_gpio_cnf != 0U)  || 
-        (cts_gpio_cnf <= 32U) || 
+    if ((cts_gpio_cnf != 0U)  ||
+        (cts_gpio_cnf <= 32U) ||
        ((NRF_GPIOTE->CONFIG[cts_gpio_cnf-1U] & 3) == 0U)) {
       /* If CTS pin is configured as GPIO Input */
       if ((NRF_GPIO->IN & (1U << RTE_USART0_RTS_PIN_NUM)) == 0U) {
@@ -757,7 +757,7 @@ static ARM_USART_MODEM_STATUS USART_GetModemStatus (void) {
       }
     }
 #endif
-  } 
+  }
   modem_status.dsr      = 0U;
   modem_status.dcd      = 0U;
   modem_status.ri       = 0U;
