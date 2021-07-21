@@ -80,6 +80,8 @@ typedef struct {                        /* Endpoint configuration */
 static OS_MUT      usbd_hw_mutex;
 #endif
 static uint32_t    setup_packet_available;
+static uint32_t    ep0_no_data_stage;
+static uint32_t    ep0_status_next;
 static uint32_t    ep0_dir;
 static ep_config_t ep_config[2][USBD_EP_NUM_MAX];
 static uint32_t    ep_buf   [2][USBD_EP_NUM_MAX][64/4];
@@ -145,32 +147,17 @@ void usbd_dma (uint32_t EPNum, uint32_t *buf, uint32_t cnt) {
 #endif
 
   if (ep_dir != 0U) {                   /* If IN endpoint */
-    if ((ep_num == 0U) && (cnt == 0U)) {
-      /* Status stage send ZLP IN */
-      NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Trigger;
-    } else {
       NRF_USBD->EPIN[ep_num].PTR        = (uint32_t)buf;
       NRF_USBD->EPIN[ep_num].MAXCNT     = len;
       NRF_USBD->TASKS_STARTEPIN[ep_num] = USBD_TASKS_STARTEPIN_TASKS_STARTEPIN_Trigger;
       while (NRF_USBD->EVENTS_ENDEPIN[ep_num] == 0U);
       NRF_USBD->EVENTS_ENDEPIN[ep_num]  = 0U;
-    }
   } else {                              /* If OUT endpoint */
-    if ((ep_num == 0U) && (cnt == 0U)) {
-      /* Status stage receive ZLP OUT */
-      NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Trigger;
-    } else {
       NRF_USBD->EPOUT[ep_num].PTR       = (uint32_t)buf;
       NRF_USBD->EPOUT[ep_num].MAXCNT    = len;
       NRF_USBD->TASKS_STARTEPOUT[ep_num]= USBD_TASKS_STARTEPOUT_TASKS_STARTEPOUT_Trigger;
       while (NRF_USBD->EVENTS_ENDEPOUT[ep_num] == 0U);
       NRF_USBD->EVENTS_ENDEPOUT[ep_num] = 0U;
-      if ((ep_num == 0U) && (ep0_dir == 0U)) {
-        /* Allow OUT data stage on Control Endpoint 0 */
-        NRF_USBD->TASKS_EP0RCVOUT = USBD_TASKS_EP0RCVOUT_TASKS_EP0RCVOUT_Msk;
-        NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Trigger;
-      }
-    }
   }
 
 #ifdef __RTX
@@ -373,7 +360,8 @@ void USBD_ConfigEP (USB_ENDPOINT_DESCRIPTOR *pEPD) {
 void USBD_DirCtrlEP (uint32_t dir) {
   if (dir == 0U) {
     ep0_dir = 0U;
-    NRF_USBD->TASKS_EP0RCVOUT = USBD_TASKS_EP0RCVOUT_TASKS_EP0RCVOUT_Msk;
+  } else {
+    ep0_dir = 1U;
   }
 }
 
@@ -574,8 +562,14 @@ uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
   if (ep_dir != 0U) {                   /* If not OUT Endpoint */
     return 0U;
   }
+  if ((ep_num == 0U) && (setup_packet_available == 0U) && (ep0_dir != 0)) {
+    /* Status stage of Device-to-Host handled in USBD_WriteEP */
+    /* Note - ep0_dir is set only after the setup packet has been read */
+    return 0U;
+  }
 
   if ((ep_num == 0U) && (setup_packet_available != 0U)) {
+    uint16_t wlength;
     setup_packet_available = 0U;
 
     /* If reading Endpoint 0 and Setup Packet is available */
@@ -588,6 +582,18 @@ uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
     pData[6] = NRF_USBD->WLENGTHL;
     pData[7] = NRF_USBD->WLENGTHH;
     len = 8U;
+
+    /* Start status stage immediately if there is no data stage */
+    wlength = (pData[7] << 8) | (pData[6] << 0);
+    if (wlength == 0) {
+        ep0_no_data_stage = 1;
+        NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Trigger;
+    } else {
+        ep0_no_data_stage = 0;
+    }
+  } else if ((ep_num == 0U) && (ep0_no_data_stage != 0)) {
+      /* There isn't a data stage so don't try to read data */
+      len = 0;
   } else {
     len = NRF_USBD->SIZE.EPOUT[ep_num];
 
@@ -603,6 +609,14 @@ uint32_t USBD_ReadEP (uint32_t EPNum, uint8_t *pData) {
 
     /* Copy data received to requested pData */
     memcpy((void *)pData, (const void *)&ep_buf[ep_dir][ep_num][0], len);
+
+    /* Start the status stage if endpoint 0 */
+    if (ep_num == 0U) {
+        /* TODO - Only start the status stage after reading the last OUT packet.
+            Until that is done control Host-To-Device transfers consisting
+            of multiple OUT packets likely won't work. */
+        NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Trigger;
+    }
   }
 
   /* Start OUT transfer (Receive data to USB controller's internal buffer) */
@@ -636,11 +650,25 @@ uint32_t USBD_WriteEP (uint32_t EPNum, uint8_t *pData, uint32_t cnt) {
   if (ep_dir == 0U) {                   /* If not IN Endpoint */
     return 0U;
   }
+  if ((ep_num == 0U) && (ep0_no_data_stage != 0)) {
+    /* There isn't a data stage so don't try to write data */
+    return 0U;
+  }
+  if ((ep_num == 0U) && (ep0_dir == 0)) {
+    /* Status stage of Host-to-Device handled elsewhere */
+    return 0U;
+  }
 
   ep_max_len =  ep_config[ep_dir][ep_num].max_packet_size;
 
   if (len > ep_max_len) {
     len = ep_max_len;
+  }
+
+  /* If this is a short packet on endpoint 0 then it is the last packet
+     of the transfer. Start the status stage after it is sent (the next IN event) */
+  if ((ep_num == 0U) && (len < ep_max_len)) {
+      ep0_status_next = 1U;
   }
 
   /* Copy data to be sent to ep_buf */
@@ -756,6 +784,7 @@ void USBD_IRQHandler (void) {
   /* Check Endpoint 0 Setup Packet received event */
   if (NRF_USBD->EVENTS_EP0SETUP != 0U) {
     setup_packet_available = 1U;
+    ep0_status_next = 0U;
     NRF_USBD->EVENTS_EP0SETUP = 0U;
 #ifdef __RTX
     if (USBD_RTX_EPTask[0]) {
@@ -770,6 +799,7 @@ void USBD_IRQHandler (void) {
 
   /* Check Endpoint 0 Data Packet sent/received event */
   if (NRF_USBD->EVENTS_EP0DATADONE != 0U) {
+    uint32_t local_ep0_status_next = ep0_status_next;
     NRF_USBD->EVENTS_EP0DATADONE = 0U;
 #ifdef __RTX
     if (USBD_RTX_EPTask[0]) {
@@ -789,7 +819,9 @@ void USBD_IRQHandler (void) {
     }
 #endif
     /* Enable Status stage */
-    NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Msk;
+    if (local_ep0_status_next) {
+		NRF_USBD->TASKS_EP0STATUS = USBD_TASKS_EP0STATUS_TASKS_EP0STATUS_Trigger;
+    }
   }
 
   /* Check Endpoint sent/received event */
