@@ -665,6 +665,10 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/ublox_evk_odin_w2.yaml
+    stm32f103xb_stm32wb55rg_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32wb55.yaml
     stm32h743xx_udb_bl:
         - *stm32h743xx_bl
         - records/board/stm32h743xx_udb_bl.yaml

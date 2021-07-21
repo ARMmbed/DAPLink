@@ -1,0 +1,8 @@
+common:
+    macros:
+        - USB_PROD_STR="STM32WB55 CMSIS-DAP"
+    sources:
+        board:
+            - source/board/stm32wb55rg.c
+        family:
+            - source/family/st/stm32wb55rg/target.c
