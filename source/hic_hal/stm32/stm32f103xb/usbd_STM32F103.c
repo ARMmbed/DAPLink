@@ -481,16 +481,19 @@ void USBD_ClearEPBuf(U32 EPNum)
 U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 bufsz)
 {
     /* Double Buffering is not yet supported                                    */
-    U32 num, cnt, *pv, n;
-    num = EPNum & 0x0F;
-    pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_RX));
-    cnt = (pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK;
+    U32  num = EPNum & 0x0F;
+    U32* pv  = (U32 *)(USB_PMA_ADDR + 2 * (pBUF_DSCR[num].ADDR_RX));
+    U32  cnt = pBUF_DSCR[num].COUNT_RX & EP_COUNT_MASK;
+
     if (cnt > bufsz) {
         cnt = bufsz;
     }
 
-    for (n = 0; n < (cnt + 1) / 2; n++) {
-        __UNALIGNED_UINT16_WRITE(pData, *pv++);
+    U32 halfWordToCopy = (cnt + 1) / 2;
+
+    for (U32 i = 0; i < halfWordToCopy; i++) {
+        __UNALIGNED_UINT16_WRITE(pData, *pv);
+        pv += 1;
         pData += 2;
     }
 
