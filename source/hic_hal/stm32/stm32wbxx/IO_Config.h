@@ -38,6 +38,16 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define USB_CONNECT_ON()             (USB_CONNECT_PORT->BSRR = USB_CONNECT_PIN)
 #define USB_CONNECT_OFF()            (USB_CONNECT_PORT->BRR  = USB_CONNECT_PIN)
 
+//USB GPIO Configuration
+//biby
+#define USB_DM                       GPIOA
+#define USB_DM_PIN                   GPIO_PIN_11
+#define USB_DM_PIN_Bit               11
+
+#define USB_DP                       GPIOA
+#define USB_DP_PIN                   GPIO_PIN_12
+#define USB_DP_PIN_Bit               12
+
 //Connected LED
 #define CONNECTED_LED_PORT           GPIOE
 #define CONNECTED_LED_PIN            GPIO_PIN_4

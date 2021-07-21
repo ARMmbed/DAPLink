@@ -136,25 +136,14 @@ void config_rom_init()
     if (CFG_KEY == config_rom.key) {	
 	    uint32_t size = MIN(config_rom.size, sizeof(config_rom));
 		memcpy(&config_rom_copy, (void *)&config_rom, size);
+    }	
+	
+    //Read settings from flash if the key is valid
+    if (CFG_KEY == config_rom.key) {	
+        uint32_t size = MIN(config_rom.size, sizeof(config_rom));
+		memcpy(&config_rom_copy, (void *)&config_rom, size);
     }
-	
-	GPIO_InitTypeDef GPIO_InitStructure;
-	__HAL_RCC_GPIOC_CLK_ENABLE(); 
-    GPIO_InitStructure.Pin = PIN_CDC_LED;
-    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
-	HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);
-	
-	// GPIO_InitTypeDef GPIO_InitStructure;
-	// __HAL_RCC_GPIOC_CLK_ENABLE(); 
-    GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
-	while(1);	
-	
+
     // Fill in special values
     config_rom_copy.key = CFG_KEY;
     config_rom_copy.size = sizeof(config_rom);

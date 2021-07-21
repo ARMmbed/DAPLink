@@ -28,6 +28,8 @@
 #include "daplink.h"
 #include "settings.h"
 #include "target_board.h"
+#include <stdio.h>
+#include "gpio.h"
 
 static char hex_to_ascii(uint8_t x)
 {
@@ -187,7 +189,7 @@ static void setup_string_descriptor()
 
 void info_init(void)
 {
-    info_crc_compute();
+    //info_crc_compute();
     read_unique_id(host_id);
     setup_basics();
     setup_unique_id();

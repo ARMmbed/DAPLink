@@ -99,7 +99,7 @@ void config_init()
     memcpy(config_ram.hexdump, config_ram_copy.hexdump, sizeof(config_ram_copy.hexdump[0]) * config_ram_copy.valid_dumps);
     config_ram.disable_msd = config_ram_copy.disable_msd;
     config_ram.page_erase_enable = config_ram_copy.page_erase_enable;
-	config_rom_init();
+	//config_rom_init();
 }
 
 void config_ram_set_hold_in_bl(bool hold)

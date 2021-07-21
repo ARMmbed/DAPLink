@@ -131,21 +131,42 @@ void gpio_init(void)
     // Disable JTAG to free pins for other uses
     // Note - SWD is still enabled
     //__HAL_AFIO_REMAP_SWJ_NOJTAG(); //biby
+	
+	//configure USB_DM and USB_DP
+	//biby 
+	USB_CONNECT_PORT_ENABLE();
+	
+	GPIO_InitStructure.Pin = USB_DM_PIN;
+    GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStructure.Pull = GPIO_NOPULL;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStructure.Alternate = GPIO_AF10_USB;
+    HAL_GPIO_Init(USB_DM, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.Pin = USB_DP_PIN;
+    GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStructure.Pull = GPIO_NOPULL;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStructure.Alternate = GPIO_AF10_USB;
+    HAL_GPIO_Init(USB_DP, &GPIO_InitStructure);
+	
+	__HAL_RCC_USB_CLK_ENABLE();
 
- 	USB_CONNECT_PORT_ENABLE();
+ 	//USB_CONNECT_PORT_ENABLE();
     USB_CONNECT_OFF();
     GPIO_InitStructure.Pin = USB_CONNECT_PIN;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);   
+    HAL_GPIO_Init(USB_CONNECT_PORT, &GPIO_InitStructure);  
+	
          
     // configure LEDs    
     GPIO_InitStructure.Pin = RUNNING_LED_PIN;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
     HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-	//HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_SET);
+
     
     GPIO_InitStructure.Pin = CONNECTED_LED_PIN;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
