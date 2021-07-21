@@ -628,6 +628,14 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/stm32f746zg.yaml
+    stm32f103xb_stm32l475vg_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32l475vg.yaml
+    stm32f103xb_stm32wb55rg_if:
+        - *module_if
+        - *module_hic_stm32f103xb
+        - records/board/stm32wb55.yaml
     stm32f103xb_stm32l476rg_if:
         - *module_if
         - *module_hic_stm32f103xb
