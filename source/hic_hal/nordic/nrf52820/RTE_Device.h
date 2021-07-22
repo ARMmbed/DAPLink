@@ -27,6 +27,8 @@
 #ifndef __RTE_DEVICE_H
 #define __RTE_DEVICE_H
 
+#include "IO_Config.h"
+
 // <e> USART0 (Universal synchronous asynchronous receiver transmitter) [Driver_USART0]
 // <i> Configuration settings for Driver_USART0 in component ::CMSIS Driver:USART
 #define RTE_USART0                      1
@@ -34,22 +36,22 @@
 //   <e> TX Pin
 //     <o1.0..4> Pin number
 #define RTE_USART0_TX_EN                1
-#define RTE_USART0_TX_PIN_NUM           6
+#define RTE_USART0_TX_PIN_NUM           UART_TX_PIN
 //   </e>
 //   <e> RX Pin
 //     <o1.0..4> Pin number
 #define RTE_USART0_RX_EN                1
-#define RTE_USART0_RX_PIN_NUM           8
+#define RTE_USART0_RX_PIN_NUM           UART_RX_PIN
 //   </e>
 //   <e> CTS Pin
 //     <o1.0..4> Pin number
-#define RTE_USART0_CTS_EN               1
-#define RTE_USART0_CTS_PIN_NUM          7
+#define RTE_USART0_CTS_EN               0
+#define RTE_USART0_CTS_PIN_NUM          0 /* N/A */
 //   </e>
 //   <e> RTS Pin
 //     <o1.0..4> Pin number
-#define RTE_USART0_RTS_EN               1
-#define RTE_USART0_RTS_PIN_NUM          5
+#define RTE_USART0_RTS_EN               0
+#define RTE_USART0_RTS_PIN_NUM          0 /* N/A */
 //   </e>
 
 

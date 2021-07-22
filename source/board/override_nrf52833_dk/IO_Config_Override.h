@@ -66,12 +66,14 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 #define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
 
 // UART
+#ifndef UART_ARDUINO
 // This is connected to J-Link
-#define UART_RX NRF_GPIO_PIN_MAP(0, 8) // RxD P0.08
-#define UART_TX NRF_GPIO_PIN_MAP(0, 6) // TxD P0.06
-
+#define UART_RX_PIN NRF_GPIO_PIN_MAP(0, 8) // RxD P0.08
+#define UART_TX_PIN NRF_GPIO_PIN_MAP(0, 6) // TxD P0.06
+#else
 // Alternative connected to Arduino D0 / D1
-// #define UART_RX NRF_GPIO_PIN_MAP(1, 1)
-// #define UART_TX NRF_GPIO_PIN_MAP(1, 2)
+#define UART_RX_PIN NRF_GPIO_PIN_MAP(1, 1)
+#define UART_TX_PIN NRF_GPIO_PIN_MAP(1, 2)
+#endif
 
 #endif
