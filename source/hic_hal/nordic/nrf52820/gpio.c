@@ -1,6 +1,6 @@
 /**
  * @file    gpio.c
- * @brief   GPIO access functions for nrf52833 HIC
+ * @brief   GPIO access functions for nrf52820 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021, Arm Limited, All Rights Reserved

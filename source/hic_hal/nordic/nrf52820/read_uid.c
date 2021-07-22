@@ -1,6 +1,6 @@
 /**
  * @file    read_uid.c
- * @brief   UID extraction function for nrf52833 HIC
+ * @brief   UID extraction function for nrf52820 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021, Arm Limited, All Rights Reserved
@@ -20,11 +20,12 @@
  */
 
 #include "read_uid.h"
+#include "device.h"
 
 void read_unique_id(uint32_t *id)
 {
-    id[0] = 0;
-    id[1] = 0;
-    id[2] = 0;
+    id[0] = NRF_FICR->INFO.PART;
+    id[1] = NRF_FICR->DEVICEID[0];
+    id[2] = NRF_FICR->DEVICEID[1];
     id[3] = 0;
 }
