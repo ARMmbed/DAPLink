@@ -38,13 +38,14 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 #define BUTTON_1       NRF_GPIO_PIN_MAP(0, 11)
 
 // SWDCLK (Output)
-#define PIN_SWDCLK     NRF_GPIO_PIN_MAP(1, 6) // Arduino D5
+#define PIN_SWDCLK     NRF_GPIO_PIN_MAP(0, 4)
 
 // SWDIO (Input/Output)
-#define PIN_SWDIO      NRF_GPIO_PIN_MAP(1, 7) // Arduino D6
+#define PIN_SWDIO      NRF_GPIO_PIN_MAP(0, 5)
 
 // nRESET Pin
-#define PIN_nRESET     NRF_GPIO_PIN_MAP(1, 8) // Arduino D7
+#undef PIN_nRESET
+// #define PIN_nRESET     NRF_GPIO_PIN_MAP(0, 7)
 
 // Target Running LED (Output)
 #define LED_RUNNING    LED_1
@@ -66,14 +67,14 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 #define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
 
 // UART
-#ifndef UART_ARDUINO
+#ifndef UART_EXTERNAL
 // This is connected to J-Link
 #define UART_RX_PIN NRF_GPIO_PIN_MAP(0, 8) // RxD P0.08
 #define UART_TX_PIN NRF_GPIO_PIN_MAP(0, 6) // TxD P0.06
 #else
-// Alternative connected to Arduino D0 / D1
-#define UART_RX_PIN NRF_GPIO_PIN_MAP(1, 1)
-#define UART_TX_PIN NRF_GPIO_PIN_MAP(1, 2)
+// Alternative pin out
+#define UART_RX_PIN NRF_GPIO_PIN_MAP(0, 29)
+#define UART_TX_PIN NRF_GPIO_PIN_MAP(0, 30)
 #endif
 
 #endif
