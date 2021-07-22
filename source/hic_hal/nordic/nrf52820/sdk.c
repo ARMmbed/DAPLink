@@ -24,6 +24,28 @@
 #include "daplink.h"
 #include "util.h"
 
+#ifdef NRF52820_DYNAMIC_PIN
+uint32_t uart_tx_pin;
+uint32_t uart_rx_pin;
+uint32_t sw_reset_pin;
+uint32_t led_usb_pin;
+#endif
+
 void sdk_init()
 {
+#ifdef NRF52820_DYNAMIC_PIN
+    if (NRF_FICR->INFO.PART == 0x52833) {
+        // nRF52833
+        sw_reset_pin = NRF52833_RESET_PIN;
+        led_usb_pin = NRF52833_LED_PIN;
+        uart_tx_pin = NRF52833_UART_TX_PIN;
+        uart_rx_pin = NRF52833_UART_RX_PIN;
+    } else {
+        // nRF52820
+        sw_reset_pin = NRF52820_RESET_PIN;
+        led_usb_pin = NRF52820_LED_PIN;
+        uart_tx_pin = NRF52820_UART_TX_PIN;
+        uart_rx_pin = NRF52820_UART_RX_PIN;
+    }
+#endif
 }
