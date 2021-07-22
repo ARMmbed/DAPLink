@@ -40,11 +40,13 @@
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 
 #define NRF52820_DYNAMIC_PIN
+#define GPIO_LED_ACTIVE_STATE 1
 
 extern uint32_t uart_tx_pin;
 extern uint32_t uart_rx_pin;
 extern uint32_t sw_reset_pin;
 extern uint32_t led_usb_pin;
+extern uint32_t led_pwr_pin;
 
 // SWDCLK (Output)
 #define PIN_SWDCLK        NRF_GPIO_PIN_MAP(0, 1)
@@ -70,6 +72,9 @@ extern uint32_t led_usb_pin;
 // CDC LED
 #define LED_CDC           led_usb_pin
 
+// POWER LED
+#define LED_PWR           led_pwr_pin
+
 // Reset button (SW_RESET)
 #define RESET_BUTTON      sw_reset_pin
 #define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
@@ -79,12 +84,14 @@ extern uint32_t led_usb_pin;
 #define UART_RX_PIN       uart_rx_pin
 
 #define NRF52820_RESET_PIN   NRF_GPIO_PIN_MAP(0, 6)
-#define NRF52820_LED_PIN     NRF_GPIO_PIN_MAP(0, 7)
+#define NRF52820_USB_LED_PIN NRF_GPIO_PIN_MAP(0, 14)
+#define NRF52820_PWR_LED_PIN NRF_GPIO_PIN_MAP(0, 15)
 #define NRF52820_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 8)  // From IMCU to target
 #define NRF52820_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 29) // From target to IMCU
 
 #define NRF52833_RESET_PIN   NRF_GPIO_PIN_MAP(1, 9)
-#define NRF52833_LED_PIN     NRF_GPIO_PIN_MAP(0, 11)
+#define NRF52833_USB_LED_PIN NRF_GPIO_PIN_MAP(0, 15)
+#define NRF52833_PWR_LED_PIN NRF_GPIO_PIN_MAP(0, 17)
 #define NRF52833_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 3)  // From IMCU to target
 #define NRF52833_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 2)  // From target to IMCU
 

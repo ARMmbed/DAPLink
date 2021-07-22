@@ -23,8 +23,18 @@
 
 #include "IO_config.h"
 
+#if (defined(GPIO_LED_ACTIVE_STATE) && (GPIO_LED_ACTIVE_STATE == 1))
+#define GPIO_LED_STATE(state) (state ? 1 : 0)
+#else
+#define GPIO_LED_STATE(state) (state ? 0 : 1)
+#endif
+
 void gpio_init(void)
 {
+#ifdef LED_PWR
+    nrf_gpio_cfg_output(LED_PWR);
+    nrf_gpio_pin_write(LED_PWR, GPIO_LED_STATE(1));
+#endif
 #ifdef LED_CONNECTED
     nrf_gpio_cfg_output(LED_CONNECTED);
 #endif
@@ -40,17 +50,17 @@ void gpio_init(void)
 
 void gpio_set_hid_led(gpio_led_state_t state)
 {
-    nrf_gpio_pin_write(LED_HID, state ? 0 : 1);
+    nrf_gpio_pin_write(LED_HID, GPIO_LED_STATE(state));
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
-    nrf_gpio_pin_write(LED_CDC, state ? 0 : 1);
+    nrf_gpio_pin_write(LED_CDC, GPIO_LED_STATE(state));
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
-    nrf_gpio_pin_write(LED_MSC, state ? 0 : 1);
+    nrf_gpio_pin_write(LED_MSC, GPIO_LED_STATE(state));
 }
 
 uint8_t gpio_get_reset_btn_no_fwrd(void)
