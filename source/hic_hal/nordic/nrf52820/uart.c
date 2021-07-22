@@ -61,6 +61,7 @@ int32_t uart_initialize(void)
 {
     clear_buffers();
     Driver_USART0.Initialize(uart_handler);
+    Driver_USART0.PowerControl(ARM_POWER_FULL);
 
     return 1;
 }
