@@ -11,6 +11,7 @@ common:
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
         - OS_CLOCK=72000000
+        - MAIN_TASK_STACK=960
     includes:
         - source/hic_hal/stm32/stm32f103xb
         - source/hic_hal/stm32/stm32f103xb/cmsis
