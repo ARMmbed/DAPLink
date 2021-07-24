@@ -33,10 +33,10 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 //USB control pin
 #define USB_CONNECT_PORT_ENABLE()    __HAL_RCC_GPIOA_CLK_ENABLE()
 #define USB_CONNECT_PORT_DISABLE()   __HAL_RCC_GPIOA_CLK_DISABLE()
-#define USB_CONNECT_PORT             GPIOA
-#define USB_CONNECT_PIN              GPIO_PIN_0
-#define USB_CONNECT_ON()             (USB_CONNECT_PORT->BSRR = USB_CONNECT_PIN)
-#define USB_CONNECT_OFF()            (USB_CONNECT_PORT->BRR  = USB_CONNECT_PIN)
+#define USB_CONNECT_PORT             GPIOC
+#define USB_CONNECT_PIN              GPIO_PIN_13
+#define USB_CONNECT_ON()             (USB_CONNECT_PORT->BRR = USB_CONNECT_PIN)
+#define USB_CONNECT_OFF()            (USB_CONNECT_PORT->BSRR  = USB_CONNECT_PIN)
 
 //USB GPIO Configuration
 //biby
@@ -87,9 +87,9 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define PIN_HID_LED                  GPIO_PIN_1
 #define PIN_HID_LED_Bit              1
 //Red
-#define PIN_CDC_LED_PORT             GPIOC
-#define PIN_CDC_LED                  GPIO_PIN_13
-#define PIN_CDC_LED_Bit              13
+#define PIN_CDC_LED_PORT             GPIOA
+#define PIN_CDC_LED                  GPIO_PIN_0
+#define PIN_CDC_LED_Bit              0
 
 #define PIN_MSC_LED_PORT             GPIOB
 #define PIN_MSC_LED                  GPIO_PIN_1

@@ -139,17 +139,21 @@ void EP_Status(U32 EPNum, U32 stat)
  *    Return Value:    None
  */
 
-#ifdef __RTX
-void __svc(1) USBD_IntrEna(void);
-void __SVC_1(void)
-{
-#else
-void          USBD_IntrEna(void)
-{
-#endif
-   NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
-}
 
+// #ifdef __RTX
+// void __svc(1) USBD_IntrEna(void);
+// void __SVC_1(void)
+// {
+// #else
+// void          USBD_IntrEna(void)
+// {
+// #endif
+   // NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
+// }
+//biby
+void  USBD_IntrEna(void){
+	NVIC_EnableIRQ(USB_LP_IRQn); 
+	}
 
 /*
  *  USB Device Initialize Function
@@ -159,7 +163,7 @@ void          USBD_IntrEna(void)
 
 void USBD_Init(void)
 {
-    RCC->APB1ENR1 |= (1 << 23);            /* enable clock for USB               */ //Ashley
+    RCC->APB1ENR1 |= (1 << 26);            /* enable clock for USB               */ //Ashley
     USBD_IntrEna();                       /* Enable USB Interrupts              */
     /* Control USB connecting via SW                                            */
     USB_CONNECT_OFF();
@@ -181,9 +185,17 @@ void USBD_Connect(BOOL con)
         ISTR = 0;                           /* Clear Interrupt Status             */
         CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
         USB_CONNECT_ON();
+
     } else {
         CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
         USB_CONNECT_OFF();
+		// GPIO_InitTypeDef GPIO_InitStructure;
+		// __HAL_RCC_GPIOC_CLK_ENABLE(); 
+		// GPIO_InitStructure.Pin = PIN_CDC_LED;
+		// GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+		// GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		// HAL_GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
+		// HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);  //red led
     }
 }
 
@@ -229,7 +241,7 @@ void USBD_Reset(void)
     EPxREG(0) = EP_CONTROL | EP_RX_VALID;
     DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
 
- //   NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn); //Ashley
+    NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
 }
 
 
@@ -565,8 +577,16 @@ U32 USBD_GetError(void)
  *  USB Device Interrupt Service Routine
  */
 
-void USB_LP_CAN1_RX0_IRQHandler(void)
+//void USB_LP_CAN1_RX0_IRQHandler(void)
+void USB_LP_IRQHandler(void)
 {
+	    GPIO_InitTypeDef GPIO_InitStructure;
+		__HAL_RCC_GPIOC_CLK_ENABLE(); 
+		GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+		GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+		HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
     uint32_t istr;
     uint32_t num;
     uint32_t val;
@@ -626,6 +646,7 @@ void USBD_Handler(void)
     if (istr & ISTR_RESET) {
         USBD_Reset();
         usbd_reset_core();
+					
 #ifdef __RTX
 
         if (USBD_RTX_DevTask) {

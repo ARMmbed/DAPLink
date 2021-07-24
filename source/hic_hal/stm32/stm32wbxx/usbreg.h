@@ -37,6 +37,7 @@
 
 /* Common Registers */
 #define CNTR                             REG(USB_BASE + 0x40U)             /*!< Control register */  //biby
+#define BCDR                             REG(USB_BASE + 0x58U)             /*!<  Battery Charging detector register*/  //biby
 #define ISTR                             REG(USB_BASE + 0x44U)             /*!< Interrupt status register */
 #define FNR                              REG(USB_BASE + 0x48U)             /*!< Frame number register */
 #define DADDR                            REG(USB_BASE + 0x4CU)             /*!< Device address register */

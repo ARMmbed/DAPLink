@@ -507,8 +507,7 @@ void main_task(void * arg)
 #ifdef DRAG_N_DROP_SUPPORT
             vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 #endif
-					GPIO_InitTypeDef GPIO_InitStructure;
-					__HAL_RCC_GPIOC_CLK_ENABLE();
+
             // Update USB connect status
             switch (usb_state) {
                 case USB_DISCONNECTING:
@@ -536,31 +535,18 @@ void main_task(void * arg)
                         gpio_set_board_power(true);
 
                         usb_state = USB_CONNECTED;
-				    // GPIO_InitTypeDef GPIO_InitStructure;
-					// __HAL_RCC_GPIOC_CLK_ENABLE(); 
-					GPIO_InitStructure.Pin = PIN_CDC_LED;
-					GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-					GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-					HAL_GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
-					HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);  //red led
                     }
                     else if (DECZERO(usb_no_config_count) == 0) {
                         // USB configuration timed out, which most likely indicates that the HIC is
                         // powered by a USB wall wart or similar power source. Go ahead and enable
                         // board power.
                         gpio_set_board_power(true);
-						// GPIO_InitTypeDef GPIO_InitStructure;
-						// __HAL_RCC_GPIOC_CLK_ENABLE(); 
-						GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-						GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-						GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-						HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-						HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
                     }
 		
                     break;
 
-                case USB_CONNECTED:  
+                case USB_CONNECTED: 
+					
                 case USB_DISCONNECTED:
                 default:
                     break;
@@ -800,6 +786,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_3, GPIO_PIN_RESET);
@@ -931,7 +918,8 @@ int main(void)
 	
 	Syam_HAL_Init(); //biby
 	SystemClock_Config(); //biby
-    MX_GPIO_Init(); //biby
+	gpio_init(); //biby
+    //MX_GPIO_Init(); //biby
 	// MX_USB_Device_Init(); //biby
 	// while(1);
 	
