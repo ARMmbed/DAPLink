@@ -33,13 +33,14 @@
 #include "cortex_m.h"
 #include "string.h"
 
-#include "stm32wbxx_hal_pwr_ex.h"
-//#include "stm32wbxx_hal_pcd.h"  //biby
+// #include "stm32wbxx_hal_pwr_ex.h"
+#include "stm32wbxx_hal_pcd.h"  //biby
+#include "stm32wbxx_hal.h"  //biby
 // #include "ab_device.h"
 // #include "ab_core.h"
 // #include "ab_desc.h"
 // #include "ab_cdc.h"
-// #include "ab_cdc_if.h"  //biby
+//#include "ab_cdc_if.h"  //biby
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -177,15 +178,29 @@ void  USBD_IntrEna(void){
 
 void USBD_Init(void)
 {
-	HAL_PWREx_EnableVddUSB();
+	  // if (USBD_Init(&hUsbDeviceFS, &CDC_Desc, DEVICE_FS) != USBD_OK) {
+		// GPIO_InitTypeDef GPIO_InitStructure;
+		// __HAL_RCC_GPIOC_CLK_ENABLE(); 
+		// GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+		// GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+		// GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		// HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+		// HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
+  // }
+    HAL_PWREx_EnableVddUSB();
     RCC->APB1ENR1 |= (1 << 26);            /* enable clock for USB               */ //Ashley
-    USBD_IntrEna();                       /* Enable USB Interrupts              */
+	USB->CNTR = CNTR_FRES;                 /* Force USB Reset                   */
+	HAL_Delay(100);
+	USB->CNTR = 0;
+	USB->ISTR = 0; 
+	USB->BCDR |= (uint16_t)USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
+	USB->DADDR = (uint16_t)USB_DADDR_EF;     /* set device address and enable function */ //biby
+    //USBD_IntrEna();                       /* Enable USB Interrupts              */
 	// if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
     // USB_CONNECT_ON();
   // }
-	
-	USB->DADDR = (uint16_t)USB_DADDR_EF;     /* set device address and enable function */ //biby
-	USB->BCDR |= (uint16_t)USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
+
+
     USB_CONNECT_ON();
 	while(1);
     /* Control USB connecting via SW                                            */
@@ -208,9 +223,9 @@ void USBD_Connect(BOOL con)
 		// USBx->ISTR = 0U;                        /* Clear Interrupt Status             */
 		// USBx->CNTR = USB_CNTR_RESETM| USB_CNTR_SUSPM | USB_CNTR_WKUPM;  /* USB Interrupt Mask       */
 			
-		USB->CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-		USB->CNTR = 0;
-		USB->ISTR = 0;                           /* Clear Interrupt Status             */
+		// USB->CNTR = CNTR_FRES;                   /* Force USB Reset                    */
+		// USB->CNTR = 0;
+		// USB->ISTR = 0;                           /* Clear Interrupt Status             */
 		USB->CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
         USB_CONNECT_ON();
 
