@@ -29,6 +29,9 @@
 
 #define REG(x)  (*((volatile uint32_t *)(x)))
 	
+
+// #define USB             ((USB_TypeDef *) USB1_BASE)
+// #define USB1_BASE       (APB1PERIPH_BASE + 0x00006800UL)
 //#define PERIPH_BASE           0x40000000UL /*!< Peripheral base address in the alias region */
 #define APB1PERIPH_BASE       PERIPH_BASE
 
@@ -37,12 +40,12 @@
 
 /* Common Registers */
 
-#define CNTR                             REG(0x40005C00UL + 0x00000040)             /*!< Control register */  //biby
-#define BCDR                             REG(0x40005C00UL + 0x00000058)             /*!<  Battery Charging detector register*/  //biby
-#define ISTR                             REG(0x40005C00UL + 0x00000044)             /*!< Interrupt status register */
-#define FNR                              REG(0x40005C00UL + 0x00000048)             /*!< Frame number register */
-#define DADDR                            REG(0x40005C00UL + 0x0000004C)             /*!< Device address register */
-#define BTABLE                           REG(0x40005C00UL + 0x00000050)             /*!< Buffer Table address register */  //biby
+#define CNTR                             REG(0x40006800UL + 0x00000040)             /*!< Control register */  //biby
+#define BCDR                             REG(0x40006800UL + 0x00000058)             /*!<  Battery Charging detector register*/  //biby
+#define ISTR                             REG(0x40006800UL + 0x00000044)             /*!< Interrupt status register */
+#define FNR                              REG(0x40006800UL + 0x00000048)             /*!< Frame number register */
+#define DADDR                            REG(0x40006800UL + 0x0000004C)             /*!< Device address register */
+#define BTABLE                           REG(0x40006800UL + 0x00000050)             /*!< Buffer Table address register */  //biby
 // #define CNTR                             REG(USB_BASE + 0x40U)             /*!< Control register */  //biby
 // #define BCDR                             REG(USB_BASE + 0x58U)             /*!<  Battery Charging detector register*/  //biby
 // #define ISTR                             REG(USB_BASE + 0x44U)             /*!< Interrupt status register */
@@ -89,7 +92,7 @@
 #define DADDR_ADD                        ((uint8_t)0x7FU)                  /*!< USB device address */
 
 /* EndPoint Registers */
-#define EPxREG(x)         REG(0x40005C00UL + 4*(x))
+#define EPxREG(x)         REG(0x40006800UL + 4*(x))
 // #define EPxREG(x)       REG(USB_BASE + 4*(x))
 //#define EP0REG(0)                             REG(USB_BASE)                    /*!< endpoint 0 register address */
 //#define EP1REG(1)                             REG(USB_BASE + 0x04U)           /*!< endpoint 1 register address */
