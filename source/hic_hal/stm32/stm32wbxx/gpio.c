@@ -26,9 +26,6 @@
 #include "util.h"
 //#include "stm32wbxx_hal_tim.h" //Ashley
 
-#define REG(x)  (*((volatile unsigned int *)(x)))
-#define BCDR          REG(USB_BASE + 0x58U)             /*!<  Battery Charging detector register*/  //biby
-
 static TIM_HandleTypeDef timer;
 
 static void busy_wait(uint32_t cycles)
@@ -138,8 +135,6 @@ void gpio_init(void)
 	//configure USB_DM and USB_DP
 	//biby 
 	USB_CONNECT_PORT_ENABLE();
-	
-	BCDR |= USB_BCDR_DPPU;
 	
 	GPIO_InitStructure.Pin = USB_DM_PIN;
     GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;

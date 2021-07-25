@@ -40,7 +40,6 @@
 #include "target_family.h"
 #include "target_board.h"
 //start biby
-#include "usbd_def.h"
 // #include "usbd_core.h"
 // #include "usbd_desc.h"
 // #include "usbd_cdc.h"
@@ -919,6 +918,16 @@ int main(void)
 	Syam_HAL_Init(); //biby
 	SystemClock_Config(); //biby
 	gpio_init(); //biby
+	HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
+    // HAL_NVIC_EnableIRQ(USB_LP_IRQn);
+	// GPIO_InitTypeDef GPIO_InitStructure;
+	// __HAL_RCC_GPIOC_CLK_ENABLE(); 
+    // GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+    // GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    // GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    // HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+	// HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
+	
     //MX_GPIO_Init(); //biby
 	// MX_USB_Device_Init(); //biby
 	// while(1);
@@ -928,14 +937,6 @@ int main(void)
 	
    // Initialize CMSIS-RTOS
     osKernelInitialize();
-	
-	// GPIO_InitTypeDef GPIO_InitStructure;
-	// __HAL_RCC_GPIOC_CLK_ENABLE(); 
-    // GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-    // GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    // GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    // HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-	// HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
     // Create application main thread
 #ifndef USE_LEGACY_CMSIS_RTOS
     main_task_id = osThreadNew(main_task, NULL, &k_main_thread_attr);

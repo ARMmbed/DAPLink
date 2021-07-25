@@ -33,6 +33,7 @@
 #include "cortex_m.h"
 #include "string.h"
 
+//#include "stm32wbxx_hal_pcd.h"  //biby
 #define __NO_USB_LIB_C
 #include "usb_config.c"
 
@@ -49,6 +50,12 @@
 EP_BUF_DSCR *pBUF_DSCR = (EP_BUF_DSCR *)USB_PMA_ADDR; /* Ptr to EP Buf Desc   */
 
 U16 FreeBufAddr;                        /* Endpoint Free Buffer Address       */
+
+// USBD_HandleTypeDef hUsbDeviceFS;
+// #define REG(x)  (*((volatile unsigned int *)(x)))
+// #define BCDR          REG(USB_BASE + 0x58U)             /*!<  Battery Charging detector register*/  //biby
+
+//USBD_StatusTypeDef USBD_Start(USBD_HandleTypeDef *pdev);  //biby
 
 uint32_t StatQueue[(USBD_EP_NUM + 1) * 2 + 1];
 uint32_t StatQueueHead = 0;
@@ -165,6 +172,11 @@ void USBD_Init(void)
 {
     RCC->APB1ENR1 |= (1 << 26);            /* enable clock for USB               */ //Ashley
     USBD_IntrEna();                       /* Enable USB Interrupts              */
+	// if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
+    // USB_CONNECT_ON();
+  // }
+	BCDR |= USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
+	DADDR = USB_DADDR_EF;     /* set device address and enable function */ //biby
     /* Control USB connecting via SW                                            */
     USB_CONNECT_OFF();
 }
@@ -180,10 +192,15 @@ void USBD_Init(void)
 void USBD_Connect(BOOL con)
 {
     if (con) {
-        CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-        CNTR = 0;
-        ISTR = 0;                           /* Clear Interrupt Status             */
-        CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
+		// USBx->CNTR = (uint16_t)USB_CNTR_FRES;   /* Force USB Reset                    */
+		// USBx->CNTR = 0U;
+		// USBx->ISTR = 0U;                        /* Clear Interrupt Status             */
+		// USBx->CNTR = USB_CNTR_RESETM| USB_CNTR_SUSPM | USB_CNTR_WKUPM;  /* USB Interrupt Mask       */
+			
+		CNTR = CNTR_FRES;                   /* Force USB Reset                    */
+		CNTR = 0;
+		ISTR = 0;                           /* Clear Interrupt Status             */
+		CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
         USB_CONNECT_ON();
 
     } else {
