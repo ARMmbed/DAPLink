@@ -27,7 +27,7 @@
 #define __USBREG_H
 #include <stdint.h>
 
-#define REG(x)  (*((volatile uint32_t *)(x)))
+#define REG(x)  ((volatile uint32_t *)(x))
 	
 //#define PERIPH_BASE           0x40000000UL /*!< Peripheral base address in the alias region */
 #define APB1PERIPH_BASE       PERIPH_BASE
