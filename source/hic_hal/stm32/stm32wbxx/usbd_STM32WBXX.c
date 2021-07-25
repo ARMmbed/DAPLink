@@ -33,6 +33,7 @@
 #include "cortex_m.h"
 #include "string.h"
 
+#include "stm32wbxx_hal_pwr_ex.h"
 //#include "stm32wbxx_hal_pcd.h"  //biby
 // #include "ab_device.h"
 // #include "ab_core.h"
@@ -111,15 +112,15 @@ inline static uint32_t stat_is_empty()
 
 void EP_Reset(U32 EPNum)
 {
-    U32 num, val;
-    num = EPNum & 0x0F;
-    val = EPxREG(num);
+    // U32 num, val;
+    // num = EPNum & 0x0F;
+    // val = EPxREG(num);
 
-    if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        EPxREG(num) = val & (EP_MASK | EP_DTOG_TX);
-    } else {                              /* OUT Endpoint                       */
-        EPxREG(num) = val & (EP_MASK | EP_DTOG_RX);
-    }
+    // if (EPNum & 0x80) {                   /* IN Endpoint                        */
+        // EPxREG(num) = val & (EP_MASK | EP_DTOG_TX);
+    // } else {                              /* OUT Endpoint                       */
+        // EPxREG(num) = val & (EP_MASK | EP_DTOG_RX);
+    // }
 }
 
 
@@ -134,15 +135,15 @@ void EP_Reset(U32 EPNum)
 
 void EP_Status(U32 EPNum, U32 stat)
 {
-    U32 num, val;
-    num = EPNum & 0x0F;
-    val = EPxREG(num);
+    // U32 num, val;
+    // num = EPNum & 0x0F;
+    // val = EPxREG(num);
 
-    if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
-    } else {                              /* OUT Endpoint                       */
-        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
-    }
+    // if (EPNum & 0x80) {                   /* IN Endpoint                        */
+        // EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
+    // } else {                              /* OUT Endpoint                       */
+        // EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
+    // }
 }
 
 
@@ -176,13 +177,15 @@ void  USBD_IntrEna(void){
 
 void USBD_Init(void)
 {
+	HAL_PWREx_EnableVddUSB();
     RCC->APB1ENR1 |= (1 << 26);            /* enable clock for USB               */ //Ashley
     USBD_IntrEna();                       /* Enable USB Interrupts              */
 	// if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
     // USB_CONNECT_ON();
   // }
-	BCDR |= USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
-	DADDR = USB_DADDR_EF;     /* set device address and enable function */ //biby
+	
+	USB->DADDR = (uint16_t)USB_DADDR_EF;     /* set device address and enable function */ //biby
+	USB->BCDR |= (uint16_t)USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
     USB_CONNECT_ON();
 	while(1);
     /* Control USB connecting via SW                                            */
@@ -205,14 +208,14 @@ void USBD_Connect(BOOL con)
 		// USBx->ISTR = 0U;                        /* Clear Interrupt Status             */
 		// USBx->CNTR = USB_CNTR_RESETM| USB_CNTR_SUSPM | USB_CNTR_WKUPM;  /* USB Interrupt Mask       */
 			
-		CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-		CNTR = 0;
-		ISTR = 0;                           /* Clear Interrupt Status             */
-		CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
+		USB->CNTR = CNTR_FRES;                   /* Force USB Reset                    */
+		USB->CNTR = 0;
+		USB->ISTR = 0;                           /* Clear Interrupt Status             */
+		USB->CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
         USB_CONNECT_ON();
 
     } else {
-        CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
+        USB->CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
         USB_CONNECT_OFF();
 		// GPIO_InitTypeDef GPIO_InitStructure;
 		// __HAL_RCC_GPIOC_CLK_ENABLE(); 
@@ -233,40 +236,40 @@ void USBD_Connect(BOOL con)
 
 void USBD_Reset(void)
 {
-    NVIC_DisableIRQ(USB_LP_IRQn); //Ashley
+    // NVIC_DisableIRQ(USB_LP_IRQn); //Ashley
 
-    /* Double Buffering is not yet supported                                    */
-    ISTR = 0;                             /* Clear Interrupt Status             */
-    CNTR = CNTR_CTRM | CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM |
-#ifdef __RTX
-           ((USBD_RTX_DevTask   != 0) ? CNTR_ERRM    : 0) |
-           ((USBD_RTX_DevTask   != 0) ? CNTR_PMAOVRM : 0) |
-           ((USBD_RTX_DevTask   != 0) ? CNTR_SOFM    : 0) |
-           ((USBD_RTX_DevTask   != 0) ? CNTR_ESOFM   : 0);
-#else
-           ((USBD_P_Error_Event != 0) ? CNTR_ERRM    : 0) |
-           ((USBD_P_Error_Event != 0) ? CNTR_PMAOVRM : 0) |
-           ((USBD_P_SOF_Event   != 0) ? CNTR_SOFM    : 0) |
-           ((USBD_P_SOF_Event   != 0) ? CNTR_ESOFM   : 0);
-#endif
-    FreeBufAddr = EP_BUF_ADDR;
-    BTABLE = 0x00;                        /* set BTABLE Address                 */
-    /* Setup Control Endpoint 0 */
-    pBUF_DSCR->ADDR_TX = FreeBufAddr;
-    FreeBufAddr += USBD_MAX_PACKET0;
-    pBUF_DSCR->ADDR_RX = FreeBufAddr;
-    FreeBufAddr += USBD_MAX_PACKET0;
+    // /* Double Buffering is not yet supported                                    */
+    // ISTR = 0;                             /* Clear Interrupt Status             */
+    // CNTR = CNTR_CTRM | CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM |
+// #ifdef __RTX
+           // ((USBD_RTX_DevTask   != 0) ? CNTR_ERRM    : 0) |
+           // ((USBD_RTX_DevTask   != 0) ? CNTR_PMAOVRM : 0) |
+           // ((USBD_RTX_DevTask   != 0) ? CNTR_SOFM    : 0) |
+           // ((USBD_RTX_DevTask   != 0) ? CNTR_ESOFM   : 0);
+// #else
+           // ((USBD_P_Error_Event != 0) ? CNTR_ERRM    : 0) |
+           // ((USBD_P_Error_Event != 0) ? CNTR_PMAOVRM : 0) |
+           // ((USBD_P_SOF_Event   != 0) ? CNTR_SOFM    : 0) |
+           // ((USBD_P_SOF_Event   != 0) ? CNTR_ESOFM   : 0);
+// #endif
+    // FreeBufAddr = EP_BUF_ADDR;
+    // BTABLE = 0x00;                        /* set BTABLE Address                 */
+    // /* Setup Control Endpoint 0 */
+    // pBUF_DSCR->ADDR_TX = FreeBufAddr;
+    // FreeBufAddr += USBD_MAX_PACKET0;
+    // pBUF_DSCR->ADDR_RX = FreeBufAddr;
+    // FreeBufAddr += USBD_MAX_PACKET0;
 
-    if (USBD_MAX_PACKET0 > 62) {
-        pBUF_DSCR->COUNT_RX = ((USBD_MAX_PACKET0 << 5) - 1) | 0x8000;
-    } else {
-        pBUF_DSCR->COUNT_RX =   USBD_MAX_PACKET0 << 9;
-    }
+    // if (USBD_MAX_PACKET0 > 62) {
+        // pBUF_DSCR->COUNT_RX = ((USBD_MAX_PACKET0 << 5) - 1) | 0x8000;
+    // } else {
+        // pBUF_DSCR->COUNT_RX =   USBD_MAX_PACKET0 << 9;
+    // }
 
-    EPxREG(0) = EP_CONTROL | EP_RX_VALID;
-    DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
+    // EPxREG(0) = EP_CONTROL | EP_RX_VALID;
+    // DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
 
-    NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
+    // NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
 }
 
 
@@ -278,8 +281,8 @@ void USBD_Reset(void)
 
 void USBD_Suspend(void)
 {
-    CNTR |= CNTR_FSUSP;                   /* Force Suspend                      */
-    CNTR |= CNTR_LPMODE;                  /* Low Power Mode                     */
+    // CNTR |= CNTR_FSUSP;                   /* Force Suspend                      */
+    // CNTR |= CNTR_LPMODE;                  /* Low Power Mode                     */
 }
 
 
@@ -303,7 +306,7 @@ void USBD_Resume(void)
 
 void USBD_WakeUp(void)
 {
-    CNTR &= ~CNTR_FSUSP;                  /* Clear Suspend                      */
+    // CNTR &= ~CNTR_FSUSP;                  /* Clear Suspend                      */
 }
 
 
@@ -328,11 +331,11 @@ void USBD_WakeUpCfg(BOOL cfg)
 
 void USBD_SetAddress(U32 adr, U32 setup)
 {
-    if (setup) {
-        return;
-    }
+    // if (setup) {
+        // return;
+    // }
 
-    DADDR = DADDR_EF | adr;
+    // DADDR = DADDR_EF | adr;
 }
 
 
@@ -344,10 +347,10 @@ void USBD_SetAddress(U32 adr, U32 setup)
 
 void USBD_Configure(BOOL cfg)
 {
-    if (cfg == __FALSE) {
-        FreeBufAddr  = EP_BUF_ADDR;
-        FreeBufAddr += 2 * USBD_MAX_PACKET0; /* reset Buffer address               */
-    }
+    // if (cfg == __FALSE) {
+        // FreeBufAddr  = EP_BUF_ADDR;
+        // FreeBufAddr += 2 * USBD_MAX_PACKET0; /* reset Buffer address               */
+    // }
 }
 
 
@@ -359,53 +362,53 @@ void USBD_Configure(BOOL cfg)
 
 void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
 {
-    /* Double Buffering is not yet supported                                    */
-    U32 num, val;
-    num = pEPD->bEndpointAddress & 0x0F;
-    val = pEPD->wMaxPacketSize;
+    // /* Double Buffering is not yet supported                                    */
+    // U32 num, val;
+    // num = pEPD->bEndpointAddress & 0x0F;
+    // val = pEPD->wMaxPacketSize;
 
-    if (pEPD->bEndpointAddress & USB_ENDPOINT_DIRECTION_MASK) {
-        (pBUF_DSCR + num)->ADDR_TX = FreeBufAddr;
-        val = (val + 1) & ~1;
-    } else {
-        (pBUF_DSCR + num)->ADDR_RX = FreeBufAddr;
+    // if (pEPD->bEndpointAddress & USB_ENDPOINT_DIRECTION_MASK) {
+        // (pBUF_DSCR + num)->ADDR_TX = FreeBufAddr;
+        // val = (val + 1) & ~1;
+    // } else {
+        // (pBUF_DSCR + num)->ADDR_RX = FreeBufAddr;
 
-        if (val > 62) {
-            val = (val + 31) & ~31;
-            (pBUF_DSCR + num)->COUNT_RX = ((val << 5) - 1) | 0x8000;
-        } else {
-            val = (val + 1)  & ~1;
-            (pBUF_DSCR + num)->COUNT_RX =   val << 9;
-        }
-    }
+        // if (val > 62) {
+            // val = (val + 31) & ~31;
+            // (pBUF_DSCR + num)->COUNT_RX = ((val << 5) - 1) | 0x8000;
+        // } else {
+            // val = (val + 1)  & ~1;
+            // (pBUF_DSCR + num)->COUNT_RX =   val << 9;
+        // }
+    // }
 
-    FreeBufAddr += val;
+    // FreeBufAddr += val;
 
-    switch (pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK) {
-        case USB_ENDPOINT_TYPE_CONTROL:
-            val = EP_CONTROL;
-            break;
+    // switch (pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK) {
+        // case USB_ENDPOINT_TYPE_CONTROL:
+            // val = EP_CONTROL;
+            // break;
 
-        case USB_ENDPOINT_TYPE_ISOCHRONOUS:
-            val = EP_ISOCHRONOUS;
-            break;
+        // case USB_ENDPOINT_TYPE_ISOCHRONOUS:
+            // val = EP_ISOCHRONOUS;
+            // break;
 
-        case USB_ENDPOINT_TYPE_BULK:
-            val = EP_BULK;
+        // case USB_ENDPOINT_TYPE_BULK:
+            // val = EP_BULK;
 
-            if (USB_DBL_BUF_EP & (1 << num)) {
-                val |= EP_KIND;
-            }
+            // if (USB_DBL_BUF_EP & (1 << num)) {
+                // val |= EP_KIND;
+            // }
 
-            break;
+            // break;
 
-        case USB_ENDPOINT_TYPE_INTERRUPT:
-            val = EP_INTERRUPT;
-            break;
-    }
+        // case USB_ENDPOINT_TYPE_INTERRUPT:
+            // val = EP_INTERRUPT;
+            // break;
+    // }
 
-    val |= num;
-    EPxREG(num) = val;
+    // val |= num;
+    // EPxREG(num) = val;
 }
 
 
@@ -431,7 +434,7 @@ void USBD_DirCtrlEP(U32 dir)
 
 void USBD_EnableEP(U32 EPNum)
 {
-    EP_Status(EPNum, EP_TX_NAK | EP_RX_VALID);    /* EP is able to receive      */
+    // EP_Status(EPNum, EP_TX_NAK | EP_RX_VALID);    /* EP is able to receive      */
 }
 
 
@@ -445,7 +448,7 @@ void USBD_EnableEP(U32 EPNum)
 
 void USBD_DisableEP(U32 EPNum)
 {
-    EP_Status(EPNum, EP_TX_DIS | EP_RX_DIS);
+    // EP_Status(EPNum, EP_TX_DIS | EP_RX_DIS);
 }
 
 
@@ -459,7 +462,7 @@ void USBD_DisableEP(U32 EPNum)
 
 void USBD_ResetEP(U32 EPNum)
 {
-    EP_Reset(EPNum);
+    // EP_Reset(EPNum);
 }
 
 
@@ -473,7 +476,7 @@ void USBD_ResetEP(U32 EPNum)
 
 void USBD_SetStallEP(U32 EPNum)
 {
-    EP_Status(EPNum, EP_TX_STALL | EP_RX_STALL);
+    // EP_Status(EPNum, EP_TX_STALL | EP_RX_STALL);
 }
 
 
@@ -487,8 +490,8 @@ void USBD_SetStallEP(U32 EPNum)
 
 void USBD_ClrStallEP(U32 EPNum)
 {
-    EP_Reset(EPNum);                      /* reset DTog Bits                    */
-    EP_Status(EPNum, EP_TX_VALID | EP_RX_VALID);
+    // EP_Reset(EPNum);                      /* reset DTog Bits                    */
+    // EP_Status(EPNum, EP_TX_VALID | EP_RX_VALID);
 }
 
 
@@ -517,22 +520,22 @@ void USBD_ClearEPBuf(U32 EPNum)
 
 U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 bufsz)
 {
-    /* Double Buffering is not yet supported                                    */
-    U32 num, cnt, *pv, n;
-    num = EPNum & 0x0F;
-    pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_RX));
-    cnt = (pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK;
-    if (cnt > bufsz) {
-        cnt = bufsz;
-    }
+    // /* Double Buffering is not yet supported                                    */
+    // U32 num, cnt, *pv, n;
+    // num = EPNum & 0x0F;
+    // pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_RX));
+    // cnt = (pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK;
+    // if (cnt > bufsz) {
+        // cnt = bufsz;
+    // }
 
-    for (n = 0; n < (cnt + 1) / 2; n++) {
-        __UNALIGNED_UINT16_WRITE(pData, *pv++);
-        pData += 2;
-    }
+    // for (n = 0; n < (cnt + 1) / 2; n++) {
+        // __UNALIGNED_UINT16_WRITE(pData, *pv++);
+        // pData += 2;
+    // }
 
-    EP_Status(EPNum, EP_RX_VALID);
-    return (cnt);
+    // EP_Status(EPNum, EP_RX_VALID);
+    // return (cnt);
 }
 
 
@@ -548,25 +551,25 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 bufsz)
 
 U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 {
-    /* Double Buffering is not yet supported                                    */
-    U32 num, *pv, n;
-    U16 statusEP;
-    num = EPNum & 0x0F;
-    pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_TX));
+    // /* Double Buffering is not yet supported                                    */
+    // U32 num, *pv, n;
+    // U16 statusEP;
+    // num = EPNum & 0x0F;
+    // pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_TX));
 
-    for (n = 0; n < (cnt + 1) / 2; n++) {
-        *pv++ = __UNALIGNED_UINT16_READ(pData);
-        pData += 2;
-    }
+    // for (n = 0; n < (cnt + 1) / 2; n++) {
+        // *pv++ = __UNALIGNED_UINT16_READ(pData);
+        // pData += 2;
+    // }
 
-    (pBUF_DSCR + num)->COUNT_TX = cnt;
-    statusEP = EPxREG(num);
+    // (pBUF_DSCR + num)->COUNT_TX = cnt;
+    // statusEP = EPxREG(num);
 
-    if ((statusEP & EP_STAT_TX) != EP_TX_STALL) {
-        EP_Status(EPNum, EP_TX_VALID);      /* do not make EP valid if stalled    */
-    }
+    // if ((statusEP & EP_STAT_TX) != EP_TX_STALL) {
+        // EP_Status(EPNum, EP_TX_VALID);      /* do not make EP valid if stalled    */
+    // }
 
-    return (cnt);
+    // return (cnt);
 }
 
 
@@ -578,7 +581,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 
 U32 USBD_GetFrame(void)
 {
-    return (FNR & FNR_FN);
+    // return (FNR & FNR_FN);
 }
 
 
@@ -593,7 +596,7 @@ U32 LastError;                          /* Last Error                         */
 
 U32 USBD_GetError(void)
 {
-    return (LastError);
+    // return (LastError);
 }
 #endif
 
@@ -605,212 +608,212 @@ U32 USBD_GetError(void)
 //void USB_LP_CAN1_RX0_IRQHandler(void)
 void USB_LP_IRQHandler(void)
 {
-	    GPIO_InitTypeDef GPIO_InitStructure;
-		__HAL_RCC_GPIOC_CLK_ENABLE(); 
-		GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-		GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-		HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-		HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
-    uint32_t istr;
-    uint32_t num;
-    uint32_t val;
+	    // GPIO_InitTypeDef GPIO_InitStructure;
+		// __HAL_RCC_GPIOC_CLK_ENABLE(); 
+		// GPIO_InitStructure.Pin = RUNNING_LED_PIN;
+		// GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+		// GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		// HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+		// HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
+    // uint32_t istr;
+    // uint32_t num;
+    // uint32_t val;
 
-    istr = ISTR;
-    // Zero out endpoint ID since this is read from the queue
-    LastIstr |= istr & ~(ISTR_DIR | ISTR_EP_ID);
-    // Clear interrupts that are pending
-    ISTR = ~(istr & USB_ISTR_W0C_MASK);
-    if (istr & ISTR_CTR) {
-        while ((istr = ISTR) & ISTR_CTR) {
-            num = istr & ISTR_EP_ID;
-            val = EPxREG(num);
+    // istr = ISTR;
+    // // Zero out endpoint ID since this is read from the queue
+    // LastIstr |= istr & ~(ISTR_DIR | ISTR_EP_ID);
+    // // Clear interrupts that are pending
+    // ISTR = ~(istr & USB_ISTR_W0C_MASK);
+    // if (istr & ISTR_CTR) {
+        // while ((istr = ISTR) & ISTR_CTR) {
+            // num = istr & ISTR_EP_ID;
+            // val = EPxREG(num);
 
-            // Process and filter out the zero length status out endpoint to prevent
-            // the next SETUP packet from being dropped.
-            if ((0 == num) && (val & EP_CTR_RX) && !(val & EP_SETUP)
-                    && (0 == ((pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK))) {
-                if (val & EP_CTR_TX) {
-                    // Drop the RX event but not TX
-                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) |
-                               ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
-                } else {
-                    // Drop the event
-                }
-            } else {
-                stat_enque(((val & VAL_MASK) << VAL_SHIFT) |
-                           ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
-            }
+            // // Process and filter out the zero length status out endpoint to prevent
+            // // the next SETUP packet from being dropped.
+            // if ((0 == num) && (val & EP_CTR_RX) && !(val & EP_SETUP)
+                    // && (0 == ((pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK))) {
+                // if (val & EP_CTR_TX) {
+                    // // Drop the RX event but not TX
+                    // stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) |
+                               // ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
+                // } else {
+                    // // Drop the event
+                // }
+            // } else {
+                // stat_enque(((val & VAL_MASK) << VAL_SHIFT) |
+                           // ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
+            // }
 
 
-            if (val & EP_CTR_RX) {
-                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
-            }
+            // if (val & EP_CTR_RX) {
+                // EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
+            // }
 
-            if (val & EP_CTR_TX) {
-                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
-            }
-        }
-    }
+            // if (val & EP_CTR_TX) {
+                // EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
+            // }
+        // }
+    // }
 
-    USBD_SignalHandler();
+    // USBD_SignalHandler();
 }
 
 void USBD_Handler(void)
 {
-    U32 istr, num, val, num_val;
-    cortex_int_state_t state;
+    // U32 istr, num, val, num_val;
+    // cortex_int_state_t state;
 
-    // Get ISTR
-    state = cortex_int_get_and_disable();
-    istr = LastIstr;
-    LastIstr = 0;
-    cortex_int_restore(state);
+    // // Get ISTR
+    // state = cortex_int_get_and_disable();
+    // istr = LastIstr;
+    // LastIstr = 0;
+    // cortex_int_restore(state);
 
-    /* USB Reset Request                                                        */
-    if (istr & ISTR_RESET) {
-        USBD_Reset();
-        usbd_reset_core();
+    // /* USB Reset Request                                                        */
+    // if (istr & ISTR_RESET) {
+        // USBD_Reset();
+        // usbd_reset_core();
 					
-#ifdef __RTX
+// #ifdef __RTX
 
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_RESET, USBD_RTX_DevTask);
-        }
+        // if (USBD_RTX_DevTask) {
+            // isr_evt_set(USBD_EVT_RESET, USBD_RTX_DevTask);
+        // }
 
-#else
+// #else
 
-        if (USBD_P_Reset_Event) {
-            USBD_P_Reset_Event();
-        }
+        // if (USBD_P_Reset_Event) {
+            // USBD_P_Reset_Event();
+        // }
 
-#endif
-    }
+// #endif
+    // }
 
-    /* USB Suspend Request                                                      */
-    if (istr & ISTR_SUSP) {
-        USBD_Suspend();
-#ifdef __RTX
+    // /* USB Suspend Request                                                      */
+    // if (istr & ISTR_SUSP) {
+        // USBD_Suspend();
+// #ifdef __RTX
 
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_SUSPEND, USBD_RTX_DevTask);
-        }
+        // if (USBD_RTX_DevTask) {
+            // isr_evt_set(USBD_EVT_SUSPEND, USBD_RTX_DevTask);
+        // }
 
-#else
+// #else
 
-        if (USBD_P_Suspend_Event) {
-            USBD_P_Suspend_Event();
-        }
+        // if (USBD_P_Suspend_Event) {
+            // USBD_P_Suspend_Event();
+        // }
 
-#endif
-    }
+// #endif
+    // }
 
-    /* USB Wakeup                                                               */
-    if (istr & ISTR_WKUP) {
-        USBD_WakeUp();
-#ifdef __RTX
+    // /* USB Wakeup                                                               */
+    // if (istr & ISTR_WKUP) {
+        // USBD_WakeUp();
+// #ifdef __RTX
 
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_RESUME,  USBD_RTX_DevTask);
-        }
+        // if (USBD_RTX_DevTask) {
+            // isr_evt_set(USBD_EVT_RESUME,  USBD_RTX_DevTask);
+        // }
 
-#else
+// #else
 
-        if (USBD_P_Resume_Event) {
-            USBD_P_Resume_Event();
-        }
+        // if (USBD_P_Resume_Event) {
+            // USBD_P_Resume_Event();
+        // }
 
-#endif
-    }
+// #endif
+    // }
 
-    /* Start of Frame                                                           */
-    if (istr & ISTR_SOF) {
-#ifdef __RTX
+    // /* Start of Frame                                                           */
+    // if (istr & ISTR_SOF) {
+// #ifdef __RTX
 
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
-        }
+        // if (USBD_RTX_DevTask) {
+            // isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
+        // }
 
-#else
+// #else
 
-        if (USBD_P_SOF_Event) {
-            USBD_P_SOF_Event();
-        }
+        // if (USBD_P_SOF_Event) {
+            // USBD_P_SOF_Event();
+        // }
 
-#endif
-    }
+// #endif
+    // }
 
-    /* PMA Over/underrun                                                        */
-    if (istr & ISTR_PMAOVR) {
-#ifdef __RTX
-        LastError = 2;
+    // /* PMA Over/underrun                                                        */
+    // if (istr & ISTR_PMAOVR) {
+// #ifdef __RTX
+        // LastError = 2;
 
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_ERROR, USBD_RTX_DevTask);
-        }
+        // if (USBD_RTX_DevTask) {
+            // isr_evt_set(USBD_EVT_ERROR, USBD_RTX_DevTask);
+        // }
 
-#else
+// #else
 
-        if (USBD_P_Error_Event) {
-            USBD_P_Error_Event(2);
-        }
+        // if (USBD_P_Error_Event) {
+            // USBD_P_Error_Event(2);
+        // }
 
-#endif
-    }
+// #endif
+    // }
 
-    /* Error: No Answer, CRC Error, Bit Stuff Error, Frame Format Error         */
-    if (istr & ISTR_ERR) {
-#ifdef __RTX
-        LastError = 1;
+    // /* Error: No Answer, CRC Error, Bit Stuff Error, Frame Format Error         */
+    // if (istr & ISTR_ERR) {
+// #ifdef __RTX
+        // LastError = 1;
 
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_ERROR, USBD_RTX_DevTask);
-        }
+        // if (USBD_RTX_DevTask) {
+            // isr_evt_set(USBD_EVT_ERROR, USBD_RTX_DevTask);
+        // }
 
-#else
+// #else
 
-        if (USBD_P_Error_Event) {
-            USBD_P_Error_Event(1);
-        }
+        // if (USBD_P_Error_Event) {
+            // USBD_P_Error_Event(1);
+        // }
 
-#endif
-    }
+// #endif
+    // }
 
-    /* Endpoint Interrupts                                                      */
-    while ((istr & ISTR_CTR) && !stat_is_empty()) {
-        num_val = stat_deque();
-        num = (num_val >> EP_NUM_SHIFT) & EP_NUM_MASK;
-        val = (num_val >> VAL_SHIFT) & VAL_MASK;
-        if (val & EP_CTR_TX) {
-#ifdef __RTX
+    // /* Endpoint Interrupts                                                      */
+    // while ((istr & ISTR_CTR) && !stat_is_empty()) {
+        // num_val = stat_deque();
+        // num = (num_val >> EP_NUM_SHIFT) & EP_NUM_MASK;
+        // val = (num_val >> VAL_SHIFT) & VAL_MASK;
+        // if (val & EP_CTR_TX) {
+// #ifdef __RTX
 
-            if (USBD_RTX_EPTask[num]) {
-                isr_evt_set(USBD_EVT_IN,  USBD_RTX_EPTask[num]);
-            }
+            // if (USBD_RTX_EPTask[num]) {
+                // isr_evt_set(USBD_EVT_IN,  USBD_RTX_EPTask[num]);
+            // }
 
-#else
+// #else
 
-            if (USBD_P_EP[num]) {
-                USBD_P_EP[num](USBD_EVT_IN);
-            }
+            // if (USBD_P_EP[num]) {
+                // USBD_P_EP[num](USBD_EVT_IN);
+            // }
 
-#endif
-        }
+// #endif
+        // }
 
-        if (val & EP_CTR_RX) {
-#ifdef __RTX
+        // if (val & EP_CTR_RX) {
+// #ifdef __RTX
 
-            if (USBD_RTX_EPTask[num]) {
-                isr_evt_set((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT, USBD_RTX_EPTask[num]);
-            }
+            // if (USBD_RTX_EPTask[num]) {
+                // isr_evt_set((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT, USBD_RTX_EPTask[num]);
+            // }
 
-#else
+// #else
 
-            if (USBD_P_EP[num]) {
-                USBD_P_EP[num]((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT);
-            }
+            // if (USBD_P_EP[num]) {
+                // USBD_P_EP[num]((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT);
+            // }
 
-#endif
-        }
-    }
+// #endif
+        // }
+    // }
 }
