@@ -34,6 +34,12 @@
 #include "string.h"
 
 //#include "stm32wbxx_hal_pcd.h"  //biby
+// #include "ab_device.h"
+// #include "ab_core.h"
+// #include "ab_desc.h"
+// #include "ab_cdc.h"
+// #include "ab_cdc_if.h"  //biby
+
 #define __NO_USB_LIB_C
 #include "usb_config.c"
 
@@ -107,12 +113,12 @@ void EP_Reset(U32 EPNum)
 {
     U32 num, val;
     num = EPNum & 0x0F;
-    val = *EPxREG(num);
+    val = EPxREG(num);
 
     if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        *EPxREG(num) = val & (EP_MASK | EP_DTOG_TX);
+        EPxREG(num) = val & (EP_MASK | EP_DTOG_TX);
     } else {                              /* OUT Endpoint                       */
-        *EPxREG(num) = val & (EP_MASK | EP_DTOG_RX);
+        EPxREG(num) = val & (EP_MASK | EP_DTOG_RX);
     }
 }
 
@@ -130,12 +136,12 @@ void EP_Status(U32 EPNum, U32 stat)
 {
     U32 num, val;
     num = EPNum & 0x0F;
-    val = *EPxREG(num);
+    val = EPxREG(num);
 
     if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        *EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
+        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
     } else {                              /* OUT Endpoint                       */
-        *EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
+        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
     }
 }
 
@@ -175,8 +181,10 @@ void USBD_Init(void)
 	// if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
     // USB_CONNECT_ON();
   // }
-	*BCDR |= USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
-	*DADDR = USB_DADDR_EF;     /* set device address and enable function */ //biby
+	BCDR |= USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
+	DADDR = USB_DADDR_EF;     /* set device address and enable function */ //biby
+    USB_CONNECT_ON();
+	while(1);
     /* Control USB connecting via SW                                            */
     USB_CONNECT_OFF();
 }
@@ -197,14 +205,14 @@ void USBD_Connect(BOOL con)
 		// USBx->ISTR = 0U;                        /* Clear Interrupt Status             */
 		// USBx->CNTR = USB_CNTR_RESETM| USB_CNTR_SUSPM | USB_CNTR_WKUPM;  /* USB Interrupt Mask       */
 			
-		*CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-		*CNTR = 0;
-		*ISTR = 0;                           /* Clear Interrupt Status             */
-		*CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
+		CNTR = CNTR_FRES;                   /* Force USB Reset                    */
+		CNTR = 0;
+		ISTR = 0;                           /* Clear Interrupt Status             */
+		CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
         USB_CONNECT_ON();
 
     } else {
-        *CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
+        CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
         USB_CONNECT_OFF();
 		// GPIO_InitTypeDef GPIO_InitStructure;
 		// __HAL_RCC_GPIOC_CLK_ENABLE(); 
@@ -228,8 +236,8 @@ void USBD_Reset(void)
     NVIC_DisableIRQ(USB_LP_IRQn); //Ashley
 
     /* Double Buffering is not yet supported                                    */
-    *ISTR = 0;                             /* Clear Interrupt Status             */
-    *CNTR = CNTR_CTRM | CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM |
+    ISTR = 0;                             /* Clear Interrupt Status             */
+    CNTR = CNTR_CTRM | CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM |
 #ifdef __RTX
            ((USBD_RTX_DevTask   != 0) ? CNTR_ERRM    : 0) |
            ((USBD_RTX_DevTask   != 0) ? CNTR_PMAOVRM : 0) |
@@ -242,7 +250,7 @@ void USBD_Reset(void)
            ((USBD_P_SOF_Event   != 0) ? CNTR_ESOFM   : 0);
 #endif
     FreeBufAddr = EP_BUF_ADDR;
-    *BTABLE = 0x00;                        /* set BTABLE Address                 */
+    BTABLE = 0x00;                        /* set BTABLE Address                 */
     /* Setup Control Endpoint 0 */
     pBUF_DSCR->ADDR_TX = FreeBufAddr;
     FreeBufAddr += USBD_MAX_PACKET0;
@@ -255,8 +263,8 @@ void USBD_Reset(void)
         pBUF_DSCR->COUNT_RX =   USBD_MAX_PACKET0 << 9;
     }
 
-    *EPxREG(0) = EP_CONTROL | EP_RX_VALID;
-    *DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
+    EPxREG(0) = EP_CONTROL | EP_RX_VALID;
+    DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
 
     NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
 }
@@ -270,8 +278,8 @@ void USBD_Reset(void)
 
 void USBD_Suspend(void)
 {
-    *CNTR |= CNTR_FSUSP;                   /* Force Suspend                      */
-    *CNTR |= CNTR_LPMODE;                  /* Low Power Mode                     */
+    CNTR |= CNTR_FSUSP;                   /* Force Suspend                      */
+    CNTR |= CNTR_LPMODE;                  /* Low Power Mode                     */
 }
 
 
@@ -295,7 +303,7 @@ void USBD_Resume(void)
 
 void USBD_WakeUp(void)
 {
-    *CNTR &= ~CNTR_FSUSP;                  /* Clear Suspend                      */
+    CNTR &= ~CNTR_FSUSP;                  /* Clear Suspend                      */
 }
 
 
@@ -324,7 +332,7 @@ void USBD_SetAddress(U32 adr, U32 setup)
         return;
     }
 
-    *DADDR = DADDR_EF | adr;
+    DADDR = DADDR_EF | adr;
 }
 
 
@@ -397,7 +405,7 @@ void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
     }
 
     val |= num;
-    *EPxREG(num) = val;
+    EPxREG(num) = val;
 }
 
 
@@ -552,7 +560,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     }
 
     (pBUF_DSCR + num)->COUNT_TX = cnt;
-    statusEP = *EPxREG(num);
+    statusEP = EPxREG(num);
 
     if ((statusEP & EP_STAT_TX) != EP_TX_STALL) {
         EP_Status(EPNum, EP_TX_VALID);      /* do not make EP valid if stalled    */
@@ -570,7 +578,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 
 U32 USBD_GetFrame(void)
 {
-    return (*FNR & FNR_FN);
+    return (FNR & FNR_FN);
 }
 
 
@@ -608,15 +616,15 @@ void USB_LP_IRQHandler(void)
     uint32_t num;
     uint32_t val;
 
-    istr = *ISTR;
+    istr = ISTR;
     // Zero out endpoint ID since this is read from the queue
     LastIstr |= istr & ~(ISTR_DIR | ISTR_EP_ID);
     // Clear interrupts that are pending
-    *ISTR = ~(istr & USB_ISTR_W0C_MASK);
+    ISTR = ~(istr & USB_ISTR_W0C_MASK);
     if (istr & ISTR_CTR) {
-        while ((istr = *ISTR) & ISTR_CTR) {
+        while ((istr = ISTR) & ISTR_CTR) {
             num = istr & ISTR_EP_ID;
-            val = *EPxREG(num);
+            val = EPxREG(num);
 
             // Process and filter out the zero length status out endpoint to prevent
             // the next SETUP packet from being dropped.
@@ -636,11 +644,11 @@ void USB_LP_IRQHandler(void)
 
 
             if (val & EP_CTR_RX) {
-                *EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
+                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
             }
 
             if (val & EP_CTR_TX) {
-                *EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
+                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
             }
         }
     }
