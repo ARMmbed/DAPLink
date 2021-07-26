@@ -184,10 +184,10 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - TDI, nTRST to HighZ mode (pins are unused in SWD mode).
 */
 __STATIC_INLINE void PORT_SWD_SETUP (void) {
-  nrf_gpio_cfg(PIN_SWDCLK, NRF_GPIO_PIN_DIR_OUTPUT,
+  nrf_gpio_cfg(PIN_SWCLK, NRF_GPIO_PIN_DIR_OUTPUT,
                NRF_GPIO_PIN_INPUT_DISCONNECT, NRF_GPIO_PIN_NOPULL,
                NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-  nrf_gpio_pin_set(PIN_SWDCLK);
+  nrf_gpio_pin_set(PIN_SWCLK);
   nrf_gpio_cfg(PIN_SWDIO, NRF_GPIO_PIN_DIR_OUTPUT,
                NRF_GPIO_PIN_INPUT_CONNECT, NRF_GPIO_PIN_NOPULL,
                NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
@@ -205,7 +205,7 @@ Disables the DAP Hardware I/O pins which configures:
  - TCK/SWCLK, TMS/SWDIO, TDI, TDO, nTRST, nRESET to High-Z mode.
 */
 __STATIC_INLINE void PORT_OFF (void) {
-  nrf_gpio_cfg_input(PIN_SWDCLK, NRF_GPIO_PIN_NOPULL);
+  nrf_gpio_cfg_input(PIN_SWCLK, NRF_GPIO_PIN_NOPULL);
   nrf_gpio_cfg_input(PIN_SWDIO, NRF_GPIO_PIN_NOPULL);
 #ifdef PIN_nRESET
   nrf_gpio_cfg_input(PIN_nRESET, NRF_GPIO_PIN_NOPULL);
@@ -219,21 +219,21 @@ __STATIC_INLINE void PORT_OFF (void) {
 \return Current status of the SWCLK/TCK DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN  (void) {
-  return nrf_gpio_pin_out_read(PIN_SWDCLK);
+  return nrf_gpio_pin_out_read(PIN_SWCLK);
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
 Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_SET (void) {
-  nrf_gpio_pin_set(PIN_SWDCLK);
+  nrf_gpio_pin_set(PIN_SWCLK);
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
 Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR (void) {
-  nrf_gpio_pin_clear(PIN_SWDCLK);
+  nrf_gpio_pin_clear(PIN_SWCLK);
 }
 
 

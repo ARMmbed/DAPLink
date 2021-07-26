@@ -49,7 +49,7 @@ extern uint32_t led_usb_pin;
 extern uint32_t led_pwr_pin;
 
 // SWDCLK (Output)
-#define PIN_SWDCLK        NRF_GPIO_PIN_MAP(0, 1)
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 1)
 
 // SWDIO (Input/Output)
 #define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 0)
