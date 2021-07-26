@@ -23,6 +23,13 @@
 
 #include "IO_config.h"
 
+#ifdef FAST_GPIO
+NRF_GPIO_Type *pin_swclk_reg;
+NRF_GPIO_Type *pin_swdio_reg;
+uint32_t pin_swclk_idx;
+uint32_t pin_swdio_idx;
+#endif
+
 #if (defined(GPIO_LED_ACTIVE_STATE) && (GPIO_LED_ACTIVE_STATE == 1))
 #define GPIO_LED_STATE(state) (state ? 1 : 0)
 #else

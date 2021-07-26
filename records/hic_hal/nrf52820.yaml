@@ -5,6 +5,7 @@ common:
         - Cortex-M4
     macros:
         - INTERFACE_NRF52820
+        # - FAST_GPIO
         - NRF52820_XXAA
         - DAPLINK_HIC_ID=0x6E052820  # DAPLINK_HIC_ID_NRF52820
         - OS_CLOCK=64000000
