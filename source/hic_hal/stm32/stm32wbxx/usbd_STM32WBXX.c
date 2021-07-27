@@ -36,11 +36,7 @@
 // #include "stm32wbxx_hal_pwr_ex.h"
 #include "stm32wbxx_hal_pcd.h"  //biby
 #include "stm32wbxx_hal.h"  //biby
-// #include "ab_device.h"
-// #include "ab_core.h"
-// #include "ab_desc.h"
-// #include "ab_cdc.h"
-//#include "ab_cdc_if.h"  //biby
+
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
@@ -52,6 +48,9 @@
 #define EP_NUM_SHIFT        0
 
 #define USB_DBL_BUF_EP      0x0000
+unsigned int x;
+//#define EP0R                            *(0x40006800UL + 4*(x))
+
 
 #define EP_BUF_ADDR (sizeof(EP_BUF_DSCR)*(USBD_EP_NUM+1)) /* Endpoint Buf Adr */
 
@@ -115,12 +114,12 @@ void EP_Reset(U32 EPNum)
 {
     U32 num, val;
     num = EPNum & 0x0F;
-    val = EPxREG(num);
+    val = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R; //EA
 
     if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        EPxREG(num) = val & (EP_MASK | EP_DTOG_TX);
+        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = val & (EP_MASK | EP_DTOG_TX); // EP_CTR_TX
     } else {                              /* OUT Endpoint                       */
-        EPxREG(num) = val & (EP_MASK | EP_DTOG_RX);
+        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = val & (EP_MASK | EP_DTOG_RX);
     }
 }
 
@@ -138,12 +137,12 @@ void EP_Status(U32 EPNum, U32 stat)
 {
     U32 num, val;
     num = EPNum & 0x0F;
-    val = EPxREG(num);
+    val = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R;
 
     if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
+        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
     } else {                              /* OUT Endpoint                       */
-        EPxREG(num) = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
+        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
     }
 }
 
@@ -260,7 +259,7 @@ void USBD_Reset(void)
         pBUF_DSCR->COUNT_RX =   USBD_MAX_PACKET0 << 9;
     }
 
-    USB->EP0R = EP_CONTROL | EP_RX_VALID;
+    USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_CONTROL | EP_RX_VALID;
     USB->DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
 
     NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
@@ -402,7 +401,7 @@ void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
     }
 
     val |= num;
-    EPxREG(num) = val;
+    USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = val;
 }
 
 
@@ -557,7 +556,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     }
 
     (pBUF_DSCR + num)->COUNT_TX = cnt;
-    statusEP = EPxREG(num);
+    statusEP = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R;
 
     if ((statusEP & EP_STAT_TX) != EP_TX_STALL) {
         EP_Status(EPNum, EP_TX_VALID);      /* do not make EP valid if stalled    */
@@ -614,7 +613,7 @@ void USB_LP_IRQHandler(void)
     if (istr & ISTR_CTR) {
         while ((istr = USB->ISTR) & ISTR_CTR) {
             num = istr & ISTR_EP_ID;
-            val = USB->EP0R;
+            val = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R;
 
             // Process and filter out the zero length status out endpoint to prevent
             // the next SETUP packet from being dropped.
@@ -634,11 +633,11 @@ void USB_LP_IRQHandler(void)
 
 
             if (val & EP_CTR_RX) {
-                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
+                USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
             }
 
             if (val & EP_CTR_TX) {
-                EPxREG(num) = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
+                USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
             }
         }
     }

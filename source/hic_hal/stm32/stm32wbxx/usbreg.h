@@ -91,7 +91,7 @@
 #define DADDR_ADD                        ((uint8_t)0x7FU)                  /*!< USB device address */
 
 /* EndPoint Registers */
-// #define EPxREG(x)         REG(0x40006800UL + 4*(x))
+//#define EP(x)R                            (0x40006800UL + 4*(x))
 //#define EPxREG(x)       REG(USB1_BASE + 4*(x))
 //#define EP0REG(0)                             REG(USB_BASE)                    /*!< endpoint 0 register address */
 //#define EP1REG(1)                             REG(USB_BASE + 0x04U)           /*!< endpoint 1 register address */
