@@ -156,13 +156,8 @@
 #endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
-#ifndef BULK_ENDPOINT               //check if bulk endpoint is not enabled
 #define USBD_HID_EP_INTIN           1
 #define USBD_HID_EP_INTOUT          1
-#else                               //if bulk endpoint is enabled remove interrupt endpoints from the hid
-#define USBD_HID_EP_INTIN           0
-#define USBD_HID_EP_INTOUT          0
-#endif
 #define USBD_HID_EP_INTIN_STACK     0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
