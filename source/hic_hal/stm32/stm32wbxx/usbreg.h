@@ -25,11 +25,10 @@
 
 #ifndef __USBREG_H
 #define __USBREG_H
-#include <stdint.h>
+//#include <stdint.h>
 
-// #define REG(x)  (*((volatile uint32_t *)(x)))
+//#define REG(x)  (*((volatile unsigned int *)(x)))
 	
-
 // #define USB             ((USB_TypeDef *) USB1_BASE)
 // #define USB1_BASE       (APB1PERIPH_BASE + 0x00006800UL)
 //#define PERIPH_BASE           0x40000000UL /*!< Peripheral base address in the alias region */
@@ -93,8 +92,7 @@
 
 /* EndPoint Registers */
 // #define EPxREG(x)         REG(0x40006800UL + 4*(x))
-
-// #define EPxREG(x)       REG(USB_BASE + 4*(x))
+//#define EPxREG(x)       REG(USB1_BASE + 4*(x))
 //#define EP0REG(0)                             REG(USB_BASE)                    /*!< endpoint 0 register address */
 //#define EP1REG(1)                             REG(USB_BASE + 0x04U)           /*!< endpoint 1 register address */
 //#define EP2REG(2)                             REG(USB_BASE + 0x08U)           /*!< endpoint 2 register address */

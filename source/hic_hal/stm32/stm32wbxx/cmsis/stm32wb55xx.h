@@ -13055,20 +13055,18 @@ typedef struct
 /*                         USB Device General registers                       */
 /*                                                                            */
 /******************************************************************************/
-#define USB             ((USB_TypeDef *) USB1_BASE)
-#define USB1_BASE       (APB1PERIPH_BASE + 0x00006800UL)
-//#define USB_BASE                              (0x40006800UL)                   /*!< USB_IP Peripheral Registers base address */
+#define USB_BASE                              (0x40005C00UL)                   /*!< USB_IP Peripheral Registers base address */
 #define USB_PMAADDR_Pos           (13U)                                        
 #define USB_PMAADDR_Msk           (0x20003UL << USB_PMAADDR_Pos)               /*!< 0x40006000 */
 #define USB_PMAADDR               USB_PMAADDR_Msk                              /*!< USB_IP Packet Memory Area base address */
                                              
-#define USB_CNTR                             (USB1_BASE + 0x40)           /*!< Control register */
-#define USB_ISTR                             (USB1_BASE + 0x44)           /*!< Interrupt status register */
-#define USB_FNR                              (USB1_BASE + 0x48)           /*!< Frame number register */
-#define USB_DADDR                            (USB1_BASE + 0x4C)           /*!< Device address register */
-#define USB_BTABLE                           (USB1_BASE + 0x50)           /*!< Buffer Table address register */
-#define USB_LPMCSR                           (USB1_BASE + 0x54)           /*!< LPM Control and Status register */
-#define USB_BCDR                             (USB1_BASE + 0x58)           /*!< Battery Charging detector register*/
+#define USB_CNTR                             (USB_BASE + 0x40)           /*!< Control register */
+#define USB_ISTR                             (USB_BASE + 0x44)           /*!< Interrupt status register */
+#define USB_FNR                              (USB_BASE + 0x48)           /*!< Frame number register */
+#define USB_DADDR                            (USB_BASE + 0x4C)           /*!< Device address register */
+#define USB_BTABLE                           (USB_BASE + 0x50)           /*!< Buffer Table address register */
+#define USB_LPMCSR                           (USB_BASE + 0x54)           /*!< LPM Control and Status register */
+#define USB_BCDR                             (USB_BASE + 0x58)           /*!< Battery Charging detector register*/
 
 /****************************  ISTR interrupt events  *************************/
 #define USB_ISTR_CTR                          ((uint16_t)0x8000U)              /*!< Correct TRansfer (clear-only bit) */
@@ -13133,14 +13131,14 @@ typedef struct
 #define USB_DADDR_EF                          ((uint8_t)0x80U)                 /*!< USB device address Enable Function */
 #define USB_DADDR_ADD                         ((uint8_t)0x7FU)                 /*!< USB device address */
 /******************************  Endpoint register    *************************/
-#define USB_EP0R                              USB1_BASE                   /*!< endpoint 0 register address */
-#define USB_EP1R                             (USB1_BASE + 0x04)           /*!< endpoint 1 register address */
-#define USB_EP2R                             (USB1_BASE + 0x08)           /*!< endpoint 2 register address */
-#define USB_EP3R                             (USB1_BASE + 0x0C)           /*!< endpoint 3 register address */
-#define USB_EP4R                             (USB1_BASE + 0x10)           /*!< endpoint 4 register address */
-#define USB_EP5R                             (USB1_BASE + 0x14)           /*!< endpoint 5 register address */
-#define USB_EP6R                             (USB1_BASE + 0x18)           /*!< endpoint 6 register address */
-#define USB_EP7R                             (USB1_BASE + 0x1C)           /*!< endpoint 7 register address */
+#define USB_EP0R                              USB_BASE                   /*!< endpoint 0 register address */
+#define USB_EP1R                             (USB_BASE + 0x04)           /*!< endpoint 1 register address */
+#define USB_EP2R                             (USB_BASE + 0x08)           /*!< endpoint 2 register address */
+#define USB_EP3R                             (USB_BASE + 0x0C)           /*!< endpoint 3 register address */
+#define USB_EP4R                             (USB_BASE + 0x10)           /*!< endpoint 4 register address */
+#define USB_EP5R                             (USB_BASE + 0x14)           /*!< endpoint 5 register address */
+#define USB_EP6R                             (USB_BASE + 0x18)           /*!< endpoint 6 register address */
+#define USB_EP7R                             (USB_BASE + 0x1C)           /*!< endpoint 7 register address */
 /* bit positions */ 
 #define USB_EP_CTR_RX                         ((uint16_t)0x8000U)              /*!<  EndPoint Correct TRansfer RX */
 #define USB_EP_DTOG_RX                        ((uint16_t)0x4000U)              /*!<  EndPoint Data TOGGLE RX */
