@@ -569,7 +569,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
           return ARM_DRIVER_ERROR_PARAMETER;
       }
       break;
-#elif
+#else
       return ARM_DRIVER_ERROR_UNSUPPORTED;
 #endif
 
@@ -599,7 +599,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
           return ARM_DRIVER_ERROR_PARAMETER;
       }
       break;
-#elif
+#else
       return ARM_DRIVER_ERROR_UNSUPPORTED;
 #endif
 
