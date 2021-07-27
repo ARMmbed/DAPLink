@@ -1,326 +1,172 @@
-/*
- * Copyright (c) 2004-2016 ARM Limited. All rights reserved.
+/**
+ * @file    usbd.c
+ * @brief
  *
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the License); you may
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
-/*----------------------------------------------------------------------------
-*      RL-ARM - USB
-*----------------------------------------------------------------------------
-*      Name:    usbd_STM32F103.c
-*      Purpose: Hardware Layer module for ST STM32F103
-*      Rev.:    V4.70
-*---------------------------------------------------------------------------*/
-
-/* Double Buffering is not supported                                         */
-
-#include <rl_usb.h>
-#include "stm32wbxx.h"
-#include "usbreg.h"
+#include "usb_def.h"
+#include "rl_usb.h"
+#include "usbd_event.h"
+#include "stm32wbxx_hal.h"
+#include "util.h"
 #include "IO_Config.h"
-#include "cortex_m.h"
-#include "string.h"
-
-// #include "stm32wbxx_hal_pwr_ex.h"
-#include "stm32wbxx_hal_pcd.h"  //biby
-#include "stm32wbxx_hal.h"  //biby
-
 
 #define __NO_USB_LIB_C
 #include "usb_config.c"
 
-#define USB_ISTR_W0C_MASK   (ISTR_PMAOVR | ISTR_ERR | ISTR_WKUP | ISTR_SUSP | ISTR_RESET | ISTR_SOF | ISTR_ESOF)
-#define VAL_MASK            0xFFFF
-#define VAL_SHIFT           16
-#define EP_NUM_MASK         0xFFFF
-#define EP_NUM_SHIFT        0
+#define USBD_BTABLE_SIZE                (8 * (USBD_EP_NUM + 1))
+#define USBD_GET_FLAG(__INTERRUPT__)    (((USB->ISTR) & (__INTERRUPT__)) == (__INTERRUPT__))
+#define USBD_CLEAR_FLAG(__INTERRUPT__)  ((USB->ISTR) &= ~(__INTERRUPT__))
 
-#define USB_DBL_BUF_EP      0x0000
-unsigned int x;
-//#define EP0R                            *(0x40006800UL + 4*(x))
+uint16_t Buf_Offset = 0x18;
 
 
-#define EP_BUF_ADDR (sizeof(EP_BUF_DSCR)*(USBD_EP_NUM+1)) /* Endpoint Buf Adr */
-
-EP_BUF_DSCR *pBUF_DSCR = (EP_BUF_DSCR *)USB_PMA_ADDR; /* Ptr to EP Buf Desc   */
-
-U16 FreeBufAddr;                        /* Endpoint Free Buffer Address       */
-
-// USBD_HandleTypeDef hUsbDeviceFS;
-// #define REG(x)  (*((volatile unsigned int *)(x)))
-// #define BCDR          REG(USB_BASE + 0x58U)             /*!<  Battery Charging detector register*/  //biby
-
-//USBD_StatusTypeDef USBD_Start(USBD_HandleTypeDef *pdev);  //biby
-
-uint32_t StatQueue[(USBD_EP_NUM + 1) * 2 + 1];
-uint32_t StatQueueHead = 0;
-uint32_t StatQueueTail = 0;
-uint32_t LastIstr = 0;
-
-
-inline static void stat_enque(uint32_t stat)
+static PCD_EPTypeDef *USBD_GetEP(uint16_t ep_addr)
 {
-    cortex_int_state_t state;
-    state = cortex_int_get_and_disable();
-    StatQueue[StatQueueTail] = stat;
-    StatQueueTail = (StatQueueTail + 1) % (sizeof(StatQueue) / sizeof(StatQueue[0]));
-    cortex_int_restore(state);
-}
+    static PCD_EPTypeDef IN_ep[USBD_EP_NUM + 1] = {0};
+    static PCD_EPTypeDef OUT_ep[USBD_EP_NUM + 1] = {0};
 
-inline static uint32_t stat_deque()
-{
-    cortex_int_state_t state;
-    uint32_t stat;
-    state = cortex_int_get_and_disable();
-    stat = StatQueue[StatQueueHead];
-    StatQueueHead = (StatQueueHead + 1) % (sizeof(StatQueue) / sizeof(StatQueue[0]));
-    cortex_int_restore(state);
+    util_assert((0x7f & ep_addr) <= USBD_EP_NUM);
 
-    return stat;
-}
-
-inline static uint32_t stat_is_empty()
-{
-    cortex_int_state_t state;
-    uint32_t empty;
-    state = cortex_int_get_and_disable();
-    empty = StatQueueHead == StatQueueTail;
-    cortex_int_restore(state);
-    return empty;
-}
-
-
-/*
- *  Reset Endpoint
- *    Parameters:      EPNum: Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
- */
-
-void EP_Reset(U32 EPNum)
-{
-    U32 num, val;
-    num = EPNum & 0x0F;
-    val = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R; //EA
-
-    if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = val & (EP_MASK | EP_DTOG_TX); // EP_CTR_TX
-    } else {                              /* OUT Endpoint                       */
-        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = val & (EP_MASK | EP_DTOG_RX);
+    if ((ep_addr & 0x80U) == 0x80U)  {
+        return &IN_ep[ep_addr & 0x7FU];
+    } else {
+        return &OUT_ep[ep_addr];
     }
 }
 
-
-/*
- *  Set Endpoint Status
- *    Parameters:      EPNum: Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *                     stat: New Status
- *    Return Value:    None
- */
-
-void EP_Status(U32 EPNum, U32 stat)
+static void _USBD_ConfigEP(uint16_t ep_addr, uint8_t ep_type, uint16_t ep_buf_size)
 {
-    U32 num, val;
-    num = EPNum & 0x0F;
-    val = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R;
+    util_assert(Buf_Offset + ep_buf_size < 512);
+    PCD_EPTypeDef *ep = USBD_GetEP(ep_addr);
+    ep->doublebuffer = 0;
+    ep->pmaadress = Buf_Offset;
+    ep->maxpacket = ep_buf_size;
+    ep->type = ep_type;
+    Buf_Offset += ep_buf_size;
 
-    if (EPNum & 0x80) {                   /* IN Endpoint                        */
-        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_TX);
-    } else {                              /* OUT Endpoint                       */
-        USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) | ((val ^ stat) & EP_STAT_RX);
+    switch (ep_type) {
+        case EP_TYPE_CTRL:
+            PCD_SET_EPTYPE(USB, ep->num, USB_EP_CONTROL);
+            break;
+        case EP_TYPE_BULK:
+            PCD_SET_EPTYPE(USB, ep->num, USB_EP_BULK);
+            break;
+        case EP_TYPE_INTR:
+            PCD_SET_EPTYPE(USB, ep->num, USB_EP_INTERRUPT);
+            break;
+        case EP_TYPE_ISOC:
+            PCD_SET_EPTYPE(USB, ep->num, USB_EP_ISOCHRONOUS);
+            break;
+        default:
+        break;
     }
 }
 
+static void USB_EnableInt(USB_TypeDef *USBx)
+{
+    uint32_t winterruptmask = 0;
 
-/*
- *  USB Device Interrupt enable
- *   Called by USBD_Init to enable the USB Interrupt
- *    Return Value:    None
- */
+    /* Set winterruptmask variable */
+    winterruptmask = USB_CNTR_CTRM | USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_RESETM;
 
+    if (USBD_P_Error_Event) {
+        winterruptmask |= USB_CNTR_ERRM | USB_CNTR_PMAOVRM;
+    }
 
-// #ifdef __RTX
-// void __svc(1) USBD_IntrEna(void);
-// void __SVC_1(void)
-// {
-// #else
-// void          USBD_IntrEna(void)
-// {
-// #endif
-   // NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
-// }
-//biby
+    if (USBD_P_SOF_Event) {
+        winterruptmask |= USB_CNTR_SOFM | USB_CNTR_ESOFM;
+    }
+
+    /* Set interrupt mask */
+    USBx->CNTR |= winterruptmask;
+}
 void  USBD_IntrEna(void){
 	NVIC_EnableIRQ(USB_LP_IRQn); 
 	}
-
-/*
- *  USB Device Initialize Function
- *   Called by the User to initialize USB
- *    Return Value:    None
- */
-
+/* USB init function */
 void USBD_Init(void)
 {
-    HAL_PWREx_EnableVddUSB();
+	HAL_PWREx_EnableVddUSB();
     RCC->APB1ENR1 |= (1 << 26);            /* enable clock for USB               */ //Ashley
     USBD_IntrEna();                       /* Enable USB Interrupts              */
     /* Control USB connecting via SW                                            */
+    __HAL_RCC_USB_CLK_ENABLE();
+    USB_DisableGlobalInt(USB);
+    HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USB_LP_IRQn);
     USB_CONNECT_OFF();
 }
 
-
-/*
- *  USB Device Connect Function
- *   Called by the User to Connect/Disconnect USB Device
- *    Parameters:      con:   Connect/Disconnect
- *    Return Value:    None
- */
-
 void USBD_Connect(BOOL con)
 {
-    if (con) {
-		USB->CNTR = CNTR_FRES;                 /* Force USB Reset                   */
-		//HAL_Delay(100);
-		USB->CNTR = 0;
-		USB->ISTR = 0; 
-		USB->BCDR |= USB_BCDR_DPPU;     /* Enabling DP Pull-UP bit to Connect internal PU resistor on USB DP line */ //biby
-		USB->DADDR = USB_DADDR_EF;     /* set device address and enable function */ //biby
-		// USB->CNTR = CNTR_FRES;                   /* Force USB Reset                    */
-		// USB->CNTR = 0;
-		// USB->ISTR = 0;                           /* Clear Interrupt Status             */
-		USB->CNTR = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; /* USB Interrupt Mask       */
-        USB_CONNECT_ON();
+    USB_DisableGlobalInt(USB);
 
+    if (con) {
+        USB->CNTR = USB_CNTR_FRES;
+        USB->ISTR = 0;
+        USB->CNTR = USB_CNTR_RESETM;
+        USB->BTABLE = BTABLE_ADDRESS;
+
+        USB_EnableGlobalInt (USB);
+
+        USB->BCDR |= USB_BCDR_DPPU;                // enable internal pullup on DP+ line
     } else {
-        USB->CNTR = CNTR_FRES | CNTR_PDWN;       /* Switch Off USB Device              */
-        USB_CONNECT_OFF();
-		// GPIO_InitTypeDef GPIO_InitStructure;
-		// __HAL_RCC_GPIOC_CLK_ENABLE(); 
-		// GPIO_InitStructure.Pin = PIN_CDC_LED;
-		// GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-		// GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-		// HAL_GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
-		// HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);  //red led
+        USB->CNTR = USB_CNTR_FRES | USB_CNTR_PDWN;
+
+        USB->BCDR &= (uint16_t)(~(USB_BCDR_DPPU)); // disable internal pullup on DP+ line
     }
 }
-
-
-/*
- *  USB Device Reset Function
- *   Called automatically on USB Device Reset
- *    Return Value:    None
- */
 
 void USBD_Reset(void)
 {
-    NVIC_DisableIRQ(USB_LP_IRQn); //Ashley
+    PCD_EPTypeDef *ep = NULL;
 
-    /* Double Buffering is not yet supported                                    */
-    USB->ISTR = 0;                             /* Clear Interrupt Status             */
-    USB->CNTR = CNTR_CTRM | CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM |
-#ifdef __RTX
-           ((USBD_RTX_DevTask   != 0) ? CNTR_ERRM    : 0) |
-           ((USBD_RTX_DevTask   != 0) ? CNTR_PMAOVRM : 0) |
-           ((USBD_RTX_DevTask   != 0) ? CNTR_SOFM    : 0) |
-           ((USBD_RTX_DevTask   != 0) ? CNTR_ESOFM   : 0);
-#else
-           ((USBD_P_Error_Event != 0) ? CNTR_ERRM    : 0) |
-           ((USBD_P_Error_Event != 0) ? CNTR_PMAOVRM : 0) |
-           ((USBD_P_SOF_Event   != 0) ? CNTR_SOFM    : 0) |
-           ((USBD_P_SOF_Event   != 0) ? CNTR_ESOFM   : 0);
-#endif
-    FreeBufAddr = EP_BUF_ADDR;
-    USB->BTABLE = 0x00;                        /* set BTABLE Address                 */
-    /* Setup Control Endpoint 0 */
-    pBUF_DSCR->ADDR_TX = FreeBufAddr;
-    FreeBufAddr += USBD_MAX_PACKET0;
-    pBUF_DSCR->ADDR_RX = FreeBufAddr;
-    FreeBufAddr += USBD_MAX_PACKET0;
+    for (int index = 0; index <= USBD_EP_NUM; index++)  {
+        ep = USBD_GetEP(index | 0x80);
+        ep->is_in = 1;
+        ep->num = index;
+        ep->type = EP_TYPE_CTRL;
+        ep->maxpacket = 0;
+        ep->xfer_buff = 0;
+        ep->xfer_len = 0;
 
-    if (USBD_MAX_PACKET0 > 62) {
-        pBUF_DSCR->COUNT_RX = ((USBD_MAX_PACKET0 << 5) - 1) | 0x8000;
-    } else {
-        pBUF_DSCR->COUNT_RX =   USBD_MAX_PACKET0 << 9;
+        ep = USBD_GetEP(index);
+        ep->is_in = 0;
+        ep->num = index;
+        ep->type = EP_TYPE_CTRL;
+        ep->maxpacket = 0;
+        ep->xfer_buff = 0;
+        ep->xfer_len = 0;
     }
 
-    USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_CONTROL | EP_RX_VALID;
-    USB->DADDR = DADDR_EF | 0;                 /* Enable USB Default Address         */
-
-    NVIC_EnableIRQ(USB_LP_IRQn); //Ashley
+    Buf_Offset = USBD_BTABLE_SIZE;
+    _USBD_ConfigEP(0x00, EP_TYPE_CTRL, USBD_MAX_PACKET0);
+    _USBD_ConfigEP(0x80, EP_TYPE_CTRL, USBD_MAX_PACKET0);
+    USBD_EnableEP(0x00);
+    USBD_EnableEP(0x80);
+    USB_EnableInt(USB);
 }
-
-
-/*
- *  USB Device Suspend Function
- *   Called automatically on USB Device Suspend
- *    Return Value:    None
- */
-
-void USBD_Suspend(void)
-{
-    USB->CNTR |= CNTR_FSUSP;                   /* Force Suspend                      */
-    USB->CNTR |= CNTR_LPMODE;                  /* Low Power Mode                     */
-}
-
-
-/*
- *  USB Device Resume Function
- *   Called automatically on USB Device Resume
- *    Return Value:    None
- */
-
-void USBD_Resume(void)
-{
-    /* Performed by Hardware                                                    */
-}
-
-
-/*
- *  USB Device Remote Wakeup Function
- *   Called automatically on USB Device Remote Wakeup
- *    Return Value:    None
- */
-
-void USBD_WakeUp(void)
-{
-    USB->CNTR &= ~CNTR_FSUSP;                  /* Clear Suspend                      */
-}
-
-
-/*
- *  USB Device Remote Wakeup Configuration Function
- *    Parameters:      cfg:   Device Enable/Disable
- *    Return Value:    None
- */
 
 void USBD_WakeUpCfg(BOOL cfg)
 {
-    /* Not needed                                                               */
+    /* Not needed */
 }
-
-
-/*
- *  USB Device Set Address Function
- *    Parameters:      adr:   USB Device Address
- *                     setup: Called in setup stage (!=0), else after status stage
- *    Return Value:    None
- */
 
 void USBD_SetAddress(U32 adr, U32 setup)
 {
@@ -328,485 +174,311 @@ void USBD_SetAddress(U32 adr, U32 setup)
         return;
     }
 
-    USB->DADDR = DADDR_EF | adr;
+    USB->DADDR = (USB_DADDR_EF | adr);
 }
-
-
-/*
- *  USB Device Configure Function
- *    Parameters:      cfg:   Device Configure/Deconfigure
- *    Return Value:    None
- */
 
 void USBD_Configure(BOOL cfg)
 {
-    if (cfg == __FALSE) {
-        FreeBufAddr  = EP_BUF_ADDR;
-        FreeBufAddr += 2 * USBD_MAX_PACKET0; /* reset Buffer address               */
+    if (cfg == __TRUE) {
+        return;
     }
+    Buf_Offset = USBD_BTABLE_SIZE + USBD_MAX_PACKET0 * 2;
 }
-
-
-/*
- *  Configure USB Device Endpoint according to Descriptor
- *    Parameters:      pEPD:  Pointer to Device Endpoint Descriptor
- *    Return Value:    None
- */
 
 void USBD_ConfigEP(USB_ENDPOINT_DESCRIPTOR *pEPD)
 {
-    /* Double Buffering is not yet supported                                    */
-    U32 num, val;
-    num = pEPD->bEndpointAddress & 0x0F;
-    val = pEPD->wMaxPacketSize;
-
-    if (pEPD->bEndpointAddress & USB_ENDPOINT_DIRECTION_MASK) {
-        (pBUF_DSCR + num)->ADDR_TX = FreeBufAddr;
-        val = (val + 1) & ~1;
-    } else {
-        (pBUF_DSCR + num)->ADDR_RX = FreeBufAddr;
-
-        if (val > 62) {
-            val = (val + 31) & ~31;
-            (pBUF_DSCR + num)->COUNT_RX = ((val << 5) - 1) | 0x8000;
-        } else {
-            val = (val + 1)  & ~1;
-            (pBUF_DSCR + num)->COUNT_RX =   val << 9;
-        }
-    }
-
-    FreeBufAddr += val;
+    uint8_t type;
 
     switch (pEPD->bmAttributes & USB_ENDPOINT_TYPE_MASK) {
         case USB_ENDPOINT_TYPE_CONTROL:
-            val = EP_CONTROL;
+            type = EP_TYPE_CTRL;
             break;
-
         case USB_ENDPOINT_TYPE_ISOCHRONOUS:
-            val = EP_ISOCHRONOUS;
+            type = EP_TYPE_ISOC;
             break;
-
         case USB_ENDPOINT_TYPE_BULK:
-            val = EP_BULK;
-
-            if (USB_DBL_BUF_EP & (1 << num)) {
-                val |= EP_KIND;
-            }
-
+            type = EP_TYPE_BULK;
             break;
-
         case USB_ENDPOINT_TYPE_INTERRUPT:
-            val = EP_INTERRUPT;
+            type = EP_TYPE_INTR;
             break;
     }
 
-    val |= num;
-    USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = val;
+    _USBD_ConfigEP(pEPD->bEndpointAddress, type, pEPD->wMaxPacketSize);
 }
-
-
-/*
- *  Set Direction for USB Device Control Endpoint
- *    Parameters:      dir:   Out (dir == 0), In (dir <> 0)
- *    Return Value:    None
- */
 
 void USBD_DirCtrlEP(U32 dir)
 {
-    /* Not needed                                                               */
+    /* Not needed */
 }
-
-
-/*
- *  Enable USB Device Endpoint
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
- */
 
 void USBD_EnableEP(U32 EPNum)
 {
-    EP_Status(EPNum, EP_TX_NAK | EP_RX_VALID);    /* EP is able to receive      */
+    PCD_EPTypeDef *ep = USBD_GetEP(EPNum);
+
+    PCD_SET_EP_ADDRESS(USB, ep->num, ep->num);
+
+    if (ep->is_in) {
+        /*Set the endpoint Transmit buffer address */
+        PCD_SET_EP_TX_ADDRESS(USB, ep->num, ep->pmaadress);
+        PCD_CLEAR_TX_DTOG(USB, ep->num);
+        /* Configure NAK status for the Endpoint*/
+        PCD_SET_EP_TX_STATUS(USB, ep->num, USB_EP_TX_NAK);
+    } else {
+        /*Set the endpoint Receive buffer address */
+        PCD_SET_EP_RX_ADDRESS(USB, ep->num, ep->pmaadress);
+        /*Set the endpoint Receive buffer counter*/
+        PCD_SET_EP_RX_CNT(USB, ep->num, ep->maxpacket);
+        PCD_CLEAR_RX_DTOG(USB, ep->num);
+        /* Configure VALID status for the Endpoint*/
+        PCD_SET_EP_RX_STATUS(USB, ep->num, USB_EP_RX_VALID);
+    }
 }
-
-
-/*
- *  Disable USB Endpoint
- *    Parameters:      EPNum: Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
- */
 
 void USBD_DisableEP(U32 EPNum)
 {
-    EP_Status(EPNum, EP_TX_DIS | EP_RX_DIS);
+    PCD_EPTypeDef *ep = USBD_GetEP(EPNum);
+
+    if (ep->is_in==0U) {
+        /* Clear the data toggle bits for the endpoint IN/OUT*/
+        PCD_CLEAR_RX_DTOG(USB, ep->num);
+        PCD_CLEAR_TX_DTOG(USB, ep->num);
+
+        /* Reset value of the data toggle bits for the endpoint out*/
+        PCD_TX_DTOG(USB, ep->num);
+
+        PCD_SET_EP_RX_STATUS(USB, ep->num, USB_EP_RX_DIS);
+        PCD_SET_EP_TX_STATUS(USB, ep->num, USB_EP_TX_DIS);
+    } else {
+        /* Clear the data toggle bits for the endpoint IN/OUT*/
+        PCD_CLEAR_RX_DTOG(USB, ep->num);
+        PCD_CLEAR_TX_DTOG(USB, ep->num);
+        PCD_RX_DTOG(USB, ep->num);
+        /* Configure DISABLE status for the Endpoint*/
+        PCD_SET_EP_TX_STATUS(USB, ep->num, USB_EP_TX_DIS);
+        PCD_SET_EP_RX_STATUS(USB, ep->num, USB_EP_RX_DIS);
+    }
 }
-
-
-/*
- *  Reset USB Device Endpoint
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
- */
 
 void USBD_ResetEP(U32 EPNum)
 {
-    EP_Reset(EPNum);
+    if (EPNum & 0x80) {
+        PCD_CLEAR_TX_DTOG(USB, EPNum & 0x7f);
+    } else {
+        PCD_CLEAR_RX_DTOG(USB, EPNum);
+    }
 }
 
-
-/*
- *  Set Stall for USB Device Endpoint
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
+/**
+ * @brief Set Stall for USB Device Endpoint
  */
-
 void USBD_SetStallEP(U32 EPNum)
 {
-    EP_Status(EPNum, EP_TX_STALL | EP_RX_STALL);
+    if (EPNum & 0x80) {
+        PCD_SET_EP_TX_STATUS(USB, EPNum & 0x7f, USB_EP_TX_STALL);
+    } else {
+        PCD_SET_EP_RX_STATUS(USB, EPNum, USB_EP_RX_STALL);
+    }
 }
 
-
-/*
- *  Clear Stall for USB Device Endpoint
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
+/**
+ * @brief Clear Stall for USB Device Endpoint
  */
-
 void USBD_ClrStallEP(U32 EPNum)
 {
-    EP_Reset(EPNum);                      /* reset DTog Bits                    */
-    EP_Status(EPNum, EP_TX_VALID | EP_RX_VALID);
+    USBD_ResetEP (EPNum);    /* reset DTog Bits	*/
+
+    if (EPNum & 0x80) {
+        PCD_SET_EP_TX_STATUS(USB, EPNum & 0x7f, USB_EP_TX_VALID);
+    } else {
+        PCD_SET_EP_RX_STATUS(USB, EPNum, USB_EP_RX_VALID);
+    }
 }
 
-
-/*
- *  Clear USB Device Endpoint Buffer
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *    Return Value:    None
+/**
+ * @brief Clear USB Device Endpoint Buffer
  */
-
 void USBD_ClearEPBuf(U32 EPNum)
 {
-    ;
+    /* Not needed */
 }
 
-
-/*
- *  Read USB Device Endpoint Data
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *                     pData: Pointer to Data Buffer
- *    Return Value:    Number of bytes read
- */
-
-U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 bufsz)
+U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 cnt)
 {
-    /* Double Buffering is not yet supported                                    */
-    U32 num, cnt, *pv, n;
-    num = EPNum & 0x0F;
-    pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_RX));
-    cnt = (pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK;
-    if (cnt > bufsz) {
-        cnt = bufsz;
-    }
+    PCD_EPTypeDef *ep = USBD_GetEP(EPNum);
+    U32 count = 0;
 
-    for (n = 0; n < (cnt + 1) / 2; n++) {
-        __UNALIGNED_UINT16_WRITE(pData, *pv++);
-        pData += 2;
-    }
+    count = MIN(cnt, PCD_GET_EP_RX_CNT(USB, ep->num));
+    USB_ReadPMA(USB, pData, ep->pmaadress, count);
+    PCD_SET_EP_RX_STATUS(USB, ep->num, USB_EP_RX_VALID);
 
-    EP_Status(EPNum, EP_RX_VALID);
-    return (cnt);
+    return count;
 }
-
-
-/*
- *  Write USB Device Endpoint Data
- *    Parameters:      EPNum: Device Endpoint Number
- *                       EPNum.0..3: Address
- *                       EPNum.7:    Dir
- *                     pData: Pointer to Data Buffer
- *                     cnt:   Number of bytes to write
- *    Return Value:    Number of bytes written
- */
 
 U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
 {
-    /* Double Buffering is not yet supported                                    */
-    U32 num, *pv, n;
-    U16 statusEP;
-    num = EPNum & 0x0F;
-    pv  = (U32 *)(USB_PMA_ADDR + 2 * ((pBUF_DSCR + num)->ADDR_TX));
+    PCD_EPTypeDef *ep = USBD_GetEP(EPNum);
+    U32 count = 0;
 
-    for (n = 0; n < (cnt + 1) / 2; n++) {
-        *pv++ = __UNALIGNED_UINT16_READ(pData);
-        pData += 2;
-    }
+    count = MIN(cnt, ep->maxpacket);
+    USB_WritePMA(USB, pData, ep->pmaadress, count);
+    PCD_SET_EP_TX_CNT(USB, ep->num, count);
+    PCD_SET_EP_TX_STATUS(USB, ep->num, USB_EP_TX_VALID);
 
-    (pBUF_DSCR + num)->COUNT_TX = cnt;
-    statusEP = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R;
-
-    if ((statusEP & EP_STAT_TX) != EP_TX_STALL) {
-        EP_Status(EPNum, EP_TX_VALID);      /* do not make EP valid if stalled    */
-    }
-
-    return (cnt);
+    return count;
 }
 
-
-/*
- *  Get USB Device Last Frame Number
- *    Parameters:      None
- *    Return Value:    Frame Number
+/**
+ * @brief Get USB Device Last Frame Number
  */
-
 U32 USBD_GetFrame(void)
 {
-    return (USB->FNR & FNR_FN);
+    return (USB->FNR & (USB_FNR_FN));
 }
 
-
 #ifdef __RTX
-U32 LastError;                          /* Last Error                         */
-
-/*
- *  Get USB Last Error Code
- *    Parameters:      None
- *    Return Value:    Error Code
+U32 LastError;
+/**
+ * @brief Get USB Last Error Code
  */
-
 U32 USBD_GetError(void)
 {
     return (LastError);
 }
 #endif
 
-
-/*
- *  USB Device Interrupt Service Routine
- */
-
-//void USB_LP_CAN1_RX0_IRQHandler(void)
-void USB_LP_IRQHandler(void)
+void USBD_Handler(void)
 {
-    uint32_t istr;
-    uint32_t num;
-    uint32_t val;
+    if (USBD_GET_FLAG(USB_ISTR_CTR))  {
+        uint8_t epindex = 0;
+        __IO uint16_t wIstr = 0;
+        U32 event;
 
-    istr = USB->ISTR;
-    // Zero out endpoint ID since this is read from the queue
-    LastIstr |= istr & ~(ISTR_DIR | ISTR_EP_ID);
-    // Clear interrupts that are pending
-    USB->ISTR = ~(istr & USB_ISTR_W0C_MASK);
-    if (istr & ISTR_CTR) {
-        while ((istr = USB->ISTR) & ISTR_CTR) {
-            num = istr & ISTR_EP_ID;
-            val = USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R;
+        while (((wIstr = USB->ISTR) & USB_ISTR_CTR) != 0)  {
+            epindex = (uint8_t)(wIstr & USB_ISTR_EP_ID);
 
-            // Process and filter out the zero length status out endpoint to prevent
-            // the next SETUP packet from being dropped.
-            if ((0 == num) && (val & EP_CTR_RX) && !(val & EP_SETUP)
-                    && (0 == ((pBUF_DSCR + num)->COUNT_RX & EP_COUNT_MASK))) {
-                if (val & EP_CTR_TX) {
-                    // Drop the RX event but not TX
-                    stat_enque((((val & VAL_MASK) & ~EP_CTR_RX) << VAL_SHIFT) |
-                               ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
-                } else {
-                    // Drop the event
+            if (wIstr & USB_ISTR_DIR)  {
+                event = USBD_EVT_OUT;
+                if (epindex == 0 && (PCD_GET_ENDPOINT(USB, PCD_ENDP0) & USB_EP_SETUP)) {
+                    event = USBD_EVT_SETUP;
                 }
+                PCD_CLEAR_RX_EP_CTR(USB, epindex);
             } else {
-                stat_enque(((val & VAL_MASK) << VAL_SHIFT) |
-                           ((num & EP_NUM_MASK) << EP_NUM_SHIFT));
+                event = USBD_EVT_IN;
+                PCD_CLEAR_TX_EP_CTR(USB, epindex);
             }
 
-
-            if (val & EP_CTR_RX) {
-                USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) & ~EP_CTR_RX;
-            }
-
-            if (val & EP_CTR_TX) {
-                USB->EP0R, USB->EP1R, USB->EP2R, USB->EP3R, USB->EP4R, USB->EP5R, USB->EP6R, USB->EP7R = EP_VAL_UNCHANGED(val) & ~EP_CTR_TX;
+            if (USBD_P_EP[epindex]) {
+                USBD_P_EP[epindex](event);
             }
         }
     }
 
-    USBD_SignalHandler();
-}
-
-void USBD_Handler(void)
-{
-		GPIO_InitTypeDef GPIO_InitStructure;
-		__HAL_RCC_GPIOC_CLK_ENABLE(); 
-		GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-		GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-		HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-		HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
-    U32 istr, num, val, num_val;
-    cortex_int_state_t state;
-
-    // Get ISTR
-    state = cortex_int_get_and_disable();
-    istr = LastIstr;
-    LastIstr = 0;
-    cortex_int_restore(state);
-
-    /* USB Reset Request                                                        */
-    if (istr & ISTR_RESET) {
+    if (USBD_GET_FLAG(USB_ISTR_RESET)) {
+        USBD_CLEAR_FLAG(USB_ISTR_RESET);
         USBD_Reset();
         usbd_reset_core();
-					
 #ifdef __RTX
-
         if (USBD_RTX_DevTask) {
             isr_evt_set(USBD_EVT_RESET, USBD_RTX_DevTask);
         }
-
 #else
-
         if (USBD_P_Reset_Event) {
             USBD_P_Reset_Event();
         }
-
+        USBD_SetAddress(0, 0);
 #endif
     }
 
-    /* USB Suspend Request                                                      */
-    if (istr & ISTR_SUSP) {
-        USBD_Suspend();
-#ifdef __RTX
-
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_SUSPEND, USBD_RTX_DevTask);
-        }
-
-#else
-
-        if (USBD_P_Suspend_Event) {
-            USBD_P_Suspend_Event();
-        }
-
-#endif
-    }
-
-    /* USB Wakeup                                                               */
-    if (istr & ISTR_WKUP) {
-        USBD_WakeUp();
-#ifdef __RTX
-
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_RESUME,  USBD_RTX_DevTask);
-        }
-
-#else
-
-        if (USBD_P_Resume_Event) {
-            USBD_P_Resume_Event();
-        }
-
-#endif
-    }
-
-    /* Start of Frame                                                           */
-    if (istr & ISTR_SOF) {
-#ifdef __RTX
-
-        if (USBD_RTX_DevTask) {
-            isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
-        }
-
-#else
-
-        if (USBD_P_SOF_Event) {
-            USBD_P_SOF_Event();
-        }
-
-#endif
-    }
-
-    /* PMA Over/underrun                                                        */
-    if (istr & ISTR_PMAOVR) {
+    if (USBD_GET_FLAG(USB_ISTR_PMAOVR)) {
 #ifdef __RTX
         LastError = 2;
 
         if (USBD_RTX_DevTask) {
             isr_evt_set(USBD_EVT_ERROR, USBD_RTX_DevTask);
         }
-
 #else
-
         if (USBD_P_Error_Event) {
             USBD_P_Error_Event(2);
         }
-
 #endif
+        USBD_CLEAR_FLAG(USB_ISTR_PMAOVR);
     }
 
-    /* Error: No Answer, CRC Error, Bit Stuff Error, Frame Format Error         */
-    if (istr & ISTR_ERR) {
+    if (USBD_GET_FLAG(USB_ISTR_ERR)) {
 #ifdef __RTX
         LastError = 1;
 
         if (USBD_RTX_DevTask) {
             isr_evt_set(USBD_EVT_ERROR, USBD_RTX_DevTask);
         }
-
 #else
-
         if (USBD_P_Error_Event) {
             USBD_P_Error_Event(1);
         }
+#endif
+        USBD_CLEAR_FLAG(USB_ISTR_ERR);
+    }
 
+    if (USBD_GET_FLAG(USB_ISTR_WKUP)) {
+        USB->CNTR &= ~(USB_CNTR_LPMODE);
+        USB->CNTR &= ~(USB_CNTR_FSUSP);
+#ifdef __RTX
+        if (USBD_RTX_DevTask) {
+            isr_evt_set(USBD_EVT_RESUME,  USBD_RTX_DevTask);
+        }
+#else
+        if (USBD_P_Resume_Event) {
+            USBD_P_Resume_Event();
+        }
+#endif
+        USBD_CLEAR_FLAG(USB_ISTR_WKUP);
+    }
+
+    if (USBD_GET_FLAG(USB_ISTR_SUSP)) {
+        /* Force low-power mode in the macrocell */
+        USB->CNTR |= USB_CNTR_FSUSP;
+
+        /* clear of the ISTR bit must be done after setting of CNTR_FSUSP */
+        USBD_CLEAR_FLAG(USB_ISTR_SUSP);
+
+        USB->CNTR |= USB_CNTR_LPMODE;
+
+#ifdef __RTX
+        if (USBD_RTX_DevTask) {
+            isr_evt_set(USBD_EVT_SUSPEND, USBD_RTX_DevTask);
+        }
+#else
+        if (USBD_GET_FLAG(USB_ISTR_WKUP) == 0U) {
+            if (USBD_P_Suspend_Event) {
+                USBD_P_Suspend_Event();
+            }
+        }
 #endif
     }
 
-    /* Endpoint Interrupts                                                      */
-    while ((istr & ISTR_CTR) && !stat_is_empty()) {
-        num_val = stat_deque();
-        num = (num_val >> EP_NUM_SHIFT) & EP_NUM_MASK;
-        val = (num_val >> VAL_SHIFT) & VAL_MASK;
-        if (val & EP_CTR_TX) {
+    if (USBD_GET_FLAG(USB_ISTR_SOF)) {
+        USBD_CLEAR_FLAG(USB_ISTR_SOF);
 #ifdef __RTX
-
-            if (USBD_RTX_EPTask[num]) {
-                isr_evt_set(USBD_EVT_IN,  USBD_RTX_EPTask[num]);
-            }
-
-#else
-
-            if (USBD_P_EP[num]) {
-                USBD_P_EP[num](USBD_EVT_IN);
-            }
-
-#endif
+        if (USBD_RTX_DevTask) {
+            isr_evt_set(USBD_EVT_SOF, USBD_RTX_DevTask);
         }
-
-        if (val & EP_CTR_RX) {
-#ifdef __RTX
-
-            if (USBD_RTX_EPTask[num]) {
-                isr_evt_set((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT, USBD_RTX_EPTask[num]);
-            }
-
 #else
-
-            if (USBD_P_EP[num]) {
-                USBD_P_EP[num]((val & EP_SETUP) ? USBD_EVT_SETUP : USBD_EVT_OUT);
-            }
-
-#endif
+        if (USBD_P_SOF_Event) {
+            USBD_P_SOF_Event();
         }
+#endif
     }
+
+    if (USBD_GET_FLAG(USB_ISTR_ESOF)) {
+        USBD_CLEAR_FLAG(USB_ISTR_ESOF);
+    }
+
+    HAL_NVIC_EnableIRQ(USB_LP_IRQn);
+}
+
+void USB_LP_IRQHandler(void)
+{
+    HAL_NVIC_DisableIRQ(USB_LP_IRQn);
+    USBD_SignalHandler();
 }
