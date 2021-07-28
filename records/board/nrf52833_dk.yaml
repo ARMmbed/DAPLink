@@ -2,5 +2,7 @@ common:
     macros:
         - IO_CONFIG_OVERRIDE
         - DEVELOP_IN_NRF52833
+        # - NRF528XX_DYNAMIC_PIN
+        - UART_EXTERNAL
     includes:
         - source/board/override_nrf52833_dk

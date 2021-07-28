@@ -39,13 +39,17 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 
 // SWDCLK (Output)
 #define PIN_SWCLK      NRF_GPIO_PIN_MAP(0, 4)
+// #define PIN_SWCLK      NRF_GPIO_PIN_MAP(0, 30)
 
 // SWDIO (Input/Output)
 #define PIN_SWDIO      NRF_GPIO_PIN_MAP(0, 5)
+// #define PIN_SWDIO      NRF_GPIO_PIN_MAP(0, 31)
 
 // nRESET Pin
 #undef PIN_nRESET
-// #define PIN_nRESET     NRF_GPIO_PIN_MAP(0, 7)
+
+
+#ifndef NRF528XX_DYNAMIC_PIN
 
 // Target Running LED (Output)
 #define LED_RUNNING    LED_1
@@ -75,6 +79,58 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 // Alternative pin out
 #define UART_RX_PIN NRF_GPIO_PIN_MAP(0, 29)
 #define UART_TX_PIN NRF_GPIO_PIN_MAP(0, 30)
+#endif
+
+#else
+
+/* Use dynamic pin-mapping */
+
+extern uint32_t uart_tx_pin;
+extern uint32_t uart_rx_pin;
+extern uint32_t sw_reset_pin;
+extern uint32_t led_usb_pin;
+extern uint32_t led_pwr_pin;
+
+// HID LED
+#define LED_HID           led_usb_pin
+
+// MSC LED
+#define LED_MSC           led_usb_pin
+
+// CDC LED
+#define LED_CDC           led_usb_pin
+
+// POWER LED
+#define LED_PWR           led_pwr_pin
+
+// Reset button (SW_RESET)
+#define RESET_BUTTON      sw_reset_pin
+#define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
+
+// UART
+#define UART_TX_PIN       uart_tx_pin
+#define UART_RX_PIN       uart_rx_pin
+
+/* Use defaults for nRF52820 */
+#define NRF52820_RESET_PIN   NRF_GPIO_PIN_MAP(0, 6)
+#define NRF52820_USB_LED_PIN NRF_GPIO_PIN_MAP(0, 14)
+#define NRF52820_PWR_LED_PIN NRF_GPIO_PIN_MAP(0, 15)
+#define NRF52820_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 8)  // From IMCU to target
+#define NRF52820_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 29) // From target to IMCU
+
+#define NRF52833_RESET_PIN   BUTTON_1
+#define NRF52833_USB_LED_PIN LED_4
+#define NRF52833_PWR_LED_PIN LED_3
+#ifndef UART_EXTERNAL
+// This is connected to J-Link
+#define NRF52833_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 8) // RxD P0.08
+#define NRF52833_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 6) // TxD P0.06
+#else
+// Alternative pin out
+#define NRF52833_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 29)  // From IMCU to target
+#define NRF52833_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 30)  // From target to IMCU
+#endif
+
 #endif
 
 #endif
