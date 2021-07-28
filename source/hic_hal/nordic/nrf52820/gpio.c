@@ -23,13 +23,6 @@
 
 #include "IO_config.h"
 
-#ifdef FAST_GPIO
-NRF_GPIO_Type *pin_swclk_reg;
-NRF_GPIO_Type *pin_swdio_reg;
-uint32_t pin_swclk_idx;
-uint32_t pin_swdio_idx;
-#endif
-
 #if (defined(GPIO_LED_ACTIVE_STATE) && (GPIO_LED_ACTIVE_STATE == 1))
 #define GPIO_LED_STATE(state) (state ? 1 : 0)
 #else
@@ -38,6 +31,23 @@ uint32_t pin_swdio_idx;
 
 void gpio_init(void)
 {
+#if defined(FAST_GPIO)
+#ifdef LED_PWR
+    gpio_cfg_output(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR));
+    gpio_write(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR), GPIO_LED_STATE(1));
+#endif
+#ifdef LED_CONNECTED
+    gpio_cfg_output(GPIO_REG(LED_CONNECTED), GPIO_IDX(LED_CONNECTED));
+#endif
+#ifdef LED_RUNNING
+    gpio_cfg_output(GPIO_REG(LED_RUNNING), GPIO_IDX(LED_RUNNING));
+#endif
+    gpio_cfg_output(GPIO_REG(LED_HID), GPIO_IDX(LED_HID));
+    gpio_cfg_output(GPIO_REG(LED_MSC), GPIO_IDX(LED_MSC));
+    gpio_cfg_output(GPIO_REG(LED_CDC), GPIO_IDX(LED_CDC));
+
+    gpio_cfg_input(GPIO_REG(RESET_BUTTON), GPIO_IDX(RESET_BUTTON), RESET_BUTTON_PULL);
+#else
 #ifdef LED_PWR
     nrf_gpio_cfg_output(LED_PWR);
     nrf_gpio_pin_write(LED_PWR, GPIO_LED_STATE(1));
@@ -53,21 +63,34 @@ void gpio_init(void)
     nrf_gpio_cfg_output(LED_CDC);
 
     nrf_gpio_cfg_input(RESET_BUTTON, RESET_BUTTON_PULL);
+#endif
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
 {
+#if defined(FAST_GPIO)
+    gpio_write(GPIO_REG(LED_HID), GPIO_IDX(LED_HID), GPIO_LED_STATE(state));
+#else
     nrf_gpio_pin_write(LED_HID, GPIO_LED_STATE(state));
+#endif
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
+#if defined(FAST_GPIO)
+    gpio_write(GPIO_REG(LED_CDC), GPIO_IDX(LED_CDC), GPIO_LED_STATE(state));
+#else
     nrf_gpio_pin_write(LED_CDC, GPIO_LED_STATE(state));
+#endif
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
+#if defined(FAST_GPIO)
+    gpio_write(GPIO_REG(LED_MSC), GPIO_IDX(LED_MSC), GPIO_LED_STATE(state));
+#else
     nrf_gpio_pin_write(LED_MSC, GPIO_LED_STATE(state));
+#endif
 }
 
 uint8_t gpio_get_reset_btn_no_fwrd(void)
@@ -77,7 +100,11 @@ uint8_t gpio_get_reset_btn_no_fwrd(void)
 
 uint8_t gpio_get_reset_btn_fwrd(void)
 {
+#if defined(FAST_GPIO)
+    return gpio_read(GPIO_REG(RESET_BUTTON), GPIO_IDX(RESET_BUTTON)) ? 0 : 1;
+#else
     return nrf_gpio_pin_read(RESET_BUTTON) ? 0 : 1;
+#endif
 }
 
 void gpio_set_board_power(bool powerEnabled)

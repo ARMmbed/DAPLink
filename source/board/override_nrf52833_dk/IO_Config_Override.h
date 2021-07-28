@@ -26,7 +26,7 @@
 #include "compiler.h"
 #include "daplink.h"
 
-#include "nrf_gpio.h"
+#include "dl_nrf_gpio.h"
 
 // This GPIO configuration is only valid for the nrf52820 HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);

@@ -178,100 +178,6 @@ __STATIC_INLINE void PORT_JTAG_SETUP (void) {
   ;
 }
 
-#if defined(FAST_GPIO) || defined(FAST_GPIO2)
-
-extern NRF_GPIO_Type *pin_swclk_reg;
-extern NRF_GPIO_Type *pin_swdio_reg;
-extern uint32_t pin_swclk_idx;
-extern uint32_t pin_swdio_idx;
-
-#if (GPIO_COUNT == 1)
-#define INIT_PIN(id, pin) \
-  { \
-    NRFX_ASSERT(nrf_gpio_pin_present_check(pin)); \
-    id##_reg = NRF_P0; \
-    id##_idx = pin; \
-  }
-#else
-#define INIT_PIN(id, pin) \
-  { \
-    NRFX_ASSERT(nrf_gpio_pin_present_check(pin)); \
-    if (pin < P0_PIN_NUM) { \
-      id##_reg = NRF_P0; \
-      id##_idx = pin; \
-    } else { \
-      id##_reg = NRF_P1; \
-      id##_idx = pin & 0x1F; \
-    } \
-  }
-#endif
-
-#define CONFIG_PIN(pin, dir, input, pull, drive, sense) \
-  gpio_config(pin##_reg, pin##_idx, dir, input, pull, drive, sense)
-
-#define SET_PIN(pin) \
-  pin##_reg->OUTSET = (1UL << pin##_idx)
-#define CLEAR_PIN(pin) \
-  pin##_reg->OUTCLR = (1UL << pin##_idx)
-#define READ_PIN(pin) \
-  (((pin##_reg->IN) >> pin##_idx) & 1UL)
-#define READ_PIN_OUT(pin) \
-  (((pin##_reg->OUT) >> pin##_idx) & 1UL)
-#define SET_OUTPUT_DIR(pin) \
-  pin##_reg->DIRSET = (1UL << pin##_idx)
-
-__STATIC_INLINE void gpio_config(
-    NRF_GPIO_Type       *reg,
-    uint32_t             idx,
-    nrf_gpio_pin_dir_t   dir,
-    nrf_gpio_pin_input_t input,
-    nrf_gpio_pin_pull_t  pull,
-    nrf_gpio_pin_drive_t drive,
-    nrf_gpio_pin_sense_t sense)
-{
-    reg->PIN_CNF[idx] = ((uint32_t)dir << GPIO_PIN_CNF_DIR_Pos)
-                        | ((uint32_t)input << GPIO_PIN_CNF_INPUT_Pos)
-                        | ((uint32_t)pull << GPIO_PIN_CNF_PULL_Pos)
-                        | ((uint32_t)drive << GPIO_PIN_CNF_DRIVE_Pos)
-                        | ((uint32_t)sense << GPIO_PIN_CNF_SENSE_Pos);
-}
-
-__STATIC_INLINE void gpio_set(NRF_GPIO_Type *reg, uint32_t idx)
-{
-    reg->OUTSET = (1UL << idx);
-}
-
-__STATIC_INLINE void gpio_clear(NRF_GPIO_Type *reg, uint32_t idx)
-{
-    reg->OUTCLR = (1UL << idx);
-}
-
-__STATIC_INLINE uint32_t gpio_read(NRF_GPIO_Type *reg, uint32_t idx)
-{
-    return ((reg->IN >> idx) & 1UL);
-}
-
-__STATIC_INLINE uint32_t gpio_out_read(NRF_GPIO_Type *reg, uint32_t idx)
-{
-    return ((reg->OUT >> idx) & 1UL);
-}
-
-__STATIC_INLINE void gpio_set_output_dir(NRF_GPIO_Type *reg, uint32_t idx)
-{
-    reg->DIRSET = (1UL << idx);
-}
-
-#if (GPIO_COUNT == 1)
-#define GPIO_REG(pin)  NRF_P0
-#define GPIO_IDX(pin)  (pin)
-#else
-#define GPIO_REG(pin)  (((pin) < P0_PIN_NUM) ? NRF_P0 : NRF_P1)
-#define GPIO_IDX(pin)  (((pin) < P0_PIN_NUM) ? (pin) : ((pin) & 0x1F))
-#endif
-
-
-#endif
-
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
@@ -279,22 +185,13 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 */
 __STATIC_INLINE void PORT_SWD_SETUP (void) {
 #if defined(FAST_GPIO)
-  INIT_PIN(pin_swclk, PIN_SWCLK);
-  INIT_PIN(pin_swdio, PIN_SWDIO);
-  CONFIG_PIN(pin_swclk, NRF_GPIO_PIN_DIR_OUTPUT,
-             NRF_GPIO_PIN_INPUT_DISCONNECT, NRF_GPIO_PIN_NOPULL,
-             NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-  SET_PIN(pin_swclk);
-  CONFIG_PIN(pin_swdio, NRF_GPIO_PIN_DIR_OUTPUT,
-             NRF_GPIO_PIN_INPUT_CONNECT, NRF_GPIO_PIN_NOPULL,
-             NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-  SET_PIN(pin_swdio);
-#elif defined(FAST_GPIO2)
-  gpio_config(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK),
+  COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(PIN_SWCLK));
+  COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(PIN_SWDIO));
+  gpio_cfg(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK),
              NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
              NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
   gpio_set(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK));
-  gpio_config(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO),
+  gpio_cfg(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO),
              NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_CONNECT,
              NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
   gpio_set(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
@@ -322,24 +219,17 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF (void) {
 #if defined(FAST_GPIO)
-  CONFIG_PIN(pin_swclk, NRF_GPIO_PIN_DIR_INPUT,
-             NRF_GPIO_PIN_INPUT_CONNECT, NRF_GPIO_PIN_NOPULL,
-             NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-  CONFIG_PIN(pin_swdio, NRF_GPIO_PIN_DIR_INPUT,
-             NRF_GPIO_PIN_INPUT_CONNECT, NRF_GPIO_PIN_NOPULL,
-             NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-#elif defined(FAST_GPIO2)
-  gpio_config(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO),
-             NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_CONNECT,
+  gpio_cfg(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO),
+             NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
              NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-  gpio_config(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK),
-             NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_CONNECT,
+  gpio_cfg(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK),
+             NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
              NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
 #else
-  nrf_gpio_cfg_input(PIN_SWCLK, NRF_GPIO_PIN_NOPULL);
-  nrf_gpio_cfg_input(PIN_SWDIO, NRF_GPIO_PIN_NOPULL);
+  nrf_gpio_cfg_default(PIN_SWCLK);
+  nrf_gpio_cfg_default(PIN_SWDIO);
 #ifdef PIN_nRESET
-  nrf_gpio_cfg_input(PIN_nRESET, NRF_GPIO_PIN_NOPULL);
+  nrf_gpio_cfg_default(PIN_nRESET);
 #endif
 #endif
 }
@@ -352,8 +242,6 @@ __STATIC_INLINE void PORT_OFF (void) {
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN  (void) {
 #if defined(FAST_GPIO)
-  return READ_PIN_OUT(pin_swclk);
-#elif defined(FAST_GPIO2)
   return gpio_out_read(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK));
 #else
   return nrf_gpio_pin_out_read(PIN_SWCLK);
@@ -365,8 +253,6 @@ Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_SET (void) {
 #if defined(FAST_GPIO)
-  SET_PIN(pin_swclk);
-#elif defined(FAST_GPIO2)
   gpio_set(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK));
 #else
   nrf_gpio_pin_set(PIN_SWCLK);
@@ -378,8 +264,6 @@ Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR (void) {
 #if defined(FAST_GPIO)
-  CLEAR_PIN(pin_swclk);
-#elif defined(FAST_GPIO2)
   gpio_clear(GPIO_REG(PIN_SWCLK), GPIO_IDX(PIN_SWCLK));
 #else
   nrf_gpio_pin_clear(PIN_SWCLK);
@@ -394,8 +278,6 @@ __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR (void) {
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN  (void) {
 #if defined(FAST_GPIO)
-  return READ_PIN(pin_swdio);
-#elif defined(FAST_GPIO2)
   return gpio_read(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
 #else
   return nrf_gpio_pin_read(PIN_SWDIO) & 0x1;
@@ -407,8 +289,6 @@ Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_SET (void) {
 #if defined(FAST_GPIO)
-  SET_PIN(pin_swdio);
-#elif defined(FAST_GPIO2)
   gpio_set(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
 #else
   nrf_gpio_pin_set(PIN_SWDIO);
@@ -420,8 +300,6 @@ Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR (void) {
 #if defined(FAST_GPIO)
-  CLEAR_PIN(pin_swdio);
-#elif defined(FAST_GPIO2)
   gpio_clear(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
 #else
   nrf_gpio_pin_clear(PIN_SWDIO);
@@ -433,8 +311,6 @@ __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR (void) {
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN      (void) {
 #if defined(FAST_GPIO)
-  return READ_PIN(pin_swdio);
-#elif defined(FAST_GPIO2)
   return gpio_read(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
 #else
   return nrf_gpio_pin_read(PIN_SWDIO) & 0x1;
@@ -446,12 +322,6 @@ __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN      (void) {
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT     (uint32_t bit) {
 #if defined(FAST_GPIO)
-  if (bit & 0x1) {
-    SET_PIN(pin_swdio);
-  } else {
-    CLEAR_PIN(pin_swdio);
-  }
-#elif defined(FAST_GPIO2)
   if (bit & 0x1) {
     gpio_set(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
   } else {
@@ -472,8 +342,6 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE  (void) {
 #if defined(FAST_GPIO)
-  SET_OUTPUT_DIR(pin_swdio);
-#elif defined(FAST_GPIO2)
   gpio_set_output_dir(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO));
 #else
   nrf_gpio_pin_dir_set(PIN_SWDIO, NRF_GPIO_PIN_DIR_OUTPUT);
@@ -486,11 +354,7 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE (void) {
 #if defined(FAST_GPIO)
-  CONFIG_PIN(pin_swdio, NRF_GPIO_PIN_DIR_INPUT,
-             NRF_GPIO_PIN_INPUT_CONNECT, NRF_GPIO_PIN_NOPULL,
-             NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
-#elif defined(FAST_GPIO2)
-  gpio_config(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO),
+  gpio_cfg(GPIO_REG(PIN_SWDIO), GPIO_IDX(PIN_SWDIO),
              NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_CONNECT,
              NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
 #else
@@ -585,7 +449,11 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {
 #ifdef LED_CONNECTED
+#if defined(FAST_GPIO)
+    gpio_write(GPIO_REG(LED_CONNECTED), GPIO_IDX(LED_CONNECTED), bit ? 0 : 1);
+#else
     nrf_gpio_pin_write(LED_CONNECTED, bit ? 0 : 1);
+#endif
 #endif
 }
 
@@ -596,7 +464,11 @@ __STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {
 */
 __STATIC_INLINE void LED_RUNNING_OUT (uint32_t bit) {
 #ifdef LED_RUNNING
+#if defined(FAST_GPIO)
+    gpio_write(GPIO_REG(LED_RUNNING), GPIO_IDX(LED_RUNNING), bit ? 0 : 1);
+#else
     nrf_gpio_pin_write(LED_RUNNING, bit ? 0 : 1);
+#endif
 #endif
 }
 

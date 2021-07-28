@@ -34,12 +34,12 @@
 #include "compiler.h"
 #include "daplink.h"
 
-#include "nrf_gpio.h"
+#include "dl_nrf_gpio.h"
 
 // This GPIO configuration is only valid for the nrf52820 HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 
-#define NRF52820_DYNAMIC_PIN
+#define NRF528XX_DYNAMIC_PIN
 #define GPIO_LED_ACTIVE_STATE 1
 
 extern uint32_t uart_tx_pin;
