@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <stdio.h>
-#include "stm32wbxx.h"
+//#include "stm32wbxx.h"
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main_interface.h"
@@ -39,12 +39,6 @@
 #include "sdk.h"
 #include "target_family.h"
 #include "target_board.h"
-//start biby
-// #include "usbd_core.h"
-// #include "usbd_desc.h"
-// #include "usbd_cdc.h"
-// #include "usbd_cdc_if.h"
-//end biby
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "vfs_manager.h"
@@ -115,148 +109,6 @@ void __libc_init_array (void) {}
 #define MSC_LED_DEF GPIO_LED_OFF
 #endif
 
-// //start biby
-// #define DEVICE_FS 		0
-
-// USBD_HandleTypeDef hUsbDeviceFS; 
-
-// USBD_DescriptorsTypeDef CDC_Desc =
-// {
-  // USBD_CDC_DeviceDescriptor,
-  // USBD_CDC_LangIDStrDescriptor,
-  // USBD_CDC_ManufacturerStrDescriptor,
-  // USBD_CDC_ProductStrDescriptor,
-  // USBD_CDC_SerialStrDescriptor,
-  // USBD_CDC_ConfigStrDescriptor,
-  // USBD_CDC_InterfaceStrDescriptor
-// }; 
-
-// USBD_StatusTypeDef USBD_Init(USBD_HandleTypeDef *pdev,
-                             // USBD_DescriptorsTypeDef *pdesc, uint8_t id)
-// {
-  // USBD_StatusTypeDef ret;
-
-  // /* Check whether the USB Host handle is valid */
-  // if (pdev == NULL)
-  // {
-// #if (USBD_DEBUG_LEVEL > 1U)
-    // USBD_ErrLog("Invalid Device handle");
-// #endif
-    // return USBD_FAIL;
-  // }
-
-  // /* Unlink previous class resources */
-  // pdev->pClass = NULL;
-  // pdev->pUserData = NULL;
-  // pdev->pConfDesc = NULL;
-
-  // /* Assign USBD Descriptors */
-  // if (pdesc != NULL)
-  // {
-    // pdev->pDesc = pdesc;
-  // }
-
-  // /* Set Device initial State */
-  // pdev->dev_state = USBD_STATE_DEFAULT;
-  // pdev->id = id;
-
-  // /* Initialize low level driver */
-  // ret = USBD_LL_Init(pdev);
-
-  // return ret;
-// }
-
-// USBD_StatusTypeDef USBD_RegisterClass(USBD_HandleTypeDef *pdev, USBD_ClassTypeDef *pclass)
-// {
-  // uint16_t len = 0U;
-
-  // if (pclass == NULL)
-  // {
-// #if (USBD_DEBUG_LEVEL > 1U)
-    // USBD_ErrLog("Invalid Class handle");
-// #endif
-    // return USBD_FAIL;
-  // }
-
-  // /* link the class to the USB Device handle */
-  // pdev->pClass = pclass;
-
-  // /* Get Device Configuration Descriptor */
-// #ifdef USE_USB_HS
-  // if (pdev->pClass->GetHSConfigDescriptor != NULL)
-  // {
-    // pdev->pConfDesc = (void *)pdev->pClass->GetHSConfigDescriptor(&len);
-  // }
-// #else /* Default USE_USB_FS */
-  // if (pdev->pClass->GetFSConfigDescriptor != NULL)
-  // {
-    // pdev->pConfDesc = (void *)pdev->pClass->GetFSConfigDescriptor(&len);
-  // }
-// #endif /* USE_USB_FS */
-
-  // return USBD_OK;
-// }
-
-// uint8_t USBD_CDC_RegisterInterface(USBD_HandleTypeDef *pdev,
-                                   // USBD_CDC_ItfTypeDef *fops)
-// {
-  // if (fops == NULL)
-  // {
-    // return (uint8_t)USBD_FAIL;
-  // }
-
-  // pdev->pUserData = fops;
-
-  // return (uint8_t)USBD_OK;
-// }
-
-// USBD_StatusTypeDef USBD_RegisterClass(USBD_HandleTypeDef *pdev, USBD_ClassTypeDef *pclass)
-// {
-  // uint16_t len = 0U;
-
-  // if (pclass == NULL)
-  // {
-// #if (USBD_DEBUG_LEVEL > 1U)
-    // USBD_ErrLog("Invalid Class handle");
-// #endif
-    // return USBD_FAIL;
-  // }
-
-  // /* link the class to the USB Device handle */
-  // pdev->pClass = pclass;
-
-  // /* Get Device Configuration Descriptor */
-// #ifdef USE_USB_HS
-  // if (pdev->pClass->GetHSConfigDescriptor != NULL)
-  // {
-    // pdev->pConfDesc = (void *)pdev->pClass->GetHSConfigDescriptor(&len);
-  // }
-// #else /* Default USE_USB_FS */
-  // if (pdev->pClass->GetFSConfigDescriptor != NULL)
-  // {
-    // pdev->pConfDesc = (void *)pdev->pClass->GetFSConfigDescriptor(&len);
-  // }
-// #endif /* USE_USB_FS */
-
-  // return USBD_OK;
-// }
-
-// USBD_CDC_ItfTypeDef USBD_Interface_fops_FS =
-// {
-  // CDC_Init_FS,
-  // CDC_DeInit_FS,
-  // CDC_Control_FS,
-  // CDC_Receive_FS,
-  // CDC_TransmitCplt_FS
-// };
-
-// USBD_StatusTypeDef USBD_Start(USBD_HandleTypeDef *pdev)
-// {
-  // /* Start the low level driver  */
-  // return USBD_LL_Start(pdev);
-// }
-
-// //end biby
 
 // Reference to our main task
 osThreadId_t main_task_id;
@@ -374,8 +226,7 @@ void main_task(void * arg)
     // LED
     gpio_led_state_t hid_led_value = HID_LED_DEF;
     gpio_led_state_t cdc_led_value = CDC_LED_DEF;
-    gpio_led_state_t msc_led_value = MSC_LED_DEF;	
-	
+    gpio_led_state_t msc_led_value = MSC_LED_DEF;		
     // USB
     uint32_t usb_state_count = USB_BUSY_TIME;
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
@@ -918,7 +769,7 @@ int main(void)
 	Syam_HAL_Init(); //biby
 	SystemClock_Config(); //biby
 	gpio_init(); //biby
-	HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
+	//HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
     // HAL_NVIC_EnableIRQ(USB_LP_IRQn);
 	// GPIO_InitTypeDef GPIO_InitStructure;
 	// __HAL_RCC_GPIOC_CLK_ENABLE(); 

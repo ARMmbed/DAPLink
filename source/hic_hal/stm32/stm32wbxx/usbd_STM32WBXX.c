@@ -126,10 +126,12 @@ void USBD_Connect(BOOL con)
         USB_EnableGlobalInt (USB);
 
         USB->BCDR |= USB_BCDR_DPPU;                // enable internal pullup on DP+ line
+		USB_CONNECT_ON();
     } else {
         USB->CNTR = USB_CNTR_FRES | USB_CNTR_PDWN;
 
         USB->BCDR &= (uint16_t)(~(USB_BCDR_DPPU)); // disable internal pullup on DP+ line
+		USB_CONNECT_OFF();
     }
 }
 

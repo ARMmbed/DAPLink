@@ -20,14 +20,13 @@
  */
 
 #include <string.h>
-#include <stdio.h>
+
 
 #include "settings.h"
 #include "target_config.h"
 #include "compiler.h"
 #include "cortex_m.h"
 #include "FlashPrg.h"
-#include "gpio.h"
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
