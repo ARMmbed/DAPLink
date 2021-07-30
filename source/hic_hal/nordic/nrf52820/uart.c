@@ -47,6 +47,7 @@ uint8_t read_buffer_data[BUFFER_SIZE];
 struct {
     uint8_t rx;
     uint8_t tx;
+    uint8_t tx_active;
 } cb_buf;
 
 void uart_handler(uint32_t event);
@@ -178,20 +179,8 @@ int32_t uart_write_free(void)
 
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
-    if (size == 0) {
-        return 0;
-    }
-
-    uint32_t cnt = 0;
-    if (circ_buf_count_used(&write_buffer) > 0) {
-        cb_buf.tx = circ_buf_pop(&write_buffer);
-        cnt = circ_buf_write(&write_buffer, data, size);
-    } else {
-        cb_buf.tx = data[0];
-        cnt = circ_buf_write(&write_buffer, data + 1, size - 1) + 1;
-    }
-    USART_INSTANCE.Send(&(cb_buf.tx), 1);
-
+    uint32_t cnt = circ_buf_write(&write_buffer, data, size);
+    NVIC_SetPendingIRQ(USART_IRQ);
     return cnt;
 }
 
@@ -213,10 +202,13 @@ void uart_handler(uint32_t event) {
         USART_INSTANCE.Receive(&(cb_buf.rx), 1);
     }
 
-    if (event & ARM_USART_EVENT_SEND_COMPLETE) {
+    if ((event & ARM_USART_EVENT_SEND_COMPLETE) || !cb_buf.tx_active) {
         if (circ_buf_count_used(&write_buffer) > 0) {
+            cb_buf.tx_active = true;
             cb_buf.tx = circ_buf_pop(&write_buffer);
             USART_INSTANCE.Send(&(cb_buf.tx), 1);
+        } else {
+            cb_buf.tx_active = false;
         }
     }
 }
