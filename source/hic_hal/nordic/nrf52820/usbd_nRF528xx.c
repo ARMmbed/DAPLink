@@ -240,6 +240,7 @@ void USBD_Reset (void) {
   NRF_USBD->INTENSET = USBD_INTEN_USBRESET_Msk    | 
                        USBD_INTEN_EPDATA_Msk      | 
                        USBD_INTEN_EP0SETUP_Msk    | 
+                       USBD_INTEN_SOF_Msk         |
                        USBD_INTEN_EP0DATADONE_Msk ;
 }
 
