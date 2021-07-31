@@ -1,9 +1,6 @@
-/**
- * @file    read_uid.c
- * @brief   
- *
+/*
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2018, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,21 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "stm32wbxx.h"
+
 #include "read_uid.h"
+#include "util.h"
+#include "stm32wbxx.h"
+
+typedef struct
+{
+    uint16_t fwid;
+    uint16_t hwid;
+    uint32_t devid_l;
+    uint32_t devid_h;
+} UID_TypeDef;
+
+#define UID ((UID_TypeDef *) UID_BASE)
 
 void read_unique_id(uint32_t *id)
 {
-    uint32_t Device_Serial0, Device_Serial1, Device_Serial2;    
-    Device_Serial0 = *(uint32_t*)(0x08007FFC); 
-    Device_Serial1 = *(uint32_t*)(0x08007FFD); 
-    Device_Serial2 = *(uint32_t*)(0x08007FFE);    
-	
-	// 0x1FFF 0000 - 0x1FFF 6FFF 55rg
-    // 0x1FFF F000 - 0x1FFF F7FF 103
-    id[0] = Device_Serial0;
-    id[1] = Device_Serial1;
-    id[2] = Device_Serial2;
-    id[3] = 0xA5A5A5A5;
+    util_assert(id != NULL);
+
+    id[0] = UID->fwid;
+    id[1] = UID->hwid;
+    id[2] = UID->devid_l;
+    id[3] = UID->devid_h;
+}
+
+void create_unique_id(void)
+{
+    util_assert(false);
 }

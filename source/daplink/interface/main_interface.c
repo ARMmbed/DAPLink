@@ -237,6 +237,7 @@ void main_task(void * arg)
 #endif
 
     // Initialize settings - required for asserts to work
+	
     config_init();
 
 #ifdef USE_LEGACY_CMSIS_RTOS
@@ -769,6 +770,7 @@ int main(void)
 	Syam_HAL_Init(); //biby
 	SystemClock_Config(); //biby
 	gpio_init(); //biby
+	
 	//HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
     // HAL_NVIC_EnableIRQ(USB_LP_IRQn);
 	// GPIO_InitTypeDef GPIO_InitStructure;

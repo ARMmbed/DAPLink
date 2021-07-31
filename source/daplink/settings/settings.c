@@ -72,13 +72,12 @@ static cfg_ram_t config_ram_copy;
 
 void config_init()
 {
-	
     uint32_t new_size;
     // Initialize RAM copy
     memset(&config_ram_copy, 0, sizeof(config_ram_copy));
     // Read settings from RAM if the key is valid
     new_size = sizeof(config_ram);
-
+	
     if (CFG_KEY == config_ram.key) {
         uint32_t size = MIN(config_ram.size, sizeof(config_ram));
         new_size = MAX(config_ram.size, sizeof(config_ram));
@@ -101,13 +100,13 @@ void config_init()
     config_ram.disable_msd = config_ram_copy.disable_msd;
     config_ram.page_erase_enable = config_ram_copy.page_erase_enable;
 	
-	GPIO_InitTypeDef GPIO_InitStructure;
+     GPIO_InitTypeDef GPIO_InitStructure;
 	__HAL_RCC_GPIOC_CLK_ENABLE(); 
-    GPIO_InitStructure.Pin = PIN_CDC_LED;
+    GPIO_InitStructure.Pin = RUNNING_LED_PIN;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(PIN_CDC_LED_PORT, &GPIO_InitStructure);
-	HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, GPIO_PIN_RESET);  //red led
+    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
+	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
 	
 	//config_rom_init();
 	
