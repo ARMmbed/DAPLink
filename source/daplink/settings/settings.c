@@ -98,18 +98,9 @@ void config_init()
     config_ram.valid_dumps = config_ram_copy.valid_dumps;
     memcpy(config_ram.hexdump, config_ram_copy.hexdump, sizeof(config_ram_copy.hexdump[0]) * config_ram_copy.valid_dumps);
     config_ram.disable_msd = config_ram_copy.disable_msd;
-    config_ram.page_erase_enable = config_ram_copy.page_erase_enable;
+    config_ram.page_erase_enable = config_ram_copy.page_erase_enable;	
 	
-     GPIO_InitTypeDef GPIO_InitStructure;
-	__HAL_RCC_GPIOC_CLK_ENABLE(); 
-    GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-	HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
-	
-	//config_rom_init();
-	
+	config_rom_init();	
 }
 
 void config_ram_set_hold_in_bl(bool hold)

@@ -3,7 +3,7 @@
  * @brief   Implementation of flash_hal.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,6 +21,7 @@
 
 #include "flash_hal.h"
 #include "cortex_m.h"
+#include "daplink_addr.h"
 
 uint32_t  flash_erase_sector(uint32_t addr)
 {
@@ -40,4 +41,12 @@ uint32_t  flash_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
     retval = ProgramPage(adr, sz, (uint32_t *)buf);
     cortex_int_restore(state);
     return retval;
+}
+
+// Default implementation. May be overridden by HIC support.
+__WEAK bool flash_is_readable(uint32_t addr, uint32_t length)
+{
+    uint32_t end_addr = addr + length - 1;
+    return (addr >= DAPLINK_ROM_START && addr < (DAPLINK_ROM_START + DAPLINK_ROM_SIZE))
+        && (end_addr >= DAPLINK_ROM_START && end_addr < (DAPLINK_ROM_START + DAPLINK_ROM_SIZE));
 }

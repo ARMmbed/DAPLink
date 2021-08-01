@@ -1,9 +1,9 @@
 /**
  * @file    flash_hal.h
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,6 +22,7 @@
 #ifndef FLASH_HAL_H
 #define FLASH_HAL_H
 
+#include <stdbool.h>
 #include "FlashPrg.h"
 
 #ifdef __cplusplus
@@ -30,6 +31,17 @@ extern "C" {
 
 uint32_t  flash_program_page(uint32_t adr, uint32_t sz, uint8_t *buf);
 uint32_t  flash_erase_sector(uint32_t addr);
+
+/*!
+ * @brief Test whether the specified flash address range can be read from.
+ *
+ * The default implementation returns true if the given address range is within the bounds
+ * of the HIC's internal flash memory (defined by DAPLINK_ROM_START and DAPLINK_ROM_SIZE).
+ *
+ * @retval true All pages within the specified range are readble.
+ * @retval false At least one page within the specified range cannot be read.
+ */
+bool flash_is_readable(uint32_t addr, uint32_t length);
 
 #ifdef __cplusplus
 }

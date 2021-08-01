@@ -771,6 +771,7 @@ int main(void)
 	SystemClock_Config(); //biby
 	gpio_init(); //biby
 	
+	
 	//HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
     // HAL_NVIC_EnableIRQ(USB_LP_IRQn);
 	// GPIO_InitTypeDef GPIO_InitStructure;
