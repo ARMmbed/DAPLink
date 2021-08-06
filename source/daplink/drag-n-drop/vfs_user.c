@@ -4,7 +4,7 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -497,6 +497,20 @@ static uint32_t update_html_file(uint8_t *data, uint32_t datasize)
     return expand_info(data, datasize);
 }
 
+#if defined(__CC_ARM)
+#define COMPILER_DESCRIPTION "armcc"
+#elif (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050))
+#define COMPILER_DESCRIPTION "armclang"
+#elif defined(__GNUC__)
+#define COMPILER_DESCRIPTION "gcc"
+#endif
+
+#if (GIT_LOCAL_MODS)
+#define LOCAL_MODS ", local mods"
+#else
+#define LOCAL_MODS ""
+#endif
+
 static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
 {
     uint32_t pos=0;
@@ -504,10 +518,13 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
 
     char *buf = (char *)data;
 
-    //Needed by expand_info strlen
+    // Needed by expand_info strlen
     memset(buf, 0, datasize);
 
     pos += util_write_string(buf + pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
+    // Build ID
+    pos += util_write_string(buf + pos, "Build ID: " GIT_DESCRIPTION \
+        " (" COMPILER_DESCRIPTION LOCAL_MODS ")\r\n");
     // Unique ID
     pos += util_write_string(buf + pos, "Unique ID: @U\r\n");
     // HIC ID
@@ -550,22 +567,6 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
         pos += util_write_string(buf + pos, "\r\n");
     }
 
-#if defined(__CC_ARM)
-    pos += util_write_string(buf + pos, "Compiler: armcc\r\n");
-#elif (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050))
-    pos += util_write_string(buf + pos, "Compiler: armclang\r\n");
-#elif defined(__GNUC__)
-    pos += util_write_string(buf + pos, "Compiler: gcc\r\n");
-#endif
-
-    // GIT sha
-    pos += util_write_string(buf + pos, "Git SHA: ");
-    pos += util_write_string(buf + pos, GIT_COMMIT_SHA);
-    pos += util_write_string(buf + pos, "\r\n");
-    // Local modifications when making the build
-    pos += util_write_string(buf + pos, "Local Mods: ");
-    pos += util_write_uint32(buf + pos, GIT_LOCAL_MODS);
-    pos += util_write_string(buf + pos, "\r\n");
     // Supported USB endpoints
     pos += util_write_string(buf + pos, "USB Interfaces: ");
 #ifdef MSC_ENDPOINT
@@ -599,7 +600,7 @@ static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize)
     pos += util_write_uint32(buf + pos, remount_count);
     pos += util_write_string(buf + pos, "\r\n");
 
-    //Target URL
+    // Target URL
     pos += util_write_string(buf + pos, "URL: @R\r\n");
 
     return expand_info(data, datasize);
