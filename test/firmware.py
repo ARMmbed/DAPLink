@@ -69,7 +69,7 @@ class DAPLinkFirmware(Firmware):
     """Class to abstract access to a daplink firmware image"""
 
     _IF_RE = re.compile("^([a-z0-9]+)([_a-z0-9]*)_if$")
-    _BL_RE = re.compile("^([a-z0-9]+)_bl$")
+    _BL_RE = re.compile("^([a-z0-9]+)([_a-z0-9]*)_bl$")
 
     def __init__(self, name, bundle, directory):
         self._name = name
