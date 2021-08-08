@@ -41,6 +41,8 @@ tool_specific:
     gcc_arm:
         linker_file:
             - source/hic_hal/stm32/stm32wbxx/gcc/stm32wbxx.ld
+        includes:
+            - source/hic_hal/stm32/stm32wbxx/gcc
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32wbxx/gcc
