@@ -51,9 +51,9 @@ _Min_Stack_Size = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;
 MEMORY
 {
   RAM_SHARED            (xrw) : ORIGIN = 0x20030000, LENGTH = 10K
-  m_interrupts          (rx)  : ORIGIN = DAPLINK_ROM_CONFIG_ADMIN_START, LENGTH = 0x400
+  m_interrupts          (rx)  : ORIGIN = DAPLINK_ROM_CONFIG_ADMIN_START, LENGTH = 0x0000C000
   m_text                (rx)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = DAPLINK_ROM_APP_SIZE
-  m_cfgrom              (rw)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
+  m_cfgrom              (rw)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = 0x00004000
   m_data                (rw)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
   m_cfgram              (rw)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
 }
