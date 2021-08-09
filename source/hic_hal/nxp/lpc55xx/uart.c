@@ -154,6 +154,11 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
+
+    // If there was no Receive() call in progress aborting it is harmless.
+    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
+    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+
     uint32_t r = USART_INSTANCE.Control(control, config->Baudrate);
     if (r != ARM_DRIVER_OK) {
         return 0;
