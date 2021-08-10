@@ -25,7 +25,7 @@
 // trouble here is that reset for different targets is implemented differently so all targets
 //  have to use the largest stack or these have to be defined in multiple places... Not ideal
 //  may want to move away from threads for some of these behaviours to optimize mempory usage (RAM)
-#define MAIN_TASK_STACK     (800)
+#define MAIN_TASK_STACK     (864)
 #define MAIN_TASK_PRIORITY  (osPriorityNormal)
 
 #endif
