@@ -683,16 +683,12 @@ static int32_t USART_NonBlockingControl(uint32_t control, uint32_t arg, cmsis_us
     {
         /* Abort Send */
         case ARM_USART_ABORT_SEND:
-            usart->resource->base->FIFOINTENSET &= ~USART_FIFOINTENSET_TXLVL_MASK;
-            usart->handle->txDataSize = 0;
-            usart->handle->txState    = kUSART_TxIdle;
+            USART_TransferAbortSend(usart->resource->base, usart->handle);
             return ARM_DRIVER_OK;
 
         /* Abort receive */
         case ARM_USART_ABORT_RECEIVE:
-            usart->resource->base->FIFOINTENSET &= ~USART_FIFOINTENSET_RXLVL_MASK;
-            usart->handle->rxDataSize = 0U;
-            usart->handle->rxState    = kUSART_RxIdle;
+            USART_TransferAbortReceive(usart->resource->base, usart->handle);
             return ARM_DRIVER_OK;
 
         default:

@@ -61,6 +61,7 @@ int32_t uart_initialize(void)
 {
     clear_buffers();
     Driver_USART0.Initialize(uart_handler);
+    Driver_USART0.PowerControl(ARM_POWER_FULL);
 
     return 1;
 }
@@ -68,6 +69,8 @@ int32_t uart_initialize(void)
 int32_t uart_uninitialize(void)
 {
     USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
+    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+    Driver_USART0.PowerControl(ARM_POWER_OFF);
     Driver_USART0.Uninitialize();
     clear_buffers();
 
@@ -151,6 +154,11 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
+
+    // If there was no Receive() call in progress aborting it is harmless.
+    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
+    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+
     uint32_t r = USART_INSTANCE.Control(control, config->Baudrate);
     if (r != ARM_DRIVER_OK) {
         return 0;
