@@ -144,7 +144,10 @@ static main_led_state_t msc_led_state = MAIN_LED_FLASH;
 main_usb_connect_t usb_state;
 static bool usb_test_mode = false;
 
-__WEAK void board_30ms_hook(void){}
+__WEAK void board_30ms_hook(void)
+{
+
+}
 
 __WEAK void handle_reset_button(void)
 {

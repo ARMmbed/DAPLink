@@ -6,6 +6,9 @@ common:
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
         - IO_CONFIG_OVERRIDE
         - DELAY_FAST_CYCLES=2U
+        - DAP_DEFAULT_SWJ_CLOCK=8000000
+        - BOARD_USB_BMAXPOWER=0x96
+        - BOARD_EXTRA_BUFFER=100
     includes:
         - source/board/microbitv2
     sources:
