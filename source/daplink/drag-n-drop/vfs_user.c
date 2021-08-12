@@ -45,6 +45,11 @@
 //! device.  This is to accomodate for hex file programming.
 #define VFS_DISK_SIZE (MB(64))
 
+// Additional buffer space to display more than 512 bytes in DETAILS.TXT
+#if !defined(BOARD_EXTRA_BUFFER)
+#define BOARD_EXTRA_BUFFER 0
+#endif
+
 //! @brief Constants for magic action or config files.
 //!
 //! The "magic files" are files with a special name that if created on the USB MSC volume, will
@@ -118,7 +123,7 @@ static const magic_file_info_t s_magic_file_info[] = {
         { "PAGE_OFFACT", kChipEraseActionFile       },
     };
 
-static uint8_t file_buffer[VFS_SECTOR_SIZE+100];
+static uint8_t file_buffer[VFS_SECTOR_SIZE+BOARD_EXTRA_BUFFER];
 static char assert_buf[64 + 1];
 static uint16_t assert_line;
 static assert_source_t assert_source;
@@ -354,7 +359,7 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
         return 0;
     }
     
-    size = update_details_txt_file(file_buffer, VFS_SECTOR_SIZE+100);
+    size = update_details_txt_file(file_buffer, VFS_SECTOR_SIZE+BOARD_EXTRA_BUFFER);
     
     if (size - VFS_SECTOR_SIZE * sector_offset > VFS_SECTOR_SIZE) {
         memcpy(data, file_buffer + sector_offset * VFS_SECTOR_SIZE, VFS_SECTOR_SIZE);

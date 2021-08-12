@@ -27,6 +27,7 @@ extern "C" {
 #endif
 
 // Keep in sync with the lists error_message and error_type
+// New values shold be added to the end of the enum to preserve error codes
 typedef enum {
     /* Shared errors */
     ERROR_SUCCESS = 0,

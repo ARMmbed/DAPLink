@@ -3,7 +3,6 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
  * Copyright 2020 NXP
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -32,7 +31,7 @@
 #include "pwr_mon.h"
 #include "IO_Config.h"
 #include "uart.h"
-#include "i2c.h"
+#include "i2c_commands.h"
 #include "rl_usb.h"
 
 /*******************************************************************************

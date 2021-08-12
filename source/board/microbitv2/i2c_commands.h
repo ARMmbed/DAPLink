@@ -3,7 +3,6 @@
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
  * Copyright 2020 NXP
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -27,10 +26,15 @@
 
 #include "cmsis_compiler.h"
 #include "virtual_fs.h"
+#include "fsl_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define I2C_SLAVE_NRF_KL_COMMS      (0x70U)
+#define I2C_SLAVE_HID               (0x71U)
+#define I2C_SLAVE_FLASH             (0x72U)
 
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
@@ -165,6 +169,27 @@ typedef __PACKED_STRUCT i2cFlashCmd_tag {
         uint8_t data[1024];
     } cmdData;
 } i2cFlashCmd_t;
+
+/*! i2c Write Callback prototype */
+typedef void (*i2cWriteCallback_t)
+(
+    uint8_t*    pData,
+    uint8_t     size
+);
+
+/*! i2c Read Callback prototype */
+typedef void (*i2cReadCallback_t)
+(
+    uint8_t*    pData,
+    uint8_t     size
+);
+
+void i2c_initialize(void);
+void i2c_deinitialize(void);
+status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress);
+status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress);
+void i2c_clearBuffer(void); 
+void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
 
 #ifdef __cplusplus
 }
