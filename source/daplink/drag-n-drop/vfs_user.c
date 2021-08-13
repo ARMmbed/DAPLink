@@ -83,9 +83,6 @@ typedef struct _magic_file_info {
     magic_file_t which; //!< Enum for the file.
 } magic_file_info_t;
 
-static const char error_prefix[] = "error: ";
-static const char error_type_prefix[] = "type: ";
-
 static const vfs_filename_t assert_file = "ASSERT  TXT";
 
 //! @brief Table of magic files and their names.
@@ -349,6 +346,31 @@ uint32_t setting_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t
     return l;
 }
 
+uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, const uint8_t *value) {
+    uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
+    l += util_write_in_region(buf, size, start, pos + l, ": ", 2);
+    l += util_write_string_in_region(buf, size, start, pos, value);
+    l += util_write_in_region(buf, size, start, pos + l, "\r\n", 2);
+    return l;
+}
+
+uint32_t uint32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t value) {
+    uint8_t number[14] = {':', ' '};
+    uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
+    uint32_t digits = util_write_uint32(number + 2, value) + 2;
+    number[digits++] = '\r';
+    number[digits++] = '\n';
+    l += util_write_in_region(buf, size, start, pos + l, number, digits);
+    return l;
+}
+
+uint32_t hex32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t value) {
+    uint8_t hex[14] = { ':', ' ', '0', 'x', 0, 0, 0, 0, 0, 0, 0, 0, '\r', '\n' };
+    uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
+    util_write_hex32(hex + 4, value);
+    l += util_write_in_region(buf, size, start, pos + l, hex, sizeof(hex));
+    return l;
+}
 
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *buf, uint32_t num_sectors)
@@ -412,10 +434,8 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *buf, uint32_
         return 0;
     }
 
-    pos += util_write_string_in_region(buf, size, start, pos, error_prefix);
-    pos += util_write_string_in_region(buf, size, start, pos, contents);
-    pos += util_write_in_region(buf, size, start, pos, "\r\n", 2);
-    pos += util_write_string_in_region(buf, size, start, pos, error_type_prefix);
+    pos += string_field_in_region(buf, size, start, pos, "error", contents);
+    pos += util_write_string_in_region(buf, size, start, pos, "type: ");
 
     // Write each applicable error type, separated by commas
     int index = 0;
@@ -460,19 +480,11 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *buf, uint3
     }
 
     pos += util_write_string_in_region(buf, size, start, pos, "Assert\r\n");
-    pos += util_write_string_in_region(buf, size, start, pos, "File: ");
-    pos += util_write_string_in_region(buf, size, start, pos, assert_buf);
-    pos += util_write_string_in_region(buf, size, start, pos, "\r\n");
-    pos += util_write_string_in_region(buf, size, start, pos, "Line: ");
-    uint8_t lineno[10];
-    uint32_t digits = util_write_uint32(lineno, assert_line);
-    pos += util_write_in_region(buf, size, start, pos, lineno, digits);
-    pos += util_write_string_in_region(buf, size, start, pos, "\r\n");
+    pos += string_field_in_region(buf, size, start, pos, "File", assert_buf);
+    pos += uint32_field_in_region(buf, size, start, pos, "Line", assert_line);
 
     if (source_str != 0) {
-        pos += util_write_string_in_region(buf, size, start, pos, "Source: ");
-        pos += util_write_string_in_region(buf, size, start, pos, source_str);
-        pos += util_write_string_in_region(buf, size, start, pos, "\r\n");
+        pos += string_field_in_region(buf, size, start, pos, "Source", source_str);
     }
 
     valid_hexdumps = config_ram_get_hexdumps(&hexdumps);
@@ -539,29 +551,31 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
     pos += setting_in_region(buf, size, start, pos, "Overflow detection", config_get_overflow_detect());
     pos += setting_in_region(buf, size, start, pos, "Incompatible image detection", config_get_detect_incompatible_target());
     pos += setting_in_region(buf, size, start, pos, "Page erasing", config_ram_get_page_erase());
+
     // Current mode and version
-    if(daplink_is_bootloader()) {
-        pos += util_write_string_in_region(buf, size, start, pos, "Daplink Mode: Bootloader\r\n");
-        pos += expand_string_in_region(buf, size, start, pos, "Bootloader Version: @V\r\n");
-    } else {
-        pos += util_write_string_in_region(buf, size, start, pos, "Daplink Mode: Interface\r\n");
-        pos += expand_string_in_region(buf, size, start, pos, "Interface Version: @V\r\n");
-    }
+#if defined(DAPLINK_BL)
+    pos += util_write_string_in_region(buf, size, start, pos, "Daplink Mode: Bootloader\r\n");
+    pos += expand_string_in_region(buf, size, start, pos, "Bootloader Version: @V\r\n");
 
-    // Other builds version (bl or if)
-    if (!daplink_is_bootloader() && info_get_bootloader_present()) {
-        uint8_t version[6] = { 0, 0, 0, 0, '\r', '\n' };
-        pos += util_write_string_in_region(buf, size, start, pos, "Bootloader Version: ");
-        util_write_uint32_zp(version, info_get_bootloader_version(), 4);
-        pos += util_write_in_region(buf, size, start, pos, version, 6);
-    }
-
-    if (!daplink_is_interface() && info_get_interface_present()) {
+    if (info_get_interface_present()) {
         uint8_t version[6] = { 0, 0, 0, 0, '\r', '\n' };
         pos += util_write_string_in_region(buf, size, start, pos, "Interface Version: ");
         util_write_uint32_zp(version, info_get_interface_version(), 4);
         pos += util_write_in_region(buf, size, start, pos, version, 6);
     }
+#elif defined(DAPLINK_IF)
+    pos += util_write_string_in_region(buf, size, start, pos, "Daplink Mode: Interface\r\n");
+    pos += expand_string_in_region(buf, size, start, pos, "Interface Version: @V\r\n");
+
+#if DAPLINK_ROM_BL_SIZE != 0
+    if (info_get_bootloader_present()) {
+        uint8_t version[6] = { 0, 0, 0, 0, '\r', '\n' };
+        pos += util_write_string_in_region(buf, size, start, pos, "Bootloader Version: ");
+        util_write_uint32_zp(version, info_get_bootloader_version(), 4);
+        pos += util_write_in_region(buf, size, start, pos, version, 6);
+    }
+#endif
+#endif
 
     // Supported USB endpoints
     pos += util_write_string_in_region(buf, size, start, pos, "USB Interfaces: "
@@ -580,25 +594,18 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
       "\r\n"
     );
 
-    uint8_t crc[10] = { 0, 0, 0, 0, 0, 0, 0, 0, '\r', '\n' };
+#if DAPLINK_ROM_BL_SIZE != 0
     // CRC of the bootloader (if there is one)
     if (info_get_bootloader_present()) {
-        pos += util_write_string_in_region(buf, size, start, pos, "Bootloader CRC: 0x");
-        util_write_hex32(crc, info_get_crc_bootloader());
-        pos += util_write_in_region(buf, size, start, pos, crc, 10);
+        pos += hex32_field_in_region(buf, size, start, pos, "Bootloader CRC", info_get_crc_bootloader());
     }
+#endif
+
     // CRC of the interface
-    pos += util_write_string_in_region(buf, size, start, pos, "Interface CRC: 0x");
-    util_write_hex32(crc, info_get_crc_interface());
-    pos += util_write_in_region(buf, size, start, pos, crc, 10);
+    pos += hex32_field_in_region(buf, size, start, pos, "Interface CRC", info_get_crc_interface());
 
     // Number of remounts that have occurred
-    uint8_t count[12];
-    pos += util_write_string_in_region(buf, size, start, pos, "Remount count: ");
-    uint32_t digits = util_write_uint32(count, remount_count);
-    count[digits++] = '\r';
-    count[digits++] = '\n';
-    pos += util_write_in_region(buf, size, start, pos, count, digits);
+    pos += uint32_field_in_region(buf, size, start, pos, "Remount count", remount_count);
 
     //Target URL
     pos += expand_string_in_region(buf, size, start, pos, "URL: @R\r\n");
