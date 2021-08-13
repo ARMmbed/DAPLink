@@ -336,16 +336,6 @@ uint32_t expand_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, ui
     return util_write_in_region(buf, size, start, pos, str_buf, l);
 }
 
-uint32_t setting_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t boolean) {
-    uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
-    if (boolean) {
-        l += util_write_in_region(buf, size, start, pos + l, ": 1\r\n", 5);
-    } else {
-        l += util_write_in_region(buf, size, start, pos + l, ": 0\r\n", 5);
-    }
-    return l;
-}
-
 uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, const uint8_t *value) {
     uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
     l += util_write_in_region(buf, size, start, pos + l, ": ", 2);
@@ -354,22 +344,22 @@ uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uin
     return l;
 }
 
+uint32_t setting_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t boolean) {
+    return string_field_in_region(buf, size, start, pos, label, boolean ? "1" : "0");
+}
+
 uint32_t uint32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t value) {
-    uint8_t number[14] = {':', ' '};
-    uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
-    uint32_t digits = util_write_uint32(number + 2, value) + 2;
-    number[digits++] = '\r';
-    number[digits++] = '\n';
-    l += util_write_in_region(buf, size, start, pos + l, number, digits);
-    return l;
+    uint8_t number[11];
+    uint32_t digits = util_write_uint32(number, value);
+    number[digits] = 0;
+    return string_field_in_region(buf, size, start, pos, label, number);
 }
 
 uint32_t hex32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t value) {
-    uint8_t hex[14] = { ':', ' ', '0', 'x', 0, 0, 0, 0, 0, 0, 0, 0, '\r', '\n' };
-    uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
-    util_write_hex32(hex + 4, value);
-    l += util_write_in_region(buf, size, start, pos + l, hex, sizeof(hex));
-    return l;
+    uint8_t hex[11] = { '0', 'x' };
+    util_write_hex32(hex + 2, value);
+    hex[10] = 0;
+    return string_field_in_region(buf, size, start, pos, label, hex);
 }
 
 // File callback to be used with vfs_add_file to return file contents
