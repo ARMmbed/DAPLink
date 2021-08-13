@@ -77,7 +77,7 @@ __isr_vector:
     .size    __isr_vector, . - __isr_vector
 
 #if defined(DAPLINK_BL)
-    /* TODO: Bootloader Configuration Area (BCA) used by Kinetis ROM Bootloader
+    /* TODO: Bootloader Configuration Area (BCA) used by Kinetis ROM Bootloader */
 #endif
 
 /* Flash Configuration */
