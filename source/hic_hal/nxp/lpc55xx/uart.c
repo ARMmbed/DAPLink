@@ -45,6 +45,10 @@ circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
 
 struct {
+    // Number of bytes pending to be transferred. This is 0 if there is no
+    // ongoing transfer and the uart_handler processed the last transfer.
+    volatile uint32_t tx_size;
+
     uint8_t rx;
     uint8_t tx;
 } cb_buf;
@@ -60,6 +64,7 @@ void clear_buffers(void)
 int32_t uart_initialize(void)
 {
     clear_buffers();
+    cb_buf.tx_size = 0;
     Driver_USART0.Initialize(uart_handler);
     Driver_USART0.PowerControl(ARM_POWER_FULL);
 
@@ -73,6 +78,7 @@ int32_t uart_uninitialize(void)
     Driver_USART0.PowerControl(ARM_POWER_OFF);
     Driver_USART0.Uninitialize();
     clear_buffers();
+    cb_buf.tx_size = 0;
 
     return 1;
 }
@@ -189,15 +195,17 @@ int32_t uart_write_data(uint8_t *data, uint16_t size)
         return 0;
     }
 
-    uint32_t cnt = 0;
-    if (circ_buf_count_used(&write_buffer) > 0) {
+    // Disable interrupts to prevent the uart_handler from modifying the
+    // circular buffer at the same time.
+    NVIC_DisableIRQ(USART_IRQ);
+    uint32_t cnt = circ_buf_write(&write_buffer, data, size);
+    if (cb_buf.tx_size == 0 && circ_buf_count_used(&write_buffer) > 0) {
+        // There's no pending transfer, so we need to start the process.
         cb_buf.tx = circ_buf_pop(&write_buffer);
-        cnt = circ_buf_write(&write_buffer, data, size);
-    } else {
-        cb_buf.tx = data[0];
-        cnt = circ_buf_write(&write_buffer, data + 1, size - 1) + 1;
+        USART_INSTANCE.Send(&(cb_buf.tx), 1);
+        cb_buf.tx_size = 1;
     }
-    USART_INSTANCE.Send(&(cb_buf.tx), 1);
+    NVIC_EnableIRQ(USART_IRQ);
 
     return cnt;
 }
@@ -224,6 +232,10 @@ void uart_handler(uint32_t event) {
         if (circ_buf_count_used(&write_buffer) > 0) {
             cb_buf.tx = circ_buf_pop(&write_buffer);
             USART_INSTANCE.Send(&(cb_buf.tx), 1);
+        } else {
+            // Signals that next call to uart_write_data() should start a
+            // transfer.
+            cb_buf.tx_size = 0;
         }
     }
 }
