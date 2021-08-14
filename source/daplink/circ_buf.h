@@ -57,6 +57,15 @@ uint32_t circ_buf_read(circ_buf_t *circ_buf, uint8_t *data, uint32_t size);
 // Attempt to write size bytes to the buffer. Return the number of bytes written
 uint32_t circ_buf_write(circ_buf_t *circ_buf, const uint8_t *data, uint32_t size);
 
+// Returns a pointer to the next byte on the circular buffer and stores in the
+// value pointed by "size" the number of bytes available in that region, which
+// may be less than the total number of bytes in the circular buffer.
+const uint8_t* circ_buf_peek(circ_buf_t *circ_buf, uint32_t* size);
+
+// Remove n bytes from the front of the circular buffer. The values are
+// discarded.
+void circ_buf_pop_n(circ_buf_t *circ_buf, uint32_t n);
+
 #ifdef __cplusplus
 }
 #endif

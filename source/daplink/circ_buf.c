@@ -134,3 +134,47 @@ uint32_t circ_buf_write(circ_buf_t *circ_buf, const uint8_t *data, uint32_t size
 
     return cnt;
 }
+
+const uint8_t* circ_buf_peek(circ_buf_t *circ_buf, uint32_t* size)
+{
+    uint32_t cnt;
+    uint8_t* ret;
+    cortex_int_state_t state;
+
+    state = cortex_int_get_and_disable();
+
+    if (circ_buf->tail >= circ_buf->head) {
+        cnt = circ_buf->tail - circ_buf->head;
+    } else {
+        // We can't peek all the bytes in the circular buffer in this case.
+        cnt = circ_buf->size - circ_buf->head;
+    }
+    ret = circ_buf->buf + circ_buf->head;
+
+    cortex_int_restore(state);
+
+    if (size) {
+        *size = cnt;
+    }
+    return ret;
+}
+
+void circ_buf_pop_n(circ_buf_t *circ_buf, uint32_t n)
+{
+    cortex_int_state_t state;
+
+    state = cortex_int_get_and_disable();
+
+    if (circ_buf->tail >= circ_buf->head) {
+        util_assert(circ_buf->tail - circ_buf->head <= n);
+        circ_buf->head += n;
+    } else {
+        util_assert(circ_buf->tail + circ_buf->size - circ_buf->head <= n);
+        circ_buf->head += n;
+        if (circ_buf->head >= circ_buf->size) {
+            circ_buf->head -= circ_buf->size;
+        }
+    }
+
+    cortex_int_restore(state);
+}
