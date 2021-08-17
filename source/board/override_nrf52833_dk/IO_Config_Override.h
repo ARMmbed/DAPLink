@@ -81,6 +81,10 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52820);
 #define UART_TX_PIN NRF_GPIO_PIN_MAP(0, 30)
 #endif
 
+// I2C
+#define I2C_SCL_PIN  NRF_GPIO_PIN_MAP(0, 27)
+#define I2C_SDA_PIN  NRF_GPIO_PIN_MAP(0, 26)
+
 #else
 
 /* Use dynamic pin-mapping */
@@ -90,6 +94,8 @@ extern uint32_t uart_rx_pin;
 extern uint32_t sw_reset_pin;
 extern uint32_t led_usb_pin;
 extern uint32_t led_pwr_pin;
+extern uint32_t i2c_scl_pin;
+extern uint32_t i2c_sda_pin;
 
 // HID LED
 #define LED_HID           led_usb_pin
@@ -110,6 +116,9 @@ extern uint32_t led_pwr_pin;
 // UART
 #define UART_TX_PIN       uart_tx_pin
 #define UART_RX_PIN       uart_rx_pin
+// I2C
+#define I2C_SCL_PIN       i2c_scl_pin
+#define I2C_SDA_PIN       i2c_sda_pin
 
 /* Use defaults for nRF52820 */
 #define NRF52820_RESET_PIN   NRF_GPIO_PIN_MAP(0, 6)
@@ -130,6 +139,9 @@ extern uint32_t led_pwr_pin;
 #define NRF52833_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 29)  // From IMCU to target
 #define NRF52833_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 30)  // From target to IMCU
 #endif
+
+#define NRF52833_I2C_SCL_PIN NRF_GPIO_PIN_MAP(0, 27)
+#define NRF52833_I2C_SDA_PIN NRF_GPIO_PIN_MAP(0, 26)
 
 #endif
 

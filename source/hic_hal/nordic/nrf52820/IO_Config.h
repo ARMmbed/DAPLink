@@ -47,6 +47,8 @@ extern uint32_t uart_rx_pin;
 extern uint32_t sw_reset_pin;
 extern uint32_t led_usb_pin;
 extern uint32_t led_pwr_pin;
+extern uint32_t i2c_scl_pin;
+extern uint32_t i2c_sda_pin;
 
 // SWDCLK (Output)
 #define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 1)
@@ -83,16 +85,24 @@ extern uint32_t led_pwr_pin;
 #define UART_TX_PIN       uart_tx_pin
 #define UART_RX_PIN       uart_rx_pin
 
+// I2C
+#define I2C_SCL_PIN       i2c_scl_pin
+#define I2C_SDA_PIN       i2c_sda_pin
+
 #define NRF52820_RESET_PIN   NRF_GPIO_PIN_MAP(0, 6)
 #define NRF52820_USB_LED_PIN NRF_GPIO_PIN_MAP(0, 14)
 #define NRF52820_PWR_LED_PIN NRF_GPIO_PIN_MAP(0, 15)
 #define NRF52820_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 29) // From IMCU to target
 #define NRF52820_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 8)  // From target to IMCU
+#define NRF52820_I2C_SCL_PIN NRF_GPIO_PIN_MAP(0, 28)
+#define NRF52820_I2C_SDA_PIN NRF_GPIO_PIN_MAP(0, 30)
 
 #define NRF52833_RESET_PIN   NRF_GPIO_PIN_MAP(1, 9)
 #define NRF52833_USB_LED_PIN NRF_GPIO_PIN_MAP(0, 15)
 #define NRF52833_PWR_LED_PIN NRF_GPIO_PIN_MAP(0, 17)
 #define NRF52833_UART_TX_PIN NRF_GPIO_PIN_MAP(0, 2)  // From IMCU to target
 #define NRF52833_UART_RX_PIN NRF_GPIO_PIN_MAP(0, 3)  // From target to IMCU
+#define NRF52833_I2C_SCL_PIN NRF_GPIO_PIN_MAP(0, 29)
+#define NRF52833_I2C_SDA_PIN NRF_GPIO_PIN_MAP(0, 28)
 
 #endif

@@ -88,14 +88,14 @@ extern "C" {
  * @param irq_number IRQ number.
  * @param priority   Priority to be set.
  */
-#define NRFX_IRQ_PRIORITY_SET(irq_number, priority)
+#define NRFX_IRQ_PRIORITY_SET(irq_number, priority) NVIC_SetPriority(irq_number, priority)
 
 /**
  * @brief Macro for enabling a specific IRQ.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_ENABLE(irq_number)
+#define NRFX_IRQ_ENABLE(irq_number)                 NVIC_EnableIRQ(irq_number)
 
 /**
  * @brief Macro for checking if a specific IRQ is enabled.
@@ -105,28 +105,28 @@ extern "C" {
  * @retval true  If the IRQ is enabled.
  * @retval false Otherwise.
  */
-#define NRFX_IRQ_IS_ENABLED(irq_number)
+#define NRFX_IRQ_IS_ENABLED(irq_number)             NVIC_GetEnableIRQ(irq_number)
 
 /**
  * @brief Macro for disabling a specific IRQ.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_DISABLE(irq_number)
+#define NRFX_IRQ_DISABLE(irq_number)                NVIC_DisableIRQ(irq_number)
 
 /**
  * @brief Macro for setting a specific IRQ as pending.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_PENDING_SET(irq_number)
+#define NRFX_IRQ_PENDING_SET(irq_number)            NVIC_SetPendingIRQ(irq_number)
 
 /**
  * @brief Macro for clearing the pending status of a specific IRQ.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_PENDING_CLEAR(irq_number)
+#define NRFX_IRQ_PENDING_CLEAR(irq_number)          NVIC_ClearPendingIRQ(irq_number)
 
 /**
  * @brief Macro for checking the pending status of a specific IRQ.
@@ -134,7 +134,7 @@ extern "C" {
  * @retval true  If the IRQ is pending.
  * @retval false Otherwise.
  */
-#define NRFX_IRQ_IS_PENDING(irq_number)
+#define NRFX_IRQ_IS_PENDING(irq_number)             NVIC_GetPendingIRQ(irq_number)
 
 /** @brief Macro for entering into a critical section. */
 #define NRFX_CRITICAL_SECTION_ENTER()

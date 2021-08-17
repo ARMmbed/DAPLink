@@ -54,5 +54,16 @@
 #define RTE_USART0_RTS_PIN_NUM          0 /* N/A */
 //   </e>
 
+// <e> TWIS0 ( I2C compatible two-wire interface) [Driver_I2C0]
+// <i> Configuration settings for Driver_I2C0 in component ::CMSIS Driver:I2C
+#define RTE_TWIS0                       1
+
+//     <o.0..4> SCL Pin number
+#define RTE_TWIS0_SCL_PIN_NUM           I2C_SCL_PIN
+
+//     <o.0..4> SDA Pin number
+#define RTE_TWIS0_SDA_PIN_NUM           I2C_SDA_PIN
+// </e>
+
 
 #endif /* __RTE_DEVICE_H */

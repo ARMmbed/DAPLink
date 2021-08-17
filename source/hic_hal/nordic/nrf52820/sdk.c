@@ -31,6 +31,8 @@ uint32_t uart_rx_pin;
 uint32_t sw_reset_pin;
 uint32_t led_usb_pin;
 uint32_t led_pwr_pin;
+uint32_t i2c_scl_pin;
+uint32_t i2c_sda_pin;
 
 COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52833(NRF52833_RESET_PIN));
 COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52833(NRF52833_USB_LED_PIN));
@@ -65,6 +67,8 @@ void sdk_init()
         led_pwr_pin = NRF52833_PWR_LED_PIN;
         uart_tx_pin = NRF52833_UART_TX_PIN;
         uart_rx_pin = NRF52833_UART_RX_PIN;
+        i2c_scl_pin = NRF52833_I2C_SCL_PIN;
+        i2c_sda_pin = NRF52833_I2C_SDA_PIN;
     } else {
         // nRF52820
         sw_reset_pin = NRF52820_RESET_PIN;
@@ -72,6 +76,8 @@ void sdk_init()
         led_pwr_pin = NRF52820_PWR_LED_PIN;
         uart_tx_pin = NRF52820_UART_TX_PIN;
         uart_rx_pin = NRF52820_UART_RX_PIN;
+        i2c_scl_pin = NRF52820_I2C_SCL_PIN;
+        i2c_sda_pin = NRF52820_I2C_SDA_PIN;
     }
 #endif
 }
