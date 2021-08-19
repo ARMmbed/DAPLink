@@ -199,9 +199,6 @@ error_t flash_decoder_validate_target_image(flash_decoder_type_t type, const uin
             if (g_board_info.target_cfg) {
                 if (board_detect_incompatible_image(data, size)){
                     status = ERROR_FD_INCOMPATIBLE_IMAGE;
-                    flash_intf_target->init();
-                    flash_intf_target->erase_chip();
-                    flash_intf_target->uninit();
                 } else {
                     status = ERROR_SUCCESS;
                 }

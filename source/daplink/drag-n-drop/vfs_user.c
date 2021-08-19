@@ -355,7 +355,8 @@ static uint32_t read_file_details_txt(uint32_t sector_offset, uint8_t *data, uin
 {
     uint32_t size = 0;
 
-    if (sector_offset > 1) {
+    // Check that sector is valid depending on file_buffer size
+    if (sector_offset > (VFS_SECTOR_SIZE + BOARD_EXTRA_BUFFER - 1) / VFS_SECTOR_SIZE) {
         return 0;
     }
     
