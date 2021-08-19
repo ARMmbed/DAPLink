@@ -1053,7 +1053,12 @@ uint8_t swd_set_target_state_sw(target_state_t state)
             osDelay(2);
         
             // Power down
-            if (!swd_write_dp(DP_CTRL_STAT, 0x0)) {
+            // Per ADIv6 spec. Clear first CSYSPWRUPREQ followed by CDBGPWRUPREQ
+            if (!swd_read_dp(DP_CTRL_STAT, &val)) {
+                return 0;
+            }
+            
+            if (!swd_write_dp(DP_CTRL_STAT, val & ~CSYSPWRUPREQ)) {
                 return 0;
             }
             
@@ -1062,7 +1067,18 @@ uint8_t swd_set_target_state_sw(target_state_t state)
                 if (!swd_read_dp(DP_CTRL_STAT, &val)) {
                     return 0;
                 }
-            } while ((val & (CSYSPWRUPACK | CDBGPWRUPACK)) == 1);
+            } while ((val & (CSYSPWRUPACK)) == 1);
+            
+            if (!swd_write_dp(DP_CTRL_STAT, val & ~CDBGPWRUPREQ)) {
+                return 0;
+            }
+            
+            // Wait until ACK is deasserted
+            do {
+                if (!swd_read_dp(DP_CTRL_STAT, &val)) {
+                    return 0;
+                }
+            } while ((val & (CDBGPWRUPACK)) == 1);
         
             swd_off();
             break;
