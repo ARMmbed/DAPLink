@@ -111,9 +111,7 @@ uint32_t util_write_string(char *str, const char *data)
 }
 
 uint32_t util_write_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const uint8_t *input) {
-    uint32_t length = strlen(input);
-
-    return util_write_in_region(buf, size, start, pos, input, length);
+    return util_write_in_region(buf, size, start, pos, input, strlen(input));
 }
 
 uint32_t util_write_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const uint8_t *input, uint32_t length) {

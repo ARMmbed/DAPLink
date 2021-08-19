@@ -527,10 +527,10 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
 {
     uint32_t pos = 0;
 
-    pos += util_write_string_in_region(buf, size, start, pos, "# DAPLink Firmware - see https://mbed.com/daplink\r\n");
-    // Build ID
-    pos += util_write_string_in_region(buf, size, start, pos, "Build ID: " GIT_DESCRIPTION \
-        " (" COMPILER_DESCRIPTION LOCAL_MODS ")\r\n");
+    pos += util_write_string_in_region(buf, size, start, pos,
+        "# DAPLink Firmware - see https://mbed.com/daplink\r\n"
+        // Build ID
+        "Build ID: " GIT_DESCRIPTION " (" COMPILER_DESCRIPTION LOCAL_MODS ")\r\n");
     // Unique ID
     pos += expand_string_in_region(buf, size, start, pos, "Unique ID: @U\r\n");
     // HIC ID
@@ -567,22 +567,30 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
 #endif
 #endif
 
-    // Supported USB endpoints
-    pos += util_write_string_in_region(buf, size, start, pos, "USB Interfaces: "
+    pos += util_write_string_in_region(buf, size, start, pos,
+        // Full commit hash
+        "Git SHA: " GIT_COMMIT_SHA "\r\n"
+        // Local modifications when making the build
+#if GIT_LOCAL_MODS
+        "Local Mods: 1\r\n"
+#else
+        "Local Mods: 0\r\n"
+#endif
+        // Supported USB endpoints
+        "USB Interfaces: "
 #ifdef MSC_ENDPOINT
-      "MSD"
+        "MSD"
 #endif
 #ifdef CDC_ENDPOINT
-      ", CDC"
+        ", CDC"
 #endif
 #ifdef HID_ENDPOINT
-      ", HID"
+        ", HID"
 #endif
 #if (WEBUSB_INTERFACE)
-      ", WebUSB"
+        ", WebUSB"
 #endif
-      "\r\n"
-    );
+        "\r\n");
 
 #if DAPLINK_ROM_BL_SIZE != 0
     // CRC of the bootloader (if there is one)
