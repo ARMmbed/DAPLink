@@ -86,12 +86,14 @@ int32_t uart_initialize(void)
     clear_buffers();
 
     // alternate setting
-    UART_PORT->PCR[PIN_UART_RX_BIT] = PORT_PCR_MUX(PIN_UART_RX_MUX_ALT) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
+    UART_PORT->PCR[PIN_UART_RX_BIT] = PORT_PCR_MUX(PIN_UART_RX_MUX_ALT);
     UART_PORT->PCR[PIN_UART_TX_BIT] = PORT_PCR_MUX(PIN_UART_TX_MUX_ALT);
     // transmitter and receiver enabled
     UART->CTRL |= LPUART_CTRL_RE_MASK | LPUART_CTRL_TE_MASK;
     // Enable receiver interrupt and RX Overrun interrupt
     UART->CTRL |= LPUART_CTRL_RIE_MASK | LPUART_CTRL_ORIE_MASK;
+    
+    NVIC_SetPriority(UART_RX_TX_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
     NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
     NVIC_EnableIRQ(UART_RX_TX_IRQn);
     return 1;

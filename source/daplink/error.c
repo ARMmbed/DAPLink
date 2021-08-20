@@ -97,6 +97,8 @@ static const char *const error_message[] = {
     "The starting address for the interface update is wrong.",
     // ERROR_FD_UNSUPPORTED_UPDATE
     "The application file format is unknown and cannot be parsed and/or processed.",
+    // ERROR_FD_INCOMPATIBLE_IMAGE
+    "The application image is not compatible with the target.",
 
     /* Flash IAP interface */
 
@@ -196,6 +198,8 @@ static error_type_t error_type[] = {
     // ERROR_FD_INTF_UPDT_ADDR_WRONG
     ERROR_TYPE_USER,
     // ERROR_FD_UNSUPPORTED_UPDATE
+    ERROR_TYPE_USER,
+    // ERROR_FD_INCOMPATIBLE_IMAGE
     ERROR_TYPE_USER,
 
     /* Flash IAP interface */

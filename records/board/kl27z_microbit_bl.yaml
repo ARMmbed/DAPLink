@@ -1,0 +1,6 @@
+common:
+    macros:
+        - MICROBIT_LOCK_BOOTLOADER
+    sources:
+        board:
+            - source/board/kl27z_microbit_bl.c

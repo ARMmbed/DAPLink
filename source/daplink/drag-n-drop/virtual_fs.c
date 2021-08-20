@@ -114,7 +114,6 @@ static void write_dir(uint32_t offset, const uint8_t *data, uint32_t size);
 static void file_change_cb_stub(const vfs_filename_t filename, vfs_file_change_t change,
                                 vfs_file_t file, vfs_file_t new_file_data);
 static uint32_t cluster_to_sector(uint32_t cluster_idx);
-static bool filename_valid(const vfs_filename_t filename);
 static bool filename_character_valid(char character);
 
 // If sector size changes update comment below
@@ -684,7 +683,7 @@ static uint32_t cluster_to_sector(uint32_t cluster_idx)
     return sectors_before_data + (cluster_idx - 2) * mbr.sectors_per_cluster;
 }
 
-static bool filename_valid(const vfs_filename_t  filename)
+bool filename_valid(const vfs_filename_t  filename)
 {
     // Information on valid 8.3 filenames can be found in
     // the microsoft hardware whitepaper:

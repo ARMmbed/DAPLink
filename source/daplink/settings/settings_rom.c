@@ -44,13 +44,14 @@ typedef struct __attribute__((__packed__)) cfg_setting {
     uint8_t auto_rst;
     uint8_t automation_allowed;
     uint8_t overflow_detect;
+    uint8_t detect_incompatible_target;
 
     // Add new members here
 
 } cfg_setting_t;
 
 // Make sure FORMAT in generate_config.py is updated if size changes
-COMPILER_ASSERT(sizeof(cfg_setting_t) == 9);
+COMPILER_ASSERT(sizeof(cfg_setting_t) == 10);
 
 // Sector buffer must be as big or bigger than settings
 COMPILER_ASSERT(sizeof(cfg_setting_t) < SECTOR_BUFFER_SIZE);
@@ -70,6 +71,7 @@ static const cfg_setting_t config_default = {
     .auto_rst = 1,
     .automation_allowed = 1,
     .overflow_detect = 1,
+    .detect_incompatible_target = 0
 };
 
 // Buffer for data to flash
@@ -163,6 +165,12 @@ void config_set_overflow_detect(bool on)
     program_cfg(&config_rom_copy);
 }
 
+void config_set_detect_incompatible_target(bool on)
+{
+    config_rom_copy.detect_incompatible_target = on;
+    program_cfg(&config_rom_copy);
+}
+
 bool config_get_auto_rst()
 {
     return config_rom_copy.auto_rst;
@@ -176,4 +184,9 @@ bool config_get_automation_allowed(void)
 bool config_get_overflow_detect()
 {
     return config_rom_copy.overflow_detect;
+}
+
+bool config_get_detect_incompatible_target()
+{
+    return config_rom_copy.detect_incompatible_target;
 }

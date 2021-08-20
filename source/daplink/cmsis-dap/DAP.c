@@ -1775,8 +1775,6 @@ void DAP_Setup(void) {
 
   // Default settings
   DAP_Data.debug_port  = 0U;
-  DAP_Data.fast_clock  = 0U;
-  DAP_Data.clock_delay = CLOCK_DELAY(DAP_DEFAULT_SWJ_CLOCK);
   DAP_Data.transfer.idle_cycles = 0U;
   DAP_Data.transfer.retry_count = 100U;
   DAP_Data.transfer.match_retry = 0U;
@@ -1788,6 +1786,23 @@ void DAP_Setup(void) {
 #if (DAP_JTAG != 0)
   DAP_Data.jtag_dev.count = 0U;
 #endif
+
+  if (DAP_DEFAULT_SWJ_CLOCK >= MAX_SWJ_CLOCK(DELAY_FAST_CYCLES)) {
+    DAP_Data.fast_clock  = 1U;
+    DAP_Data.clock_delay = 1U;
+  } else {
+    DAP_Data.fast_clock  = 0U;
+
+    uint32_t delay = ((CPU_CLOCK/2U) + (DAP_DEFAULT_SWJ_CLOCK - 1U)) / DAP_DEFAULT_SWJ_CLOCK;
+    if (delay > IO_PORT_WRITE_CYCLES) {
+      delay -= IO_PORT_WRITE_CYCLES;
+      delay  = (delay + (DELAY_SLOW_CYCLES - 1U)) / DELAY_SLOW_CYCLES;
+    } else {
+      delay  = 1U;
+    }
+
+  DAP_Data.clock_delay = delay;
+  }
 
   DAP_SETUP();  // Device specific setup
 }

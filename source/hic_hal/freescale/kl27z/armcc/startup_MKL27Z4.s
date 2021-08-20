@@ -167,6 +167,16 @@ __Vectors_Size 	EQU     __Vectors_End - __Vectors
 ;     <o5>  Backdoor Comparison Key 5.  <0x0-0xFF:2>
 ;     <o6>  Backdoor Comparison Key 6.  <0x0-0xFF:2>
 ;     <o7>  Backdoor Comparison Key 7.  <0x0-0xFF:2>
+#if defined(MICROBIT_LOCK_BOOTLOADER)
+BackDoorK0      EQU     0x4D ; 'M'
+BackDoorK1      EQU     0x49 ; 'I'
+BackDoorK2      EQU     0x43 ; 'C'
+BackDoorK3      EQU     0x52 ; 'R'
+BackDoorK4      EQU     0x4F ; 'O'
+BackDoorK5      EQU     0x42 ; 'B'
+BackDoorK6      EQU     0x49 ; 'I'
+BackDoorK7      EQU     0x54 ; 'T'
+#else
 BackDoorK0      EQU     0xFF
 BackDoorK1      EQU     0xFF
 BackDoorK2      EQU     0xFF
@@ -175,41 +185,32 @@ BackDoorK4      EQU     0xFF
 BackDoorK5      EQU     0xFF
 BackDoorK6      EQU     0xFF
 BackDoorK7      EQU     0xFF
+#endif
 ;   </h>
 ;   <h> Program flash protection bytes (FPROT)
 ;     <i> Each program flash region can be protected from program and erase operation by setting the associated PROT bit.
 ;     <i> Each bit protects a 1/32 region of the program flash memory.
-;     <h> FPROT0
-;       <i> Program Flash Region Protect Register 0
+;     <h> FPROT3
+;       <i> Program Flash Region Protect Register 3
 ;       <i> 1/32 - 8/32 region
-;       <o.0>   FPROT0.0
-;       <o.1>   FPROT0.1
-;       <o.2>   FPROT0.2
-;       <o.3>   FPROT0.3
-;       <o.4>   FPROT0.4
-;       <o.5>   FPROT0.5
-;       <o.6>   FPROT0.6
-;       <o.7>   FPROT0.7
-nFPROT0         EQU     0x00
-FPROT0          EQU     nFPROT0:EOR:0xFF
-;     </h>
-;     <h> FPROT1
-;       <i> Program Flash Region Protect Register 1
-;       <i> 9/32 - 16/32 region
-;       <o.0>   FPROT1.0
-;       <o.1>   FPROT1.1
-;       <o.2>   FPROT1.2
-;       <o.3>   FPROT1.3
-;       <o.4>   FPROT1.4
-;       <o.5>   FPROT1.5
-;       <o.6>   FPROT1.6
-;       <o.7>   FPROT1.7
-nFPROT1         EQU     0x00
-FPROT1          EQU     nFPROT1:EOR:0xFF
+;       <o.0>   FPROT3.0
+;       <o.1>   FPROT3.1
+;       <o.2>   FPROT3.2
+;       <o.3>   FPROT3.3
+;       <o.4>   FPROT3.4
+;       <o.5>   FPROT3.5
+;       <o.6>   FPROT3.6
+;       <o.7>   FPROT3.7
+#if defined(MICROBIT_LOCK_BOOTLOADER)
+nFPROT3         EQU     0x0F ; Enable protection of the first 32 kB of flash
+#else
+nFPROT3         EQU     0x00
+#endif
+FPROT3          EQU     nFPROT3:EOR:0xFF
 ;     </h>
 ;     <h> FPROT2
 ;       <i> Program Flash Region Protect Register 2
-;       <i> 17/32 - 24/32 region
+;       <i> 9/32 - 16/32 region
 ;       <o.0>   FPROT2.0
 ;       <o.1>   FPROT2.1
 ;       <o.2>   FPROT2.2
@@ -221,43 +222,57 @@ FPROT1          EQU     nFPROT1:EOR:0xFF
 nFPROT2         EQU     0x00
 FPROT2          EQU     nFPROT2:EOR:0xFF
 ;     </h>
-;     <h> FPROT3
-;       <i> Program Flash Region Protect Register 3
+;     <h> FPROT1
+;       <i> Program Flash Region Protect Register 1
+;       <i> 17/32 - 24/32 region
+;       <o.0>   FPROT1.0
+;       <o.1>   FPROT1.1
+;       <o.2>   FPROT1.2
+;       <o.3>   FPROT1.3
+;       <o.4>   FPROT1.4
+;       <o.5>   FPROT1.5
+;       <o.6>   FPROT1.6
+;       <o.7>   FPROT1.7
+nFPROT1         EQU     0x00
+FPROT1          EQU     nFPROT1:EOR:0xFF
+;     </h>
+;     <h> FPROT0
+;       <i> Program Flash Region Protect Register 0
 ;       <i> 25/32 - 32/32 region
-;       <o.0>   FPROT3.0
-;       <o.1>   FPROT3.1
-;       <o.2>   FPROT3.2
-;       <o.3>   FPROT3.3
-;       <o.4>   FPROT3.4
-;       <o.5>   FPROT3.5
-;       <o.6>   FPROT3.6
-;       <o.7>   FPROT3.7
-nFPROT3         EQU     0x00
-FPROT3          EQU     nFPROT3:EOR:0xFF
+;       <o.0>   FPROT0.0
+;       <o.1>   FPROT0.1
+;       <o.2>   FPROT0.2
+;       <o.3>   FPROT0.3
+;       <o.4>   FPROT0.4
+;       <o.5>   FPROT0.5
+;       <o.6>   FPROT0.6
+;       <o.7>   FPROT0.7
+nFPROT0         EQU     0x00
+FPROT0          EQU     nFPROT0:EOR:0xFF
 ;     </h>
 ;   </h>
 ;   <h> Flash nonvolatile option byte (FOPT)
 ;     <i> Allows the user to customize the operation of the MCU at boot time.
 ;     <o.0> LPBOOT0
 ;       <0=> Core and system clock divider (OUTDIV1) is 0x7 (divide by 8) when LPBOOT1=0 or 0x1 (divide by 2) when LPBOOT1=1.
-;       <1=> Core and system clock divider (OUTDIV1) is 0x3 (divide by 4) when LPBOOT1=0 or 0x0 (divide by 1) when LPBOOT1=1.
+;     * <1=> Core and system clock divider (OUTDIV1) is 0x3 (divide by 4) when LPBOOT1=0 or 0x0 (divide by 1) when LPBOOT1=1.
 ;     <o.1> BOOTPIN_OPT
-;       <0=> Force Boot from ROM if BOOTCFG0 asserted, where BOOTCFG0 is the boot config function which is muxed with NMI pin
+;     * <0=> Force Boot from ROM if BOOTCFG0 asserted, where BOOTCFG0 is the boot config function which is muxed with NMI pin
 ;       <1=> Boot source configured by FOPT (BOOTSRC_SEL) bits
 ;     <o.2> NMI_DIS
-;       <0=> NMI interrupts are always blocked
+;     * <0=> NMI interrupts are always blocked
 ;       <1=> NMI_b pin/interrupts reset default to enabled
 ;     <o.3> RESET_PIN_CFG
 ;       <0=> RESET pin is disabled following a POR and cannot be enabled as reset function
-;       <1=> RESET_b pin is dedicated
+;     * <1=> RESET_b pin is dedicated
 ;     <o.4> LPBOOT1
 ;       <0=> Core and system clock divider (OUTDIV1) is 0x7 (divide by 8) when LPBOOT0=0 or 0x3 (divide by 4) when LPBOOT0=1.
-;       <1=> Core and system clock divider (OUTDIV1) is 0x1 (divide by 2) when LPBOOT0=0 or 0x0 (divide by 1) when LPBOOT0=1.
+;     * <1=> Core and system clock divider (OUTDIV1) is 0x1 (divide by 2) when LPBOOT0=0 or 0x0 (divide by 1) when LPBOOT0=1.
 ;     <o.5> FAST_INIT
 ;       <0=> Slower initialization
-;       <1=> Fast Initialization
+;     * <1=> Fast Initialization
 ;     <o.6..7> BOOTSRC_SEL
-;       <0=> Boot from Flash
+;     * <0=> Boot from Flash
 ;       <2=> Boot from ROM
 ;       <3=> Boot from ROM
 ;         <i> Boot source selection
@@ -267,21 +282,25 @@ FOPT          EQU     0x39
 ;     <i> WARNING: If SEC field is configured as "MCU security status is secure" and MEEN field is configured as "Mass erase is disabled",
 ;     <i> MCU's security status cannot be set back to unsecure state since Mass erase via the debugger is blocked !!!
 ;     <o.0..1> SEC
-;       <2=> MCU security status is unsecure
+;     * <2=> MCU security status is unsecure
 ;       <3=> MCU security status is secure
 ;         <i> Flash Security
 ;     <o.2..3> FSLACC
 ;       <2=> Freescale factory access denied
-;       <3=> Freescale factory access granted
+;     * <3=> Freescale factory access granted
 ;         <i> Freescale Failure Analysis Access Code
 ;     <o.4..5> MEEN
 ;       <2=> Mass erase is disabled
-;       <3=> Mass erase is enabled
+;     * <3=> Mass erase is enabled
 ;     <o.6..7> KEYEN
-;       <2=> Backdoor key access enabled
+;     * <2=> Backdoor key access enabled
 ;       <3=> Backdoor key access disabled
 ;         <i> Backdoor Key Security Enable
+#if defined(MICROBIT_LOCK_BOOTLOADER)
+FSEC          EQU     0xBE
+#else
 FSEC          EQU     0xFE
+#endif
 ;   </h>
 ; </h>
 
@@ -293,7 +312,7 @@ FSEC          EQU     0xFE
 
                 DCB     BackDoorK0, BackDoorK1, BackDoorK2, BackDoorK3
                 DCB     BackDoorK4, BackDoorK5, BackDoorK6, BackDoorK7
-                DCB     FPROT0    , FPROT1    , FPROT2    , FPROT3
+                DCB     FPROT3    , FPROT2    , FPROT1    , FPROT0
                 DCB     FSEC      , FOPT      , 0xFF      , 0xFF
 
                 AREA    |.text|, CODE, READONLY
@@ -339,6 +358,19 @@ SysTick_Handler\
                 EXPORT  SysTick_Handler         [WEAK]
                 B       .
                 ENDP
+I2C0_IRQHandler\
+                PROC
+                EXPORT  I2C0_IRQHandler         [WEAK]
+                LDR     R0, =I2C0_DriverIRQHandler
+                BX      R0
+                ENDP
+
+I2C1_IRQHandler\
+                PROC
+                EXPORT  I2C1_IRQHandler         [WEAK]
+                LDR     R0, =I2C1_DriverIRQHandler
+                BX      R0
+                ENDP
 Default_Handler\
                 PROC
                 EXPORT  DMA0_IRQHandler         [WEAK]
@@ -349,8 +381,8 @@ Default_Handler\
                 EXPORT  FTFA_IRQHandler         [WEAK]
                 EXPORT  PMC_IRQHandler         [WEAK]
                 EXPORT  LLWU_IRQHandler         [WEAK]
-                EXPORT  I2C0_IRQHandler         [WEAK]
-                EXPORT  I2C1_IRQHandler         [WEAK]
+                EXPORT  I2C0_DriverIRQHandler   [WEAK]
+                EXPORT  I2C1_DriverIRQHandler   [WEAK]
                 EXPORT  SPI0_IRQHandler         [WEAK]
                 EXPORT  SPI1_IRQHandler         [WEAK]
                 EXPORT  LPUART0_IRQHandler         [WEAK]
@@ -382,8 +414,8 @@ Reserved20_IRQHandler
 FTFA_IRQHandler
 PMC_IRQHandler
 LLWU_IRQHandler
-I2C0_IRQHandler
-I2C1_IRQHandler
+I2C0_DriverIRQHandler
+I2C1_DriverIRQHandler
 SPI0_IRQHandler
 SPI1_IRQHandler
 LPUART0_IRQHandler
