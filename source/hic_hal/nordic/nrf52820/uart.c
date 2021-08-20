@@ -45,9 +45,11 @@ circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
 
 struct {
+    // Number of bytes pending to be transferred. This is 0 if there is no
+    // ongoing transfer and the uart_handler processed the last transfer.
+    volatile uint32_t tx_size;
+
     uint8_t rx;
-    uint8_t tx;
-    uint8_t tx_active;
 } cb_buf;
 
 void uart_handler(uint32_t event);
@@ -61,6 +63,7 @@ void clear_buffers(void)
 int32_t uart_initialize(void)
 {
     clear_buffers();
+    cb_buf.tx_size = 0;
     Driver_USART0.Initialize(uart_handler);
     Driver_USART0.PowerControl(ARM_POWER_FULL);
 
@@ -70,8 +73,11 @@ int32_t uart_initialize(void)
 int32_t uart_uninitialize(void)
 {
     USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
+    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+    Driver_USART0.PowerControl(ARM_POWER_OFF);
     Driver_USART0.Uninitialize();
     clear_buffers();
+    cb_buf.tx_size = 0;
 
     return 1;
 }
@@ -153,6 +159,11 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
+
+    // If there was no Receive() call in progress aborting it is harmless.
+    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
+    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+
     uint32_t r = USART_INSTANCE.Control(control, config->Baudrate);
     if (r != ARM_DRIVER_OK) {
         return 0;
@@ -177,10 +188,42 @@ int32_t uart_write_free(void)
     return circ_buf_count_free(&write_buffer);
 }
 
+// Start a new TX transfer if there are bytes pending to be transferred on the
+// write_buffer buffer. The transferred bytes are not removed from the circular
+// by this function, only the event handler will remove them once the transfer
+// is done.
+static void uart_start_tx_transfer() {
+    uint32_t tx_size = 0;
+    const uint8_t* buf = circ_buf_peek(&write_buffer, &tx_size);
+    if (tx_size > BUFFER_SIZE / 4) {
+        // The bytes being transferred remain on the circular buffer memory
+        // until the transfer is done. Limiting the UART transfer size
+        // allows the uart_handler to clear those bytes earlier.
+        tx_size = BUFFER_SIZE / 4;
+    }
+    cb_buf.tx_size = tx_size;
+    if (tx_size) {
+        USART_INSTANCE.Send(buf, tx_size);
+    }
+}
+
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
+    if (size == 0) {
+        return 0;
+    }
+
     uint32_t cnt = circ_buf_write(&write_buffer, data, size);
-    NVIC_SetPendingIRQ(USART_IRQ);
+    if (cb_buf.tx_size == 0) {
+        // There's no pending transfer and the value of cb_buf.tx_size will not
+        // change to non-zero by the event handler once it is zero. Note that it
+        // is entirely possible that we transferred all the bytes we added to
+        // the circular buffer in this function by the time we are in this
+        // branch, in that case uart_start_tx_transfer() would not schedule any
+        // transfer.
+        uart_start_tx_transfer();
+    }
+
     return cnt;
 }
 
@@ -202,13 +245,8 @@ void uart_handler(uint32_t event) {
         USART_INSTANCE.Receive(&(cb_buf.rx), 1);
     }
 
-    if ((event & ARM_USART_EVENT_SEND_COMPLETE) || !cb_buf.tx_active) {
-        if (circ_buf_count_used(&write_buffer) > 0) {
-            cb_buf.tx_active = true;
-            cb_buf.tx = circ_buf_pop(&write_buffer);
-            USART_INSTANCE.Send(&(cb_buf.tx), 1);
-        } else {
-            cb_buf.tx_active = false;
-        }
+    if (event & ARM_USART_EVENT_SEND_COMPLETE) {
+        circ_buf_pop_n(&write_buffer, cb_buf.tx_size);
+        uart_start_tx_transfer();
     }
 }
