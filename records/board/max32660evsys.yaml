@@ -1,0 +1,6 @@
+common:
+    sources:
+        board:
+            - source/board/max32660evsys.c
+        family:
+            - source/family/maxim/max32660/target.c

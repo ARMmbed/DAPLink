@@ -667,6 +667,10 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
+    max32625_max32660evsys_if:
+        - *module_if
+        - *module_hic_max32625
+        - records/board/max32660evsys.yaml
     max32625_max32665hsp_if:
         - *module_if
         - *module_hic_max32625

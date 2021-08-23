@@ -130,6 +130,7 @@ PROJECT_RELEASE_INFO = {
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max32660evsys_if',                   False,      0x0000,     "bin"       ),
     ('max32625_max32665hsp_if',                     False,      0x0000,     "bin"       ),
     ('kl26z_if',                                    False,      0x0000,     "bin"       ),
     ('k20dx_if',                                    False,      0x0000,     "bin"       ),
@@ -195,6 +196,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0419,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32665hsp_if',                  'max32625_bl',      'MAX32665'                              ),
     (   0x0415,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
+    (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0453,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
@@ -362,6 +364,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0415,  # MAX32625MBED
     0x0418,  # MAX32620FTHR
     0x0419,  # MAX32665HSP
+    0x0421,  # MAX32660EVSYS
     0x0450,  # mtb_ublox_odin_w2
     0x0456,  # lpc11u35_mtb_murata_abz_078_if
     0x0457,  # lpc11u35_mtb_rak811_if
