@@ -24,7 +24,12 @@
 #include "cortex_m.h"
 
 #define MAIN_TASK_PRIORITY      (10)
+
+#ifndef MAIN_TASK_STACK
 #define MAIN_TASK_STACK         (800)
+#endif
+
+
 static uint64_t stk_main_task [MAIN_TASK_STACK / sizeof(uint64_t)];
 
 #define TIMER_TASK_30_PRIORITY  (11)
