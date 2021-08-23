@@ -21,7 +21,6 @@
 
 #include <string.h>
 #include <stdio.h>
-//#include "stm32wbxx.h"
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "main_interface.h"
@@ -39,6 +38,8 @@
 #include "sdk.h"
 #include "target_family.h"
 #include "target_board.h"
+
+#include "stm32wbxx_hal.h"
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "vfs_manager.h"
@@ -109,6 +110,52 @@ void __libc_init_array (void) {}
 #define MSC_LED_DEF GPIO_LED_OFF
 #endif
 
+ADC_HandleTypeDef hadc1;
+I2C_HandleTypeDef hi2c3;
+QSPI_HandleTypeDef hqspi;
+SPI_HandleTypeDef hspi2;
+USART_HandleTypeDef husart1;
+
+uint8_t Rx_Buf[8];
+uint8_t Receive_Buf[8];
+uint8_t Tx_Buf[1];
+uint8_t Tx_Buf1[1], Tx_Buf2[1], Tx_Buf3[1], Tx_Buf4[1], Tx_Buf5[1], Tx_Buf6[1], Tx_Buf7[1];
+int command, protocol, buf;
+int prot = 0;
+int buf1, buf2, buf3, buf4, buf5, buf6, buf7;
+int p=0;
+int k, l, m =0;
+
+int b[1] = {9};
+int a = 0;
+int n = 0;
+int d,e = 0;
+
+/* for SPI data transfer */
+uint8_t spiTxBuf[2], spiRxBuf[2];
+/* for USART data transfer */
+uint8_t message[4];
+/*for ADC data transfer */
+uint16_t raw;
+/* for I2C data transfer */
+static const uint8_t ADDR = 0x48 << 1; // Use 8-bit address
+static const uint8_t REG_TEMP = 0x00;
+uint8_t i2c_buf[12];
+uint8_t ret;
+/* for QSPI data transfer */
+uint8_t qspi_data;
+
+void protocol_bridging(void);
+static void MX_ADC1_Init(void);
+static void MX_I2C3_Init(void);
+static void MX_QUADSPI_Init(void);
+static void MX_USART1_Init(void);
+static void MX_SPI2_Init(void);
+static void SPI_Tx_Rx(void);
+static void I2C_Tx_Rx(void);
+static void USART_Tx_Rx(void);
+static void ADC_Tx_Rx(void);
+static void QSPI_Tx_Rx(void);
 
 // Reference to our main task
 osThreadId_t main_task_id;
@@ -246,7 +293,7 @@ void main_task(void * arg)
 #endif
     
 	// leds
-    //gpio_init(); //biby
+    gpio_init(); 
 		
 	// Turn to LED default settings	
     //gpio_set_hid_led(hid_led_value);
@@ -304,6 +351,12 @@ void main_task(void * arg)
     osTimerId_t tmr_id = osTimerNew(timer_task_30mS, osTimerPeriodic, NULL, NULL);
 #endif
     osTimerStart(tmr_id, 3);
+	
+	for(int i = 0; i < 8; i++)
+	{
+		Receive_Buf[i] = 0;
+	}
+	
     while (1) {
         flags = osThreadFlagsWait(FLAGS_MAIN_RESET             // Put target in reset state
                        | FLAGS_MAIN_90MS            // 90mS tick
@@ -396,7 +449,9 @@ void main_task(void * arg)
 		
                     break;
 
-                case USB_CONNECTED: 
+                case USB_CONNECTED: protocol_bridging();
+				
+					break;
 					
                 case USB_DISCONNECTED:
                 default:
@@ -515,43 +570,226 @@ void main_task(void * arg)
     }
 }
 
-// start biby
-HAL_StatusTypeDef Syam_HAL_Init(void)
+
+void protocol_bridging()
 {
-  HAL_StatusTypeDef  status = HAL_OK;
-  /* Configure Flash prefetch, Instruction cache, Data cache */
-  /* Default configuration at reset is:                      */
-  /* - Prefetch disabled                                     */
-  /* - Instruction cache enabled                             */
-  /* - Data cache enabled                                    */
-#if (INSTRUCTION_CACHE_ENABLE == 0U)
-   __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
-#endif /* INSTRUCTION_CACHE_ENABLE */
+	USBD_CDC_ACM_DataRead((uint8_t *)b, 1);
+	
+	if(b[0] != 9)
+	{	
+		Receive_Buf[e] = b[0];
+		e++;
+		b[0] = 9;
+		if(e == 8)
+		{
+			USBD_CDC_ACM_DataSend((uint8_t *)Receive_Buf, 8);
+			e = 0;	
+			a = 1;
+		}
+	}
+	
+	if(a == 1)
+	{
+		/** ASCII to Decimal conversion **/
+		for(int i=0; i<8; i++)
+		{
+			Rx_Buf[i] = Receive_Buf[i] - 48U;
+		}
+		
+		protocol = Rx_Buf[0];
+		
+		/** checking protocol **/
 
-#if (DATA_CACHE_ENABLE == 0U)
-   __HAL_FLASH_DATA_CACHE_DISABLE();
-#endif /* DATA_CACHE_ENABLE */
+		if(protocol == 0)
+		{
+			// SPI Protocol
+			
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);  //green led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);  //red led on
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off  
+			HAL_Delay(1000);
+			
+			buf1 = Rx_Buf[1];   /*mode*/
+			buf2 = Rx_Buf[2];   /*Baudrate prescaler*/
+			buf3 = Rx_Buf[3];   /*Data Size*/
+			buf4 = Rx_Buf[4];   /*CRC Check*/
+			buf5 = Rx_Buf[5];   /*CRC Length*/
+			buf6 = Rx_Buf[6];   /*TI mode*/
+			buf7 = Rx_Buf[7];   /*First Bit*/
+		
+			/** Decimal to ASCII conversion **/
+			Tx_Buf[0] = protocol + 48U;
+			Tx_Buf1[0] = buf1 + 48U;
+			Tx_Buf2[0] = buf2 + 48U;
+			Tx_Buf3[0] = buf3 + 48U;
+			Tx_Buf4[0] = buf4 + 48U;
+			Tx_Buf5[0] = buf5 + 48U;
+			Tx_Buf6[0] = buf6 + 48U;
+			Tx_Buf7[0] = buf7 + 48U;
+			
+			HAL_Delay(100);
+			MX_SPI2_Init();
+			SPI_Tx_Rx();
+			
+			buf1 = 0;
+			buf2 = 0;
+			buf3 = 0;
+			buf4 = 0;
+			buf5 = 0;
+			buf6 = 0;
+			buf7 = 0;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);  //red led off
+		} 
+		else if (protocol == 1)
+		{
+			// I2C Protocol
 
-#if (PREFETCH_ENABLE != 0U)
-  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
-#endif /* PREFETCH_ENABLE */
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);  //green led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);  //blue led on
+			HAL_Delay(1000);
+			
+			buf1 = Rx_Buf[1];   /*Addressing Mode*/
+			buf3 = Rx_Buf[2];   /*No Stretch Mode*/
+			buf3 = 0;
+			buf4 = 0;
+			buf5 = 0;
+			buf6 = 0;
+			buf7 = 0;
+			
+			/** Decimal to ASCII conversion **/
+			Tx_Buf1[0] = buf1 + 48U;
+			Tx_Buf2[0] = buf2 + 48U;
+			Tx_Buf2[0] = buf2 + 48U;
+			Tx_Buf3[0] = buf3 + 48U;
+			Tx_Buf4[0] = buf4 + 48U;
+			Tx_Buf5[0] = buf5 + 48U;
+			Tx_Buf6[0] = buf6 + 48U;
+			Tx_Buf7[0] = buf7 + 48U;
+			
+			HAL_Delay(100);
+			MX_I2C3_Init();
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
+			I2C_Tx_Rx();
+			buf1 = 0;
+			buf2 = 0;
+			buf3 = 0;
+			buf4 = 0;
+			buf5 = 0;
+			buf6 = 0;
+			buf7 = 0;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
+			
+		}
+		else if(protocol == 2)
+		{
+			// USART Protocol
 
-  /* Set Interrupt Group Priority */
-  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);  //green led on
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);  //blue led on
+			HAL_Delay(1000);
+			buf1 = Rx_Buf[1];   /*BaudRate*/
+			buf2 = Rx_Buf[2];   /*WordLength*/
+			buf3 = Rx_Buf[3];   /*StopBits*/
+			buf4 = Rx_Buf[4];   /*Parity*/
+			buf5 = Rx_Buf[5];   /*Mode*/
+			
+			/** Decimal to ASCII conversion **/
+			Tx_Buf1[0] = buf1 + 48U;
+			Tx_Buf2[0] = buf2 + 48U;
+			Tx_Buf3[0] = buf3 + 48U;
+			Tx_Buf4[0] = buf4 + 48U;
+			Tx_Buf5[0] = buf5 + 48U;
+
+			HAL_Delay(100);
+			MX_USART1_Init();
+			USART_Tx_Rx();
+			buf1 = 0;
+			buf2 = 0;
+			buf3 = 0;
+			buf4 = 0;
+			buf5 = 0;
+			buf6 = 0;
+			buf7 = 0;
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);  //green led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
+		}
+		else if(protocol == 3)
+		{
+			// ADC Protocol
+
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);  //green led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);   //red led on
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);  //blue led on
+			HAL_Delay(1000);
+			buf1 = Rx_Buf[1];   /*ClockPrescaler*/
+			buf2 = Rx_Buf[2];   /*Channel*/
+			buf3 = Rx_Buf[3];   /*Sampling Time*/
+			buf4 = Rx_Buf[4];   /*Data Align*/
+			buf5 = Rx_Buf[5];   /*Overrun*/
+
+			/** Decimal to ASCII conversion **/
+			Tx_Buf1[0] = buf1 + 48U;
+			Tx_Buf2[0] = buf2 + 48U;
+			Tx_Buf3[0] = buf3 + 48U;
+			Tx_Buf4[0] = buf4 + 48U;
+			Tx_Buf5[0] = buf5 + 48U;
+			Tx_Buf6[0] = buf6 + 48U;
+
+			HAL_Delay(100);
+			MX_ADC1_Init();
+			ADC_Tx_Rx();
+			buf1 = 0;
+			buf2 = 0;
+			buf3 = 0;
+			buf4 = 0;
+			buf5 = 0;
+			buf6 = 0;
+			buf7 = 0;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
+		}
+		else if(protocol == 4)
+		{
+			// QSPI Protocol
+
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);  //green led on
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);   //red led on
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
+			HAL_Delay(1000);
+			buf1 = Rx_Buf[1];   /*Sample Shifting*/
+			buf2 = Rx_Buf[2];   /*ChipSelectHighTime*/
+			buf3 = Rx_Buf[3];   /*Clock Mode*/
+
+			/** Decimal to ASCII conversion **/
+			Tx_Buf1[0] = buf1 + 48U;
+			Tx_Buf2[0] = buf2 + 48U;
+			Tx_Buf3[0] = buf3 + 48U;
+
+			HAL_Delay(100);
+			MX_QUADSPI_Init();
+			QSPI_Tx_Rx();
+			buf1 = 0;
+			buf2 = 0;
+			buf3 = 0;
+			buf4 = 0;
+			buf5 = 0;
+			buf6 = 0;
+			buf7 = 0;
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);  //green led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET); //red led off
+		}
+		a = 0;
+	}
+}
   
-  /* Use SysTick as time base source and configure 1ms tick (default clock after Reset is MSI) */
-  if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
-  {
-    status = HAL_ERROR;
-  }
-  else
-  {
-    /* Init the low level hardware */
-    HAL_MspInit();
-  }
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
 
-  /* Return function status */
-  return status;
+  /* USER CODE END Error_Handler_Debug */
 }
 
 void SystemClock_Config(void)
@@ -625,139 +863,696 @@ void SystemClock_Config(void)
   */
   HAL_RCCEx_EnableMSIPLLMode();
 }
-
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_3, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11
-                          |GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_5, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_6
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10, GPIO_PIN_RESET);
-						  
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13|GPIO_PIN_15, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);   
-
-  /*Configure GPIO pins : PC13 PC15 PC0 PC3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PC14 PC1 PC2 PC4
-                           PC5 PC6 PC10 PC11
-                           PC12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_4
-                          |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_10|GPIO_PIN_11
-                          |GPIO_PIN_12;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PH3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PB8 PB9 PB10 PB11
-                           PB14 PB15 PB5 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11
-                          |GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA0 PA4 PA5 PA13
-                           PA14 PA15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_13
-                          |GPIO_PIN_14|GPIO_PIN_15;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA1 PA2 PA3 PA6
-                           PA7 PA8 PA9 PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_6
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PB2 PB0 PB1 PB12
-                           PB13 PB3 PB4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_12
-                          |GPIO_PIN_13|GPIO_PIN_3|GPIO_PIN_4;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PE4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PD0 PD1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-}
-
-// void MX_USB_Device_Init(void)
-// {
-  // /* USER CODE BEGIN USB_Device_Init_PreTreatment */
-
-  // /* USER CODE END USB_Device_Init_PreTreatment */
-
-  // /* Init Device Library, add supported class and start the library. */
-  // if (USBD_Init(&hUsbDeviceFS, &CDC_Desc, DEVICE_FS) != USBD_OK) {
-    // //Error_Handler();
-  // }
-  // if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC) != USBD_OK) {
-    // //Error_Handler();
-  // }
-  // if (USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS) != USBD_OK) {
-    // //Error_Handler();
-  // }
-  // if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
-    // //Error_Handler();
-  // }
-  // /* USER CODE BEGIN USB_Device_Init_PostTreatment */
-
-  // /* USER CODE END USB_Device_Init_PostTreatment */
-// }
-
-
-
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-
-  /* USER CODE END Error_Handler_Debug */
-}
 //end biby
+
+static void MX_SPI2_Init(void)
+{
+
+  /* USER CODE BEGIN SPI2_Init 0 */
+
+	/*** mode selection ***/
+	if (buf1 == 0)
+	{
+		hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+		hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+	}
+	else if (buf1 == 1)
+	{
+		hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+		hspi2.Init.CLKPhase = SPI_PHASE_2EDGE;
+	}
+	else if (buf1 == 2)
+	{
+		hspi2.Init.CLKPolarity = SPI_POLARITY_HIGH;
+		hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+	}
+	else if (buf1 == 3)
+	{
+		hspi2.Init.CLKPolarity = SPI_POLARITY_HIGH;
+		hspi2.Init.CLKPhase = SPI_PHASE_2EDGE;
+	}
+	else
+	{
+		hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+		hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+	}
+
+  /* USER CODE END SPI2_Init 0 */
+
+  /* USER CODE BEGIN SPI2_Init 1 */
+  
+	/*** baudrate prescaler selection ***/
+	if (buf2 == 0)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+	}
+	else if (buf2 == 1)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+	}
+	else if (buf2 == 2)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+	}
+	else if (buf2 == 3)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+	}
+	else if (buf2 == 4)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+	}
+	else if (buf2 == 5)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+	}
+	else if (buf2 == 6)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+	}
+	else if (buf2 == 7)
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+	}
+	else
+	{
+		hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+	}
+
+	/*** datasize selection ***/
+	if (buf3 == 0)
+	{
+		hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+	}
+	else if (buf3  == 1)
+	{
+		hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
+	}
+	else
+	{
+		hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+	}
+
+	/*** CRC enable/disable ***/
+	if (buf4 == 0)
+	{
+		hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	}
+	else if (buf4 == 1)
+	{
+		hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_ENABLE;
+	}
+	else
+	{
+		hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	}
+
+	/*** CRCLength ***/
+	if (buf5 == 0)
+	{
+		hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+	}
+	else if (buf5 == 1)
+	{
+		hspi2.Init.CRCLength = SPI_CRC_LENGTH_8BIT;
+	}
+	else if (buf5 == 2)
+	{
+		hspi2.Init.CRCLength = SPI_CRC_LENGTH_16BIT;
+	}
+	else
+	{
+		hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+	}
+
+	/*** TI Mode ***/
+	if (buf6 == 0)
+	{
+		hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+	}
+	else if (buf6 == 1)
+	{
+		hspi2.Init.TIMode = SPI_TIMODE_ENABLE;
+	}
+	else
+	{
+		hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+	}
+
+	/** First Bit ***/
+	if (buf7 == 0)
+	{
+		hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	}
+	else if (buf7 == 1)
+	{
+		hspi2.Init.FirstBit = SPI_FIRSTBIT_LSB;
+	}
+	else
+	{
+		hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	}
+
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.NSS = SPI_NSS_HARD_INPUT;
+  hspi2.Init.CRCPolynomial = 7;
+  hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI2_Init 2 */
+
+  /* USER CODE END SPI2_Init 2 */
+
+}
+
+static void MX_I2C3_Init(void)
+{
+
+	/* USER CODE BEGIN I2C1_Init 0 */
+
+	/*** AddressingMode ***/
+	if (buf1 == 0)
+	{
+		hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	}
+	else if (buf1 == 1)
+	{
+		hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_10BIT;
+	}
+	else
+	{
+		hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	}
+
+	/* USER CODE END I2C1_Init 0 */
+
+	/* USER CODE BEGIN I2C1_Init 1 */
+
+	/*** No Stretch Mode ***/
+	if (buf2 == 0)
+	{
+		hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	}
+	else if (buf2 == 1)
+	{
+		hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+	}
+	else
+	{
+		hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	}
+
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.Timing = 0x10707DBC;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c3, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c3, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C3_Init 2 */
+
+  /* USER CODE END I2C3_Init 2 */
+
+}
+
+static void MX_USART1_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+	/*** Baud Rate ***/
+	if (buf1 == 0)
+	{
+		husart1.Init.BaudRate = 38400;
+	}
+	else if (buf1 == 1)
+	{
+		husart1.Init.BaudRate = 9600;
+	}
+	else if (buf1 == 2)
+	{
+		husart1.Init.BaudRate = 115200;
+	}
+	else
+	{
+		husart1.Init.BaudRate = 115200;
+	}
+
+	/*** WordLength ***/
+	if (buf2 == 0)
+	{
+		husart1.Init.WordLength = USART_WORDLENGTH_8B;
+	}
+	else if (buf2 == 1)
+	{
+		husart1.Init.WordLength = USART_WORDLENGTH_9B;
+	}
+	else
+	{
+		husart1.Init.WordLength = USART_WORDLENGTH_8B;
+	}
+
+	/*** StopBits ***/
+	if (buf3 == 0)
+	{
+		husart1.Init.StopBits = USART_STOPBITS_0_5;
+	}
+	else if (buf3 == 1)
+	{
+		husart1.Init.StopBits = USART_STOPBITS_1;
+	}
+	else if (buf3 == 2)
+	{
+		husart1.Init.StopBits = USART_STOPBITS_1_5;
+	}
+	else if (buf3 == 3)
+	{
+		husart1.Init.StopBits = USART_STOPBITS_2;
+	}
+	else
+	{
+		husart1.Init.StopBits = USART_STOPBITS_1;
+	}
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+	/*** Parity ***/
+	if (buf4 == 0)
+	{
+		husart1.Init.Parity = USART_PARITY_NONE;
+	}
+	else if (buf4 == 1)
+	{
+		husart1.Init.Parity = USART_PARITY_EVEN;
+	}
+	else if (buf4 == 2)
+	{
+		husart1.Init.Parity = USART_PARITY_ODD;
+	}
+	else
+	{
+		husart1.Init.Parity = USART_PARITY_NONE;
+	}
+
+	/*** Mode ***/
+	if (buf5 == 0)
+	{
+		husart1.Init.Mode = USART_MODE_RX;
+	}
+	else if (buf5 == 1)
+	{
+		husart1.Init.Mode = USART_MODE_TX;
+	}
+	else if (buf5 == 2)
+	{
+		husart1.Init.Mode = USART_MODE_TX_RX;
+	}
+	else
+	{
+		husart1.Init.Mode = USART_MODE_TX_RX;
+	}
+
+  /* USER CODE END USART1_Init 1 */
+  husart1.Instance = USART1;
+  husart1.Init.CLKPolarity = USART_POLARITY_LOW;
+  husart1.Init.CLKPhase = USART_PHASE_1EDGE;
+  husart1.Init.CLKLastBit = USART_LASTBIT_DISABLE;
+  husart1.Init.ClockPrescaler = USART_PRESCALER_DIV1;
+  husart1.SlaveMode = USART_SLAVEMODE_DISABLE;
+  if (HAL_USART_Init(&husart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_USARTEx_SetTxFifoThreshold(&husart1, USART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_USARTEx_SetRxFifoThreshold(&husart1, USART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_USARTEx_DisableFifoMode(&husart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+
+}
+
+static void MX_ADC1_Init(void)
+{
+  /* USER CODE BEGIN ADC1_Init 0 */
+  
+    ADC_ChannelConfTypeDef sConfig = {0};
+	
+	/*** Clock Prescaler ***/
+	if (buf1 == 0)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;
+	}
+	else if (buf1 == 1)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+	}
+	else if (buf1 == 2)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
+	}
+	else if (buf1 == 3)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
+	}
+	else if (buf1 == 4)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV8;
+	}
+	else if (buf1 == 5)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV16;
+	}
+	else if (buf1 == 6)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV32;
+	}
+	else if (buf1 == 7)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV64;
+	}
+	else if (buf1 == 8)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV128;
+	}
+	else if (buf1 == 9)
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV256;
+	}
+	else
+	{
+		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+	}
+
+	/*** Channel ***/
+	if (buf2 == 0)
+	{
+		sConfig.Channel = ADC_CHANNEL_0;
+	}
+	else if (buf2 == 1)
+	{
+		sConfig.Channel = ADC_CHANNEL_1;
+	}
+	else if (buf2 == 2)
+	{
+		sConfig.Channel = ADC_CHANNEL_2;
+	}
+	else if (buf2 == 3)
+	{
+		sConfig.Channel = ADC_CHANNEL_3;
+	}
+	else if (buf2 == 4)
+	{
+		sConfig.Channel = ADC_CHANNEL_4;
+	}
+	else
+	{
+		sConfig.Channel = ADC_CHANNEL_4;
+	}
+	
+	/*** Sampling Time ***/
+	if (buf3 == 0)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+	}
+	else if (buf3 == 1)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_6CYCLES_5;
+	}
+	else if (buf3 == 2)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_12CYCLES_5;
+	}
+	else if (buf3 == 3)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_24CYCLES_5;
+	}
+	else if (buf3 == 4)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
+	}
+	else if (buf3 == 5)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_92CYCLES_5;
+	}
+	else if (buf3 == 6)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+	}
+	else if (buf3 == 7)
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
+	}
+	else
+	{
+		sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+	}
+  /* USER CODE END ADC1_Init 0 */
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+ 	/*** Data Align ***/
+	if (buf4 == 0)
+	{
+		hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+	}
+	else if (buf4 == 1)
+	{
+		hadc1.Init.DataAlign = ADC_DATAALIGN_LEFT;
+	}
+	else
+	{
+		hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+	}
+
+	/*** Over run ***/
+	if (buf5 == 0)
+	{
+		hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+	}
+	else if (buf5 == 1)
+	{
+		hadc1.Init.Overrun =  ADC_OVR_DATA_OVERWRITTEN;
+	}
+	else
+	{
+		hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+	}
+
+  /* USER CODE END ADC1_Init 1 */
+  /** Common config
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.LowPowerAutoWait = DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Regular Channel
+  */
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
+}
+
+static void MX_QUADSPI_Init(void)
+{
+
+  /* USER CODE BEGIN QUADSPI_Init 0 */
+  /*** Sample Shifting ***/
+	if (buf1 == 0)
+	{
+		hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
+	}
+	else if (buf1 == 1)
+	{
+		hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_HALFCYCLE;
+	}
+	else
+	{
+		hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
+	}
+
+  /* USER CODE END QUADSPI_Init 0 */
+
+  /* USER CODE BEGIN QUADSPI_Init 1 */
+  /*** Chip Select High Time ***/
+	if (buf2 == 0)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_1_CYCLE;
+	}
+	else if (buf2 == 1)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_2_CYCLE;
+	}
+	else if (buf2 == 2)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_3_CYCLE;
+	}
+	else if (buf2 == 3)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_4_CYCLE;
+	}
+	else if (buf2 == 4)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_5_CYCLE;
+	}
+	else if (buf2 == 5)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_6_CYCLE;
+	}
+	else if (buf2 == 6)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_7_CYCLE;
+	}
+	else if (buf2 == 7)
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_8_CYCLE;
+	}
+	else
+	{
+		hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_1_CYCLE;
+	}
+
+	/*** Clock Mode ***/
+	if (buf3 == 0)
+	{
+		hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
+	}
+	else if (buf3 == 1)
+	{
+		hqspi.Init.ClockMode = QSPI_CLOCK_MODE_3;
+	}
+	else
+	{
+		hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
+	}
+
+  /* USER CODE END QUADSPI_Init 1 */
+  /* QUADSPI parameter configuration*/
+  hqspi.Instance = QUADSPI;
+  hqspi.Init.ClockPrescaler = 255;
+  hqspi.Init.FifoThreshold = 1;
+  hqspi.Init.FlashSize = 1;
+  if (HAL_QSPI_Init(&hqspi) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN QUADSPI_Init 2 */
+
+  /* USER CODE END QUADSPI_Init 2 */
+
+}
+
+static void SPI_Tx_Rx(void)
+{
+	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
+	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+	
+	/*** SPI Transmit ***/
+	// 1. Bring slave select low
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+	// 2. Transmit register + data
+	spiTxBuf[0] = 0x20;
+	spiTxBuf[1] = 0x11;
+	HAL_SPI_Transmit(&hspi2, spiTxBuf, 2, 50);
+	// 3. Bring slave select high
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+
+	/*** SPI Receive ***/
+	// 1. Bring slave select low
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+	// 2. Transmit register + 0x80 (to set MSB bit to high, read mode)
+	spiTxBuf[0] = 0x20|0x80;
+	HAL_SPI_Transmit(&hspi2, spiTxBuf, 1, 50);
+	// 3. Receive data
+	HAL_SPI_Receive(&hspi2, spiTxBuf, 1, 50);
+	// 4. Bring slave select high
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+	// end of SPI
+}
+
+static void I2C_Tx_Rx(void)
+{
+	// i2c_buf[0] = REG_TEMP;
+	// ret = HAL_I2C_Master_Transmit(&hi2c3, ADDR, i2c_buf, 1, 200);
+	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);  //green led on
+	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
+	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
+	// ret = HAL_I2C_Master_Receive(&hi2c3, ADDR, i2c_buf, 2, 200);
+	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);   //green led off
+	// HAL_Delay(1000);
+}
+
+static void ADC_Tx_Rx(void)
+{
+	// HAL_ADC_Start(&hadc1);
+	// HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+	// raw = HAL_ADC_GetValue(&hadc1);
+}
+
+static void USART_Tx_Rx(void)
+{
+	// HAL_USART_Receive(&husart1, message, sizeof(message), HAL_MAX_DELAY);
+	// HAL_USART_Transmit(&husart1, message, sizeof(message), HAL_MAX_DELAY);
+}
+
+static void QSPI_Tx_Rx(void)
+{
+	// HAL_QSPI_Receive(&hqspi, qspi_data, HAL_MAX_DELAY);
+	// HAL_QSPI_Transmit(&hqspi, qspi_data, HAL_MAX_DELAY);
+}
 
 int main(void)
 {
@@ -766,26 +1561,7 @@ int main(void)
     SCB->VTOR = SCB_VTOR_TBLOFF_Msk & DAPLINK_ROM_IF_START;
 #endif
     // initialize vendor sdk
-	
-	Syam_HAL_Init(); //biby
 	SystemClock_Config(); //biby
-	gpio_init(); //biby
-	
-	
-	//HAL_NVIC_SetPriority(USB_LP_IRQn, 0, 0);
-    // HAL_NVIC_EnableIRQ(USB_LP_IRQn);
-	// GPIO_InitTypeDef GPIO_InitStructure;
-	// __HAL_RCC_GPIOC_CLK_ENABLE(); 
-    // GPIO_InitStructure.Pin = RUNNING_LED_PIN;
-    // GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    // GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-    // HAL_GPIO_Init(RUNNING_LED_PORT, &GPIO_InitStructure);
-	// HAL_GPIO_WritePin(RUNNING_LED_PORT, RUNNING_LED_PIN, GPIO_PIN_RESET);  //blue led
-	
-    //MX_GPIO_Init(); //biby
-	// MX_USB_Device_Init(); //biby
-	// while(1);
-	
 	//sdk_init();
 	
 	
@@ -796,7 +1572,7 @@ int main(void)
     main_task_id = osThreadNew(main_task, NULL, &k_main_thread_attr);
 #else
     osThreadNew(main_task, NULL, NULL);
-#endif	
+#endif
     // Start thread execution
     osKernelStart();
 
