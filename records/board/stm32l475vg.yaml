@@ -1,4 +1,6 @@
 common:
+    macros:
+        - USB_PROD_STR="STM32L475 CMSIS-DAP"
     sources:
         board:
             - source/board/stm32l475vg.c
