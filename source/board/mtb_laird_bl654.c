@@ -22,12 +22,12 @@
 #include "target_board.h"
 #include "target_family.h"
 
-extern target_cfg_t target_device_nrf52840_256;
+extern target_cfg_t target_device_nrf52840;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0465",
     .family_id = kNordic_Nrf52_FamilyID,
-    .target_cfg = &target_device_nrf52840_256,
+    .target_cfg = &target_device_nrf52840,
 };
 
