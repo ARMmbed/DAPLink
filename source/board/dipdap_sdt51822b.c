@@ -18,14 +18,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "target_board.h"
 #include "target_family.h"
+
+extern target_cfg_t target_device_nrf51822_32;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "3103",
     .family_id = kNordic_Nrf51_FamilyID,
     .flags = kEnablePageErase,
-    .target_cfg = &target_device,
+    .target_cfg = &target_device_nrf51822_32,
 };
