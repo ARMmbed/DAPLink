@@ -16,18 +16,18 @@ common:
         board:
             - source/board/myboardname.c
         family:
-            - source/family/nordic/nrf51822/target_16.c
+            - source/family/nordic/nrf51822/target_nrf51.c
             - source/family/nordic/target_reset_nrf51.c
 ```
 
 This assumes there is already target support present in the codebase. If adding a new target family is needed, additional steps in [Porting target family guide](PORT_TARGET_FAMILY.md) will be needed. If the target support exists `source/board/myboardname.c` needs creation with a BOARD ID. If you're developing a custom or non-official Mbed platform, then can use any BOARD ID and the `mbedls` [mocking feature](https://github.com/ARMmbed/mbed-os-tools/blob/master/packages/mbed-ls/README.md#mocking-renaming-platforms).
 ```c
 /**
- * @file   myboard.c
+ * @file   myboardname.c
  * @brief   board_info api for my board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -46,34 +46,36 @@ This assumes there is already target support present in the codebase. If adding 
 #include "target_family.h"
 #include "target_board.h"
 
+extern target_cfg_t target_device_nrf51822_16;
+
 const board_info_t g_board_info = {
     .board_id = "0x240",
     .family_id = kStub_HWReset_FamilyID,
     .flags = kEnablePageErase|kEnableUnderResetConnect,
-    .target_cfg = &target_device,
+    .target_cfg = &target_device_nrf51822_16,
 };
 ```
 The complete fields of board_info api with description is in `source/target/target_board.h`.
 ```c
-// Flags for board_info 
-enum { 
+// Flags for board_info
+enum {
     kEnablePageErase = 1,               /*!< Enable page programming and sector erase for drag and drop */
     kEnableUnderResetConnect = 1<<1,    /*!< Enable under reset connection when enabling debug mode */
 };
 
-typedef struct __attribute__((__packed__)) board_info { 
-    uint16_t infoVersion;               /*!< Version number of the board */ 
-    uint16_t family_id;                 /*!< Use to select target family from defined target family ids */ 
+typedef struct __attribute__((__packed__)) board_info {
+    uint16_t infoVersion;               /*!< Version number of the board */
+    uint16_t family_id;                 /*!< Use to select target family from defined target family ids */
     char board_id[5];                   /*!< 4-char board ID plus null terminator */
-    uint8_t _padding[3]; 
+    uint8_t _padding[3];
     uint32_t flags;                     /*!< Combination of kEnablePageErase and kEnableUnderResetConnect */
-    target_cfg_t *target_cfg;           /*!< Specific chip configuration for the target and enables MSD when non-NULL */ 
-     
-    // fields used by MSD 
+    target_cfg_t *target_cfg;           /*!< Specific chip configuration for the target and enables MSD when non-NULL */
+
+    // fields used by MSD
     vfs_filename_t daplink_url_name;    /*!< Customize the URL file name */
     vfs_filename_t daplink_drive_name;  /*!< Customize the MSD DAPLink drive name */
     char daplink_target_url[64];        /*!< Customize the target url in DETAILS.TXT */
-    
+
     // some specific board initilization
     void (*prerun_board_config)(void);                      /*!< Specific board debug/ID related initialization */
     void (*swd_set_target_reset)(uint8_t asserted);         /*!< Boards can customize how to send reset to the target precedence over target family */
@@ -99,7 +101,7 @@ Configration Fields
 * Firmware - The name of the firmware as shown in projects.yaml.
 * Bootloader - The name of the bootloader firmware as shown in projects.yaml. Only required on HICs with a DAPLink bootloader.
 * Target - Name of the target for this board.
-    * If this is an mbed official board then the target should match the name in the mbed platform page URL. For example the K64F is located at https://developer.mbed.org/platforms/FRDM-K64F/ so it would have the target name `FRDM-K64F`. Using this naming convention allows the automated tests to use the RESTful Compile API. the automated tests will build the target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the resulting image to the target. 
+    * If this is an mbed official board then the target should match the name in the mbed platform page URL. For example the K64F is located at https://developer.mbed.org/platforms/FRDM-K64F/ so it would have the target name `FRDM-K64F`. Using this naming convention allows the automated tests to use the RESTful Compile API. the automated tests will build the target UART application on-the-fly in the cloud using the RESTful Compile API, download it to the PC, then download the resulting image to the target.
     * If it is not, you will need to build the UART application yourself and supply it to `test/run_tests.py` via --targetdir. In this case, the target is the application image filename sans extension.
 
 You may need to update one or more other dictionaries. See comments in the code for guidance.

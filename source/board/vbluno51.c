@@ -28,11 +28,13 @@ static void vbluno_prerun_board_config()
     uart_enable_flow_control(false);
 }
 
+extern target_cfg_t target_device_nrf51822_32;
+
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "C006",
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_target_url = "https://os.mbed.com/platforms/VBLUNO51/",
     .prerun_board_config = vbluno_prerun_board_config,
-    .target_cfg = &target_device,
+    .target_cfg = &target_device_nrf51822_32,
 };
