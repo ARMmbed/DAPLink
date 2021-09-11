@@ -7,6 +7,7 @@ common:
         board:
             - source/board/mkit_dk_dongle_nrf5x.c
         family:
-            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/nrf51822/target_nrf51.c
+            - source/family/nordic/nrf52/target.c
             - source/family/nordic/target_reset_nrf51.c
             - source/family/nordic/target_reset_nrf52.c

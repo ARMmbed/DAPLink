@@ -7,5 +7,5 @@ common:
         board:
             - source/board/96b_nitrogen.c
         family:
-            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/nrf52/target.c
             - source/family/nordic/target_reset_nrf52.c

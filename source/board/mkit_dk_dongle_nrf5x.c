@@ -1,9 +1,9 @@
 /**
- * @file    nrf5x.c
+ * @file    mkit_dk_dongle_nrf5x.c
  * @brief   board ID for the Nordic nRF5x developments boards
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -34,24 +34,26 @@ const char *board_id_nrf51_dongle = "1120";
 const char *board_id_nrf52_dk = "1101";
 const char *board_id_nrf52840_dk = "1102";
 
-extern target_cfg_t target_device_nrf52;
+extern target_cfg_t target_device_nrf51822_16;
+extern target_cfg_t target_device_nrf51822_32;
+extern target_cfg_t target_device_nrf52_64;
 extern target_cfg_t target_device_nrf52840;
+target_cfg_t target_device;
 static uint8_t device_type;
 
 static void set_target_device(uint32_t device)
 {
     device_type = device;
     if (device == 0) {
-        // Target device already set to nRF51
-    }
-    else if (device == 1) {
-        target_device = target_device_nrf52;
-    }
-    else if (device == 2) {
+        target_device = target_device_nrf51822_16;
+    } else if (device == 1) {
+        target_device = target_device_nrf51822_32;
+    } else if (device == 2) {
+        target_device = target_device_nrf52_64;
+    } else if (device == 3) {
         target_device = target_device_nrf52840;
     }
 }
-
 
 static void nrf_prerun_board_config(void)
 {
@@ -88,30 +90,28 @@ static void nrf_prerun_board_config(void)
      *   1 | 1 | 0 |    undefined
      */
 
-
     if (bit3) {
         set_target_device(0);
         target_device.rt_family_id = kNordic_Nrf51_FamilyID;
         target_device.rt_board_id = board_id_nrf51_mkit;  // 1070
-        //Note only a setting of 111 is defined
+        // Note only a setting of 111 is defined
         util_assert(bit2 && bit1);
     } else {
         if (!bit2 && bit1) {
-            set_target_device(0);
+            set_target_device(1);
             target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dk;  // 1100
-        }
-        else if (!bit2 && !bit1) {
-            set_target_device(0);
+        } else if (!bit2 && !bit1) {
+            set_target_device(1);
             target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dongle;  // 1120
         }
         else if (bit2 && !bit1) {
-            set_target_device(1);
+            set_target_device(2);
             target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52_dk;  // 1101
         } else { //(bit2 && bit1)
-            set_target_device(2);
+            set_target_device(3);
             target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52840_dk;  // 1102
         }
@@ -126,7 +126,7 @@ static void nrf_swd_set_target_reset(uint8_t asserted){
     if (asserted && device_type == 0) {
         PIOA->PIO_OER = PIN_SWDIO;
         PIOA->PIO_OER = PIN_SWCLK;
-    }else if(!asserted) {
+    } else if(!asserted) {
         PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
     }
 }
