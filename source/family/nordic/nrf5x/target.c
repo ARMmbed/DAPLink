@@ -1,9 +1,9 @@
 /**
  * @file    target.c
- * @brief   Target information for the nrf51
+ * @brief   Target information for the nRF52 Family
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -58,6 +58,18 @@ target_cfg_t target_device_nrf52_64 = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash_nrf52,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20010000,
+    .erase_reset                    = 1,
+};
+
+target_cfg_t target_device_nrf52833 = {
+    .sectors_info                   = sectors_info_nrf52,
+    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0,
+    .flash_regions[0].end           = KB(512),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_nrf52,
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20020000,
     .erase_reset                    = 1,
 };
 
