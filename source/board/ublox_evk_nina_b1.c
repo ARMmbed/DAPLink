@@ -29,10 +29,12 @@ static void nina_swd_set_target_reset(uint8_t asserted){
     }
 }
 
+extern target_cfg_t target_device_nrf52_64;
+
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "1237",
     .family_id = kNordic_Nrf52_FamilyID,
     .swd_set_target_reset = nina_swd_set_target_reset,
-    .target_cfg = &target_device,
+    .target_cfg = &target_device_nrf52_64,
 };

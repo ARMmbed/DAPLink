@@ -24,19 +24,7 @@
 // The file flash_blob.c must only be included in target.c
 #include "flash_blob.c"
 
-// target information
-target_cfg_t target_device = {  // Default is nRF51
-    .sectors_info                   = sectors_info,
-    .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
-    .flash_regions[0].start         = 0,
-    .flash_regions[0].end           = KB(256),
-    .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash,
-    .ram_regions[0].start           = 0x20000000,
-    .ram_regions[0].end             = 0x20004000,
-    .erase_reset                    = 1,
-};
-
+// target information for model with 32 KB RAM
 target_cfg_t target_device_nrf52 = {
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
@@ -49,6 +37,7 @@ target_cfg_t target_device_nrf52 = {
     .erase_reset                    = 1,
 };
 
+// target information for nRF52832 with 64 KB RAM / 512 KB Flash
 target_cfg_t target_device_nrf52_64 = {
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
@@ -61,6 +50,7 @@ target_cfg_t target_device_nrf52_64 = {
     .erase_reset                    = 1,
 };
 
+// target information for nRF52833 with 128 KB RAM / 512 KB Flash
 target_cfg_t target_device_nrf52833 = {
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
@@ -73,6 +63,7 @@ target_cfg_t target_device_nrf52833 = {
     .erase_reset                    = 1,
 };
 
+// target information for nRF52840 with 256 KB RAM / 1024 KB Flash
 target_cfg_t target_device_nrf52840 = {
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
