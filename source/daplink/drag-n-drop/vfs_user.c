@@ -339,7 +339,7 @@ uint32_t expand_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, ui
 uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, const uint8_t *value) {
     uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
     l += util_write_in_region(buf, size, start, pos + l, ": ", 2);
-    l += util_write_string_in_region(buf, size, start, pos, value);
+    l += util_write_string_in_region(buf, size, start, pos + l, value);
     l += util_write_in_region(buf, size, start, pos + l, "\r\n", 2);
     return l;
 }
