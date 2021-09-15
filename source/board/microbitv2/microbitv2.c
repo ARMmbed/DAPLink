@@ -588,18 +588,19 @@ uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
 #elif defined(INTERFACE_NRF52820)
 #include "device.h"
 
-const char * const board_id_mb_2_0 = "9903";
-const char * const board_id_mb_2_0x = "9905";
+const char * const board_id_mb_2_0_default = "9903";
+const char * const board_id_mb_2_2_833 = "9905";
+const char * const board_id_mb_2_2_820 = "9906";
 extern target_cfg_t target_device_nrf52_64;
 
 static void prerun_board_config(void)
 {
     target_device = target_device_nrf52_64;
-    target_device.rt_board_id = board_id_mb_2_0;
+    target_device.rt_board_id = board_id_mb_2_0_default;
     if (NRF_FICR->INFO.PART == 0x52833) {
-        target_device.rt_board_id = board_id_mb_2_0x; // nRF52833
-    } else {
-        target_device.rt_board_id = board_id_mb_2_0; // nRF52820
+        target_device.rt_board_id = board_id_mb_2_2_833; // nRF52833
+    } else if (NRF_FICR->INFO.PART == 0x52820) {
+        target_device.rt_board_id = board_id_mb_2_2_820; // nRF52820
     }
 }
 #endif
