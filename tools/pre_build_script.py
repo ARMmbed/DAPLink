@@ -48,6 +48,7 @@ VERSION_GIT_FILE_TEMPLATE = """
 #ifndef VERSION_GIT_H
 #define VERSION_GIT_H
 
+#define GIT_DESCRIPTION  \"%s\"
 #define GIT_COMMIT_SHA  \"%s\"
 #define GIT_LOCAL_MODS  %d
 
@@ -58,6 +59,15 @@ VERSION_GIT_FILE_TEMPLATE = """
 
 
 def generate_version_file(version_git_dir):
+
+    # Get the git description.
+    print("#> Getting git description")
+    try:
+        git_description = check_output("git describe HEAD", shell=True)
+        git_description = git_description.decode().strip()
+    except:
+        print("#> ERROR: Failed to get git description, do you have git.exe in your PATH environment variable?")
+        return 1
 
     output_file = os.path.join(os.path.normpath(version_git_dir),'version_git.h')
     print("#> Pre-build script start")
@@ -80,9 +90,8 @@ def generate_version_file(version_git_dir):
     else:
         git_has_changes = 0
 
-
     # Create the version file. Only overwrite an existing file if it changes.
-    version_text = VERSION_GIT_FILE_TEMPLATE % (git_sha, git_has_changes)
+    version_text = VERSION_GIT_FILE_TEMPLATE % (git_description, git_sha, git_has_changes)
     try:
         with open(output_file, 'r') as version_file:
             current_version_text = version_file.read()
