@@ -19,7 +19,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "fsl_device_registers.h"
 #include "IO_Config.h"
 #include "DAP.h"
@@ -28,7 +28,7 @@
 #include "flexio_pwm.h"
 #include "gpio.h"
 #include "power.h"
-#include "rl_usb.h" 
+#include "rl_usb.h"
 #include "pwr_mon.h"
 #include "main.h"
 #include "i2c_commands.h"
@@ -78,7 +78,7 @@ typedef enum {
     BOARD_VERSION_2_1 = 1,
 } mb_version_t;
 
-extern target_cfg_t target_device_nrf52_64;
+extern target_cfg_t target_device_nrf52833;
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
 extern i2c_slave_handle_t g_s_handle;
@@ -115,15 +115,15 @@ static mb_version_t read_brd_rev_id_pin(void) {
     GPIO_PinInit(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID_BIT, &pin_config);
 
     adc_init();
-    
+
     // 1. Discharge capacitor
     //    Drive BRD_REV_ID pin to low
     GPIO_PortClear(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_MuxAsGpio);
-    //    Add a 3ms delay to allow the 100nF Cap to discharge 
+    //    Add a 3ms delay to allow the 100nF Cap to discharge
     //    at least 5*RC with 4700R.
     for (uint32_t count = 16 * 3000; count > 0UL; count--);
-    
+
     // 2. Charge capacitor for 100us
     //    Drive BRD_REV_ID pin to high
     GPIO_PortSet(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
@@ -132,42 +132,41 @@ static mb_version_t read_brd_rev_id_pin(void) {
     for (uint32_t count = 1600; count > 0UL; count--);
     //    Change pin to ADC (High-Z). Capacitor will stop charging
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_PinDisabledOrAnalog);
-    
+
     // 3. Take ADC measurement
     board_rev_id_adc = adc_read_channel(0, PIN_BOARD_REV_ID_ADC_CH, PIN_BOARD_REV_ID_ADC_MUX);
     board_rev_id_mv = board_rev_id_adc * 3300 / 0xFFF;  // Convert ADC 12-bit value to mV with 3.3V reference
-    
+
     // 4. Discharge capacitor
     //    Drive BRD_REV_ID pin to low
     GPIO_PortClear(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_MuxAsGpio);
-    //    Add a 3ms delay to allow the 100nF Cap to discharge 
+    //    Add a 3ms delay to allow the 100nF Cap to discharge
     //    at least 5*RC with 4700R.
     for (uint32_t count = 16 * 3000; count > 0UL; count--);
-    
+
     // 5. Identify board ID depending on voltage
     if ( board_rev_id_mv > BRD_ID_1_LOWER_THR_V && board_rev_id_mv < BRD_ID_1_UPPER_THR_V) {
         board_version = BOARD_VERSION_2_1;
     } else {
         board_version = BOARD_VERSION_2_0;
     }
-    
+
     return board_version;
 }
 
 static void set_board_id(mb_version_t board_version) {
-    target_device = target_device_nrf52_64;
     switch (board_version) {
         case BOARD_VERSION_2_0:
-            target_device.rt_board_id = board_id_mb_2_0;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_2_0;
             board_id_hex = 0x9903;
             break;
         case BOARD_VERSION_2_1:
-            target_device.rt_board_id = board_id_mb_2_1;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_2_1;
             board_id_hex = 0x9904;
             break;
         default:
-            target_device.rt_board_id = board_id_mb_2_0;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_2_0;
             board_id_hex = 0x9903;
             break;
     }
@@ -185,7 +184,7 @@ static void prerun_board_config(void)
 {
     mb_version_t board_version = read_brd_rev_id_pin();
     set_board_id(board_version);
-    
+
     // init power monitoring
     power_init();
     pwr_mon_init();
@@ -194,20 +193,20 @@ static void prerun_board_config(void)
 
     flexio_pwm_init();
     flexio_pwm_init_pins();
-    
+
     if (power_source == PWR_BATT_ONLY){
         // Turn on the red LED with low duty cycle to conserve power.
         power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
-        
+
     } else {
         // Turn on the red LED with max duty cycle when powered by USB or EC
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
     }
     uint8_t gamma_led_dc = get_led_gamma(power_led_max_duty_cycle);
     flexio_pwm_set_dutycycle(gamma_led_dc);
-    
+
     i2c_initialize();
-    
+
     gpio_pin_config_t pin_config = {
         .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U
@@ -217,11 +216,11 @@ static void prerun_board_config(void)
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
     /* COMBINED_SENSOR_INT as output default low when pin mux ALT1 */
     GPIO_PinInit(COMBINED_SENSOR_INT_GPIO, COMBINED_SENSOR_INT_PIN, &pin_config);
-    
+
     // Load Config from Flash if present
     flashConfig_t * pflashConfigROM;
     pflashConfigROM = (void *)FLASH_CONFIG_ADDRESS;
-    
+
     if (CFG_KEY == pflashConfigROM->key) {
         memcpy(&gflashConfig, pflashConfigROM, sizeof(flashConfig_t));
     }
@@ -289,7 +288,7 @@ void handle_reset_button()
 void board_30ms_hook()
 {
   static uint8_t blink_in_progress = 0;
-    
+
     if (usb_state == USB_CONNECTED) {
         // configure pin as GPIO
         PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
@@ -300,22 +299,22 @@ void board_30ms_hook()
         PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(0);
         power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
     }
-    
+
     if (wake_from_usb) {
         main_shutdown_state = MAIN_USER_EVENT;
-        
+
         if (usb_state == USB_DISCONNECTED) {
             usb_state = USB_CONNECTING;
         }
     }
-    
+
     if (i2c_wake_timeout > 0) {
         i2c_wake_timeout--;
     }
-    
+
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
-    if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING 
-        && automatic_sleep_on == true && g_s_handle.isBusy == false && i2c_wake_timeout == 0 && i2c_allow_sleep) { 
+    if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING
+        && automatic_sleep_on == true && g_s_handle.isBusy == false && i2c_wake_timeout == 0 && i2c_allow_sleep) {
         interface_power_mode = kAPP_PowerModeVlps;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }
@@ -349,13 +348,13 @@ void board_30ms_hook()
           {
           // Release COMBINED_SENSOR_INT in case it was previously asserted
           PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
-              
+
           // Prepare I2C response
           i2cCommand_t i2cResponse = {0};
           i2cResponse.cmdId = gReadResponse_c;
           i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
           i2cResponse.cmdData.readRspCmd.dataSize = 1;
-          
+
           if (wake_from_usb) {
               i2cResponse.cmdData.readRspCmd.data[0] = gWakeFromWakeOnEdge_c;
               wake_from_usb = 0;
@@ -368,7 +367,7 @@ void board_30ms_hook()
 
           // Response ready, assert COMBINED_SENSOR_INT
           PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
-      
+
           // Return LED to ON after release of long press
           main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
@@ -376,7 +375,7 @@ void board_30ms_hook()
       case MAIN_SHUTDOWN_REQUESTED:
           if (power_source == PWR_BATT_ONLY || (usb_state == USB_DISCONNECTED && !usb_pc_connected)) {
               main_powerdown_event();
-              
+
               // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
               // When the duty cycle is 0% or 100%, the FlexIO driver will configure the pin as GPIO
               if (power_led_sleep_state_on == true && interface_power_mode == kAPP_PowerModeVlls0) {
@@ -387,7 +386,7 @@ void board_30ms_hook()
               else {
                   shutdown_led_dc = 0;
               }
-              
+
               main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           else if (usb_state == USB_CONNECTED){
@@ -412,14 +411,14 @@ void board_30ms_hook()
           } else if (shutdown_led_dc > (PWR_LED_ON_MAX_BRIGHTNESS - 10)) {
               shutdown_led_dc--;
           }
-          
+
           // If we are no longer PC connected, go into idle mode
           if (usb_state == USB_DISCONNECTED && !usb_pc_connected) {
               main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           break;
       case MAIN_LED_BLINK_ONCE:
-          
+
           if (blink_in_progress) {
             blink_in_progress--;
             if (blink_in_progress == 5) {
@@ -429,8 +428,8 @@ void board_30ms_hook()
             blink_in_progress = 10;
             shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
           }
-          
-          if (blink_in_progress == 0) { 
+
+          if (blink_in_progress == 0) {
             main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           break;
@@ -445,7 +444,7 @@ void board_30ms_hook()
     } else {
         flexio_pwm_set_dutycycle(final_fade_led_dc);
     }
-    
+
     // Remount if requested.
     if (do_remount) {
         do_remount = false;
@@ -480,10 +479,10 @@ void board_vfs_stream_closed_hook()
     reset_pressed = 0;
     power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
     main_shutdown_state = MAIN_SHUTDOWN_WAITING;
-    
+
     // Clear any pending I2C response
     i2c_clearBuffer();
-    
+
     // Release COMBINED_SENSOR_INT
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }
@@ -494,7 +493,7 @@ bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
         // Erase last 128KB flash block
         FLASH_Erase(&g_flash, FLASH_CONFIG_ADDRESS, g_flash.PFlashTotalSize / g_flash.PFlashBlockCount, kFLASH_apiEraseKey);
     }
-    
+
     return false;
 }
 
@@ -529,7 +528,7 @@ void vfs_user_build_filesystem_hook() {
     }
 
     file_size = gflashConfig.fileSize;
-    
+
     if (gflashConfig.fileVisible) {
         vfs_create_file(gflashConfig.fileName, read_file_data_txt, 0, file_size);
     }
@@ -549,11 +548,11 @@ static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32
 uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
 {
     uint8_t result = 0;
-    
+
     // Check difference in vectors (mem fault, bus fault, usage fault)
     // If these vectors are 0, we assume it's an M0 image (not compatible)
     result = memcmp(data + M0_RESERVED_VECT_OFFSET, (uint8_t[M0_RESERVED_VECT_SIZE]){0}, M0_RESERVED_VECT_SIZE);
-    
+
     return result == 0;
 }
 
@@ -573,6 +572,5 @@ const board_info_t g_board_info = {
     .daplink_drive_name =       "MICROBIT",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
     .prerun_board_config = prerun_board_config,
-    .target_cfg = &target_device,
+    .target_cfg = &target_device_nrf52833,
 };
-

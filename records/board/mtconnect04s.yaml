@@ -3,5 +3,5 @@ common:
         board:
             - source/board/mtconnect04s.c
         family:
-            - source/family/nordic/nrf51822/target_32.c
+            - source/family/nordic/nrf51822/target_nrf51.c
             - source/family/nordic/target_reset_nrf51.c
