@@ -27,6 +27,8 @@ jobs:
 
     - name: Checkout source files
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Install Embedded Arm Toolchain
       if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
