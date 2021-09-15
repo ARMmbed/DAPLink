@@ -17,7 +17,7 @@
 #
 
 import os
-from firmware import DAPLinkFirmware
+from firmware import DAPLinkFirmware, ReleaseFirmware
 
 
 def load_bundle_from_release(directory):
@@ -82,8 +82,10 @@ class ReleaseFirmwareBundle(FirmwareBundle):
                 if daplink_firmware.valid:
                     firmware_list.append(daplink_firmware)
             elif os.path.isfile(path):
-                # Parse relevent info
-                pass
+                if (('.bin' in name) or ('.hex' in name)):
+                    daplink_firmware = ReleaseFirmware(name, self, path)
+                    if daplink_firmware.valid:
+                        firmware_list.append(daplink_firmware)
             else:
                 assert False
         self._firmware_list = firmware_list

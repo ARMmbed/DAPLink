@@ -464,10 +464,12 @@ class DaplinkBoard(object):
         test_info = parent_test.create_subtest('load_interface')
         self.set_mode(self.MODE_BL, test_info)
 
-        data_crc, crc_in_image = _compute_crc(filepath)
-        assert data_crc == crc_in_image, ("CRC in interface is wrong "
-                                          "expected 0x%x, found 0x%x" %
-                                          (data_crc, crc_in_image))
+        # Check image CRC
+        if '.hex' in filepath:
+            data_crc, crc_in_image = _compute_crc(filepath)
+            assert data_crc == crc_in_image, ("CRC in interface is wrong "
+                                              "expected 0x%x, found 0x%x" %
+                                              (data_crc, crc_in_image))
 
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as firmware_file:
@@ -480,8 +482,12 @@ class DaplinkBoard(object):
         test_info.info("programming took %s s" % (stop - start))
         self.wait_for_remount(test_info)
 
-        # Check the CRC
         self.set_mode(self.MODE_IF, test_info)
+
+        if '.hex' not in filepath:
+            return
+
+        # Check the CRC
         if DaplinkBoard.KEY_IF_CRC not in self.details_txt:
             test_info.failure("No interface CRC in details.txt")
             return
@@ -499,10 +505,11 @@ class DaplinkBoard(object):
         self.set_mode(self.MODE_IF, test_info)
 
         # Check image CRC
-        data_crc, crc_in_image = _compute_crc(filepath)
-        assert data_crc == crc_in_image, ("CRC in bootloader is wrong "
-                                          "expected 0x%x, found 0x%x" %
-                                          (data_crc, crc_in_image))
+        if '.hex' in filepath:
+            data_crc, crc_in_image = _compute_crc(filepath)
+            assert data_crc == crc_in_image, ("CRC in bootloader is wrong "
+                                              "expected 0x%x, found 0x%x" %
+                                              (data_crc, crc_in_image))
 
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as firmware_file:
@@ -515,8 +522,12 @@ class DaplinkBoard(object):
         test_info.info("programming took %s s" % (stop - start))
         self.wait_for_remount(test_info)
 
-        # Check the CRC
         self.set_mode(self.MODE_IF, test_info)
+
+        if '.hex' not in filepath:
+            return
+
+        # Check the CRC
         if DaplinkBoard.KEY_BL_CRC not in self.details_txt:
             test_info.failure("No bootloader CRC in details.txt")
             return
