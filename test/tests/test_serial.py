@@ -80,7 +80,7 @@ class SerialTester(object):
     def __exit__(self, exception_type, value, traceback):
         self._queue.put(None)
         self._write_thread.join(ERROR_TIMEOUT_SECONDS)
-        assert not self._write_thread.isAlive(), "Thread join failed"
+        assert not self._write_thread.is_alive(), "Thread join failed"
         self.raw_serial.close()
         self.raw_serial = None
         return False
