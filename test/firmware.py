@@ -183,15 +183,11 @@ class ReleaseFirmware(Firmware):
                 print('Warning: board "%s" no entry in SUPPORTED_CONFIGURATIONS in info.py' % name)
 
         # Set file paths
-        self._bin_path = path
-        self._hex_path = path
-        self._bin_path = os.path.abspath(self._bin_path)
-        self._hex_path = os.path.abspath(self._hex_path)
-        if not os.path.isfile(self._bin_path):
-            return  # Failure
+        self._hex_path = os.path.abspath(path)
         if not os.path.isfile(self._hex_path):
             return  # Failure
-
+        bin_path = re.sub(r'[.]hex', r'.bin', self._hex_path)
+        self._bin_path = bin_path if os.path.isfile(bin_path) else None
         self._valid = True
 
     def __str__(self):

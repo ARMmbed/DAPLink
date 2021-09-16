@@ -82,7 +82,7 @@ class ReleaseFirmwareBundle(FirmwareBundle):
                 if daplink_firmware.valid:
                     firmware_list.append(daplink_firmware)
             elif os.path.isfile(path):
-                if (('.bin' in name) or ('.hex' in name)):
+                if ('.hex' in name):
                     daplink_firmware = ReleaseFirmware(name, self, path)
                     if daplink_firmware.valid:
                         firmware_list.append(daplink_firmware)
