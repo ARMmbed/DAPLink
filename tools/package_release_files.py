@@ -146,6 +146,12 @@ def package_release_files(source, dest, version, toolchain, release_info, suppor
         dest_name = build_number + "_" + host_mcu + "_" + base_name + dest_offset_str + "." + extension
         dest_path = os.path.join(output_dir, dest_name)
         shutil.copyfile(source_path, dest_path)
+        if extension == 'bin':
+            shutil.copyfile(os.path.join(source_dir_part, prj_name + "_crc" + ".hex"),
+                            os.path.join(output_dir, build_number + "_" + host_mcu + "_" + base_name + dest_offset_str + ".hex"))
+        else:
+            shutil.copyfile(os.path.join(source_dir_part, prj_name + "_crc" + legacy_str + source_offset_str + ".bin"),
+                            os.path.join(output_dir, build_number + "_" + host_mcu + "_" + base_name + dest_offset_str + ".bin"))
 
         product_code = 'NOT SUPPORTED'
         for board_id, family_id, fimware, bootloader, target in supported_configurations:
