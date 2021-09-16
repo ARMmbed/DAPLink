@@ -118,7 +118,6 @@ static uint32_t read_file_fail_txt(uint32_t sector_offset, uint8_t *data, uint32
 static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 static uint32_t read_file_need_bl_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors);
 
-static uint32_t update_html_file(uint8_t *data, uint32_t datasize);
 static uint32_t update_details_txt_file(uint8_t *data, uint32_t datasize, uint32_t start);
 static void erase_target(void);
 
@@ -325,18 +324,18 @@ static uint32_t get_file_size(vfs_read_cb_t read_func)
 #define EXPANSION_BUFFER_SIZE 128
 #endif
 
-uint32_t expand_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *input) {
-    uint8_t str_buf[EXPANSION_BUFFER_SIZE];
+uint32_t expand_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *input) {
+    char str_buf[EXPANSION_BUFFER_SIZE];
     memset(str_buf, 0, sizeof(str_buf));
     for(uint32_t i = 0; (i < (sizeof(str_buf) - 1)) && 0 != input[i]; i++) {
         str_buf[i] = input[i];
     }
-    uint32_t l = expand_info(str_buf, sizeof(str_buf));
+    uint32_t l = expand_info((uint8_t *)str_buf, sizeof(str_buf));
 
     return util_write_in_region(buf, size, start, pos, str_buf, l);
 }
 
-uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, const uint8_t *value) {
+uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *label, const char *value) {
     uint32_t l = util_write_string_in_region(buf, size, start, pos, label);
     l += util_write_in_region(buf, size, start, pos + l, ": ", 2);
     l += util_write_string_in_region(buf, size, start, pos + l, value);
@@ -344,19 +343,19 @@ uint32_t string_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uin
     return l;
 }
 
-uint32_t setting_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t boolean) {
+uint32_t setting_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *label, uint32_t boolean) {
     return string_field_in_region(buf, size, start, pos, label, boolean ? "1" : "0");
 }
 
-uint32_t uint32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t value) {
-    uint8_t number[11];
+uint32_t uint32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *label, uint32_t value) {
+    char number[11];
     uint32_t digits = util_write_uint32(number, value);
     number[digits] = 0;
-    return string_field_in_region(buf, size, start, pos, label, number);
+    return string_field_in_region(buf, size, start, pos, label, (char *)number);
 }
 
-uint32_t hex32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, uint8_t *label, uint32_t value) {
-    uint8_t hex[11] = { '0', 'x' };
+uint32_t hex32_field_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *label, uint32_t value) {
+    char hex[11] = { '0', 'x' };
     util_write_hex32(hex + 2, value);
     hex[10] = 0;
     return string_field_in_region(buf, size, start, pos, label, hex);
@@ -482,7 +481,7 @@ static uint32_t read_file_assert_txt(uint32_t sector_offset, uint8_t *buf, uint3
         //print hexdumps
         pos += util_write_string_in_region(buf, size, start, pos, "Hexdumps\r\n");
         while ((index < valid_hexdumps) && ((pos + 10) < VFS_SECTOR_SIZE)) { //hexdumps + newline is always 10 characters
-            uint8_t hex[10] = { 0, 0, 0, 0, 0, 0, 0, 0, '\r', '\n' };
+            char hex[10] = { 0, 0, 0, 0, 0, 0, 0, 0, '\r', '\n' };
             util_write_hex32(hex, hexdumps[index++]);
             pos += util_write_in_region(buf, size, start, pos, hex, 10);
         }
@@ -548,7 +547,7 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
     pos += expand_string_in_region(buf, size, start, pos, "Bootloader Version: @V\r\n");
 
     if (info_get_interface_present()) {
-        uint8_t version[6] = { 0, 0, 0, 0, '\r', '\n' };
+        char version[6] = { 0, 0, 0, 0, '\r', '\n' };
         pos += util_write_string_in_region(buf, size, start, pos, "Interface Version: ");
         util_write_uint32_zp(version, info_get_interface_version(), 4);
         pos += util_write_in_region(buf, size, start, pos, version, 6);
@@ -559,7 +558,7 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
 
 #if DAPLINK_ROM_BL_SIZE != 0
     if (info_get_bootloader_present()) {
-        uint8_t version[6] = { 0, 0, 0, 0, '\r', '\n' };
+        char version[6] = { 0, 0, 0, 0, '\r', '\n' };
         pos += util_write_string_in_region(buf, size, start, pos, "Bootloader Version: ");
         util_write_uint32_zp(version, info_get_bootloader_version(), 4);
         pos += util_write_in_region(buf, size, start, pos, version, 6);

@@ -110,11 +110,11 @@ uint32_t util_write_string(char *str, const char *data)
     return pos;
 }
 
-uint32_t util_write_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const uint8_t *input) {
+uint32_t util_write_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *input) {
     return util_write_in_region(buf, size, start, pos, input, strlen(input));
 }
 
-uint32_t util_write_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const uint8_t *input, uint32_t length) {
+uint32_t util_write_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *input, uint32_t length) {
     if (buf != NULL) {
         // Check if there is something to copy
         if (((pos + length) >= start) && (pos <= (start + size))) {
