@@ -29,6 +29,8 @@
  */
 
 #include "fsl_flash.h"
+#include "compiler.h"
+#define USE_RAM_FUNC
 
 /*******************************************************************************
  * Definitions
@@ -237,12 +239,14 @@ enum _flash_config_area_range
  ******************************************************************************/
 
 #if FLASH_DRIVER_IS_FLASH_RESIDENT
+#ifndef USE_RAM_FUNC
 /*! @brief Copy flash_run_command() to RAM*/
 static void copy_flash_run_command(uint8_t *flashRunCommand);
 /*! @brief Copy flash_cache_clear_command() to RAM*/
 static void copy_flash_cache_clear_command(uint8_t *flashCacheClearCommand);
 /*! @brief Check whether flash execute-in-ram functions are ready*/
 static status_t flash_check_execute_in_ram_function_info(flash_config_t *config);
+#endif
 #endif /* FLASH_DRIVER_IS_FLASH_RESIDENT */
 
 /*! @brief Internal function Flash command sequence. Called by driver APIs only*/
@@ -318,19 +322,26 @@ volatile uint32_t *const kFPROT = (volatile uint32_t *)&FTFL->FPROT3;
 #endif
 
 #if FLASH_DRIVER_IS_FLASH_RESIDENT
+#ifdef USE_RAM_FUNC
+#define callFlashRunCommand        flash_run_command
+#define callFlashCacheClearCommand flash_cache_clear_command
+#else
 /*! @brief A function pointer used to point to relocated flash_run_command() */
 static void (*callFlashRunCommand)(FTFx_REG_ACCESS_TYPE ftfx_fstat);
 /*! @brief A function pointer used to point to relocated flash_cache_clear_command() */
 static void (*callFlashCacheClearCommand)(FTFx_REG32_ACCESS_TYPE ftfx_reg);
+#endif
 #endif /* FLASH_DRIVER_IS_FLASH_RESIDENT */
 
 #if (FLASH_DRIVER_IS_FLASH_RESIDENT && !FLASH_DRIVER_IS_EXPORTED)
+#ifndef USE_RAM_FUNC
 /*! @brief A static buffer used to hold flash_run_command() */
 static uint8_t s_flashRunCommand[kFLASH_executeInRamFunctionMaxSize];
 /*! @brief A static buffer used to hold flash_cache_clear_command() */
 static uint8_t s_flashCacheClearCommand[kFLASH_executeInRamFunctionMaxSize];
 /*! @brief Flash execute-in-ram function information */
 static flash_execute_in_ram_function_config_t s_flashExecuteInRamFunctionInfo;
+#endif
 #endif
 
 /*!
@@ -414,6 +425,7 @@ status_t FLASH_Init(flash_config_t *config)
 
 /* copy required flash commands to RAM */
 #if (FLASH_DRIVER_IS_FLASH_RESIDENT && !FLASH_DRIVER_IS_EXPORTED)
+#ifndef USE_RAM_FUNC
     if (kStatus_FLASH_Success != flash_check_execute_in_ram_function_info(config))
     {
         s_flashExecuteInRamFunctionInfo.activeFunctionCount = 0;
@@ -422,6 +434,7 @@ status_t FLASH_Init(flash_config_t *config)
         config->flashExecuteInRamFunctionInfo = &s_flashExecuteInRamFunctionInfo.activeFunctionCount;
         FLASH_PrepareExecuteInRamFunctions(config);
     }
+#endif
 #endif
 
     config->FlexRAMBlockBase = FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS;
@@ -455,6 +468,7 @@ status_t FLASH_SetCallback(flash_config_t *config, flash_callback_t callback)
 }
 
 #if FLASH_DRIVER_IS_FLASH_RESIDENT
+#ifndef USE_RAM_FUNC
 status_t FLASH_PrepareExecuteInRamFunctions(flash_config_t *config)
 {
     flash_execute_in_ram_function_config_t *flashExecuteInRamFunctionInfo;
@@ -472,6 +486,7 @@ status_t FLASH_PrepareExecuteInRamFunctions(flash_config_t *config)
 
     return kStatus_FLASH_Success;
 }
+#endif
 #endif /* FLASH_DRIVER_IS_FLASH_RESIDENT */
 
 status_t FLASH_EraseAll(flash_config_t *config, uint32_t key)
@@ -1890,6 +1905,9 @@ status_t FLASH_VerifyProgram(flash_config_t *config,
  * It is for flash-resident bootloader only, not technically required for ROM or
  *  flashloader (RAM-resident bootloader).
  */
+#ifdef USE_RAM_FUNC
+RAM_FUNCTION
+#endif
 void flash_run_command(FTFx_REG_ACCESS_TYPE ftfx_fstat)
 {
     /* clear CCIF bit */
@@ -1902,6 +1920,7 @@ void flash_run_command(FTFx_REG_ACCESS_TYPE ftfx_fstat)
     }
 }
 
+#ifndef USE_RAM_FUNC
 /*!
  * @brief Be used for determining the size of flash_run_command()
  *
@@ -1946,6 +1965,7 @@ static void copy_flash_run_command(uint8_t *flashRunCommand)
     memcpy((void *)flashRunCommand, (void *)flash_run_command_start_addr, funcLength);
     callFlashRunCommand = (void (*)(FTFx_REG_ACCESS_TYPE ftfx_fstat))((uint32_t)flashRunCommand + 1);
 }
+#endif
 #endif /* FLASH_DRIVER_IS_FLASH_RESIDENT */
 
 /*!
@@ -1964,12 +1984,13 @@ static status_t flash_command_sequence(flash_config_t *config)
     /* clear RDCOLERR & ACCERR & FPVIOL flag in flash status register */
     FTFx->FSTAT = FTFx_FSTAT_RDCOLERR_MASK | FTFx_FSTAT_ACCERR_MASK | FTFx_FSTAT_FPVIOL_MASK;
 
+#ifndef USE_RAM_FUNC
     status_t returnCode = flash_check_execute_in_ram_function_info(config);
     if (kStatus_FLASH_Success != returnCode)
     {
         return returnCode;
     }
-
+#endif
     /* We pass the ftfx_fstat address as a parameter to flash_run_comamnd() instead of using
      * pre-processed MICRO sentences or operating global variable in flash_run_comamnd()
      * to make sure that flash_run_command() will be compiled into position-independent code (PIC). */
@@ -2022,6 +2043,9 @@ static status_t flash_command_sequence(flash_config_t *config)
  * It is for flash-resident bootloader only, not technically required for ROM or
  * flashloader (RAM-resident bootloader).
  */
+#ifdef USE_RAM_FUNC
+RAM_FUNCTION
+#endif
 void flash_cache_clear_command(FTFx_REG32_ACCESS_TYPE ftfx_reg)
 {
 #if defined(FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS) && FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
@@ -2044,6 +2068,7 @@ void flash_cache_clear_command(FTFx_REG32_ACCESS_TYPE ftfx_reg)
     __DSB();
 }
 
+#ifndef USE_RAM_FUNC
 /*!
  * @brief Be used for determining the size of flash_cache_clear_command()
  *
@@ -2088,6 +2113,7 @@ static void copy_flash_cache_clear_command(uint8_t *flashCacheClearCommand)
     memcpy((void *)flashCacheClearCommand, (void *)flash_cache_clear_command_start_addr, funcLength);
     callFlashCacheClearCommand = (void (*)(FTFx_REG32_ACCESS_TYPE ftfx_reg))((uint32_t)flashCacheClearCommand + 1);
 }
+#endif
 #endif /* FLASH_DRIVER_IS_FLASH_RESIDENT */
 
 /*!
@@ -2113,11 +2139,13 @@ void __attribute__((optimize("O0"))) flash_cache_clear(flash_config_t *config)
 #endif
 {
 #if FLASH_DRIVER_IS_FLASH_RESIDENT
+#ifndef USE_RAM_FUNC
     status_t returnCode = flash_check_execute_in_ram_function_info(config);
     if (kStatus_FLASH_Success != returnCode)
     {
         return;
     }
+#endif
 
 /* We pass the ftfx register address as a parameter to flash_cache_clear_comamnd() instead of using
  * pre-processed MACROs or a global variable in flash_cache_clear_comamnd()
@@ -2180,6 +2208,7 @@ void __attribute__((optimize("O0"))) flash_cache_clear(flash_config_t *config)
 #endif
 
 #if FLASH_DRIVER_IS_FLASH_RESIDENT
+#ifndef USE_RAM_FUNC
 /*! @brief Check whether flash execute-in-ram functions are ready  */
 static status_t flash_check_execute_in_ram_function_info(flash_config_t *config)
 {
@@ -2200,6 +2229,7 @@ static status_t flash_check_execute_in_ram_function_info(flash_config_t *config)
 
     return kStatus_FLASH_ExecuteInRamFunctionNotReady;
 }
+#endif
 #endif /* FLASH_DRIVER_IS_FLASH_RESIDENT */
 
 /*! @brief Validates the range and alignment of the given address range.*/
