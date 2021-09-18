@@ -44,20 +44,20 @@ const target_family_descriptor_t g_sw_sysresetreq_family = {
 };
 
 // Weak references to family definitions.
-extern __WEAK const target_family_descriptor_t g_nxp_kinetis_kseries;
-extern __WEAK const target_family_descriptor_t g_nxp_kinetis_lseries;
-extern __WEAK const target_family_descriptor_t g_nxp_kinetis_k32w_series;
-extern __WEAK const target_family_descriptor_t g_nxp_mimxrt;
-extern __WEAK const target_family_descriptor_t g_nxp_rapid_iot;
-extern __WEAK const target_family_descriptor_t g_nxp_lpc55xx_series;
-extern __WEAK const target_family_descriptor_t g_nordic_nrf51;
-extern __WEAK const target_family_descriptor_t g_nordic_nrf52;
-extern __WEAK const target_family_descriptor_t g_realtek_rtl8195am;
-extern __WEAK const target_family_descriptor_t g_ti_family;
-extern __WEAK const target_family_descriptor_t g_wiznet_family;
-extern __WEAK const target_family_descriptor_t g_renesas_family;
-extern __WEAK const target_family_descriptor_t g_toshiba_tz_family;
-extern __WEAK const target_family_descriptor_t g_ambiq_ama3b1kk;
+__WEAK const target_family_descriptor_t g_nxp_kinetis_kseries = {0};
+__WEAK const target_family_descriptor_t g_nxp_kinetis_lseries = {0};
+__WEAK const target_family_descriptor_t g_nxp_kinetis_k32w_series = {0};
+__WEAK const target_family_descriptor_t g_nxp_mimxrt = {0};
+__WEAK const target_family_descriptor_t g_nxp_rapid_iot = {0};
+__WEAK const target_family_descriptor_t g_nxp_lpc55xx_series = {0};
+__WEAK const target_family_descriptor_t g_nordic_nrf51 = {0};
+__WEAK const target_family_descriptor_t g_nordic_nrf52 = {0};
+__WEAK const target_family_descriptor_t g_realtek_rtl8195am = {0};
+__WEAK const target_family_descriptor_t g_ti_family = {0};
+__WEAK const target_family_descriptor_t g_wiznet_family = {0};
+__WEAK const target_family_descriptor_t g_renesas_family = {0};
+__WEAK const target_family_descriptor_t g_toshiba_tz_family = {0};
+__WEAK const target_family_descriptor_t g_ambiq_ama3b1kk = {0};
 
 //! @brief Terminator value for g_families list.
 //!
