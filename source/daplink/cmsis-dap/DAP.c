@@ -56,9 +56,6 @@
 #define MAX_SWJ_CLOCK(delay_cycles) \
   ((CPU_CLOCK/2U) / (IO_PORT_WRITE_CYCLES + delay_cycles))
 
-#define CLOCK_DELAY(swj_clock) \
- (((CPU_CLOCK/2U) / swj_clock) - IO_PORT_WRITE_CYCLES)
-
 
          DAP_Data_t DAP_Data;           // DAP Data
 volatile uint8_t    DAP_TransferAbort;  // Transfer Abort Flag
