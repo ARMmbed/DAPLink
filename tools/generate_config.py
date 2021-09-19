@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+from __future__ import print_function
+
 import struct
 import argparse
 from intelhex import IntelHex
@@ -38,7 +40,6 @@ MINIMUM_ALIGN = 1 << 10  # 1k aligned
 
 def create_hex(filename, addr, auto_rst, automation_allowed,
                overflow_detect, detect_incompatible_target, pad_size):
-    file_format = 'hex'
     intel_hex = IntelHex()
     intel_hex.puts(addr, struct.pack(FORMAT, CFG_KEY, FORMAT_LENGTH, auto_rst,
                                      automation_allowed, overflow_detect, detect_incompatible_target))
@@ -46,8 +47,7 @@ def create_hex(filename, addr, auto_rst, automation_allowed,
     pad_byte_count = pad_size - (FORMAT_LENGTH % pad_size)
     pad_data = '\xFF' * pad_byte_count
     intel_hex.puts(pad_addr, pad_data)
-    with open(filename, 'wb') as f:
-        intel_hex.tofile(f, file_format)
+    intel_hex.write_hex_file(filename)
 
 
 def str_to_int(val):
@@ -67,18 +67,18 @@ parser.add_argument("--output_file", type=str, default='settings.hex', help="Nam
 
 def main():
     args = parser.parse_args()
-    print "Output file %s" % args.output_file
-    print "Config Offset 0x%x" % args.addr
+    print("Output file %s" % args.output_file)
+    print("Config Offset 0x%x" % args.addr)
     if args.addr % MINIMUM_ALIGN != 0:
-        print "WARNING! Configuration is not on a 1K boundary"
+        print("WARNING! Configuration is not on a 1K boundary")
     if args.addr % args.pad != 0:
-        print "WARNING! Configuration is not aligned to pad size"
-    print "Settings:"
-    print "  auto_rst: %i" % args.auto_rst
-    print "  automation_allowed: %i" % args.automation_allowed
-    print "  overflow_detect: %i" % args.overflow_detect
-    print "  detect_incompatible_target: %i" % args.detect_incompatible_target
-    print ""
+        print("WARNING! Configuration is not aligned to pad size")
+    print("Settings:")
+    print("  auto_rst: %i" % args.auto_rst)
+    print("  automation_allowed: %i" % args.automation_allowed)
+    print("  overflow_detect: %i" % args.overflow_detect)
+    print("  detect_incompatible_target: %i" % args.detect_incompatible_target)
+    print("")
     create_hex(args.output_file, args.addr, args.auto_rst,
                args.automation_allowed, args.overflow_detect, args.detect_incompatible_target, args.pad)
 
