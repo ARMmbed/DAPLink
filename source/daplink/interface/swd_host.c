@@ -1051,7 +1051,8 @@ uint8_t swd_set_target_state_sw(target_state_t state)
             osDelay(2);
             swd_set_target_reset(0);
             osDelay(2);
-        
+
+#ifndef INTERFACE_KL26Z
             // Power down
             // Per ADIv6 spec. Clear first CSYSPWRUPREQ followed by CDBGPWRUPREQ
             if (!swd_read_dp(DP_CTRL_STAT, &val)) {
@@ -1079,7 +1080,8 @@ uint8_t swd_set_target_state_sw(target_state_t state)
                     return 0;
                 }
             } while ((val & (CDBGPWRUPACK)) == 1);
-        
+#endif
+
             swd_off();
             break;
 
