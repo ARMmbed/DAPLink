@@ -284,6 +284,20 @@ __weak void SystemInit(void)
     /* Perform an initial trim of the internal ring oscillator */
     CLKMAN_TrimRO();
 
+#if !defined (__CC_ARM) // Prevent Keil tools from calling these functions until post scatter load
     SystemCoreClockUpdate();
     Board_Init();
+#endif /* ! __CC_ARM */
 }
+
+#if defined ( __CC_ARM )
+extern void $Super$$main(void);
+// This will be executed after the RAM initialization
+void $Sub$$main(void)
+{
+    SystemCoreClockUpdate();
+    Board_Init();
+    // Call to main function
+    $Super$$main();
+}
+#endif

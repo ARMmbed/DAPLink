@@ -135,7 +135,7 @@ int32_t uart_reset(void)
 /******************************************************************************/
 int32_t uart_set_configuration(UART_Configuration *config)
 {
-    uint32_t ctrl;
+    uint32_t ctrl = 0;
 
     // Get current configuration; clearing parameters that may be configured here
     ctrl = CdcAcmUart->ctrl & ~(MXC_F_UART_CTRL_PARITY |
@@ -183,7 +183,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
 /******************************************************************************/
 int32_t uart_get_configuration(UART_Configuration *config)
 {
-    uint32_t ctrl;
+    uint32_t ctrl = 0;
 
     // Capture current configuration
     ctrl = CdcAcmUart->ctrl;

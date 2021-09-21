@@ -9,7 +9,6 @@ tool_specific:
         misc:
             asm_flags:
                 - -g
-                - --no_unaligned_access
             c_flags:
                 - -O2
                 - -Ospace
@@ -19,7 +18,6 @@ tool_specific:
                 - --split_sections
                 - --interleave
                 - -g
-                - --no_unaligned_access
             ld_flags:
                 - --bestdebug
                 - --summary_stderr
