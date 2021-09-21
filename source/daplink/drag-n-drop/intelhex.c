@@ -84,7 +84,7 @@ static uint8_t validate_checksum(hex_line_t *record)
 
 static hex_line_t line = {0};
 static uint32_t next_address_to_write = 0;
-static uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
+static uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0, skip_until_aligned = 0;
 static uint16_t binary_version = 0;
 uint16_t board_id_hex __WEAK;
 uint16_t board_id_hex_min __WEAK;
@@ -98,6 +98,7 @@ void reset_hex_parser(void)
     record_processed = 0;
     load_unaligned_record = 0;
     binary_version = 0;
+    skip_until_aligned = 0;
 }
 
 hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t hex_blob_size, uint32_t *hex_parse_cnt, uint8_t *bin_buf, const uint32_t bin_buf_size, uint32_t *bin_buf_address, uint32_t *bin_buf_cnt)
@@ -108,6 +109,16 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
     *bin_buf_cnt = (uint32_t)0;
     // Check if hex blob is aligned on a line boundary
     uint8_t block_aligned = ((hex_blob[hex_blob_size - 1] == '\n') || (hex_blob[hex_blob_size - 1] == '\r')) ? 1 : 0;
+    if (skip_until_aligned) {
+        if (hex_blob[0] == ':') {
+            // This is block is aligned we can stop skipping
+            skip_until_aligned = 0;
+        } else {
+            // This is block is not aligned we can skip it
+            status = HEX_PARSE_OK;
+            goto hex_parser_exit;
+        }
+    }
 
     // we had an exit state where the address was unaligned to the previous record and data count.
     //  Need to pop the last record into the buffer before decoding anthing else since it was
@@ -179,8 +190,13 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                             *bin_buf_cnt = (uint32_t)(*bin_buf_cnt) + line.byte_count;
                                             // Save next address to write
                                             next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
-                                        } else if (block_aligned) {
-                                            // If hex buffer is aligned on line boundary we can skip until next block
+                                        } else {
+                                            // If block is aligned on line we can skip until next block.
+                                            // Otherwise we assume it is sector aligned so we will have
+                                            // to start skipping block until we find one aligned on record.
+                                            if (!block_aligned) {
+                                                skip_until_aligned = 1;
+                                            }
                                             status = HEX_PARSE_OK;
                                             goto hex_parser_exit;
                                         }
