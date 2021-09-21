@@ -1,6 +1,6 @@
 /**
  * @file    target_board.c
- * @brief   Implementation of target_family.h
+ * @brief   Implementation of target_board.h
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -22,16 +22,6 @@
 #include <string.h>
 #include "target_board.h"
 #include "compiler.h"
-
-// Default empty board info.
-__WEAK
-const board_info_t g_board_info = {
-		.info_version = kBoardInfoVersion,
-		.board_id = "0000",
-		.daplink_url_name =       "MBED    HTM",
-		.daplink_drive_name = 		"DAPLINK    ",
-		.daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
-};
 
 // Disable optimization of these functions.
 //
