@@ -107,8 +107,6 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
     hexfile_parse_status_t status = HEX_PARSE_UNINIT;
     // reset the amount of data that is being return'd
     *bin_buf_cnt = (uint32_t)0;
-    // Check if hex blob is aligned on a line boundary
-    uint8_t block_aligned = ((hex_blob[hex_blob_size - 1] == '\n') || (hex_blob[hex_blob_size - 1] == '\r')) ? 1 : 0;
     if (skip_until_aligned) {
         if (hex_blob[0] == ':') {
             // This is block is aligned we can stop skipping
@@ -191,12 +189,10 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                             // Save next address to write
                                             next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
                                         } else {
-                                            // If block is aligned on line we can skip until next block.
-                                            // Otherwise we assume it is sector aligned so we will have
-                                            // to start skipping block until we find one aligned on record.
-                                            if (!block_aligned) {
-                                                skip_until_aligned = 1;
-                                            }
+                                            // This is Universal Hex block that does not match our version.
+                                            // We can skip this block and all blocks until we find a
+                                            // block aligned on a record boundary.
+                                            skip_until_aligned = 1;
                                             status = HEX_PARSE_OK;
                                             goto hex_parser_exit;
                                         }
