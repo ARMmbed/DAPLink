@@ -106,6 +106,8 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
     hexfile_parse_status_t status = HEX_PARSE_UNINIT;
     // reset the amount of data that is being return'd
     *bin_buf_cnt = (uint32_t)0;
+    // Check if hex blob is aligned on a line boundary
+    uint8_t block_aligned = ((hex_blob[hex_blob_size - 1] == '\n') || (hex_blob[hex_blob_size - 1] == '\r')) ? 1 : 0;
 
     // we had an exit state where the address was unaligned to the previous record and data count.
     //  Need to pop the last record into the buffer before decoding anthing else since it was
@@ -177,6 +179,10 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                             *bin_buf_cnt = (uint32_t)(*bin_buf_cnt) + line.byte_count;
                                             // Save next address to write
                                             next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
+                                        } else if (block_aligned) {
+                                            // If hex buffer is aligned on line boundary we can skip until next block
+                                            status = HEX_PARSE_OK;
+                                            goto hex_parser_exit;
                                         }
                                         break;
 
