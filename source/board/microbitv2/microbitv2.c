@@ -25,6 +25,9 @@
 #include "target_family.h"
 #include "target_board.h"
 
+uint16_t board_id_hex_min = 0x9903;
+uint16_t board_id_hex = 0;
+
 #if defined(INTERFACE_KL27Z)
 
 #include "fsl_device_registers.h"
@@ -53,9 +56,6 @@
 
 const char * const board_id_mb_2_0 = "9903";
 const char * const board_id_mb_2_1 = "9904";
-
-uint16_t board_id_hex_min = 0x9903;
-uint16_t board_id_hex = 0;
 
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
@@ -596,10 +596,13 @@ extern target_cfg_t target_device_nrf52833;
 static void prerun_board_config(void)
 {
     g_board_info.target_cfg->rt_board_id = board_id_mb_2_0_default;
+    board_id_hex = 0x9903;
     if (NRF_FICR->INFO.PART == 0x52833) {
         g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_833; // nRF52833
+        board_id_hex = 0x9905;
     } else if (NRF_FICR->INFO.PART == 0x52820) {
         g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_820; // nRF52820
+        board_id_hex = 0x9906;
     }
 }
 #endif
