@@ -21,7 +21,7 @@
 
 #include "gpio.h"
 
-#include "IO_config.h"
+#include "IO_Config.h"
 
 #if (defined(GPIO_LED_ACTIVE_STATE) && (GPIO_LED_ACTIVE_STATE == 1))
 #define GPIO_LED_STATE(state) (state ? 1 : 0)

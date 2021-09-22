@@ -20,7 +20,7 @@
  */
 
 #include "device.h"
-#include "IO_config.h"
+#include "IO_Config.h"
 #include "daplink.h"
 #include "compiler.h"
 #include "util.h"

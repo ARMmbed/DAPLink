@@ -38,6 +38,9 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nordic/nrf52820/armcc
     armclang:
+        misc:
+            common_flags:
+                - -mfpu=none
         sources:
             hic_hal:
                 - source/hic_hal/nordic/nrf52820/armcc
