@@ -25,9 +25,6 @@
 #include "target_family.h"
 #include "target_board.h"
 
-uint16_t board_id_hex_min = 0x9903;
-uint16_t board_id_hex = 0;
-
 #if defined(INTERFACE_KL27Z)
 
 #include "fsl_device_registers.h"
@@ -54,9 +51,30 @@ uint16_t board_id_hex = 0;
 #include "flash_intf.h"
 #endif
 
-const char * const board_id_mb_2_0 = "9903";
-const char * const board_id_mb_2_1 = "9904";
+#elif defined(INTERFACE_NRF52820)
 
+#include "device.h"
+
+#endif
+
+const char * const board_id_mb_2_default = "9903";
+const char * const board_id_mb_2_0 = "9904";
+const char * const board_id_mb_2_2_833 = "9905";
+const char * const board_id_mb_2_2_820 = "9906";
+
+typedef enum {
+    BOARD_VERSION_2_DEF = 0x9903,
+    BOARD_VERSION_2_0 = 0x9904,
+    BOARD_VERSION_2_2_833 = 0x9905,
+    BOARD_VERSION_2_2_820 = 0x9906,
+} mb_version_t;
+
+uint16_t board_id_hex_default = BOARD_VERSION_2_DEF;
+uint16_t board_id_hex = BOARD_VERSION_2_DEF;
+
+extern target_cfg_t target_device_nrf52833;
+
+#if defined(INTERFACE_KL27Z)
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
@@ -78,12 +96,6 @@ flashConfig_t gflashConfig = {
     .fileEncWindowEnd = 0,
 };
 
-typedef enum {
-    BOARD_VERSION_2_0 = 0,
-    BOARD_VERSION_2_1 = 1,
-} mb_version_t;
-
-extern target_cfg_t target_device_nrf52833;
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
 extern i2c_slave_handle_t g_s_handle;
@@ -105,12 +117,12 @@ static uint8_t reset_pressed = 0;
 
 // Board Rev ID detection. Reads BRD_REV_ID voltage
 // Depends on gpio_init() to have been executed already
-static mb_version_t read_brd_rev_id_pin(void) {
+static mb_version_t read_brd_rev_id(void) {
     gpio_pin_config_t pin_config = {
         .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U
     };
-    mb_version_t board_version = BOARD_VERSION_2_0;
+    mb_version_t board_version = BOARD_VERSION_2_DEF;
     uint32_t board_rev_id_adc = 0;
     uint32_t board_rev_id_mv = 0;
 
@@ -152,27 +164,47 @@ static mb_version_t read_brd_rev_id_pin(void) {
 
     // 5. Identify board ID depending on voltage
     if ( board_rev_id_mv > BRD_ID_1_LOWER_THR_V && board_rev_id_mv < BRD_ID_1_UPPER_THR_V) {
-        board_version = BOARD_VERSION_2_1;
-    } else {
         board_version = BOARD_VERSION_2_0;
+    } else {
+        board_version = BOARD_VERSION_2_DEF;
     }
 
     return board_version;
 }
 
+#elif defined(INTERFACE_NRF52820)
+
+#include "device.h"
+
+static mb_version_t read_brd_rev_id(void)
+{
+    switch (NRF_FICR->INFO.PART) {
+        case 0x52833: return BOARD_VERSION_2_2_833;
+        case 0x52820: return BOARD_VERSION_2_2_820;
+        default: return BOARD_VERSION_2_DEF;
+    }
+}
+#endif
+
 static void set_board_id(mb_version_t board_version) {
     switch (board_version) {
         case BOARD_VERSION_2_0:
             g_board_info.target_cfg->rt_board_id = board_id_mb_2_0;
-            board_id_hex = 0x9903;
+            board_id_hex = BOARD_VERSION_2_0;
             break;
-        case BOARD_VERSION_2_1:
-            g_board_info.target_cfg->rt_board_id = board_id_mb_2_1;
-            board_id_hex = 0x9904;
+        case BOARD_VERSION_2_2_833:
+            g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_833;
+            board_id_hex = BOARD_VERSION_2_2_833;
             break;
+        case BOARD_VERSION_2_2_820:
+            g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_820;
+            board_id_hex = BOARD_VERSION_2_2_820;
+            break;
+        case BOARD_VERSION_2_DEF:
+            /* Intentional fall-through */
         default:
-            g_board_info.target_cfg->rt_board_id = board_id_mb_2_0;
-            board_id_hex = 0x9903;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_2_default;
+            board_id_hex = BOARD_VERSION_2_DEF;
             break;
     }
 }
@@ -187,8 +219,12 @@ static inline uint8_t get_led_gamma(uint8_t brightness) {
 // Called in main_task() to init before USB and files are configured
 static void prerun_board_config(void)
 {
-    mb_version_t board_version = read_brd_rev_id_pin();
+    mb_version_t board_version = read_brd_rev_id();
     set_board_id(board_version);
+
+#if defined(INTERFACE_NRF52820)
+}
+#elif defined(INTERFACE_KL27Z)
 
     // init power monitoring
     power_init();
@@ -585,26 +621,6 @@ uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
     return result == 0;
 }
 
-#elif defined(INTERFACE_NRF52820)
-#include "device.h"
-
-const char * const board_id_mb_2_0_default = "9903";
-const char * const board_id_mb_2_2_833 = "9905";
-const char * const board_id_mb_2_2_820 = "9906";
-extern target_cfg_t target_device_nrf52833;
-
-static void prerun_board_config(void)
-{
-    g_board_info.target_cfg->rt_board_id = board_id_mb_2_0_default;
-    board_id_hex = 0x9903;
-    if (NRF_FICR->INFO.PART == 0x52833) {
-        g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_833; // nRF52833
-        board_id_hex = 0x9905;
-    } else if (NRF_FICR->INFO.PART == 0x52820) {
-        g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_820; // nRF52820
-        board_id_hex = 0x9906;
-    }
-}
 #endif
 
 // USB HID override function return 1 if the activity is trivial or response is null
