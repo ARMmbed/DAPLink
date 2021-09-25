@@ -1,0 +1,45 @@
+common:
+    target:
+        - mk22dn512xxx5 # Closest device.
+    macros:
+        - INTERFACE_K22F
+        - CPU_MK22FN512VMP12
+        - DAPLINK_HIC_ID=0x4B323246  # DAPLINK_HIC_ID_K22F
+        - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
+        - FLASH_DRIVER_IS_FLASH_RESIDENT=1
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=48000000
+    includes:
+        - source/hic_hal/freescale/k22f
+        - source/hic_hal/freescale/k22f/MK22F51212
+        - projectfiles/uvision/k22f_bl/build
+    sources:
+        hic_hal:
+            - source/hic_hal/freescale
+            - source/hic_hal/freescale/k22f
+            - source/hic_hal/freescale/k22f/MK22F51212
+            - source/hic_hal/freescale/k22f/armcc
+        fsl_flash_driver:
+            - source/hic_hal/freescale/iap
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\freescale\k22f"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource\hic_hal\freescale\k22f"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access

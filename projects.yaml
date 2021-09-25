@@ -42,6 +42,10 @@ module:
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/k20dx.yaml
         - records/usb/usb-bulk.yaml
+    hic_k22f: &module_hic_k22f
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/k22f.yaml
+        - records/usb/usb-bulk.yaml
     hic_k26f: &module_hic_k26f
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/k26f.yaml
@@ -102,6 +106,10 @@ projects:
         - *module_bl
         - records/hic_hal/k20dx.yaml
         - records/board/k20dx_bl.yaml
+    k22f_bl:
+        - *module_bl
+        - *module_hic_k22f
+        - records/board/k22f_bl.yaml
     k20dx_if:
         - *module_if
         - *module_hic_k20dx
@@ -302,6 +310,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/mimxrt1050_evk_qspi.yaml
+    k22f_kw38errd_if:
+        - *module_if
+        - *module_hic_k22f
+        - records/board/kw38errd.yaml
     k20dx_ep_agora_if:
         - *module_if
         - *module_hic_k20dx
