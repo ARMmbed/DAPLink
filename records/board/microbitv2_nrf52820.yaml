@@ -7,11 +7,12 @@ common:
         # - DELAY_FAST_CYCLES=2U          # Fast delay needed to reach 8MHz SWD clock speed
         # - DAP_DEFAULT_SWJ_CLOCK=8000000
         - BOARD_EXTRA_BUFFER=100
-    # includes:
-    #    - source/board/microbitv2
+    includes:
+        - source/board/microbitv2/
     sources:
         board:
-            - source/board/microbitv2/microbitv2.c
+            - source/board/microbitv2/
+            - source/board/microbitv2/nrf52820/
         target:
             - source/family/nordic/nrf52/target.c
             - source/family/nordic/target_reset_nrf52.c

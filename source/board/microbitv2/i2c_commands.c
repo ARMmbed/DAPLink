@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(INTERFACE_KL27Z)
+
 #include "i2c_commands.h"
 #include "fsl_i2c.h"
 #include "fsl_clock.h"
@@ -61,7 +63,7 @@ extern bool i2c_allow_sleep;
 extern uint16_t board_id_hex;
 extern power_source_t power_source;
 extern main_usb_connect_t usb_state;
-extern app_power_mode_t interface_power_mode;
+extern microbit_if_power_mode_t interface_power_mode;
 extern bool power_led_sleep_state_on;
 extern bool automatic_sleep_on;
 extern main_shutdown_state_t main_shutdown_state;
@@ -359,8 +361,8 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                 break;
                 case gPowerMode_c:
                     if (pI2cCommand->cmdData.writeReqCmd.dataSize == 1) {
-                        if (pI2cCommand->cmdData.writeReqCmd.data[0] == kAPP_PowerModeVlls0) {
-                            interface_power_mode = kAPP_PowerModeVlls0;
+                        if (pI2cCommand->cmdData.writeReqCmd.data[0] == MB_POWER_DOWN) {
+                            interface_power_mode = MB_POWER_DOWN;
                             i2cResponse.cmdId = gWriteResponse_c;
                             i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
                         } else { 
@@ -743,3 +745,5 @@ static void i2c_read_flash_callback(uint8_t* pData, uint8_t size) {
     // Release COMBINED_SENSOR_INT
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }
+
+#endif

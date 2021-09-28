@@ -1,5 +1,5 @@
 /**
- * @file    power.h
+ * @file    pwm.h
  * @brief
  *
  * DAPLink Interface Firmware
@@ -18,25 +18,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#ifndef PWM_H_
+#define PWM_H_
 
-#ifndef POWER_H_
-#define POWER_H_
+#include "IO_Config.h"
 
-typedef enum _microbit_power_mode_t
-{
-    MB_POWER_RUNNING = 0x01,
-    MB_POWER_SLEEP = 0x06,  // VLPS
-    MB_POWER_DOWN = 0x08,   // VLLS0
-} microbit_if_power_mode_t;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void power_init(void);
+void pwm_init(void);
+void pwm_init_pins(void);
+void pwm_deinit_pins(void);
+void pwm_set_dutycycle(uint8_t duty);
 
-/* Lowest power mode available in KL27*/
-//void power_enter_VLLS0(void);
-void power_down(void);
+#ifdef __cplusplus
+}
+#endif
 
-/* Lowest power mode that allows I2C operation with address match wakeup */
-//void power_enter_VLPS(void);
-void power_sleep(void);
-
-#endif /* POWER_H_ */
+#endif /* PWM_H_ */

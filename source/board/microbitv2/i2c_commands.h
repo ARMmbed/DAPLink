@@ -26,7 +26,8 @@
 
 #include "cmsis_compiler.h"
 #include "virtual_fs.h"
-#include "fsl_common.h"
+// #include "fsl_common.h"
+typedef int32_t status_t;
 
 #ifdef __cplusplus
 extern "C" {

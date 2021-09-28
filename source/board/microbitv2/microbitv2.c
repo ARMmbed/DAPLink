@@ -19,42 +19,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "IO_Config.h"
 #include "DAP.h"
 #include "target_family.h"
 #include "target_board.h"
+#include "gpio.h"
+#include "rl_usb.h"
+#include "flash_manager.h"
+#include "virtual_fs.h"
+#include "vfs_manager.h"
+#include "device.h"
+#include "main_interface.h"
+
+#include "microbitv2.h"
+#include "pwm.h"
+#include "power.h"
+#include "pwr_mon.h"
+#include "i2c_commands.h"
+#include "led_error_app.h"
 
 #if defined(INTERFACE_KL27Z)
 
-#include "fsl_device_registers.h"
-#include "flexio_pwm.h"
-#include "gpio.h"
-#include "power.h"
-#include "rl_usb.h"
-#include "pwr_mon.h"
-#include "main_interface.h"
-#include "i2c_commands.h"
 #include "adc.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
 #include "fsl_i2c.h"
-#include "led_error_app.h"
-#include "flash_manager.h"
-#include "virtual_fs.h"
-#include "vfs_manager.h"
-#include "cortex_m.h"
 #include "fsl_flash.h"
-#include "microbitv2.h"
+
+#endif
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "flash_intf.h"
-#endif
-
-#elif defined(INTERFACE_NRF52820)
-
-#include "device.h"
-
 #endif
 
 const char * const board_id_mb_2_default = "9903";
@@ -74,19 +70,19 @@ uint16_t board_id_hex = BOARD_VERSION_2_DEF;
 
 extern target_cfg_t target_device_nrf52833;
 
-#if defined(INTERFACE_KL27Z)
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
 uint8_t i2c_wake_timeout = 0;
 bool i2c_allow_sleep = true;
 power_source_t power_source;
-app_power_mode_t interface_power_mode = kAPP_PowerModeVlls0;
+microbit_if_power_mode_t interface_power_mode = MB_POWER_DOWN;
 bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 bool do_remount = false;
 
+#if defined(INTERFACE_KL27Z)
 flashConfig_t gflashConfig = {
     .key = CFG_KEY,
     .fileName = FLASH_CFG_FILENAME,
@@ -100,6 +96,7 @@ extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
 extern i2c_slave_handle_t g_s_handle;
 extern flash_config_t g_flash;
+#endif
 
 extern void main_powerdown_event(void);
 
@@ -115,6 +112,7 @@ static uint16_t gpio_reset_count = 0;
 // button state
 static uint8_t reset_pressed = 0;
 
+#if defined(INTERFACE_KL27Z)
 // Board Rev ID detection. Reads BRD_REV_ID voltage
 // Depends on gpio_init() to have been executed already
 static mb_version_t read_brd_rev_id(void) {
@@ -174,8 +172,6 @@ static mb_version_t read_brd_rev_id(void) {
 
 #elif defined(INTERFACE_NRF52820)
 
-#include "device.h"
-
 static mb_version_t read_brd_rev_id(void)
 {
     switch (NRF_FICR->INFO.PART) {
@@ -222,18 +218,14 @@ static void prerun_board_config(void)
     mb_version_t board_version = read_brd_rev_id();
     set_board_id(board_version);
 
-#if defined(INTERFACE_NRF52820)
-}
-#elif defined(INTERFACE_KL27Z)
-
     // init power monitoring
     power_init();
     pwr_mon_init();
 
     power_source = pwr_mon_get_power_source();
 
-    flexio_pwm_init();
-    flexio_pwm_init_pins();
+    pwm_init();
+    pwm_init_pins();
 
     if (power_source == PWR_BATT_ONLY){
         // Turn on the red LED with low duty cycle to conserve power.
@@ -244,9 +236,13 @@ static void prerun_board_config(void)
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
     }
     uint8_t gamma_led_dc = get_led_gamma(power_led_max_duty_cycle);
-    flexio_pwm_set_dutycycle(gamma_led_dc);
+    pwm_set_dutycycle(gamma_led_dc);
 
     i2c_initialize();
+
+#if defined(INTERFACE_NRF52820)
+}
+#elif defined(INTERFACE_KL27Z)
 
     gpio_pin_config_t pin_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -356,7 +352,7 @@ void board_30ms_hook()
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
     if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING
         && automatic_sleep_on == true && g_s_handle.isBusy == false && i2c_wake_timeout == 0 && i2c_allow_sleep) {
-        interface_power_mode = kAPP_PowerModeVlps;
+        interface_power_mode = MB_POWER_SLEEP;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }
 
@@ -419,9 +415,9 @@ void board_30ms_hook()
 
               // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
               // When the duty cycle is 0% or 100%, the FlexIO driver will configure the pin as GPIO
-              if (power_led_sleep_state_on == true && interface_power_mode == kAPP_PowerModeVlls0) {
+              if (power_led_sleep_state_on == true && interface_power_mode == MB_POWER_DOWN) {
                   shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
-              } else if (power_led_sleep_state_on == true && interface_power_mode == kAPP_PowerModeVlps) {
+              } else if (power_led_sleep_state_on == true && interface_power_mode == MB_POWER_SLEEP) {
                   shutdown_led_dc = PWR_LED_ON_BATT_BRIGHTNESS;
               }
               else {
@@ -481,9 +477,9 @@ void board_30ms_hook()
     // Use gamma curve except in final fade
     if (main_shutdown_state != MAIN_SHUTDOWN_REACHED_FADE) {
         uint8_t gamma_led_dc = get_led_gamma(shutdown_led_dc);
-        flexio_pwm_set_dutycycle(gamma_led_dc);
+        pwm_set_dutycycle(gamma_led_dc);
     } else {
-        flexio_pwm_set_dutycycle(final_fade_led_dc);
+        pwm_set_dutycycle(final_fade_led_dc);
     }
 
     // Remount if requested.
@@ -496,11 +492,11 @@ void board_30ms_hook()
 void board_handle_powerdown()
 {
     switch(interface_power_mode){
-        case kAPP_PowerModeVlps:
-            power_enter_VLPS();
+        case MB_POWER_SLEEP:
+            power_sleep();
             break;
-        case kAPP_PowerModeVlls0:
-            power_enter_VLLS0();
+        case MB_POWER_DOWN:
+            power_down();
             break;
         default:
             break;

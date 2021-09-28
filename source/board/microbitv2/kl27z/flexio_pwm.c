@@ -22,7 +22,7 @@
 #include "fsl_flexio.h"
 #include "fsl_common.h"
 #include "fsl_port.h"
-#include "flexio_pwm.h"
+#include "pwm.h"
 
 /*******************************************************************************
  * Definitions
@@ -45,7 +45,7 @@
 /*******************************************************************************
  * Code
  ******************************************************************************/
-void flexio_pwm_init(void)
+void pwm_init(void)
 {
     flexio_config_t fxioUserConfig;
     
@@ -69,7 +69,7 @@ void flexio_pwm_init(void)
     FLEXIO_Init(DEMO_FLEXIO_BASEADDR, &fxioUserConfig);
 }
 
-void flexio_pwm_set_dutycycle(uint8_t duty)
+void pwm_set_dutycycle(uint8_t duty)
 {
     uint32_t freq_Hz = DEMO_FLEXIO_FREQUENCY;
     
@@ -96,7 +96,7 @@ void flexio_pwm_set_dutycycle(uint8_t duty)
         PORT_SetPinMux(PIN_RED_LED_PORT, PIN_RED_LED_BIT, kPORT_MuxAsGpio);
     }
     else {
-        flexio_pwm_init_pins();
+        pwm_init_pins();
     }
 
     /* Configure the timer DEMO_FLEXIO_TIMER_CH for generating PWM */
@@ -132,12 +132,12 @@ void flexio_pwm_set_dutycycle(uint8_t duty)
     DEMO_FLEXIO_BASEADDR->TIMCTL[DEMO_FLEXIO_TIMER_CH] |= FLEXIO_TIMCTL_TIMOD(kFLEXIO_TimerModeDual8BitPWM);
 }
 
-void flexio_pwm_init_pins(void)
+void pwm_init_pins(void)
 {
     PORT_SetPinMux(PIN_RED_LED_PORT, PIN_RED_LED_BIT, kPORT_MuxAlt6);
 }
 
-void flexio_pwm_deinit_pins(void)
+void pwm_deinit_pins(void)
 {
     PORT_SetPinMux(PIN_RED_LED_PORT, PIN_RED_LED_BIT, kPORT_PinDisabledOrAnalog);
 }

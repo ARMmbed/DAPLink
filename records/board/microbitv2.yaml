@@ -10,10 +10,12 @@ common:
         - BOARD_USB_BMAXPOWER=0x96
         - BOARD_EXTRA_BUFFER=100
     includes:
-        - source/board/microbitv2
+        - source/board/microbitv2/
+        - source/board/microbitv2/kl27z/
     sources:
         board:
             - source/board/microbitv2/
+            - source/board/microbitv2/kl27z/
         target:
             - source/family/nordic/nrf52/target.c
             - source/family/nordic/target_reset_nrf52.c

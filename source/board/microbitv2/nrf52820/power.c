@@ -1,9 +1,9 @@
 /**
- * @file    power.h
+ * @file    power.c
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright 2020 NXP
+ * Copyright 2021 Micro:bit Educational Foundation
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,24 +19,19 @@
  * limitations under the License.
  */
 
-#ifndef POWER_H_
-#define POWER_H_
+#include "power.h"
 
-typedef enum _microbit_power_mode_t
+void power_init()
 {
-    MB_POWER_RUNNING = 0x01,
-    MB_POWER_SLEEP = 0x06,  // VLPS
-    MB_POWER_DOWN = 0x08,   // VLLS0
-} microbit_if_power_mode_t;
+    // TODO
+}
 
-void power_init(void);
+void power_down()
+{
+    // TODO
+}
 
-/* Lowest power mode available in KL27*/
-//void power_enter_VLLS0(void);
-void power_down(void);
-
-/* Lowest power mode that allows I2C operation with address match wakeup */
-//void power_enter_VLPS(void);
-void power_sleep(void);
-
-#endif /* POWER_H_ */
+void power_sleep()
+{
+    // TODO
+}
