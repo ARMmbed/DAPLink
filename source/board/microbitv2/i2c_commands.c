@@ -28,6 +28,7 @@
 #include "pwr_mon.h"
 #include "power.h"
 #include "storage.h"
+#include "gpio_extra.h"
 #include "microbitv2.h"
 
 
@@ -182,7 +183,7 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
     if (assert_interrupt) {
         i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
         // Response ready, assert COMBINED_SENSOR_INT
-        PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
+        gpio_assert_combined_int();
     }
 }
 
@@ -200,7 +201,7 @@ static void i2c_read_comms_callback(uint8_t* pData, uint8_t size) {
     }
 
     // Release COMBINED_SENSOR_INT
-    PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
+    gpio_disable_combined_int();
 }
 
 static bool file_extension_allowed(const vfs_filename_t  filename)
@@ -468,12 +469,12 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
     }
 
     // Response ready, assert COMBINED_SENSOR_INT
-    PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
+    gpio_assert_combined_int();
 }
 
 static void i2c_read_flash_callback(uint8_t* pData, uint8_t size) {
     // Release COMBINED_SENSOR_INT
-    PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
+    gpio_disable_combined_int();
 }
 
 void i2c_cmds_init() {

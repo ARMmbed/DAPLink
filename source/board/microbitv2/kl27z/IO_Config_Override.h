@@ -137,11 +137,6 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define PIN_BOARD_REV_ID_ADC_CH   (7)
 #define PIN_BOARD_REV_ID_ADC_MUX  (1)
 
-// COMBINED_SENSOR_INT PTA1
-#define COMBINED_SENSOR_INT_PORT        PORTA
-#define COMBINED_SENSOR_INT_GPIO        GPIOA
-#define COMBINED_SENSOR_INT_PIN         (1)
-
 // Connected LED                Not available
 
 // Target Running LED           Not available

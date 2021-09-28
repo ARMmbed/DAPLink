@@ -40,6 +40,7 @@
 #include "i2c.h"
 #include "led_error_app.h"
 #include "storage.h"
+#include "gpio_extra.h"
 
 #if defined(INTERFACE_KL27Z)
 
@@ -245,15 +246,7 @@ static void prerun_board_config(void)
 }
 #elif defined(INTERFACE_KL27Z)
 
-    gpio_pin_config_t pin_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-
-    /* COMBINED_SENSOR_INT pin mux ALT0 (Disabled High-Z) */
-    PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
-    /* COMBINED_SENSOR_INT as output default low when pin mux ALT1 */
-    GPIO_PinInit(COMBINED_SENSOR_INT_GPIO, COMBINED_SENSOR_INT_PIN, &pin_config);
+    gpio_init_combined_int();
 
     // Load Config from Flash if present
     flashConfig_t * pflashConfigROM;
@@ -329,12 +322,12 @@ void board_30ms_hook()
 
     if (usb_state == USB_CONNECTED) {
         // configure pin as GPIO
-        PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(1);
+        gpio_enable_hid_led();
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
     }
     else if (usb_state == USB_DISCONNECTED) {
         // Disable pin
-        PIN_HID_LED_PORT->PCR[PIN_HID_LED_BIT] = PORT_PCR_MUX(0);
+        gpio_disable_hid_led();
         power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
     }
 
@@ -385,7 +378,7 @@ void board_30ms_hook()
       case MAIN_USER_EVENT:
           {
           // Release COMBINED_SENSOR_INT in case it was previously asserted
-          PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
+          gpio_disable_combined_int();
 
           // Prepare I2C response
           i2cCommand_t i2cResponse = {0};
@@ -404,7 +397,7 @@ void board_30ms_hook()
           i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
 
           // Response ready, assert COMBINED_SENSOR_INT
-          PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_MuxAsGpio);
+          gpio_assert_combined_int();
 
           // Return LED to ON after release of long press
           main_shutdown_state = MAIN_SHUTDOWN_WAITING;
@@ -522,7 +515,7 @@ void board_vfs_stream_closed_hook()
     i2c_clearBuffer();
 
     // Release COMBINED_SENSOR_INT
-    PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
+    gpio_disable_combined_int();
 }
 
 bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)

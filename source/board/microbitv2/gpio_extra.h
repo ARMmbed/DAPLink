@@ -1,5 +1,5 @@
 /**
- * @file    pwm.c
+ * @file    gpio_extra.h
  * @brief
  *
  * DAPLink Interface Firmware
@@ -19,31 +19,24 @@
  * limitations under the License.
  */
 
-#include "pwm.h"
+#ifndef GPIO_EXTRA_H
+#define GPIO_EXTRA_H
+
 #include "gpio.h"
 
-void pwm_init()
-{
-    // TODO
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void pwm_init_pins()
-{
-    // TODO
-}
+void gpio_enable_hid_led(void);
+void gpio_disable_hid_led(void);
 
-void pwm_deinit_pins()
-{
-    // TODO
-}
+void gpio_init_combined_int(void);
+void gpio_disable_combined_int(void);
+void gpio_assert_combined_int(void);
 
-void pwm_set_dutycycle(uint8_t duty)
-{
-    // This is just a hack to turn off the LED when the duty cycle is low enough
-    // TODO: Actually implement this
-    if (duty < 10) {
-        gpio_clear(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR));
-    } else {
-        gpio_set(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR));
-    }
+#ifdef __cplusplus
 }
+#endif
+
+#endif
