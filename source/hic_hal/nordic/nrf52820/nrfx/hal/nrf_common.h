@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 - 2021, Nordic Semiconductor ASA
+ * Copyright (c) 2020 - 2021, Nordic Semiconductor ASA
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -31,13 +31,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef NRFX_H__
-#define NRFX_H__
+#ifndef NRF_COMMON_H__
+#define NRF_COMMON_H__
 
-#include <nrfx_config.h>
-#include <drivers/nrfx_common.h>
-#include <nrfx_glue.h>
-#include <hal/nrf_common.h>
-#include <drivers/nrfx_errors.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif // NRFX_H__
+#ifndef NRFX_EVENT_READBACK_ENABLED
+#define NRFX_EVENT_READBACK_ENABLED 1
+#endif
+
+#ifndef NRF_DECLARE_ONLY
+
+NRF_STATIC_INLINE void nrf_event_readback(void * p_event_reg)
+{
+#if NRFX_CHECK(NRFX_EVENT_READBACK_ENABLED) && !defined(NRF51)
+    (void)*((volatile uint32_t *)(p_event_reg));
+#else
+    (void)p_event_reg;
+#endif
+}
+
+#endif // NRF_DECLARE_ONLY
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // NRF_COMMON_H__

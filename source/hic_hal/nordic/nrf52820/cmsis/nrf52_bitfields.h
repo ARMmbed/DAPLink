@@ -2,6 +2,8 @@
 
 Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
 
+SPDX-License-Identifier: BSD-3-Clause
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
@@ -129,6 +131,26 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Bits 31..0 : Pointer to a scratch data area used for temporary storage during resolution.A space of minimum 3 bytes must be reserved. */
 #define AAR_SCRATCHPTR_SCRATCHPTR_Pos (0UL) /*!< Position of SCRATCHPTR field. */
 #define AAR_SCRATCHPTR_SCRATCHPTR_Msk (0xFFFFFFFFUL << AAR_SCRATCHPTR_SCRATCHPTR_Pos) /*!< Bit mask of SCRATCHPTR field. */
+
+
+/* Peripheral: APPROTECT */
+/* Description: Access Port Protection */
+
+/* Register: APPROTECT_FORCEPROTECT */
+/* Description: Software force enable APPROTECT mechanism until next reset. This register can only be written once. */
+
+/* Bits 7..0 : Write 0x0 to force enable APPROTECT mechanism */
+#define APPROTECT_FORCEPROTECT_FORCEPROTECT_Pos (0UL) /*!< Position of FORCEPROTECT field. */
+#define APPROTECT_FORCEPROTECT_FORCEPROTECT_Msk (0xFFUL << APPROTECT_FORCEPROTECT_FORCEPROTECT_Pos) /*!< Bit mask of FORCEPROTECT field. */
+#define APPROTECT_FORCEPROTECT_FORCEPROTECT_Force (0x0UL) /*!< Software force enable APPROTECT mechanism */
+
+/* Register: APPROTECT_DISABLE */
+/* Description: Software disable APPROTECT mechanism */
+
+/* Bits 7..0 : Software disable APPROTECT mechanism */
+#define APPROTECT_DISABLE_DISABLE_Pos (0UL) /*!< Position of DISABLE field. */
+#define APPROTECT_DISABLE_DISABLE_Msk (0xFFUL << APPROTECT_DISABLE_DISABLE_Pos) /*!< Bit mask of DISABLE field. */
+#define APPROTECT_DISABLE_DISABLE_SwDisable (0x5AUL) /*!< Software disable APPROTECT mechanism */
 
 
 /* Peripheral: BPROT */
@@ -12467,13 +12489,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #define UICR_PSELRESET_PIN_Msk (0x3FUL << UICR_PSELRESET_PIN_Pos) /*!< Bit mask of PIN field. */
 
 /* Register: UICR_APPROTECT */
-/* Description: Access Port protection */
+/* Description: Access port protection */
 
-/* Bits 7..0 : Enable or disable Access Port protection. Any other value than 0xFF being written to this field will enable protection. */
+/* Bits 7..0 : Enable or disable access port protection. */
 #define UICR_APPROTECT_PALL_Pos (0UL) /*!< Position of PALL field. */
 #define UICR_APPROTECT_PALL_Msk (0xFFUL << UICR_APPROTECT_PALL_Pos) /*!< Bit mask of PALL field. */
 #define UICR_APPROTECT_PALL_Enabled (0x00UL) /*!< Enable */
-#define UICR_APPROTECT_PALL_Disabled (0xFFUL) /*!< Disable */
+#define UICR_APPROTECT_PALL_HwDisabled (0x5AUL) /*!< Hardware disable of access port protection for devices where access port protection is controlled by hardware and software */
+#define UICR_APPROTECT_PALL_Disabled (0xFFUL) /*!< Hardware disable of access port protection for devices where access port protection is controlled by hardware */
 
 /* Register: UICR_NFCPINS */
 /* Description: Setting of pins dedicated to NFC functionality: NFC antenna or GPIO */
@@ -12481,8 +12504,8 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Bit 0 : Setting of pins dedicated to NFC functionality */
 #define UICR_NFCPINS_PROTECT_Pos (0UL) /*!< Position of PROTECT field. */
 #define UICR_NFCPINS_PROTECT_Msk (0x1UL << UICR_NFCPINS_PROTECT_Pos) /*!< Bit mask of PROTECT field. */
-#define UICR_NFCPINS_PROTECT_Disabled (0UL) /*!< Operation as GPIO pins. Same protection as normal GPIO pins */
-#define UICR_NFCPINS_PROTECT_NFC (1UL) /*!< Operation as NFC antenna pins. Configures the protection for NFC operation */
+#define UICR_NFCPINS_PROTECT_Disabled (0UL) /*!< Operation as GPIO pins. Same protection as normal GPIO pins. */
+#define UICR_NFCPINS_PROTECT_NFC (1UL) /*!< Operation as NFC antenna pins. Configures the protection for NFC operation. */
 
 
 /* Peripheral: WDT */

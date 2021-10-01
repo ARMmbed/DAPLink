@@ -2,6 +2,8 @@
 
 Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
 
+SPDX-License-Identifier: BSD-3-Clause
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
@@ -35,8 +37,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 /* MDK version */
 #define MDK_MAJOR_VERSION   8 
-#define MDK_MINOR_VERSION   38 
-#define MDK_MICRO_VERSION   0 
+#define MDK_MINOR_VERSION   40 
+#define MDK_MICRO_VERSION   2 
 
    
 /* Define coprocessor domains */

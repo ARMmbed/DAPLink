@@ -29,6 +29,7 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
 #include "nrf_peripherals.h"
 #include "nrf_erratas.h"
 #include "system_nrf52.h"
+#include "system_nrf52_approtect.h"
 
 #define __SYSTEM_CLOCK_64M      (64000000UL)
 
@@ -268,6 +269,8 @@ void SystemInit(void)
         __ISB();
     #endif
 
+    nrf52_handle_approtect();
+
     /* Configure NFCT pins as GPIOs if NFCT is not to be used in your code. If CONFIG_NFCT_PINS_AS_GPIOS is not defined,
        two GPIOs (see Product Specification to see which ones) will be reserved for NFC and will not be available as
        normal GPIOs. */
@@ -301,11 +304,9 @@ void SystemInit(void)
         make sure NFC pins are mapped as GPIO. */
     #if    defined (DEVELOP_IN_NRF52832) && defined(NRF52810_XXAA) \
         || defined (DEVELOP_IN_NRF52840) && defined(NRF52811_XXAA)
-        if (((*((uint32_t *)0x10001200) & (1 << 0)) != 0) || ((*((uint32_t *)0x10001204) & (1 << 0)) != 0)){
+        if ((*((uint32_t *)0x1000120C) & (1 << 0)) != 0){
             nvmc_config(NVMC_CONFIG_WEN_Wen);
-            *((uint32_t *)0x10001200) = 0;
-            nvmc_wait();
-            *((uint32_t *)0x10001204) = 0;
+            *((uint32_t *)0x1000120C) = 0;
             nvmc_wait();
             nvmc_config(NVMC_CONFIG_WEN_Ren);
             NVIC_SystemReset();

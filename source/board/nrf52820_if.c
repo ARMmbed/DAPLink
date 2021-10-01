@@ -26,9 +26,10 @@ const char * const board_id_nrf52    = "1101";
 const char * const board_id_nrf52_64 = "9903";
 const char * const board_id_nrf52840 = "1102";
 
-extern target_cfg_t target_device_nrf52;
+extern target_cfg_t target_device_nrf51822_32;
 extern target_cfg_t target_device_nrf52_64;
 extern target_cfg_t target_device_nrf52840;
+target_cfg_t target_device;
 
 static void nrf_prerun_board_config(void) {
 #if defined(TARGET_NRF52)
