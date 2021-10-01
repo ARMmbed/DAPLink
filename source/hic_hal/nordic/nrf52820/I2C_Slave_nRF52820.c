@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2013-2021 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2013-2021 Arm Limited (or its affiliates). All
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -51,7 +51,7 @@ static const ARM_DRIVER_VERSION DriverVersion = {
 };
 
 /* Driver Capabilities */
-static const ARM_I2C_CAPABILITIES DriverCapabilities = { 
+static const ARM_I2C_CAPABILITIES DriverCapabilities = {
   0U                    // Does not support 10-bit addressing
 #if (defined(ARM_I2C_API_VERSION) && (ARM_I2C_API_VERSION >= 0x203U))
 , 0U                    // Reserved bits
@@ -164,8 +164,8 @@ static int32_t I2C_Initialize (ARM_I2C_SignalEvent_t cb_event, I2C_RESOURCES *i2
   }
 
   // TWIS Configuration
-  i2c->info->config.addr[0]   = NRFX_TWIS_DEFAULT_CONFIG_ADDR0;
-  i2c->info->config.addr[1]   = NRFX_TWIS_DEFAULT_CONFIG_ADDR1;
+  i2c->info->config.addr[0]   = RTE_TWIS0_ADDR0;
+  i2c->info->config.addr[1]   = RTE_TWIS0_ADDR1;
   i2c->info->config.scl       = RTE_TWIS0_SCL_PIN_NUM;
   i2c->info->config.scl_pull  = NRF_GPIO_PIN_NOPULL;
   i2c->info->config.sda       = RTE_TWIS0_SDA_PIN_NUM;
@@ -217,8 +217,8 @@ static int32_t I2C_PowerControl (ARM_POWER_STATE state, I2C_RESOURCES *i2c) {
     return ARM_DRIVER_ERROR;
   }
 
-  if ((state != ARM_POWER_OFF)  && 
-      (state != ARM_POWER_FULL) && 
+  if ((state != ARM_POWER_OFF)  &&
+      (state != ARM_POWER_FULL) &&
       (state != ARM_POWER_LOW)) {
     return ARM_DRIVER_ERROR_PARAMETER;
   }

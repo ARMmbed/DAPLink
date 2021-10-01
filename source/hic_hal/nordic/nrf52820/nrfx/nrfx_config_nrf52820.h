@@ -1264,36 +1264,6 @@
 #define NRFX_TWIS_NO_SYNC_MODE 0
 #endif
 
-// <o> NRFX_TWIS_DEFAULT_CONFIG_ADDR0 - Address0
-#ifndef NRFX_TWIS_DEFAULT_CONFIG_ADDR0
-#define NRFX_TWIS_DEFAULT_CONFIG_ADDR0 0
-#endif
-
-// <o> NRFX_TWIS_DEFAULT_CONFIG_ADDR1 - Address1
-#ifndef NRFX_TWIS_DEFAULT_CONFIG_ADDR1
-#define NRFX_TWIS_DEFAULT_CONFIG_ADDR1 0
-#endif
-
-// <o> NRFX_TWIS_DEFAULT_CONFIG_SCL_PULL  - SCL pin pull configuration
-
-// <0=> Disabled
-// <1=> Pull down
-// <3=> Pull up
-
-#ifndef NRFX_TWIS_DEFAULT_CONFIG_SCL_PULL
-#define NRFX_TWIS_DEFAULT_CONFIG_SCL_PULL 0
-#endif
-
-// <o> NRFX_TWIS_DEFAULT_CONFIG_SDA_PULL  - SDA pin pull configuration
-
-// <0=> Disabled
-// <1=> Pull down
-// <3=> Pull up
-
-#ifndef NRFX_TWIS_DEFAULT_CONFIG_SDA_PULL
-#define NRFX_TWIS_DEFAULT_CONFIG_SDA_PULL 0
-#endif
-
 // <o> NRFX_TWIS_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
 
 // <0=> 0 (highest)
@@ -1611,9 +1581,9 @@
 // <e> NRFX_USBD_ENABLED - nrfx_usbd - USBD peripheral driver
 //==========================================================
 #ifndef NRFX_USBD_ENABLED
-#define NRFX_USBD_ENABLED 1
+#define NRFX_USBD_ENABLED 0
 #endif
-// <o> NRFX_USBD_CONFIG_IRQ_PRIORITY  - Interrupt priority
+// <o> NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
 
 // <0=> 0 (highest)
 // <1=> 1
@@ -1624,8 +1594,8 @@
 // <6=> 6
 // <7=> 7
 
-#ifndef NRFX_USBD_CONFIG_IRQ_PRIORITY
-#define NRFX_USBD_CONFIG_IRQ_PRIORITY 7
+#ifndef NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY
+#define NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY 7
 #endif
 
 // <q> USBD_CONFIG_DMASCHEDULER_ISO_BOOST  - Give priority to isochronous transfers

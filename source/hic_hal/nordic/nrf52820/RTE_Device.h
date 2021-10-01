@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2013-2021 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2013-2021 Arm Limited (or its affiliates). All
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -65,5 +65,7 @@
 #define RTE_TWIS0_SDA_PIN_NUM           I2C_SDA_PIN
 // </e>
 
+#define RTE_TWIS0_ADDR0                 0x70
+#define RTE_TWIS0_ADDR1                 0x72
 
 #endif /* __RTE_DEVICE_H */
