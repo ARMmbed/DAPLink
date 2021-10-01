@@ -63,7 +63,7 @@ def generate_version_file(version_git_dir):
     # Get the git description.
     print("#> Getting git description")
     try:
-        git_description = check_output("git describe HEAD", shell=True)
+        git_description = check_output("git describe HEAD --always --tags", shell=True)
         git_description = git_description.decode().strip()
     except:
         print("#> ERROR: Failed to get git description, do you have git.exe in your PATH environment variable?")
