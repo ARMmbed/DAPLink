@@ -30,6 +30,8 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc11u35/armcc
     gcc_arm:
+        macros:
+            - MAIN_TASK_STACK=832
         linker_file:
             - source/hic_hal/nxp/lpc11u35/gcc/lpc11u35.ld
         sources:

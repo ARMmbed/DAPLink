@@ -68,7 +68,9 @@ Provides definitions about:
 /// Default communication speed on the Debug Access Port for SWD and JTAG mode.
 /// Used to initialize the default SWD/JTAG clock frequency.
 /// The command \ref DAP_SWJ_Clock can be used to overwrite this default setting.
+#if !defined(DAP_DEFAULT_SWJ_CLOCK)
 #define DAP_DEFAULT_SWJ_CLOCK   5000000         ///< Default SWD/JTAG clock frequency in Hz.
+#endif
 
 /// Maximum Package Size for Command and Response data.
 /// This configuration settings is used to optimized the communication performance with the

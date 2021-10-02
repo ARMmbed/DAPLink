@@ -1,24 +1,25 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2019 ARM Limited
+/**
+ * @file    usb_config.c
+ * @brief   USB Device Configuration
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
 #include "util.h"
-
-/*------------------------------------------------------------------------------
- *      USB Device Configuration
- *----------------------------------------------------------------------------*/
 
 // <e> USB Device
 //   <i> Enable the USB Device functionality
@@ -67,7 +68,11 @@
 //       <i> when the device is fully operational (bMaxPower)
 //   </h>
 #define USBD_CFGDESC_BMATTRIBUTES   0x80
+#if !defined(BOARD_USB_BMAXPOWER)
 #define USBD_CFGDESC_BMAXPOWER      0xFA
+#else
+#define USBD_CFGDESC_BMAXPOWER      BOARD_USB_BMAXPOWER
+#endif
 
 //   <h> String Settings
 //     <i> These settings affect String Descriptor
@@ -146,6 +151,12 @@
 #define WEBUSB_INTERFACE 0
 #else
 #define WEBUSB_INTERFACE 1
+#endif
+
+#ifndef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#define WINUSB_INTERFACE 1
 #endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
@@ -317,6 +328,7 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
+
 #ifndef CDC_ENDPOINT
 #define CDC_ENDPOINT 0
 #else
@@ -392,6 +404,7 @@
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
 #define USBD_BULK_STRDESC            L"CMSIS-DAP v2"
 
+
 /* USB Device Calculations ---------------------------------------------------*/
 
 #define USBD_IF_NUM_MAX             (USBD_BULK_ENABLE+USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
@@ -408,15 +421,15 @@
 #define USBD_EP_NUM                 MAX(USBD_EP_NUM_CALC6, USBD_EP_NUM_CALC7)
 
 #if (USBD_EP_NUM > 7)
-#error "Max32620 only have 8 individual endpoints including EP0!"
+#error "Max32620/Max32625 only have 8 individual endpoints including EP0!"
 #endif
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_MSC_ENABLE)
-#if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)  || \
+#if ((((USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKIN)      || \
        (USBD_HID_EP_INTIN   == USBD_MSC_EP_BULKOUT)))   || \
-      ((USBD_HID_EP_INTOUT  != 0)                   && \
-       (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)  || \
+      ((USBD_HID_EP_INTOUT  != 0)                       && \
+       (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKIN)      || \
        (USBD_HID_EP_INTOUT  == USBD_MSC_EP_BULKOUT)))
 #error "HID and Mass Storage Device Interface can not use same Endpoints!"
 #endif
@@ -469,10 +482,10 @@
 #endif
 #endif
 #endif
+
 #define USBD_ADC_CIF_NUM           (0)
 #define USBD_ADC_SIF1_NUM          (1)
 #define USBD_ADC_SIF2_NUM          (2)
-
 
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
@@ -482,7 +495,7 @@
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
 #define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 #define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
-#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_BULK_ENABLE)
+#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_MSC_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)
@@ -526,7 +539,6 @@
 #define USBD_CDC_ACM_MAX_PACKET    (0)
 #define USBD_CDC_ACM_MAX_PACKET1   (0)
 #endif
-
 #if    (USBD_BULK_ENABLE)
 #if    (USBD_BULK_HS_ENABLE)
 #define USBD_BULK_MAX_PACKET       ((USBD_BULK_HS_WMAXPACKETSIZE > USBD_BULK_WMAXPACKETSIZE) ? USBD_BULK_HS_WMAXPACKETSIZE : USBD_BULK_WMAXPACKETSIZE)
@@ -536,7 +548,6 @@
 #else
 #define USBD_BULK_MAX_PACKET        (0)
 #endif
-
 #define USBD_MAX_PACKET_CALC0     ((USBD_HID_MAX_PACKET   > USBD_HID_MAX_PACKET      ) ? (USBD_HID_MAX_PACKET  ) : (USBD_HID_MAX_PACKET      ))
 #define USBD_MAX_PACKET_CALC1     ((USBD_ADC_MAX_PACKET   > USBD_CDC_ACM_MAX_PACKET  ) ? (USBD_ADC_MAX_PACKET  ) : (USBD_CDC_ACM_MAX_PACKET  ))
 #define USBD_MAX_PACKET_CALC2     ((USBD_MAX_PACKET_CALC0 > USBD_MAX_PACKET_CALC1    ) ? (USBD_MAX_PACKET_CALC0) : (USBD_MAX_PACKET_CALC1    ))

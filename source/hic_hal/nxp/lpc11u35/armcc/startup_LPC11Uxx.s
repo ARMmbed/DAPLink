@@ -59,12 +59,12 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
-                DCD     DAPLINK_BUILD_KEY         ; Build type - BL/IF
-                DCD     DAPLINK_HIC_ID            ; Compatibility
-                DCD     DAPLINK_VERSION           ; Version
+                DCD     DAPLINK_BUILD_KEY         ; DAPLINK: Build type (BL/IF)
+                DCD     DAPLINK_HIC_ID            ; DAPLINK: Compatibility
+                DCD     DAPLINK_VERSION           ; DAPLINK: Version
                 DCD     SVC_Handler               ; SVCall Handler
                 DCD     0                         ; Reserved
-                DCD     g_board_info              ; Ptr to Board info, family info other target details
+                DCD     g_board_info              ; DAPLINK: Pointer to board/family/target info
                 DCD     PendSV_Handler            ; PendSV Handler
                 DCD     SysTick_Handler           ; SysTick Handler
 

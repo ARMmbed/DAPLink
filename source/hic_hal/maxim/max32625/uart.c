@@ -237,7 +237,7 @@ int32_t uart_reset(void)
 /******************************************************************************/
 int32_t uart_set_configuration(UART_Configuration *config)
 {
-    uint32_t ctrl;
+    uint32_t ctrl = 0;
 
     // Disable UART, clear FIFOs and configuration
     CdcAcmUart->ctrl = 0;
@@ -286,7 +286,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
 /******************************************************************************/
 int32_t uart_get_configuration(UART_Configuration *config)
 {
-    uint32_t ctrl;
+    uint32_t ctrl = 0;
 
     // Capture current configuration
     ctrl = CdcAcmUart->ctrl;

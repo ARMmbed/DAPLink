@@ -152,6 +152,7 @@ SECTIONS
     *(RAM1)
     *(.data)                 /* .data sections */
     *(.data*)                /* .data* sections */
+    *(.ram_func)             /* RAM functions */
     KEEP(*(.jcr*))
     . = ALIGN(4);
     __data_end__ = .;        /* define a global symbol at data end */

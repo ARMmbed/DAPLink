@@ -1,0 +1,74 @@
+common:
+    target:
+        - cortex-m33
+    core:
+        - Cortex-M33
+    macros:
+        - INTERFACE_LPC55XX
+        - CPU_LPC55S69JBD64_cm33_core0
+        - DAPLINK_HIC_ID=0x4C504355  # DAPLINK_HIC_ID_LPC55XX
+        - OS_CLOCK=150000000
+    includes:
+        - source/hic_hal/nxp/lpc55xx
+        - source/hic_hal/nxp/lpc55xx/LPC55S69
+        - source/hic_hal/nxp/lpc55xx/LPC55S69/drivers
+    sources:
+        hic_hal:
+            - source/hic_hal/nxp/lpc55xx
+            - source/hic_hal/nxp/lpc55xx/LPC55S69
+            - source/hic_hal/nxp/lpc55xx/LPC55S69/drivers
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I../../../source/hic_hal/nxp/lpc55xx"
+            c_flags:
+                - --no_unaligned_access
+                - --diag_suppress=66 # disable warning about enums not fitting in signed 32-bit
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+        includes:
+            - projectfiles/uvision/lpc55xx_bl/build
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc55xx/armcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S69/armcc/keil_lib_power_cm33_core0.lib
+    armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource/hic_hal/nxp/lpc55xx"
+            c_flags:
+                - --no_unaligned_access
+                - --diag_suppress=66 # disable warning about enums not fitting in signed 32-bit
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+        includes:
+            - projectfiles/make_armcc/lpc55xx_bl/build
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc55xx/armcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S69/armcc/keil_lib_power_cm33_core0.lib
+    gcc_arm:
+        misc:
+            c_flags:
+                - -march=armv8-m.main+fp+dsp
+                - -mfloat-abi=hard
+                - -mfpu=fpv5-sp-d16
+            ld_flags:
+                - -march=armv8-m.main+fp+dsp
+                - -mfloat-abi=hard
+                - -mfpu=fpv5-sp-d16
+                - -Wl,--defsym=__stack_size__=0x800
+        linker_file:
+            - source/hic_hal/nxp/lpc55xx/gcc/lpc55xx.ld
+        includes:
+            - source/hic_hal/nxp/lpc55xx/gcc
+        sources:
+            hic_hal:
+                - source/hic_hal/nxp/lpc55xx/gcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S69/gcc/libpower_hardabi.a

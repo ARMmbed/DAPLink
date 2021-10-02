@@ -49,14 +49,17 @@ extern "C" {
                         _Pragma("O0")
 #define NO_OPTIMIZE_INLINE
 #define NO_OPTIMIZE_POST _Pragma("pop")
+#define RAM_FUNCTION __attribute__((section("ram_func")))
 #elif (defined(__ARMCC_VERSION)) /* ARMCLANG */
 #define NO_OPTIMIZE_PRE
 #define NO_OPTIMIZE_INLINE
 #define NO_OPTIMIZE_POST
+#define RAM_FUNCTION __attribute__((section("ram_func")))
 #elif (defined(__GNUC__))
 #define NO_OPTIMIZE_PRE
 #define NO_OPTIMIZE_INLINE __attribute__((optimize("O0")))
 #define NO_OPTIMIZE_POST
+#define RAM_FUNCTION __attribute__((long_call, section(".ram_func")))
 #else
 #error "Unknown compiler"
 #endif

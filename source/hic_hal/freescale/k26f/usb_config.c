@@ -1,6 +1,6 @@
 /**
- * @file    usb_config.h
- * @brief
+ * @file    usb_config.c
+ * @brief   USB Device Configuration
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -77,7 +77,11 @@
 //       <i> when the device is fully operational (bMaxPower)
 //   </h>
 #define USBD_CFGDESC_BMATTRIBUTES   0x80
+#if !defined(BOARD_USB_BMAXPOWER)
 #define USBD_CFGDESC_BMAXPOWER      0xFA
+#else
+#define USBD_CFGDESC_BMAXPOWER      BOARD_USB_BMAXPOWER
+#endif
 
 //   <h> String Settings
 //     <i> These settings affect String Descriptor
@@ -156,6 +160,12 @@
 #define WEBUSB_INTERFACE 0
 #else
 #define WEBUSB_INTERFACE 1
+#endif
+
+#ifndef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#define WINUSB_INTERFACE 1
 #endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
@@ -487,7 +497,7 @@
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
 #define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 #define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
-#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_BULK_ENABLE)
+#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_MSC_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)

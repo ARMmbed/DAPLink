@@ -61,12 +61,12 @@ __Vectors       DCD     __initial_sp              	; 0 Top of Stack
                 DCD     BusFault_Handler          	; 5 Bus Fault Handler
                 DCD     UsageFault_Handler        	; 6 Usage Fault Handler
                 DCD     Sign_Value                	; 7 Reserved
-                DCD     DAPLINK_BUILD_KEY               ; Build type - BL/IF
-                DCD     DAPLINK_HIC_ID                  ; Compatibility
-                DCD     DAPLINK_VERSION                 ; Version
+                DCD     DAPLINK_BUILD_KEY           ; 8 DAPLINK: Build type (BL/IF)
+                DCD     DAPLINK_HIC_ID              ; 9 DAPLINK: Compatibility
+                DCD     DAPLINK_VERSION             ; 10 DAPLINK: Version
                 DCD     SVC_Handler                 ; 11 SVCall Handler
                 DCD     DebugMon_Handler            ; 12 Debug Monitor Handler
-                DCD     g_board_info                ; 13 Ptr to Board info, family info other target details
+                DCD     g_board_info                ; 13 DAPLINK: Pointer to board/family/target info
                 DCD     PendSV_Handler              ; 14 PendSV Handler
                 DCD     SysTick_Handler             ; 15 SysTick Handler
 

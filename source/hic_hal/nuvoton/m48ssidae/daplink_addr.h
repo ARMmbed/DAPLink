@@ -37,9 +37,6 @@
 #define DAPLINK_ROM_BL_START            0x00000000
 #define DAPLINK_ROM_BL_SIZE             KB(48)
 
-#define DAPLINK_ROM_CONFIG_ADMIN_START  0x0000C000
-#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   KB(0)
-
 #define DAPLINK_ROM_IF_START            0x0000C000
 #define DAPLINK_ROM_IF_SIZE             KB(204)
 

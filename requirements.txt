@@ -4,7 +4,6 @@ pyserial
 pyOCD==0.28.*
 requests
 intelhex
-six
 enum34
 pyusb
 mbed-cli==1.8.2

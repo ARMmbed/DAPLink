@@ -1,0 +1,84 @@
+name: Build DAPLink (Linux)
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Cache Embedded Arm Toolchain
+      id:   cache-arm-gcc
+      uses: actions/cache@v2
+      env:
+        cache-name: arm-gcc-9-2020-q2
+      with:
+        path: ${{ runner.temp }}/arm-gcc
+        key:  ${{ runner.os }}-${{ env.cache-name }}
+        restore-keys: ${{ runner.os }}-${{ env.cache-name }}
+
+    - name: Cache Python modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Checkout source files
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install Python module
+      run:  |
+        pip3 install --user -r requirements.txt
+
+    - name: Install Embedded Arm Toolchain
+      if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
+      run:  |
+        curl -O -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+        md5sum gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+        echo Installing  in ${{ runner.temp }}/arm-gcc
+        mkdir -p ${{ runner.temp }}/arm-gcc
+        tar jvxf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
+
+    - name: Install dependencies
+      run:  |
+        sudo apt install -y ccache ninja-build
+        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
+        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
+        ccache --set-config=cache_dir="$GITHUB_WORKSPACE"
+        ccache --set-config=cache_dir="$GITHUB_WORKSPACE/.ccache"
+        ccache --set-config=max_size=2Gi
+        ccache -z -s
+        arm-none-eabi-gcc -v | tee log.txt
+        (git status; git log -1 )>> log.txt
+
+    - name: Cache CCache
+      id:   ccache
+      uses: actions/cache@v2
+      with:
+        path: .ccache
+        key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
+        restore-keys: ${{ runner.os }}-ccache-
+
+    - name: Compile
+      run:  |
+        export PATH="/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH"
+        python tools/progen_compile.py --release --parallel -v -v --ignore-failures
+        (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
+        mkdir bootloaders
+        cp projectfiles/make_gcc_arm/*_bl/build/*_crc.{bin,hex} bootloaders
+
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: firmware-dev-${{github.run_number}}
+        path: |
+          bootloaders/*
+          firmware*/*
+          !firmware*/*.zip

@@ -1,6 +1,6 @@
 /**
  * @file    usb_config.c
- * @brief
+ * @brief   USB Device Configuration
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -27,15 +27,15 @@
 #define USBD_RTX_CORE_STACK         0
 #define USBD_RTX_DEVICE_STACK       0
 #define USBD_RTX_ENDPOINT0_STACK    0
+
+//   <o0.0> High-speed
+//     <i> Enable high-speed functionality (if device supports it)
+#define USBD_HS_ENABLE              0
 #if (defined(WEBUSB_INTERFACE) || defined(WINUSB_INTERFACE) || defined(BULK_ENDPOINT))
 #define USBD_BOS_ENABLE             1
 #else
 #define USBD_BOS_ENABLE             0
 #endif
-//   <o0.0> High-speed
-//     <i> Enable high-speed functionality (if device supports it)
-#define USBD_HS_ENABLE              0
-
 //   <h> Device Settings
 //     <i> These settings affect Device Descriptor
 //     <o0> Power
@@ -68,7 +68,11 @@
 //       <i> when the device is fully operational (bMaxPower)
 //   </h>
 #define USBD_CFGDESC_BMATTRIBUTES   0x80
+#if !defined(BOARD_USB_BMAXPOWER)
 #define USBD_CFGDESC_BMAXPOWER      0xFA
+#else
+#define USBD_CFGDESC_BMAXPOWER      BOARD_USB_BMAXPOWER
+#endif
 
 //   <h> String Settings
 //     <i> These settings affect String Descriptor
@@ -147,6 +151,12 @@
 #define WEBUSB_INTERFACE 0
 #else
 #define WEBUSB_INTERFACE 1
+#endif
+
+#ifndef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#define WINUSB_INTERFACE 1
 #endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
@@ -397,6 +407,7 @@
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
 #define USBD_BULK_STRDESC            L"CMSIS-DAP v2"
 
+
 /* USB Device Calculations ---------------------------------------------------*/
 
 #define USBD_IF_NUM_MAX             (USBD_BULK_ENABLE+USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
@@ -479,7 +490,6 @@
 #define USBD_ADC_SIF1_NUM          (1)
 #define USBD_ADC_SIF2_NUM          (2)
 
-
 #define USBD_ADC_CIF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+0)
 #define USBD_ADC_SIF1_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+1)
 #define USBD_ADC_SIF2_STR_NUM      (3+USBD_STRDESC_SER_ENABLE+2)
@@ -488,7 +498,7 @@
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
 #define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 #define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
-#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_BULK_ENABLE)
+#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_MSC_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)
@@ -532,7 +542,6 @@
 #define USBD_CDC_ACM_MAX_PACKET    (0)
 #define USBD_CDC_ACM_MAX_PACKET1   (0)
 #endif
-
 #if    (USBD_BULK_ENABLE)
 #if    (USBD_BULK_HS_ENABLE)
 #define USBD_BULK_MAX_PACKET       ((USBD_BULK_HS_WMAXPACKETSIZE > USBD_BULK_WMAXPACKETSIZE) ? USBD_BULK_HS_WMAXPACKETSIZE : USBD_BULK_WMAXPACKETSIZE)
@@ -542,7 +551,6 @@
 #else
 #define USBD_BULK_MAX_PACKET        (0)
 #endif
-
 #define USBD_MAX_PACKET_CALC0     ((USBD_HID_MAX_PACKET   > USBD_HID_MAX_PACKET      ) ? (USBD_HID_MAX_PACKET  ) : (USBD_HID_MAX_PACKET      ))
 #define USBD_MAX_PACKET_CALC1     ((USBD_ADC_MAX_PACKET   > USBD_CDC_ACM_MAX_PACKET  ) ? (USBD_ADC_MAX_PACKET  ) : (USBD_CDC_ACM_MAX_PACKET  ))
 #define USBD_MAX_PACKET_CALC2     ((USBD_MAX_PACKET_CALC0 > USBD_MAX_PACKET_CALC1    ) ? (USBD_MAX_PACKET_CALC0) : (USBD_MAX_PACKET_CALC1    ))

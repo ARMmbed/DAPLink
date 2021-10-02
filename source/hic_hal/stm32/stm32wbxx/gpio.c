@@ -191,6 +191,39 @@ void gpio_init(void)
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
     HAL_GPIO_Init(PIN_MSC_LED_PORT, &GPIO_InitStructure);
 	HAL_GPIO_WritePin(PIN_MSC_LED_PORT, PIN_MSC_LED, GPIO_PIN_SET);
+	
+	//configure JTAG Pins
+	
+	GPIO_InitStructure.Pin = OE;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(OE_PORT, &GPIO_InitStructure);
+	HAL_GPIO_WritePin(OE_PORT, OE, GPIO_PIN_SET);
+	
+	GPIO_InitStructure.Pin = JTAG_TRST;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(JTAG_TRST_PORT, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.Pin = JTAG_TCK;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(JTAG_TCK_PORT, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.Pin = JTAG_TDI;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(JTAG_TDI_PORT, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.Pin = JTAG_TDO;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(JTAG_TDO_PORT, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.Pin = JTAG_TMS;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(JTAG_TMS_PORT, &GPIO_InitStructure);
 
     // reset button configured as gpio open drain output with a pullup
     GPIO_InitStructure.Pin = nRESET_PIN;

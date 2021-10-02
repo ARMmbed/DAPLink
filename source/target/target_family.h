@@ -61,6 +61,7 @@ enum _vendor_ids {
     kStub_VendorID = 0,
     kNXP_VendorID = 11,
     kTI_VendorID = 16,
+	kMaxim_VendorID = 23,
     kNordic_VendorID = 54,
     kToshiba_VendorID = 92,
     kRenesas_VendorID = 117,
@@ -96,6 +97,7 @@ typedef enum _family_id {
     kNXP_Mimxrt_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 3),
     kNXP_RapidIot_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 4),
     kNXP_KinetisK32W_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 5),
+    kNXP_LPC55xx_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 6),
     kNordic_Nrf51_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 1),
     kNordic_Nrf52_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 2),
     kRealtek_Rtl8195am_FamilyID = VENDOR_TO_FAMILY(kRealtek_VendorID, 1),
@@ -104,6 +106,7 @@ typedef enum _family_id {
     kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
     kRenesas_FamilyID = VENDOR_TO_FAMILY(kRenesas_VendorID, 1),
     kAmbiq_ama3b1kk_FamilyID = VENDOR_TO_FAMILY(kAmbiq_VendorID, 1),
+    kMaxim_MAX32660_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 4),
 } family_id_t;
 
 //! @brief Defines all characteristics of a device family.

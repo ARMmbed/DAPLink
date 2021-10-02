@@ -31,6 +31,11 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc
     armcc:
+        misc:
+            asm_flags:
+                - --no_unaligned_access
+            c_flags:
+                - --no_unaligned_access
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32f103xb/armcc

@@ -3,7 +3,7 @@ tool_specific:
         mcu:
             - cortex-m0
         macros:
-            -
+            - __PROGRAM_START
         linker_file:
             - source/daplink/daplink.sct
         misc:

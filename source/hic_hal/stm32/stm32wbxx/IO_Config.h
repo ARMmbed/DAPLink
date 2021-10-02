@@ -28,7 +28,7 @@
 
 
 //COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F373XC);
-COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
+COMPILER_ASSERT(DAPLINK_HIC_ID == 0x97969908); //Ashley
 
 //USB control pin
 #define USB_CONNECT_PORT_ENABLE()    __HAL_RCC_GPIOA_CLK_ENABLE()
@@ -64,17 +64,17 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define nRESET_PIN_Bit               11
 
 //SWD
-#define SWCLK_TCK_PIN_PORT           GPIOC
-#define SWCLK_TCK_PIN                GPIO_PIN_12	
-#define SWCLK_TCK_PIN_Bit            12
+#define SWCLK_TCK_PIN_PORT           GPIOA
+#define SWCLK_TCK_PIN                GPIO_PIN_8	
+#define SWCLK_TCK_PIN_Bit            8
 
-#define SWDIO_OUT_PIN_PORT           GPIOC
-#define SWDIO_OUT_PIN                GPIO_PIN_14
-#define SWDIO_OUT_PIN_Bit            14
+#define SWDIO_OUT_PIN_PORT           GPIOB
+#define SWDIO_OUT_PIN                GPIO_PIN_15
+#define SWDIO_OUT_PIN_Bit            15
 
-#define SWDIO_IN_PIN_PORT            GPIOB
-#define SWDIO_IN_PIN                 GPIO_PIN_2
-#define SWDIO_IN_PIN_Bit             2
+#define SWDIO_IN_PIN_PORT            GPIOA
+#define SWDIO_IN_PIN                 GPIO_PIN_9
+#define SWDIO_IN_PIN_Bit             9
 
 //LEDs
 //USB status LED
@@ -94,5 +94,31 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == 0x46333733); //Ashley
 #define PIN_MSC_LED_PORT             GPIOB
 #define PIN_MSC_LED                  GPIO_PIN_1
 #define PIN_MSC_LED_Bit              1
+
+//JTAG Pins
+
+#define OE_PORT                     GPIOB
+#define OE                          GPIO_PIN_5
+#define OE_Bit                      5
+
+#define JTAG_TRST_PORT              GPIOA
+#define JTAG_TRST                   GPIO_PIN_2
+#define JTAG_TRST_Bit               2
+
+#define JTAG_TCK_PORT               GPIOA
+#define JTAG_TCK                    GPIO_PIN_9
+#define JTAG_TCK_Bit                9
+
+#define JTAG_TDI_PORT               GPIOB
+#define JTAG_TDI                    GPIO_PIN_14
+#define JTAG_TDI_Bit                14
+
+#define JTAG_TDO_PORT               GPIOB
+#define JTAG_TDO                    GPIO_PIN_15
+#define JTAG_TDO_Bit                15
+
+#define JTAG_TMS_PORT               GPIOA
+#define JTAG_TMS                    GPIO_PIN_10
+#define JTAG_TMS_Bit                10
 
 #endif

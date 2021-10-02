@@ -78,7 +78,6 @@ bool info_get_config_user_present(void);
 // the given region is present.
 uint32_t info_get_crc_bootloader(void);
 uint32_t info_get_crc_interface(void);
-uint32_t info_get_crc_config_admin(void);
 uint32_t info_get_crc_config_user(void);
 
 // Get version info as an integer

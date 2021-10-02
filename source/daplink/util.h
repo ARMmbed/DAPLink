@@ -66,6 +66,11 @@ uint32_t util_write_uint32(char *str, uint32_t value);
 uint32_t util_write_uint32_zp(char *str, uint32_t value, uint16_t total_size);
 uint32_t util_write_string(char *str, const char *data);
 
+uint32_t util_write_in_region(uint8_t *buf, uint32_t size, uint32_t start,
+    uint32_t pos, const char *input, uint32_t length);
+uint32_t util_write_string_in_region(uint8_t *buf, uint32_t size, uint32_t start,
+    uint32_t pos, const char *input);
+
 __STATIC_INLINE uint32_t util_div_round_up(uint32_t dividen, uint32_t divisor)
 {
     return (dividen + divisor - 1) / divisor;

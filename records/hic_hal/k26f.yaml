@@ -40,7 +40,10 @@ tool_specific:
                 - source/hic_hal/freescale/k26f/armcc
     armcc:
         misc:
+            asm_flags:
+                - --no_unaligned_access
             c_flags:
+                - --no_unaligned_access
                 - --diag_suppress=66 # disable warning about enums not fitting in signed 32-bit
         sources:
             hic_hal:

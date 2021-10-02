@@ -28,6 +28,11 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nuvoton/m48ssidae/armcc
     armcc:
+        misc:
+            asm_flags:
+                - --no_unaligned_access
+            c_flags:
+                - --no_unaligned_access
         sources:
             hic_hal:
                 - source/hic_hal/nuvoton/m48ssidae/armcc

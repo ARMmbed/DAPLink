@@ -3,5 +3,5 @@ common:
         board:
             - source/board/dipdap_sdt52832b.c
         family:
-            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/nrf52/target.c
             - source/family/nordic/target_reset_nrf52.c

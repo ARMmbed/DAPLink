@@ -227,6 +227,7 @@ void USBD_Reset(void)
     USB0->ERREN   =  0xFF;                /* enable error interrupt sources     */
     USB0->ADDR    =  0x00;                /* set default address                */
 
+    NVIC_SetPriority(USB0_IRQn, 0x01);    /* set second highest priority        */
     NVIC_EnableIRQ(USB0_IRQn);
 }
 

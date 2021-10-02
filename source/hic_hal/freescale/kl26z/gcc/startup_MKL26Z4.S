@@ -56,12 +56,12 @@ __isr_vector:
     .long   0                                               /* Reserved*/
     .long   0                                               /* Reserved*/
     .long   0                                               /* Reserved*/
-    .long   DAPLINK_BUILD_KEY                               /* Build type - BL/IF*/
-    .long   DAPLINK_HIC_ID                                  /* Compatibility*/
-    .long   DAPLINK_VERSION                                 /* Version*/
+    .long   DAPLINK_BUILD_KEY                               /* DAPLINK: Build type (BL/IF)*/
+    .long   DAPLINK_HIC_ID                                  /* DAPLINK: Compatibility*/
+    .long   DAPLINK_VERSION                                 /* DAPLINK: Version*/
     .long   SVC_Handler                                     /* SVCall Handler*/
     .long   0                                               /* Reserved*/
-    .long   g_board_info                                    /* Ptr to Board info, family info other target details*/
+    .long   g_board_info                                    /* DAPLINK: Pointer to board/family/target info*/
     .long   PendSV_Handler                                  /* PendSV Handler*/
     .long   SysTick_Handler                                 /* SysTick Handler*/
 

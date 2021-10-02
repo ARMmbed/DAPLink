@@ -33,10 +33,18 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/freescale/k20dx/armcc
     armcc:
+        misc:
+            asm_flags:
+                - --no_unaligned_access
+            c_flags:
+                - --no_unaligned_access
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k20dx/armcc
     armclang:
+        misc:
+            common_flags:
+                - -mfpu=none
         sources:
             hic_hal:
                 - source/hic_hal/freescale/k20dx/armcc

@@ -51,13 +51,13 @@ static uint8_t read_board_type_pin(void) {
 static void set_board_id(mb_version_t board_version) {
     switch (board_version) {
         case BOARD_VERSION_1_3:
-            target_device.rt_board_id = board_id_mb_1_3;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_1_3;
             break;
         case BOARD_VERSION_1_5:
-            target_device.rt_board_id = board_id_mb_1_5;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_1_5;
             break;
         default:
-            target_device.rt_board_id = board_id_mb_1_5;
+            g_board_info.target_cfg->rt_board_id = board_id_mb_1_5;
             break;
     }
 }
@@ -69,7 +69,7 @@ static void prerun_board_config(void) {
     set_board_id(board_version);
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null 
+// USB HID override function return 1 if the activity is trivial or response is null
 uint8_t usbd_hid_no_activity(uint8_t *buf)
 {
     if(buf[0] == ID_DAP_Vendor3 &&  buf[1] == 0)
@@ -78,12 +78,14 @@ uint8_t usbd_hid_no_activity(uint8_t *buf)
         return 0;
 }
 
+extern target_cfg_t target_device_nrf51822_16;
+
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .family_id = kNordic_Nrf51_FamilyID,
-    .daplink_url_name =       "MICROBITHTM",
-    .daplink_drive_name =       "MICROBIT   ",
+    .daplink_url_name = "MICROBITHTM",
+    .daplink_drive_name = "MICROBIT   ",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
     .prerun_board_config = prerun_board_config,
-    .target_cfg = &target_device,
+    .target_cfg = &target_device_nrf51822_16,
 };
