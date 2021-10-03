@@ -7,7 +7,7 @@ common:
         - INTERFACE_STM32WBXX
         - USE_HAL_DRIVER
         - STM32WBXX
-        - DAPLINK_HIC_ID=0x97969908  # DAPLINK_HIC_ID_STM32WBXX
+        - DAPLINK_HIC_ID=0x9796990E  # DAPLINK_HIC_ID_STM32WBXX
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
         - OS_CLOCK=64000000
