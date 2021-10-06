@@ -2,6 +2,7 @@
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
+# Copyright (c) 2021 Mathias Brossard
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -48,17 +49,18 @@ for p in project_list:
         boards.append(p)
 
 hics.sort()
+boards.sort()
+all_sorted = hics + boards
+
 for p in hics:
     print(p)
 print()
-boards.sort()
 for p in boards:
     print(p)
 
-all_sorted = hics + boards
 for i in range(len(project_list)):
     if project_list[i] != all_sorted[i]:
         sys.stderr.write("Found '%s' expected '%s'\n" % (project_list[i], all_sorted[i]))
-        break
+        exit(-1)
 
 exit(0)
