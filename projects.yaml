@@ -76,6 +76,10 @@ module:
     hic_m48ssidae: &module_hic_m48ssidae
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/m48ssidae.yaml
+    hic_psoc5lp: &module_hic_psoc5lp
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/psoc5lp.yaml
+        - records/usb/usb-bulk.yaml
 
 projects:
     # HIC bootloaders and all target interfaces
@@ -641,6 +645,10 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32665hsp.yaml
+    psoc5lp_cy8ckit_if:
+        - *module_if
+        - *module_hic_psoc5lp
+        - records/board/cy8ckit.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c

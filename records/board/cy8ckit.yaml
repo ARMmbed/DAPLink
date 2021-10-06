@@ -1,0 +1,14 @@
+common:
+    macros:
+        - TARGET_MCU_PSOC6
+    includes:
+        - source/family/infineon/PSoC6xxx
+    sources:
+        board:
+            - source/board/cy8ckit.c
+        target:
+            - source/family/infineon/target.c
+            - source/family/infineon/target_reset.c
+            - source/family/infineon/PSoC6xxx/PSOC6xxx.c
+            
+
