@@ -264,3 +264,8 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
     }
     g_slave_TX_buff_ready = 1;
 }
+
+bool i2c_isBusy()
+{
+    return g_s_handle.isBusy;
+}

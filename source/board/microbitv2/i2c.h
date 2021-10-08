@@ -24,6 +24,7 @@
 #define I2C_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*! i2c Write Callback prototype */
 typedef void (*i2cWriteCallback_t)
@@ -50,5 +51,6 @@ i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t
 i2c_status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress);
 void i2c_clearBuffer(void);
 void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
+bool i2c_isBusy(void);
 
 #endif /* I2C_H_ */

@@ -47,8 +47,6 @@
 #include "adc.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
-#include "fsl_i2c.h"
-#include "fsl_flash.h"
 
 #endif
 
@@ -85,7 +83,6 @@ bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 bool do_remount = false;
 
-#if defined(INTERFACE_KL27Z)
 flashConfig_t gflashConfig = {
     .key = CFG_KEY,
     .fileName = FLASH_CFG_FILENAME,
@@ -97,8 +94,6 @@ flashConfig_t gflashConfig = {
 
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
-extern i2c_slave_handle_t g_s_handle;
-#endif
 
 extern void main_powerdown_event(void);
 
@@ -242,10 +237,6 @@ static void prerun_board_config(void)
 
     i2c_cmds_init();
 
-#if defined(INTERFACE_NRF52820)
-}
-#elif defined(INTERFACE_KL27Z)
-
     gpio_init_combined_int();
 
     // Load Config from Flash if present
@@ -345,7 +336,7 @@ void board_30ms_hook()
 
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
     if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING
-        && automatic_sleep_on == true && g_s_handle.isBusy == false && i2c_wake_timeout == 0 && i2c_allow_sleep) {
+        && automatic_sleep_on == true && i2c_isBusy() == false && i2c_wake_timeout == 0 && i2c_allow_sleep) {
         interface_power_mode = MB_POWER_SLEEP;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }
@@ -610,8 +601,6 @@ uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
 
     return result == 0;
 }
-
-#endif
 
 // USB HID override function return 1 if the activity is trivial or response is null
 uint8_t usbd_hid_no_activity(uint8_t *buf)

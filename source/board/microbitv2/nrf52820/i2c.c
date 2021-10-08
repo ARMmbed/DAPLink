@@ -50,3 +50,9 @@ void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
 {
     // TODO
 }
+
+bool i2c_isBusy()
+{
+    // TODO
+    return false;
+}

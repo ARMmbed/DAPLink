@@ -122,13 +122,6 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define PIN_RED_LED_BIT          (7)
 #define PIN_RED_LED              (1<<PIN_RED_LED_BIT)
 
-
-// define the reset button presses
-#define RESET_SHORT_PRESS       10   // x 30ms debounce time = 300ms
-#define RESET_MID_PRESS         80   // x 30ms debounce time = 2400ms
-#define RESET_LONG_PRESS        120  // x 30ms debounce time = 3600ms
-#define RESET_MAX_LENGTH_PRESS  RESET_LONG_PRESS
-
 // BOARD REV ID
 #define PIN_BOARD_REV_ID_PORT     PORTD
 #define PIN_BOARD_REV_ID_GPIO     PTD
