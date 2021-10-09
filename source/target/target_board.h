@@ -55,7 +55,7 @@ enum _board_info_flags {
  * by the device family.
  */
 typedef struct board_info {
-    uint16_t info_version;              /*!< Version number of the board info */ 
+    uint16_t info_version;              /*!< Version number of the board info */
     uint16_t family_id;                 /*!< Use to select or identify target family from defined target family or custom ones */
     char board_id[5];                   /*!< 4-char board ID plus null terminator */
     uint8_t _padding[3];
@@ -75,6 +75,12 @@ typedef struct board_info {
     void (*swd_set_target_reset)(uint8_t asserted);         /*!< Boards can customize how to send reset to the target with precedence over target family */
     uint8_t (*target_set_state)(target_state_t state);  /*!< Boards can customize target debug states with precedence over target family */
     uint32_t soft_reset_type;                               /*!< Boards can override software reset type to VECTRESET or SYSRESETREQ */
+    //@}
+
+    //! @name CMSIS-DAP v2.1 board strings
+    //@{
+    char *board_vendor; //!< Board vendor. Maximum 60 characters including terminal NULL.
+    char *board_name;   //!< Board name. Maximum 60 characters including terminal NULL.
     //@}
 } board_info_t;
 
