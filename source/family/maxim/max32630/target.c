@@ -34,4 +34,7 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20000000 + KB(512),
+    // No CMSIS Pack for MAX32630
+    // .target_vendor                  = "Maxim",
+    // .target_part_number             = "MAX32630",
 };

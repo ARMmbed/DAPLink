@@ -1,6 +1,6 @@
 /**
  * @file    microbit.c
- * @brief   board ID for the BBC Microbit board
+ * @brief   board ID for the SparkFun Artemis Development Kit
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -69,4 +69,6 @@ const board_info_t g_board_info = {
     .daplink_target_url = "https://www.sparkfun.com/artemis",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device,
+    .board_vendor = "SparkFun",
+    .board_name = "Artemis Development Kit",
 };

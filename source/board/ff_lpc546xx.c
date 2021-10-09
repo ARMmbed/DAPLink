@@ -1,6 +1,6 @@
 /**
  * @file    ff_lpc546xx.c
- * @brief   board ID for the NXP LPC54608Xpresso board
+ * @brief   board ID for the L-Tek FF-LPC546XX board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name =       "FF-LPC546XX",
     .daplink_target_url = "https://os.mbed.com/platforms/L-TEK-FF-LPC546XX",
     .target_cfg = &target_device,
+    .board_vendor = "L-Tek",
+    .board_name = "FF-LPC546XX",
 };

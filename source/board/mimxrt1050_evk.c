@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = 		"RT1050-EVK",
     .daplink_target_url = "http://www.nxp.com/imxrt1050evk",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "MIMXRT1050-EVKB",
 };

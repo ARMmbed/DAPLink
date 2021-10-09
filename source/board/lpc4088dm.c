@@ -27,4 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "1062",
     .family_id = CREATE_FAMILY_ID(kNXP_VendorID, 0), //custom
     .target_cfg = &target_device,
+    .board_vendor = "Embedded Artists",
+    .board_name = "LPC4088 Display Module",
 };

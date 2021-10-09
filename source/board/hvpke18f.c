@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = 	"HVP-KE18FD",
     .daplink_target_url = "http://www.nxp.com/hvp-ke18f",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "HVP-KE18F",
 };

@@ -573,4 +573,6 @@ const board_info_t g_board_info = {
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device_nrf52833,
+    .board_vendor = "Micro:bit Educational Foundation",
+    .board_name = "BBC micro:bit V2",
 };

@@ -1,6 +1,6 @@
 /**
  * @file    frdmkw41z.c
- * @brief   board ID for the NXP FRDM-KW24F board
+ * @brief   board ID for the NXP FRDM-KW41Z board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -30,5 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = 	"FRDM-KW41Z",
     .daplink_target_url = "http://www.nxp.com/frdm-kw41z",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-KW41Z",
 };
-

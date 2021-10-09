@@ -40,4 +40,6 @@ target_cfg_t target_device = {
     .ram_regions[0].end             = 0x20044000,
     .ram_regions[1].start           = 0x30000000,
     .ram_regions[1].end             = 0x30000000 + 0x00044000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "LPC55S69JBD100",
 };

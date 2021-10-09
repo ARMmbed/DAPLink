@@ -1,6 +1,6 @@
 /**
  * @file    musca_a.c
- * @brief   board ID for the ARM MUSCA A board
+ * @brief   board ID for the ARM MUSCA A1 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -92,4 +92,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name =     "MBED       ",
     .target_cfg = &target_device,
     .prerun_board_config = prerun_board_config,
+    .board_vendor = "ARM",
+    .board_name = "Musca",
 };

@@ -27,4 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "0210",
     .family_id = kNXP_KinetisL_FamilyID,
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-KL05Z",
 };

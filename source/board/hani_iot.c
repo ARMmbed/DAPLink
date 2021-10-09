@@ -31,5 +31,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name =       "HANI_IOT",
     .daplink_target_url = "https://os.mbed.com/platforms/HANI-IOT/",
     .target_cfg = &target_device,
+    .board_vendor = "Arrow",
+    .board_name = "HANI-IOT",
 };
-
