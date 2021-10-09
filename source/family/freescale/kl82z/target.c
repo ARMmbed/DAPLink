@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the kl46z
+ * @brief   Target information for the kl82z
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -35,4 +35,6 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x1FFFA000,
     .ram_regions[0].end             = 0x20012000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "MKL82Z128VLK7",
 };

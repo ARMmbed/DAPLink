@@ -1,6 +1,6 @@
 /**
  * @file    ssci1114.c
- * @brief   board ID for the Switch Science LPC1114 board
+ * @brief   board ID for the Switch Science mbed LPC1114FN28 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -28,5 +28,6 @@ const board_info_t g_board_info = {
     .family_id = kStub_HWReset_FamilyID,
     .daplink_drive_name =       "MBED       ",
     .target_cfg = &target_device,
+    .board_vendor = "Switch Science",
+    .board_name = "mbed LPC1114FN28",
 };
-

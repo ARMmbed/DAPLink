@@ -35,4 +35,6 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20028000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "LPC54608J512ET180",
 };

@@ -35,4 +35,6 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x1FFFFC00,
     .ram_regions[0].end             = 0x20000C00,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "MKL05Z32xxx4",
 };

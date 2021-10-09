@@ -1,6 +1,6 @@
 /**
  * @file    frdmk66f.c
- * @brief   board ID for the NXP FRDM-K64F board
+ * @brief   board ID for the NXP FRDM-K66F board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -31,5 +31,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = 		"FRDM-K66FD",
     .daplink_target_url = "http://www.nxp.com/frdm-k66f",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-K66F",
 };
-

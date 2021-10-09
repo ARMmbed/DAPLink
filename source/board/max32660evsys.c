@@ -1,6 +1,6 @@
 /**
  * @file    max32660evsys.c
- * @brief   board ID for the Maxim Integrated's MAX32660EVSYS
+ * @brief   board ID for the Maxim Integrated's MAX32660-EVSYS
  *
  * DAPLink Interface Firmware
  *
@@ -21,7 +21,7 @@
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL MAXIM INTEGRATED BE LIABLE FOR ANY CLAIM, DAMAGES
  * OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
  * Except as contained in this notice, the name of Maxim Integrated
@@ -46,5 +46,7 @@ const board_info_t g_board_info = {
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
     .daplink_url_name = "MAX32660HTM",
-    .daplink_target_url = "http://www.maximintegrated.com/max32660",
+    .daplink_target_url = "http://www.maximintegrated.com/max32660-evsys",
+    .board_vendor = "Maxim Integrated",
+    .board_name = "MAX32660-EVSYS",
 };
