@@ -527,7 +527,7 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
     uint32_t pos = 0;
 
     pos += util_write_string_in_region(buf, size, start, pos,
-        "# DAPLink Firmware - see https://mbed.com/daplink\r\n"
+        "# DAPLink Firmware - see https://daplink.io/\r\n"
         // Build ID
         "Build ID: " GIT_DESCRIPTION " (" COMPILER_DESCRIPTION LOCAL_MODS ")\r\n");
     // Unique ID
