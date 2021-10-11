@@ -45,6 +45,9 @@ typedef enum {
     I2C_STATUS_FAIL
 } i2c_status_t;
 
+/* TX and RX buffer size */
+#define I2C_DATA_LENGTH             (1024U + 8U)
+
 void i2c_initialize(void);
 void i2c_deinitialize(void);
 i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress);

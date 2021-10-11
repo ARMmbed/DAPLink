@@ -19,11 +19,10 @@
  * limitations under the License.
  */
 
-#if defined(INTERFACE_KL27Z)
+#include <string.h>
 
 #include "i2c_commands.h"
 #include "i2c.h"
-#include "fsl_port.h"
 #include "main_interface.h"
 #include "pwr_mon.h"
 #include "power.h"
@@ -484,5 +483,3 @@ void i2c_cmds_init() {
     i2c_registerWriteCallback(i2c_write_flash_callback, I2C_SLAVE_FLASH);
     i2c_registerReadCallback(i2c_read_flash_callback, I2C_SLAVE_FLASH);
 }
-
-#endif
