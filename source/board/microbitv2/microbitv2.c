@@ -37,7 +37,9 @@
 #include "power.h"
 #include "pwr_mon.h"
 #include "i2c_commands.h"
+#include "i2c.h"
 #include "led_error_app.h"
+#include "storage.h"
 
 #if defined(INTERFACE_KL27Z)
 
@@ -95,7 +97,6 @@ flashConfig_t gflashConfig = {
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
 extern i2c_slave_handle_t g_s_handle;
-extern flash_config_t g_flash;
 #endif
 
 extern void main_powerdown_event(void);
@@ -238,7 +239,7 @@ static void prerun_board_config(void)
     uint8_t gamma_led_dc = get_led_gamma(power_led_max_duty_cycle);
     pwm_set_dutycycle(gamma_led_dc);
 
-    i2c_initialize();
+    i2c_cmds_init();
 
 #if defined(INTERFACE_NRF52820)
 }
@@ -528,7 +529,7 @@ bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
 {
     if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
         // Erase last 128KB flash block
-        FLASH_Erase(&g_flash, FLASH_CONFIG_ADDRESS, g_flash.PFlashTotalSize / g_flash.PFlashBlockCount, kFLASH_apiEraseKey);
+        storage_erase_all();
     }
 
     return false;

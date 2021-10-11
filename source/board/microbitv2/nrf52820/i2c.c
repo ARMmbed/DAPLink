@@ -1,5 +1,5 @@
 /**
- * @file    i2c_commands.c
+ * @file    i2c.c
  * @brief
  *
  * DAPLink Interface Firmware
@@ -19,9 +19,34 @@
  * limitations under the License.
  */
 
-#include "i2c_commands.h"
+#include "i2c.h"
 
-void i2c_cmds_init()
+void i2c_initialize()
+{
+    // TODO
+}
+
+void i2c_deinitialize()
+{
+    // TODO
+}
+
+i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress)
+{
+    // TODO
+}
+
+i2c_status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress)
+{
+    // TODO
+}
+
+void i2c_clearBuffer()
+{
+    // TODO
+}
+
+void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
 {
     // TODO
 }

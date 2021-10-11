@@ -1,9 +1,10 @@
 /**
- * @file    i2c_commands.c
+ * @file    storage.h
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright 2021 Micro:bit Educational Foundation
+ * Copyright 2020 NXP
+ * Copyright 2021 Micro:bit Educational foundation
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,10 +19,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#ifndef STORAGE_H_
+#define STORAGE_H_
 
-#include "i2c_commands.h"
+#include <stdint.h>
 
-void i2c_cmds_init()
-{
-    // TODO
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf);
+uint32_t storage_erase_sector(uint32_t adr);
+uint32_t storage_erase_all(void);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* STORAGE_H_ */

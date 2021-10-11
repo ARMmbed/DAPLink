@@ -1,5 +1,5 @@
 /**
- * @file    i2c_commands.c
+ * @file    storage.c
  * @brief
  *
  * DAPLink Interface Firmware
@@ -19,9 +19,24 @@
  * limitations under the License.
  */
 
-#include "i2c_commands.h"
+#include "storage.h"
 
-void i2c_cmds_init()
+#include "microbitv2.h"
+
+uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
 {
-    // TODO
+    // TODO: Implement this
+    return 0;
+}
+
+uint32_t storage_erase_sector(uint32_t adr)
+{
+    // TODO: Implement this
+    return 0;
+}
+
+uint32_t storage_erase_all()
+{
+    // TODO: Implement this
+    return 0;
 }

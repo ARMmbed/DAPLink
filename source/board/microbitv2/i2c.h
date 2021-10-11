@@ -1,0 +1,54 @@
+/**
+ * @file    i2c.h
+ * @brief
+ *
+ * DAPLink Interface Firmware
+ * Copyright 2020 NXP
+ * Copyright 2021 Micro:bit Educational Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef I2C_H_
+#define I2C_H_
+
+#include <stdint.h>
+
+/*! i2c Write Callback prototype */
+typedef void (*i2cWriteCallback_t)
+(
+    uint8_t*    pData,
+    uint8_t     size
+);
+
+/*! i2c Read Callback prototype */
+typedef void (*i2cReadCallback_t)
+(
+    uint8_t*    pData,
+    uint8_t     size
+);
+
+typedef enum {
+    I2C_STATUS_SUCCESS = 0,
+    I2C_STATUS_FAIL
+} i2c_status_t;
+
+void i2c_initialize(void);
+void i2c_deinitialize(void);
+i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress);
+i2c_status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress);
+void i2c_clearBuffer(void);
+void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
+
+#endif /* I2C_H_ */

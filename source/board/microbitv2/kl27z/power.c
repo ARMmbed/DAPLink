@@ -31,7 +31,7 @@
 #include "pwr_mon.h"
 #include "IO_Config.h"
 #include "uart.h"
-#include "i2c_commands.h"
+#include "i2c.h"
 #include "rl_usb.h"
 
 /*******************************************************************************
