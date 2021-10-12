@@ -1,6 +1,6 @@
 /**
- * @file    target_reset.c
- * @brief   Target reset for the MAX32660
+ * @file    target_reset_max32xxx.c
+ * @brief   Target reset for the MAXIM micros
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -25,7 +25,13 @@
 
 #define DBG_Addr     (0xe000edf0)   // Default Core debug base addresses
 
-#define TARGET_MXC_BASE_FLC         ((uint32_t)0x40029000UL)    // Flash controller base address
+#if (TARGET_MXM == 32660)
+    #define TARGET_MXC_BASE_FLC         ((uint32_t)0x40029000UL)    // Flash controller base address
+#else //
+    #define TARGET_MXC_BASE_FLC         ((uint32_t)0x40002000UL)    // Flash controller base address
+    #define TARGET_MXC_R_FLC_PERFORM    (TARGET_MXC_BASE_FLC + (uint32_t)0x00000050UL)  // Flash controller perform register
+#endif
+
 
 #define INCREASE_DELAY  10
 #define MAX_DELAY       30000
@@ -35,7 +41,7 @@
  * is unavailable for 1024 clocks after reset.
  * This code will reset and halt after the SWD lockout period.
  */
-static uint8_t target_set_state_max32660(target_state_t state)
+static uint8_t target_set_state_max32xxx(target_state_t state)
 {
     unsigned int halt_timeout, halt_retries = 10;
     unsigned int lockout_delay, i;
@@ -89,15 +95,24 @@ static uint8_t target_set_state_max32660(target_state_t state)
         }
 
         if (val & S_HALT) {
-			return 1;
+            #if (TARGET_MXM != 32660)
+            /* Setting the Flash Controller Perform register to 0 allows
+             * the Flash Controller pending bit to clear, otherwise the
+             * bit remains set which could fail flash operation.
+             */
+            val = 0;
+            swd_write_word(TARGET_MXC_R_FLC_PERFORM, val);
+            #endif
+
+            return 1;
         }
     }
 
     return 0;
 }
 
-const target_family_descriptor_t g_maxim_max32660 = {
-    .family_id = kMaxim_MAX32660_FamilyID,
-    .target_set_state = target_set_state_max32660,
+const target_family_descriptor_t g_maxim_family = {
+    .family_id = kMaxim_FamilyID,
+    .target_set_state = target_set_state_max32xxx,
     .default_reset_type = kHardwareReset,
 };

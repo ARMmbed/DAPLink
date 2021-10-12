@@ -105,9 +105,7 @@ typedef enum _family_id {
     kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
     kRenesas_FamilyID = VENDOR_TO_FAMILY(kRenesas_VendorID, 1),
     kAmbiq_ama3b1kk_FamilyID = VENDOR_TO_FAMILY(kAmbiq_VendorID, 1),
-    kMaxim_MAX32660_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 4),
-    kMaxim_MAX32630_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 2),
-    kMaxim_MAX32620_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 3),
+    kMaxim_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 1),
 } family_id_t;
 
 //! @brief Defines all characteristics of a device family.
