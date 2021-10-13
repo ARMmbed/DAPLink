@@ -36,8 +36,24 @@ typedef enum {
 } power_source_t;
 
 void pwr_mon_init(void);
+
+/**
+ * Based on the volatages in VBAT_SENSE and the MCU Vin it determines what
+ * power sources are active.
+ * @return Active power source via power_source_t enum.
+ */
 power_source_t pwr_mon_get_power_source(void);
+
+/**
+ * Measures the Vin voltage.
+ * @return Interface MCU Vin voltage in millivolts.
+ */
 uint32_t pwr_mon_get_vin_mv(void);
+
+/**
+ * Measures the VBAT_SENSE voltage.
+ * @return VBAT_SENSE voltage in millivolts.
+ */
 uint32_t pwr_mon_get_vbat_mv(void);
 
 

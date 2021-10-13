@@ -25,18 +25,29 @@
 typedef enum _microbit_power_mode_t
 {
     MB_POWER_RUNNING = 0x01,
-    MB_POWER_SLEEP = 0x06,  // VLPS
-    MB_POWER_DOWN = 0x08,   // VLLS0
+    MB_POWER_SLEEP = 0x06,  // KL27 VLPS
+    MB_POWER_DOWN = 0x08,   // KL27 VLLS0
 } microbit_if_power_mode_t;
 
+/** 
+ * Initialises the required resources to switch between different power modes.
+ */
 void power_init(void);
 
-/* Lowest power mode available in KL27*/
-//void power_enter_VLLS0(void);
+/**
+ * Lowest power mode available in the Interface MCU.
+ * Wakes up via reset button press or falling edge of VBUS_ABSENT (previously
+ * named WAKE_ON_EDGE).
+ * 
+ */
 void power_down(void);
 
-/* Lowest power mode that allows I2C operation with address match wakeup */
-//void power_enter_VLPS(void);
+/**
+ * Lowest power mode that wakes up on I2C operation with address match wakeup.
+ * Also wakes up via reset button, VBUS_ABSENT (previously named WAKE_ON_EDGE).
+ * Does not wake up on UART traffic.
+ * Resumes operation on wake up.
+ */
 void power_sleep(void);
 
 #endif /* POWER_H_ */
