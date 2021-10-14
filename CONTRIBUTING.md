@@ -52,6 +52,17 @@ file. If a file is newly added by you, it must contain the standard license head
 require an Arm copyright. Please note that we do not list changes in each source file by copyright
 owner, as this becomes a burden to maintain.
 
+Exceptions to Apache 2.0 licensing can be made for imported source libraries, usually drivers for
+HICs or target families. In such cases, the license must be listed by the [Open Source Initiative](https://opensource.org)
+(OSI) and is required to be compatible with Apache 2.0. In addition, the Arm open source team must have
+previously approved use of the license—if this is not the case, then a request for approval can be
+made as long as the license meets other requirements. In all cases, license exceptions will be reviewed
+by the maintainers.
+
+All source files, including any imported sources with other license, must include an
+[SPDX License Identifier](https://spdx.dev/ids/) in the header comment. This allows for easy and
+clear identification of the file's license.
+
 
 ## Process
 
