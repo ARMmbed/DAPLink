@@ -26,6 +26,7 @@
 
 // target information
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
@@ -34,7 +35,7 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .flash_regions[1].start         = 0x10000000,
     .flash_regions[1].end           = 0x10000000 + KB(608),
-    .flash_regions[1].flash_algo    = (program_target_t *) &flash,    
+    .flash_regions[1].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20044000,
     .ram_regions[1].start           = 0x30000000,

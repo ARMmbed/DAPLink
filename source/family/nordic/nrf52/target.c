@@ -26,6 +26,7 @@
 
 // target information for model with 32 KB RAM
 target_cfg_t target_device_nrf52 = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
@@ -39,6 +40,7 @@ target_cfg_t target_device_nrf52 = {
 
 // target information for nRF52832 with 64 KB RAM / 512 KB Flash
 target_cfg_t target_device_nrf52_64 = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
@@ -52,6 +54,7 @@ target_cfg_t target_device_nrf52_64 = {
 
 // target information for nRF52833 with 128 KB RAM / 512 KB Flash
 target_cfg_t target_device_nrf52833 = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
@@ -65,6 +68,7 @@ target_cfg_t target_device_nrf52833 = {
 
 // target information for nRF52840 with 256 KB RAM / 1024 KB Flash
 target_cfg_t target_device_nrf52840 = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_nrf52,
     .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,

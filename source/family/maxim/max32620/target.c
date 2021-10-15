@@ -25,6 +25,7 @@
 
 /* MAX32620 2MiB Flash, 256KiB RAM */
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = FLASH_BASE,
