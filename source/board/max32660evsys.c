@@ -42,7 +42,7 @@
 const board_info_t g_board_info = {
 	.info_version = kBoardInfoVersion,
     .board_id = "0421",
-    .family_id = kMaxim_FamilyID,
+    .family_id = kMaxim_MAX3266X_FamilyID,
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
     .daplink_url_name = "MAX32660HTM",

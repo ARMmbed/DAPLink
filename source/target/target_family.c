@@ -71,7 +71,9 @@ const target_family_descriptor_t g_toshiba_tz_family  = {0};
 __attribute__((weak))
 const target_family_descriptor_t g_ambiq_ama3b1kk  = {0};
 __attribute__((weak))
-const target_family_descriptor_t g_maxim_family  = {0};
+const target_family_descriptor_t g_maxim_max3262x_family  = {0};
+__attribute__((weak))
+const target_family_descriptor_t g_maxim_max3266x_family  = {0};
 
 __attribute__((weak))
 const target_family_descriptor_t *g_families[] = {
@@ -91,7 +93,8 @@ const target_family_descriptor_t *g_families[] = {
     &g_renesas_family,
     &g_toshiba_tz_family,
     &g_ambiq_ama3b1kk,
-    &g_maxim_family,
+    &g_maxim_max3262x_family,
+    &g_maxim_max3266x_family,
     0 // list terminator
 };
 

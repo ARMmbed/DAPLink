@@ -5,5 +5,3 @@ common:
         family:
             - source/family/maxim/max32660/target.c
             - source/family/maxim/target_reset_max32xxx.c
-    macros:
-        - TARGET_MXM=32660
