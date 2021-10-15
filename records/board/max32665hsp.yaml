@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/max32665hsp.c
-        family:
-            - source/family/maxim/max32665/target.c
