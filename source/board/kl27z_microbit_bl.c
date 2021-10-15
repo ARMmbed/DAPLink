@@ -44,11 +44,12 @@ static const sector_info_t sectors_info[] = {
 
 // kl26z128 target information
 target_cfg_t target_device = {
+    .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start     = DAPLINK_ROM_IF_START,
     .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
-    .flash_regions[0].flags     = kRegionIsDefault,  
+    .flash_regions[0].flags     = kRegionIsDefault,
     .ram_regions[0].start       = 0x1FFFE000,
     .ram_regions[0].end         = 0x20006000,
 };
@@ -75,6 +76,6 @@ bool reset_button_pressed()
     else {
         btn_pressed = gpio_get_reset_btn();
     }
-    
+
     return btn_pressed;
 }

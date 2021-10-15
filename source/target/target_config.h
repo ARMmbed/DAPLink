@@ -28,6 +28,13 @@
 #include "flash_blob.h"
 #include "util.h"
 
+//! @brief Current target configuration version.
+//!
+//! - Version 0: Initial version.
+enum _target_config_version {
+    kTargetConfigVersion = 0, //!< The current board info version.
+};
+
 //! This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 

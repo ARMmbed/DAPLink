@@ -41,11 +41,12 @@ static const sector_info_t sectors_info[] = {
 
 // k26f target information
 target_cfg_t target_device = {
+    .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start     = DAPLINK_ROM_IF_START,
     .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
-    .flash_regions[0].flags     = kRegionIsDefault,  
+    .flash_regions[0].flags     = kRegionIsDefault,
     .ram_regions[0].start       = 0x1fff0000,
     .ram_regions[0].end         = 0x20030000,
     /* .flash_algo not needed for bootloader */
