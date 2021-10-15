@@ -4,4 +4,4 @@ common:
             - source/board/max32660evsys.c
         family:
             - source/family/maxim/max32660/target.c
-            - source/family/maxim/max32660/target_reset_max32660.c
+            - source/family/maxim/target_reset_max32xxx.c

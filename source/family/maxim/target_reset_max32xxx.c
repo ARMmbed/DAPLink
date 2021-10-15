@@ -1,6 +1,6 @@
 /**
- * @file    target_reset.c
- * @brief   Target reset for the MAX32660
+ * @file    target_reset_max32xxx.c
+ * @brief   Target reset for the Maxim micros
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -25,7 +25,12 @@
 
 #define DBG_Addr     (0xe000edf0)   // Default Core debug base addresses
 
-#define TARGET_MXC_BASE_FLC         ((uint32_t)0x40029000UL)    // Flash controller base address
+//
+#define MAX3262X_FLC_BASE           ((uint32_t)0x40002000UL)    // Flash controller base address
+#define MAX3262X_R_FLC_PERFORM      (MAX3262X_FLC_BASE + (uint32_t)0x50UL)  // Flash controller perform register
+//
+#define MAX3266X_FLC_BASE           ((uint32_t)0x40029000UL)    // Flash controller base address
+
 
 #define INCREASE_DELAY  10
 #define MAX_DELAY       30000
@@ -35,7 +40,7 @@
  * is unavailable for 1024 clocks after reset.
  * This code will reset and halt after the SWD lockout period.
  */
-static uint8_t target_set_state_max32660(target_state_t state)
+static uint8_t target_set_state_max326xx(target_state_t state, uint32_t reg_flc_perform) 
 {
     unsigned int halt_timeout, halt_retries = 10;
     unsigned int lockout_delay, i;
@@ -89,15 +94,38 @@ static uint8_t target_set_state_max32660(target_state_t state)
         }
 
         if (val & S_HALT) {
-			return 1;
+            if (reg_flc_perform) {
+                /* Setting the Flash Controller Perform register to 0 allows
+                 * the Flash Controller pending bit to clear, otherwise the
+                 * bit remains set which could fail flash operation.
+                 */
+                val = 0;
+                swd_write_word(reg_flc_perform, val);
+            }
+
+            return 1;
         }
     }
 
     return 0;
 }
 
-const target_family_descriptor_t g_maxim_max32660 = {
-    .family_id = kMaxim_MAX32660_FamilyID,
-    .target_set_state = target_set_state_max32660,
+static uint8_t  target_set_state_max3262x(target_state_t state) {
+    return target_set_state_max326xx(state, MAX3262X_R_FLC_PERFORM);
+}
+
+static uint8_t target_set_state_max3266x(target_state_t state) {
+    return target_set_state_max326xx(state, 0);
+}
+
+const target_family_descriptor_t g_maxim_max3262x_family = {
+    .family_id = kMaxim_MAX3262X_FamilyID,
+    .target_set_state = target_set_state_max3262x,
+    .default_reset_type = kHardwareReset,
+};
+
+const target_family_descriptor_t g_maxim_max3266x_family = {
+    .family_id = kMaxim_MAX3266X_FamilyID,
+    .target_set_state = target_set_state_max3266x,
     .default_reset_type = kHardwareReset,
 };
