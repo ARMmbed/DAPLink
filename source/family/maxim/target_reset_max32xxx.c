@@ -20,7 +20,7 @@
  */
 #include "target_family.h"
 #include "swd_host.h"
-#include "DAP_Config.h"
+#include "DAP_config.h"
 #include "target_board.h"
 
 #define DBG_Addr     (0xe000edf0)   // Default Core debug base addresses
