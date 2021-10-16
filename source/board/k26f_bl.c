@@ -60,6 +60,6 @@ const board_info_t g_board_info = {
     .board_id = "0000",
     .daplink_url_name =   "HELP_FAQHTM",
     .daplink_drive_name = "BOOTLOADER",
-    .daplink_target_url = "https://mbed.com/daplink",
+    .daplink_target_url = "https://daplink.io",
     .target_cfg = &target_device,
 };
