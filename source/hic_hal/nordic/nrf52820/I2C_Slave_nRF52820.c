@@ -124,6 +124,12 @@ static void twis_event_handler (nrfx_twis_evt_t const * p_event, I2C_RESOURCES *
   }
 
   if (i2c->info->cb_event != NULL) {
+    uint8_t address = nrf_twis_match_get(i2c->nrfx_twis.p_reg);
+    if (address == 0) {
+      event |= EXTENSION_I2C_EVENT_SLAVE_ADDR_0;
+    } else if (address == 1) {
+      event |= EXTENSION_I2C_EVENT_SLAVE_ADDR_1;
+    }
     i2c->info->cb_event (event);
   }
 }

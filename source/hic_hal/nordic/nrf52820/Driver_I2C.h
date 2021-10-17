@@ -16,12 +16,14 @@
  * limitations under the License.
  *
  * $Date:        31. March 2020
- * $Revision:    V2.4
+ * $Revision:    V2.4.DAPLinkMod
  *
  * Project:      I2C (Inter-Integrated Circuit) Driver definitions
  */
 
 /* History:
+ *  Version 2.4.DAPLinkMod
+ *    Added extra I2C event flags to match slave address
  *  Version 2.4
  *    Removed volatile from ARM_I2C_STATUS
  *  Version 2.3
@@ -113,6 +115,10 @@ typedef struct _ARM_I2C_STATUS {
 #define ARM_I2C_EVENT_ARBITRATION_LOST    (1UL << 6)  ///< Master lost arbitration
 #define ARM_I2C_EVENT_BUS_ERROR           (1UL << 7)  ///< Bus error detected (START/STOP at illegal position)
 #define ARM_I2C_EVENT_BUS_CLEAR           (1UL << 8)  ///< Bus clear finished
+
+/* DAPLink modification: Extending the event flags to include slave address match */
+#define EXTENSION_I2C_EVENT_SLAVE_ADDR_1  (1UL << 14)  ///< Transaction on slave address 1 match
+#define EXTENSION_I2C_EVENT_SLAVE_ADDR_0  (1UL << 15)  ///< Transaction on slave address 0 match
 
 
 // Function documentation

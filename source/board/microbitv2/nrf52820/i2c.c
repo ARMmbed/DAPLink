@@ -63,14 +63,24 @@ static void I2C_SignalEvent(uint32_t event) {
     }
 
     if (event & ARM_I2C_EVENT_TRANSFER_DONE) {
-       debug_i2c_data((uint8_t *)"d ", 1);
+        debug_i2c_data((uint8_t *)"d ", 1);
         if (prev_event & ARM_I2C_EVENT_SLAVE_RECEIVE) {
             debug_i2c_printf("[rx] %02x %02x ", g_slave_RX_buff[0], g_slave_RX_buff[1]);
-            pfWriteCommsCallback(&g_slave_RX_buff[0], I2Cdrv->GetDataCount());
+
+            if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_0) {
+                pfWriteCommsCallback(&g_slave_RX_buff[0], I2Cdrv->GetDataCount());
+            } else if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_1) {
+                pfWriteFlashCallback(&g_slave_RX_buff[0], I2Cdrv->GetDataCount());
+            }
         } else if (prev_event & ARM_I2C_EVENT_SLAVE_TRANSMIT) {
             debug_i2c_data((uint8_t *)"[tx] ", 5);
             for (int i = 0; i < 5; i++) debug_i2c_printf("%02x ", g_slave_TX_buff[i]);
-            pfReadCommsCallback(&g_slave_TX_buff[0], I2Cdrv->GetDataCount());
+
+            if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_0) {
+                pfReadCommsCallback(&g_slave_TX_buff[0], I2Cdrv->GetDataCount());
+            } else if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_1) {
+                pfReadFlashCallback(&g_slave_TX_buff[0], I2Cdrv->GetDataCount());
+            }
         }
     }
     if (event & ARM_I2C_EVENT_BUS_ERROR) {
@@ -96,9 +106,9 @@ static void I2C_SignalEvent(uint32_t event) {
 void i2c_initialize()
 {
     i2c_clearBuffer();
+    // I2C addresses configured via default values from RTE_Device.h
     I2Cdrv->Initialize(I2C_SignalEvent);
     I2Cdrv->PowerControl(ARM_POWER_FULL);
-    I2Cdrv->Control(ARM_I2C_OWN_ADDRESS, I2C_SLAVE_NRF_KL_COMMS);
 }
 
 void i2c_deinitialize()
