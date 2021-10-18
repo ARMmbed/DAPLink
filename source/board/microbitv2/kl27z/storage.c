@@ -21,8 +21,6 @@
 
 #include "storage.h"
 
-#include "microbitv2.h"
-
 #include "fsl_flash.h"
 
 extern flash_config_t g_flash;
@@ -55,7 +53,7 @@ uint32_t storage_erase_sector(uint32_t adr)
 
 uint32_t storage_erase_all()
 {
-    int status = FLASH_Erase(&g_flash, FLASH_CONFIG_ADDRESS, g_flash.PFlashTotalSize / g_flash.PFlashBlockCount, kFLASH_apiEraseKey);
-    // TODO: Should we verify erase?
+    int status = FLASH_Erase(&g_flash, STORAGE_CONFIG_ADDRESS, g_flash.PFlashTotalSize / g_flash.PFlashBlockCount, kFLASH_apiEraseKey);
+    // TODO: Should we verify erase? Might be slow
     return status;
 }

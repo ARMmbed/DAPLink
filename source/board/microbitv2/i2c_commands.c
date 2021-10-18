@@ -233,7 +233,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
     uint32_t storage_address = pI2cCommand->cmdData.write.addr2 << 16 |
                             pI2cCommand->cmdData.write.addr1 << 8 |
                             pI2cCommand->cmdData.write.addr0 << 0;
-    uint32_t address = storage_address + FLASH_STORAGE_ADDRESS;
+    uint32_t address = storage_address + STORAGE_ADDRESS_START;
     uint32_t length = __REV(pI2cCommand->cmdData.write.length);
     uint32_t data = (uint32_t) pI2cCommand->cmdData.write.data;
 
@@ -261,7 +261,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
         break;
         case gFlashDataRead_c: {
             /* Do address range validation */
-            if (address + length > (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE)) {
+            if (address + length > STORAGE_ADDRESS_END) {
                 pI2cCommand->cmdId = gFlashError_c;
                 i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
             } else {
@@ -276,19 +276,19 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             uint32_t address = pI2cCommand->cmdData.erase.sAddr2 << 16 |
                             pI2cCommand->cmdData.erase.sAddr1 << 8 |
                             pI2cCommand->cmdData.erase.sAddr0 << 0;
-            uint32_t start_addr = address + FLASH_STORAGE_ADDRESS;
+            uint32_t start_addr = address + STORAGE_ADDRESS_START;
 
             address = pI2cCommand->cmdData.erase.eAddr2 << 16 |
                             pI2cCommand->cmdData.erase.eAddr1 << 8 |
                             pI2cCommand->cmdData.erase.eAddr0 << 0;
-            uint32_t end_addr = address + FLASH_STORAGE_ADDRESS;
+            uint32_t end_addr = address + STORAGE_ADDRESS_START;
 
             /* Do address range validation */
             if (start_addr % DAPLINK_SECTOR_SIZE == 0 &&
                 end_addr % DAPLINK_SECTOR_SIZE == 0 &&
                 start_addr <= end_addr &&
-                start_addr < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE) &&
-                end_addr < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE)) {
+                start_addr < STORAGE_ADDRESS_END &&
+                end_addr < STORAGE_ADDRESS_END) {
                 for (uint32_t addr = start_addr; addr <= end_addr && status == 0; addr += DAPLINK_SECTOR_SIZE) {
                     status = storage_erase_sector(addr);
                 }
@@ -348,7 +348,7 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                                         pI2cCommand->cmdData.data[3] << 0;
 
                 /* Validate file size */
-                if (tempFileSize <= (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE)) {
+                if (tempFileSize <= STORAGE_SIZE) {
                     gflashConfig.fileSize = tempFileSize;
                     tempFileSize = __REV(gflashConfig.fileSize);
                     i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
@@ -418,21 +418,21 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
         case gFlashCfgWrite_c:
             // Check first is config is already present in flash
             // If differences are found, erase and write new config
-            if (0 != memcmp(&gflashConfig, (void *)FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t))) {
-                status = storage_erase_sector(FLASH_CONFIG_ADDRESS);
+            if (0 != memcmp(&gflashConfig, (void *)STORAGE_CONFIG_ADDRESS, sizeof(flashConfig_t))) {
+                status = storage_erase_sector(STORAGE_CONFIG_ADDRESS);
 
                 if (status != 0) {
                     pI2cCommand->cmdId = gFlashError_c;
                 }
                 else {
-                    status = storage_program_page(FLASH_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint8_t *) &gflashConfig);
+                    status = storage_program_page(STORAGE_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint8_t *) &gflashConfig);
                 }
             }
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         case gFlashCfgErase_c:
             // Erase flash sector containing flash config
-            status = storage_erase_sector(FLASH_CONFIG_ADDRESS);
+            status = storage_erase_sector(STORAGE_CONFIG_ADDRESS);
 
             if (status != 0) {
                 pI2cCommand->cmdId = gFlashError_c;
@@ -440,16 +440,16 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
             else {
                 // Return flash config (RAM) to default values
                 gflashConfig.key = CFG_KEY;
-                memcpy(gflashConfig.fileName, FLASH_CFG_FILENAME, 11);
-                gflashConfig.fileSize = FLASH_CFG_FILESIZE;
-                gflashConfig.fileVisible = FLASH_CFG_FILEVISIBLE;
+                memcpy(gflashConfig.fileName, STORAGE_CFG_FILENAME, 11);
+                gflashConfig.fileSize = STORAGE_CFG_FILESIZE;
+                gflashConfig.fileVisible = STORAGE_CFG_FILEVISIBLE;
                 gflashConfig.fileEncWindowStart = 0;
                 gflashConfig.fileEncWindowEnd = 0;
             }
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
         case gFlashStorageSize_c:
-            pI2cCommand->cmdData.data[0] = (FLASH_INTERFACE_SIZE - FLASH_CONFIG_SIZE)/1024;
+            pI2cCommand->cmdData.data[0] = STORAGE_SECTOR_COUNT;
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 2);
         break;
         case gFlashSectorSize_c:

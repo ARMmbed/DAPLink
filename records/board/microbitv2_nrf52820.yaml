@@ -9,6 +9,7 @@ common:
         - BOARD_EXTRA_BUFFER=100
     includes:
         - source/board/microbitv2/
+        - source/board/microbitv2/nrf52820/
     sources:
         board:
             - source/board/microbitv2/

@@ -21,22 +21,45 @@
 
 #include "storage.h"
 
-#include "microbitv2.h"
+#include "nrf_nvmc.h"
 
 uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
 {
-    // TODO: Implement this
+    uint32_t *buf_32 = (uint32_t *)buf;
+    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_WRITE);
+    for (uint32_t i = 0; i < sz / 4; i++) {
+        ((volatile uint32_t *)adr)[i] = buf_32[i];
+        while (!nrf_nvmc_ready_check(NRF_NVMC)) {
+            // Wait for controller to be ready
+        }
+    }
+    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
+
     return 0;
 }
 
 uint32_t storage_erase_sector(uint32_t adr)
 {
-    // TODO: Implement this
+    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_ERASE);
+    nrf_nvmc_page_erase_start(NRF_NVMC, adr);
+    while (!nrf_nvmc_ready_check(NRF_NVMC)) {
+        // Wait for controller to be ready
+    }
+    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
+
     return 0;
 }
 
 uint32_t storage_erase_all()
 {
-    // TODO: Implement this
+    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_ERASE);
+    for (uint32_t adr = STORAGE_FLASH_ADDRESS_START; adr < STORAGE_FLASH_ADDRESS_END; adr += STORAGE_SECTOR_SIZE) {
+        nrf_nvmc_page_erase_start(NRF_NVMC, adr);
+        while (!nrf_nvmc_ready_check(NRF_NVMC)) {
+            // Wait for controller to be ready
+        }
+    }
+    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
+
     return 0;
 }

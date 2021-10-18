@@ -85,9 +85,9 @@ bool do_remount = false;
 
 flashConfig_t gflashConfig = {
     .key = CFG_KEY,
-    .fileName = FLASH_CFG_FILENAME,
-    .fileSize = FLASH_CFG_FILESIZE,
-    .fileVisible = FLASH_CFG_FILEVISIBLE,
+    .fileName = STORAGE_CFG_FILENAME,
+    .fileSize = STORAGE_CFG_FILESIZE,
+    .fileVisible = STORAGE_CFG_FILEVISIBLE,
     .fileEncWindowStart = 0,
     .fileEncWindowEnd = 0,
 };
@@ -241,7 +241,7 @@ static void prerun_board_config(void)
 
     // Load Config from Flash if present
     flashConfig_t * pflashConfigROM;
-    pflashConfigROM = (void *)FLASH_CONFIG_ADDRESS;
+    pflashConfigROM = (void *)STORAGE_CONFIG_ADDRESS;
 
     if (CFG_KEY == pflashConfigROM->key) {
         memcpy(&gflashConfig, pflashConfigROM, sizeof(flashConfig_t));
@@ -560,18 +560,18 @@ void vfs_user_build_filesystem_hook() {
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
-    uint32_t read_address = FLASH_STORAGE_ADDRESS + (VFS_SECTOR_SIZE * sector_offset);
+    uint32_t read_address = STORAGE_ADDRESS_START + (VFS_SECTOR_SIZE * sector_offset);
     uint32_t encoded_data_offset = (gflashConfig.fileEncWindowEnd - gflashConfig.fileEncWindowStart);
 
     // Ignore out of bound reads
-    if ( read_address < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE + encoded_data_offset) ) {
+    if ( read_address < (STORAGE_ADDRESS_END + encoded_data_offset) ) {
         for (uint32_t i = 0; i < VFS_SECTOR_SIZE; i++) {
             if (i + (VFS_SECTOR_SIZE * sector_offset) < gflashConfig.fileEncWindowStart) {
                 // If data is before encoding window, no offset is needed
                 data[i] = *(uint8_t *) (read_address + i);
             } else if(i + (VFS_SECTOR_SIZE * sector_offset) < (gflashConfig.fileEncWindowStart + encoded_data_offset * 2)) {
                 // Data inside encoding window needs to consider encoding window start and size
-                uint8_t enc_byte = *(uint8_t *) (FLASH_STORAGE_ADDRESS + ((VFS_SECTOR_SIZE * sector_offset) + gflashConfig.fileEncWindowStart + i ) / 2);
+                uint8_t enc_byte = *(uint8_t *) (STORAGE_ADDRESS_START + ((VFS_SECTOR_SIZE * sector_offset) + gflashConfig.fileEncWindowStart + i ) / 2);
                 if (i % 2 == 0) {
                     // High nibble
                     enc_byte = 0x0F & (enc_byte >> 4);
