@@ -37,4 +37,6 @@ target_cfg_t target_device_stm32l475 = {
     .ram_regions[0].end             = 0x20000000 + 0x00018000,
     .ram_regions[1].start           = 0x10000188,
     .ram_regions[1].end             = 0x10008000,
+    .target_vendor                  = "Keil",
+    .target_part_number             = "STM32L486JGYx",
 };

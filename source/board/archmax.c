@@ -1,6 +1,6 @@
 /**
  * @file    archmax.c
- * @brief   board ID for the Seeed Studio ArchMax board
+ * @brief   board ID for the Seeed Studio Arch Max board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -27,4 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "9011",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,
+    .board_vendor = "Seeed Studio",
+    .board_name = "Arch Max",
 };

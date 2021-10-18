@@ -29,4 +29,6 @@ const board_info_t g_board_info = {
     .flags = kEnablePageErase,
     .daplink_drive_name =       "MBED       ",
     .target_cfg = &target_device,
+    .board_vendor = "Renesas",
+    .board_name = "GR-PEACH",
 };

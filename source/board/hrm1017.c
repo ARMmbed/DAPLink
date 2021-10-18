@@ -1,6 +1,6 @@
 /**
  * @file    hrm1017.c
- * @brief   board ID for the Switch Science HRM1017 board
+ * @brief   board ID for the Switch Science mbed HRM1017 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -29,4 +29,6 @@ const board_info_t g_board_info = {
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_drive_name = "MBED       ",
     .target_cfg = &target_device_nrf51822_16,
+    .board_vendor = "Switch Science",
+    .board_name = "mbed HRM1017",
 };

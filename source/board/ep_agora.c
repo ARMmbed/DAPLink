@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .board_id = "2600",
     .family_id = kNordic_Nrf52_FamilyID,
     .target_cfg = &target_device_nrf52840,
+    .board_vendor = "Embedded Planet",
+    .board_name = "Agora",
 };

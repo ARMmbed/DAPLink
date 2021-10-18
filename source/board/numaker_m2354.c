@@ -1,6 +1,6 @@
 /**
  * @file    numaker_m2354.c
- * @brief   board ID for the NuMaker-M2354 board
+ * @brief   board ID for the Nuvoton NuMaker-M2354 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2021 Nuvoton Technology Corp. All Rights Reserved
@@ -28,4 +28,6 @@ const board_info_t g_board_info = {
     .family_id   = kStub_SWSysReset_FamilyID,
     .flags       = kEnablePageErase,
     .target_cfg  = &target_device,
+    .board_vendor = "Nuvoton",
+    .board_name = "NuMaker-M2354",
 };
