@@ -132,6 +132,7 @@ PROJECT_RELEASE_INFO = {
     ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32660evsys_if',                   False,      0x0000,     "bin"       ),
     ('max32625_max32666fthr_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max78000fthr_if',                    False,      0x0000,     "bin"       ),
     ('kl26z_if',                                    False,      0x0000,     "bin"       ),
     ('k20dx_if',                                    False,      0x0000,     "bin"       ),
     ('k26f_if',                                     False,      0x0000,     "bin"       ),
@@ -197,6 +198,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
+    (   0x0423,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max78000fthr_if',                 'max32625_bl',      'MAX78000'                              ),
     (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0453,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
@@ -365,6 +367,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0418,  # MAX32620FTHR
     0x0421,  # MAX32660EVSYS
     0x0422,  # MAX32666FTHR
+    0x0423,  # MAX78000FTHR
     0x0450,  # mtb_ublox_odin_w2
     0x0456,  # lpc11u35_mtb_murata_abz_078_if
     0x0457,  # lpc11u35_mtb_rak811_if
