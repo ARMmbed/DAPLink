@@ -104,7 +104,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_usi_wm_bn_bm_22_if',             False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_a_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_eflash_if',                  False,      0x0000,     "bin"       ),
@@ -181,7 +180,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
     (   0x0423,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max78000fthr_if',                 'max32625_bl',      'MAX78000'                              ),
-    (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0458,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0459,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0460,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
@@ -326,7 +324,6 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0421,  # MAX32660EVSYS
     0x0422,  # MAX32666FTHR
     0x0423,  # MAX78000FTHR
-    0x0450,  # mtb_ublox_odin_w2
     0x0460,  # WISE-1570
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
