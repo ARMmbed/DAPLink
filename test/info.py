@@ -108,7 +108,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_usi_wm_bn_bm_22_if',             False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_murata_bl241_if',                False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm_s2lp_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm32l475_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm32f439_if',                   False,      0x0000,     "bin"       ),
@@ -196,7 +195,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0459,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0460,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0462,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_usi_wm_bn_bm_22_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0466,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_murata_bl241_if',             None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0467,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm_s2lp_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0468,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm32l475_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0469,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm32f439_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
