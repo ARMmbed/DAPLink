@@ -207,33 +207,20 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 */
 __STATIC_INLINE void PORT_SWD_SETUP (void)
 {
-    uint32_t out_mode;
-
     // Ensure that the GPIO clock is enabled
     if (MXC_CLKMAN->sys_clk_ctrl_6_gpio == MXC_V_CLKMAN_CLK_SCALE_DISABLED) {
         MXC_CLKMAN->sys_clk_ctrl_6_gpio = MXC_V_CLKMAN_CLK_SCALE_DIV_1;
     }
 
     // Initial state
-    MXC_GPIO->out_val[swclk_port] |= (1 << swclk_pin);
-    MXC_GPIO->out_val[swdio_port] |= (1 << swdio_pin);
-    MXC_GPIO->out_val[nreset_port] |= (1 << nreset_pin);
+    MXC_GPIO_SETBIT(swclk_port, swclk_pin);
+    MXC_GPIO_SETBIT(swdio_port, swdio_pin);
+    MXC_GPIO_SETBIT(nreset_port, nreset_pin);
 
     // Output mode
-    out_mode = MXC_GPIO->out_mode[swclk_port];
-    out_mode &= ~(0xFU << (4 * swclk_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_NORMAL << (4 * swclk_pin));
-    MXC_GPIO->out_mode[swclk_port] = out_mode;
-
-    out_mode = MXC_GPIO->out_mode[swdio_port];
-    out_mode &= ~(0xFU << (4 * swdio_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_NORMAL << (4 * swdio_pin));
-    MXC_GPIO->out_mode[swdio_port] = out_mode;
-
-    out_mode = MXC_GPIO->out_mode[nreset_port];
-    out_mode &= ~(0xFU << (4 * nreset_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_OPEN_DRAIN_WEAK_PULLUP << (4 * nreset_pin));
-    MXC_GPIO->out_mode[nreset_port] = out_mode;
+    MXC_GPIO_SETMODE(swclk_port, swclk_pin, MXC_V_GPIO_OUT_MODE_NORMAL);
+    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_NORMAL);
+    MXC_GPIO_SETMODE(nreset_port, nreset_pin, MXC_V_GPIO_OUT_MODE_OPEN_DRAIN_WEAK_PULLUP);
 
     tck_in = (volatile uint32_t *)BITBAND(&MXC_GPIO->in_val[swclk_port], swclk_pin);
     tck_out = (volatile uint32_t *)BITBAND(&MXC_GPIO->out_val[swclk_port], swclk_pin);
@@ -249,28 +236,15 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF (void)
 {
-    uint32_t out_mode;
-
     // Disable weak pullup in high-z output mode
-    MXC_GPIO->out_val[swclk_port] &= ~(1 << swclk_pin);
-    MXC_GPIO->out_val[swdio_port] &= ~(1 << swdio_pin);
-    MXC_GPIO->out_val[nreset_port] &= ~(1 << nreset_pin);
+    MXC_GPIO_CLRBIT(swclk_port, swclk_pin);
+    MXC_GPIO_CLRBIT(swdio_port, swdio_pin);
+    MXC_GPIO_CLRBIT(nreset_port, nreset_pin);
 
     // High-z output mode
-    out_mode = MXC_GPIO->out_mode[swclk_port];
-    out_mode &= ~(0xFU << (4 * swclk_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP << (4 * swclk_pin));
-    MXC_GPIO->out_mode[swclk_port] = out_mode;
-
-    out_mode = MXC_GPIO->out_mode[swdio_port];
-    out_mode &= ~(0xFU << (4 * swdio_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP << (4 * swdio_pin));
-    MXC_GPIO->out_mode[swdio_port] = out_mode;
-
-    out_mode = MXC_GPIO->out_mode[nreset_port];
-    out_mode &= ~(0xFU << (4 * nreset_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP << (4 * nreset_pin));
-    MXC_GPIO->out_mode[nreset_port] = out_mode;
+    MXC_GPIO_SETMODE(swclk_port, swclk_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
+    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
+    MXC_GPIO_SETMODE(nreset_port, nreset_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
 }
 
 // SWCLK/TCK I/O pin -------------------------------------
@@ -347,12 +321,7 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE  (void)
 {
-    uint32_t out_mode;
-
-    out_mode = MXC_GPIO->out_mode[swdio_port];
-    out_mode &= ~(0xFU << (4 * swdio_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_NORMAL << (4 * swdio_pin));
-    MXC_GPIO->out_mode[swdio_port] = out_mode;
+    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_NORMAL);
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -361,12 +330,8 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE (void)
 {
-    uint32_t out_mode;
-
-    out_mode = MXC_GPIO->out_mode[swdio_port];
-    out_mode &= ~(0xFU << (4 * swdio_pin));
-    MXC_GPIO->out_mode[swdio_port] = out_mode;
-    MXC_GPIO->out_val[swdio_port] &= ~(1 << swdio_pin);
+    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_NORMAL_HIGH_Z);
+    MXC_GPIO_CLRBIT(swdio_port, swdio_pin);
 }
 
 // TDI Pin I/O ---------------------------------------------
@@ -512,29 +477,16 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
 */
 __STATIC_INLINE void DAP_SETUP (void)
 {
-    uint32_t out_mode;
-
     // Weak pull-up disabled
-    MXC_GPIO->out_val[swclk_port] &= ~(1 << swclk_pin);
-    MXC_GPIO->out_val[swdio_port] &= ~(1 << swdio_pin);
+    MXC_GPIO_CLRBIT(swclk_port, swclk_pin);
+    MXC_GPIO_CLRBIT(swdio_port, swdio_pin);
     // Weak pull-up enabled
-    MXC_GPIO->out_val[nreset_port] |= (1 << nreset_pin);
+    MXC_GPIO_SETBIT(nreset_port, nreset_pin);
 
     // High-Z output mode
-    out_mode = MXC_GPIO->out_mode[swclk_port];
-    out_mode &= ~(0xFU << (4 * swclk_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP << (4 * swclk_pin));
-    MXC_GPIO->out_mode[swclk_port] = out_mode;
-
-    out_mode = MXC_GPIO->out_mode[swdio_port];
-    out_mode &= ~(0xFU << (4 * swdio_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP << (4 * swdio_pin));
-    MXC_GPIO->out_mode[swdio_port] = out_mode;
-
-    out_mode = MXC_GPIO->out_mode[nreset_port];
-    out_mode &= ~(0xFU << (4 * nreset_pin));
-    out_mode |= (MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP << (4 * nreset_pin));
-    MXC_GPIO->out_mode[nreset_port] = out_mode;
+    MXC_GPIO_SETMODE(swclk_port, swclk_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
+    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
+    MXC_GPIO_SETMODE(nreset_port, nreset_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.
