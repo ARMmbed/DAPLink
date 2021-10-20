@@ -102,7 +102,6 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mxchip_emw3166_if',              False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_nina_b112_if',                   False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_murata_abz_078_if',              False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_rak811_if',                      False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_wise1510_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
@@ -192,7 +191,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0455,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0456,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_murata_abz_078_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0457,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_rak811_if',                   None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0458,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0459,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
@@ -343,7 +341,6 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0422,  # MAX32666FTHR
     0x0423,  # MAX78000FTHR
     0x0450,  # mtb_ublox_odin_w2
-    0x0456,  # lpc11u35_mtb_murata_abz_078_if
     0x0457,  # lpc11u35_mtb_rak811_if
     0x0460,  # WISE-1570
     0x0468,  # lpc11u35_mtb_stm32l475_if
