@@ -100,7 +100,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
     ("lpc11u35_rtl8195am_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_a_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
@@ -177,7 +176,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
-    (   0x0459,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0460,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0700,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),

@@ -411,10 +411,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mini_iot_lpc54018.yaml
-    lpc11u35_mtb_wise1530_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_wise1530.yaml
     lpc11u35_mtb_wise1570_if:
         - *module_if
         - *module_hic_lpc11u35
