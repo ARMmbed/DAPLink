@@ -19,12 +19,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "fsl_device_registers.h"
+ 
 #include "IO_Config.h"
 #include "DAP.h"
 #include "target_family.h"
 #include "target_board.h"
+
+#if defined(INTERFACE_KL27Z)
+
+#include "fsl_device_registers.h"
 #include "flexio_pwm.h"
 #include "gpio.h"
 #include "power.h"
@@ -581,6 +584,25 @@ uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
 
     return result == 0;
 }
+
+#elif defined(INTERFACE_NRF52820)
+#include "device.h"
+
+const char * const board_id_mb_2_0 = "9903";
+const char * const board_id_mb_2_0x = "9905";
+extern target_cfg_t target_device_nrf52_64;
+
+static void prerun_board_config(void)
+{
+    target_device = target_device_nrf52_64;
+    target_device.rt_board_id = board_id_mb_2_0;
+    if (NRF_FICR->INFO.PART == 0x52833) {
+        target_device.rt_board_id = board_id_mb_2_0x; // nRF52833
+    } else {
+        target_device.rt_board_id = board_id_mb_2_0; // nRF52820
+    }
+}
+#endif
 
 // USB HID override function return 1 if the activity is trivial or response is null
 uint8_t usbd_hid_no_activity(uint8_t *buf)

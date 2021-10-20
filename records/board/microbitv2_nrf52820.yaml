@@ -1,0 +1,17 @@
+common:
+    macros:
+        - HID_LED_DEF=GPIO_LED_ON
+        - CDC_LED_DEF=GPIO_LED_ON
+        - MSC_LED_DEF=GPIO_LED_ON
+        - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
+        # - DELAY_FAST_CYCLES=2U          # Fast delay needed to reach 8MHz SWD clock speed
+        # - DAP_DEFAULT_SWJ_CLOCK=8000000
+        - BOARD_EXTRA_BUFFER=100
+    # includes:
+    #    - source/board/microbitv2
+    sources:
+        board:
+            - source/board/microbitv2/microbitv2.c
+        target:
+            - source/family/nordic/nrf5x/target.c
+            - source/family/nordic/target_reset_nrf52.c
