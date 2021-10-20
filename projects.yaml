@@ -411,10 +411,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mini_iot_lpc54018.yaml
-    lpc11u35_mtb_mxchip_emw3166_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_mxchip_emw3166.yaml
     lpc11u35_mtb_nina_b112_if:
         - *module_if
         - *module_hic_lpc11u35
