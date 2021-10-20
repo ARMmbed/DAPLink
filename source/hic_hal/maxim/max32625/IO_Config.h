@@ -102,4 +102,9 @@ typedef enum {
 #define CDC_ACM_UART_SWD 2
 #define CDC_ACM_UART_DIP 0
 
+#define MXC_GPIO_SETMODE(pt, pn, m) (MXC_GPIO->out_mode[pt] = (MXC_GPIO->out_mode[pt] & ~(0xFU << (4 * pn))) | (m << (4 * pn)))
+#define MXC_GPIO_SETBIT(pt, pn)     (MXC_SETBIT(&MXC_GPIO->out_val[pt], pn))
+#define MXC_GPIO_CLRBIT(pt, pn)     (MXC_CLRBIT(&MXC_GPIO->out_val[pt], pn))
+#define MXC_GPIO_GETBIT(pt, pn)     (MXC_GETBIT(&MXC_GPIO->in_val[pt], pn))
+
 #endif
