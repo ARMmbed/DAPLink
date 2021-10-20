@@ -363,10 +363,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archpro.yaml
-    lpc11u35_arm_watch_efm32_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/arm_watch_efm32.yaml
     lpc11u35_arm_watch_nrf51_if:
         - *module_if
         - *module_hic_lpc11u35

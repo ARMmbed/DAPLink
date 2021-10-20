@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/arm_watch_efm32.c
-        family:
-            - source/family/siliconlabs/efm32gg/target.c

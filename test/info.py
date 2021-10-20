@@ -273,7 +273,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_eflash_if',               None,               'ARM_MUSCA_B1'                          ),
     (   0x5050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
-    (   0x5051,     VENDOR_TO_FAMILY('Stub', 3),        'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
     (   0x5052,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
     (   0x5500,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
     (   0x5501,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - Set to 'Renesas-GR-LYCHEE' once this target builds
