@@ -411,10 +411,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mini_iot_lpc54018.yaml
-    lpc11u35_mtb_laird_bl654_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_laird_bl654.yaml
     lpc11u35_mtb_mts_dragonfly_if:
         - *module_if
         - *module_hic_lpc11u35
