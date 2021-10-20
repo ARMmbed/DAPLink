@@ -57,7 +57,7 @@ static inline void use_vddioh(int port, int pin)
 }
 
 /******************************************************************************/
-#if !defined(MAX3625_FORCE_IO_SWD_EXT) && !defined(MAX3625_FORCE_IO_DIP_EXT)
+#if !defined(MAX32625_FORCE_IO_SWD_EXT) && !defined(MAX32625_FORCE_IO_DIP_EXT)
 static uint16_t readADC(uint8_t ch)
 {
     uint32_t ctrl_tmp;
@@ -182,6 +182,12 @@ void gpio_init(void)
     // 1V8 VDDIO is not high enough to turn off the FET if VDDIOH is 3V3
     MXC_IOMAN->use_vddioh_1 |= (1U << (((OWM_PORT - 4) * 8) + OWM_SUP_PIN));
 
+#if defined(MAX32625_GPIO_USE_VDDIO)
+    // Use VDDIO
+    MXC_IOMAN->use_vddioh_0 = 0;
+    MXC_IOMAN->use_vddioh_1 = 0;
+#else
+	// Use VDDIOH
     use_vddioh(PIN_nRESET_PORT, PIN_nRESET_PIN);
     use_vddioh(PIN_DIP_nRESET_PORT, PIN_DIP_nRESET_PIN);
     use_vddioh(PIN_SWCLK_PORT, PIN_SWCLK_PIN);
@@ -192,14 +198,19 @@ void gpio_init(void)
     use_vddioh(PIN_RX_PORT, PIN_RX_PIN);
     use_vddioh(PIN_DIP_TX_PORT, PIN_DIP_TX_PIN);
     use_vddioh(PIN_DIP_RX_PORT, PIN_DIP_RX_PIN);
-
+#endif
+	// LEDs use VDDIOH
+    use_vddioh(PIN_DAP_LED_PORT, PIN_DAP_LED_PIN);
+    use_vddioh(PIN_MSD_LED_PORT, PIN_MSD_LED_PIN);
+    use_vddioh(PIN_CDC_LED_PORT, PIN_CDC_LED_PIN);
+	
     // Setup the ADC; read the ADC to set IO interface
     MXC_PWRMAN->pwr_rst_ctrl |= MXC_F_PWRMAN_PWR_RST_CTRL_AFE_POWERED;
     MXC_CLKMAN->clk_ctrl |= MXC_F_CLKMAN_CLK_CTRL_ADC_CLOCK_ENABLE;
 
-#if defined(MAX3625_FORCE_IO_SWD_EXT)
+#if defined(MAX32625_FORCE_IO_SWD_EXT)
     target_set_interface(IO_SWD_EXT);
-#elif defined(MAX3625_FORCE_IO_DIP_EXT)
+#elif defined(MAX32625_FORCE_IO_DIP_EXT)
     target_set_interface(IO_DIP_EXT);
 #else
     MXC_ADC->ctrl = (MXC_F_ADC_CTRL_ADC_PU |

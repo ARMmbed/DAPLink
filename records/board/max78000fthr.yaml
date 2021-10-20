@@ -1,0 +1,10 @@
+common:
+    sources:
+        board:
+            - source/board/max78000fthr.c
+        family:
+            - source/family/maxim/max78000/target.c
+            - source/family/maxim/target_reset_max32xxx.c
+    macros:
+        - MAX32625_GPIO_USE_VDDIO
+        - MAX32625_FORCE_IO_SWD_EXT
