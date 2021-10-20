@@ -371,10 +371,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/c027.yaml
-    lpc11u35_dipdap_sdt32429b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_sdt32429b.yaml
     lpc11u35_dipdap_sdt32439b_if:
         - *module_if
         - *module_hic_lpc11u35
