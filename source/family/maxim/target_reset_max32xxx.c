@@ -33,7 +33,7 @@
 
 
 #define INCREASE_DELAY  10
-#define MAX_DELAY       30000
+#define MAX_DELAY       30000  // ~2.82ms
 
 
 /* RESET_PROGRAM state halts the processor on reset by default but the SWD
@@ -53,7 +53,7 @@ static uint8_t target_set_state_max326xx(target_state_t state, uint32_t reg_flc_
     /* Reset the target and halt it when SWD is available */
     while (halt_retries--) {
         halt_timeout = 10;
-        lockout_delay = 0;
+        lockout_delay = 7450;   // ~700.6us
 
         /* Wait for SWD lockout period after reset */
         do {
