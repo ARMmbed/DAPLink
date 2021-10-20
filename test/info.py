@@ -98,7 +98,6 @@ PROJECT_RELEASE_INFO = {
     ("sam3u2c_ublox_evk_nina_b1_if",                True,       0x5000,     "bin"       ),
     ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
     ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
     ("lpc11u35_rtl8195am_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mxchip_emw3166_if',              False,      0x0000,     "bin"       ),
@@ -253,7 +252,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x2201,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_if',                None,               'WIZwiki-W7500'                         ),
     (   0x2202,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZwiki-W7500ECO'                      ),
     (   0x2203,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500p_if',               None,               'WIZwiki-W7500P'                        ),
-    (   0x2410,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x2600,     VENDOR_TO_FAMILY('Nordic', 2),      'k20dx_ep_agora_if',                        None,               None                                    ),
     (   0x2601,     VENDOR_TO_FAMILY('NXP', 0),         'k20dx_ep_kairos_if',                       None,               None                                    ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
@@ -366,7 +364,6 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x1309,  # NuMaker-M252KG
     0x1310,  # NuMaker-IoT-M263A
     0x1312,  # NuMaker-M2354
-    0x2410,  # lpc11u35_mbed_cloud_connect_if
     0x3103,  # dipdap_sdt51822b
     0x3104,  # dipdap_sdt52832b
     0x3105,  # dipdap_sdt64b

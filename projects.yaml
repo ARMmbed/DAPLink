@@ -407,10 +407,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/lpc824xpresso.yaml
-    lpc11u35_mbed_cloud_connect_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mbed_cloud_connect.yaml
     lpc11u35_mini_iot_lpc54018_if:
         - *module_if
         - *module_hic_lpc11u35
