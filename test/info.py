@@ -109,7 +109,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_usi_wm_bn_bm_22_if',             False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_murata_bl241_if',                False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm_s2lp_if',                    False,      0x0000,     "bin"       ),
@@ -194,7 +193,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
     (   0x0451,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0453,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
-    (   0x0454,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_dragonfly_if',            None,               None                                    ),
     (   0x0455,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0456,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_murata_abz_078_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0457,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_rak811_if',                   None,               None                                    ), # TODO - set target when mbed-os supports this
