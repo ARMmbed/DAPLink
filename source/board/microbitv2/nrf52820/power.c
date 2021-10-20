@@ -85,12 +85,7 @@ static void power_before(bool systemoff)
     // {
     // }
 
-    uart_uninitialize();
-
-    // TODO - I think maybe uart_uninitialize does this in USART_Uninitialize
-    /* Disable pins to lower current leakage */
-    // PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, kPORT_PinDisabledOrAnalog);
-    // PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, kPORT_PinDisabledOrAnalog);
+    uart_uninitialize(); // disables RX and TX pins
 
     gpio_disable_hid_led();
     
@@ -136,11 +131,6 @@ static void power_after()
     /* Configure I/O pin SWCLK, SWDIO */
     PORT_SWD_SETUP();
     
-    // TODO - done by uart_initialize?
-    // /* re-configure pinmux of disabled pins */
-    // PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, (port_mux_t)PIN_UART_RX_MUX_ALT);
-    // PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, (port_mux_t)PIN_UART_TX_MUX_ALT);
-
     uart_initialize();
     i2c_deinitialize();
     i2c_initialize();
