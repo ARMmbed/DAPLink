@@ -236,6 +236,10 @@ void gpio_init(void)
         target_set_interface(IO_SWD_EXT);
     }
 #endif
+	
+	// Disable Reset pin interrupt - Fix for old bootloader firmware
+    MXC_GPIO->inten[PIN_RESET_IN_NO_FWRD_PORT] &= ~(1 << PIN_RESET_IN_NO_FWRD_PIN);
+    NVIC_DisableIRQ(GPIO_P2_IRQn);
 }
 
 /******************************************************************************/
