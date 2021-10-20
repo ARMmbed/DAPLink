@@ -106,7 +106,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_usi_wm_bn_bm_22_if',             False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm_s2lp_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_stm32l475_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_a_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_eflash_if',                  False,      0x0000,     "bin"       ),
@@ -189,7 +188,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0460,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0462,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_usi_wm_bn_bm_22_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0467,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm_s2lp_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0468,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm32l475_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0700,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f072rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F072RB'                      ),
@@ -332,7 +330,6 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0423,  # MAX78000FTHR
     0x0450,  # mtb_ublox_odin_w2
     0x0460,  # WISE-1570
-    0x0468,  # lpc11u35_mtb_stm32l475_if
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
     0x1304,  # NuMaker-PFM-M487KM
