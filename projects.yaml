@@ -84,6 +84,7 @@ module:
     hic_nrf52820: &module_hic_nrf52820
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/nrf52820.yaml
+        - records/usb/usb-bulk.yaml
 
 projects:
     # HIC bootloaders and all target interfaces
@@ -171,7 +172,6 @@ projects:
         - *module_if
         - *module_hic_nrf52820
         - records/family/all_family.yaml
-        - records/usb/usb-bulk.yaml
     nrf52833_dk_bl:
         - *module_bl
         - records/hic_hal/nrf52820.yaml
@@ -182,7 +182,6 @@ projects:
         - *module_hic_nrf52820
         - records/board/nrf52820_if.yaml
         - records/board/nrf52833_dk.yaml
-        - records/usb/usb-bulk.yaml
     sam3u2c_bl:
         - *module_bl
         - records/hic_hal/sam3u2c.yaml
