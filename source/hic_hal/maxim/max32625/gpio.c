@@ -57,6 +57,7 @@ static inline void use_vddioh(int port, int pin)
 }
 
 /******************************************************************************/
+#if !defined(MAX3625_FORCE_IO_SWD_EXT) && !defined(MAX3625_FORCE_IO_DIP_EXT)
 static uint16_t readADC(uint8_t ch)
 {
     uint32_t ctrl_tmp;
@@ -95,6 +96,7 @@ static uint16_t readADC(uint8_t ch)
 
     return (uint16_t)(MXC_ADC->data);
 }
+#endif
 
 /******************************************************************************/
 void target_set_interface(TARGET_INTERFACE mode)
@@ -195,6 +197,11 @@ void gpio_init(void)
     MXC_PWRMAN->pwr_rst_ctrl |= MXC_F_PWRMAN_PWR_RST_CTRL_AFE_POWERED;
     MXC_CLKMAN->clk_ctrl |= MXC_F_CLKMAN_CLK_CTRL_ADC_CLOCK_ENABLE;
 
+#if defined(MAX3625_FORCE_IO_SWD_EXT)
+    target_set_interface(IO_SWD_EXT);
+#elif defined(MAX3625_FORCE_IO_DIP_EXT)
+    target_set_interface(IO_DIP_EXT);
+#else
     MXC_ADC->ctrl = (MXC_F_ADC_CTRL_ADC_PU |
                      MXC_F_ADC_CTRL_ADC_CLK_EN |
                      MXC_F_ADC_CTRL_BUF_PU |
@@ -217,6 +224,7 @@ void gpio_init(void)
         // Default to SWD interface
         target_set_interface(IO_SWD_EXT);
     }
+#endif
 }
 
 /******************************************************************************/
