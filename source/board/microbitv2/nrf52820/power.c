@@ -34,8 +34,14 @@
 #include "power.h"
 
 
+static void power_before(bool systemoff);
+static void power_after();
 static void power_systemoff();
 static void power_wfi();
+
+void POWER_CLOCK_IRQHandler(void);
+void GPIOTE_IRQHandler(void);
+
 
 extern volatile uint8_t wake_from_reset;
 extern volatile uint8_t wake_from_usb;
@@ -44,20 +50,19 @@ extern main_usb_connect_t usb_state;
 extern power_source_t power_source;
 
 
-uint8_t  power_in_WFI;
+uint8_t  power_in_wfi;
 uint8_t  power_gpiote_enabled;
 uint32_t power_gpiote_intenset;
 
 
 void power_init()
 {
-    power_in_WFI = 0;
+    power_in_wfi = 0;
 
     gpio_cfg_input(GPIO_REG(RESET_BUTTON), GPIO_IDX(RESET_BUTTON), RESET_BUTTON_PULL);
-    
+
     // Enable NRF_POWER interrupt for USB removed/detected
-    NRF_POWER->INTENSET = POWER_INTENSET_USBREMOVED_Msk
-                        | POWER_INTENSET_USBDETECTED_Msk;
+    NRF_POWER->INTENSET = POWER_INTENSET_USBREMOVED_Msk | POWER_INTENSET_USBDETECTED_Msk;
     NVIC_EnableIRQ(POWER_CLOCK_IRQn);
 }
 
@@ -92,8 +97,7 @@ static void power_before(bool systemoff)
     /* Disable I/O pin SWCLK, SWDIO */
     PORT_OFF();
 
-    if (systemoff)
-    {
+    if (systemoff) {
         i2c_deinitialize();
         // TODO - should i2c_deinitialize call I2Cdrv->Uninitialize()
         // so I2C1_SCL & I2C1_SDA get defaulted in nrfx_twis_uninit
@@ -117,6 +121,7 @@ static void power_before(bool systemoff)
             RESET_BUTTON_PULL,
             NRF_GPIO_PIN_S0S1,
             RESET_BUTTON_PULL == NRF_GPIO_PIN_PULLUP ? GPIO_PIN_CNF_SENSE_Low : GPIO_PIN_CNF_SENSE_High);
+
     NRF_GPIOTE->INTENSET = power_gpiote_intenset | ( GPIOTE_INTENSET_PORT_Set << GPIOTE_INTENSET_PORT_Pos);
     NVIC_EnableIRQ(GPIOTE_IRQn);
 
@@ -127,8 +132,7 @@ static void power_before(bool systemoff)
 static void power_after()
 {
     // Restore GPIOTE state
-    if (!power_gpiote_enabled)
-    {
+    if (!power_gpiote_enabled) {
         NVIC_DisableIRQ(GPIOTE_IRQn);
     }
     NRF_GPIOTE->INTENSET = power_gpiote_intenset;
@@ -160,32 +164,29 @@ static void power_systemoff()
 static void power_wfi()
 {
     power_before(false /*systemoff*/);
-    power_in_WFI = 1;
+    power_in_wfi = 1;
     __WFI();
-    power_in_WFI = 0;
-    power_after( false /*systemoff*/);
+    power_in_wfi = 0;
+    power_after(false /*systemoff*/);
 }
+
 
 // TODO - It feels wrong to call pwr_mon_get_power_source() and the USB functions in the IRQ handler
 void POWER_CLOCK_IRQHandler(void)
 {
-    if (NRF_POWER->EVENTS_USBDETECTED)
-    {
+    if (NRF_POWER->EVENTS_USBDETECTED) {
         NRF_POWER->EVENTS_USBDETECTED = 0;
         power_source = pwr_mon_get_power_source();
-        if (power_in_WFI)
-        {
+        if (power_in_wfi) {
             wake_from_usb = 1;
         }
         usb_pc_connected = true;
     }
 
-    if (NRF_POWER->EVENTS_USBREMOVED)
-    {
+    if (NRF_POWER->EVENTS_USBREMOVED) {
         NRF_POWER->EVENTS_USBREMOVED = 0;
         power_source = pwr_mon_get_power_source();
-        if (power_in_WFI)
-        {
+        if (power_in_wfi) {
             wake_from_usb = 1;
         }
         /* Reset USB on cable detach (VBUS falling edge) */
@@ -196,15 +197,11 @@ void POWER_CLOCK_IRQHandler(void)
     }
 }
 
-
 void GPIOTE_IRQHandler(void)
 {
-    if (NRF_GPIOTE->EVENTS_PORT)
-    {
+    if (NRF_GPIOTE->EVENTS_PORT) {
         NRF_GPIOTE->EVENTS_PORT = 0;
-
-        if (power_in_WFI && GPIO_REG(RESET_BUTTON)->LATCH & (1 << GPIO_IDX(RESET_BUTTON)))
-        {
+        if (power_in_wfi && (GPIO_REG(RESET_BUTTON)->LATCH & (1 << GPIO_IDX(RESET_BUTTON)))) {
             wake_from_reset = 1;
         }
     }
