@@ -118,7 +118,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_cc3220sf_if',                 False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_laird_bl654_if',                 False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_murata_bl241_if',                False,      0x0000,     "bin"       ),
     ('lpc11u35_mtb_stm_s2lp_if',                    False,      0x0000,     "bin"       ),
@@ -267,7 +266,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x3105,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
     (   0x3103,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
     (   0x3110,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
-    (   0x3300,     VENDOR_TO_FAMILY('TI', 1),          'lpc11u35_dipdap_cc3220sf_if',              None,               'CC3220SF'                              ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
     (   0x5006,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_a_if',                      None,               'ARM_MUSCA_A1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
@@ -295,7 +293,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0x9904,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                               ),
-    (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
     (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'kl26z_if',                                 None,               None                                    ),
@@ -385,7 +382,6 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x3105,  # dipdap_sdt64b
     0x3108,  # dipdap_sdt32429b
     0x3110,  # dipdap_sdt32439b
-    0x3300,  # dipdap_cc3220sf
     0x4600,  # REALTEK-RTL8195AM
     0x5500,  # GR-PEACH
     0x5501,  # GR-LYCHEE
