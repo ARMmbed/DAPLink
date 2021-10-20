@@ -113,7 +113,7 @@ void i2c_initialize()
 
 void i2c_deinitialize()
 {
-    // TODO
+    I2Cdrv->Uninitialize();
 }
 
 i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress)

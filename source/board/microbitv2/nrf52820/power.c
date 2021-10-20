@@ -98,14 +98,7 @@ static void power_before(bool systemoff)
     PORT_OFF();
 
     if (systemoff) {
-        i2c_deinitialize();
-        // TODO - should i2c_deinitialize call I2Cdrv->Uninitialize()
-        // so I2C1_SCL & I2C1_SDA get defaulted in nrfx_twis_uninit
-
-        // /* PORTC1 is configured as I2C1_SCL */
-        // PORT_SetPinMux(PORTC, 1U, kPORT_PinDisabledOrAnalog);
-        // /* PORTC2 is configured as I2C1_SDA */
-        // PORT_SetPinMux(PORTC, 2U, kPORT_PinDisabledOrAnalog);
+        i2c_deinitialize(); // disables I2C SCL & SDA
     }
 
     // Store NRF_GPIOTE state
