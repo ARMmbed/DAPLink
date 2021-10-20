@@ -272,7 +272,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x5006,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_a_if',                      None,               'ARM_MUSCA_A1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_eflash_if',               None,               'ARM_MUSCA_B1'                          ),
-    (   0x5050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
     (   0x5500,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
     (   0x5501,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - Set to 'Renesas-GR-LYCHEE' once this target builds
     (   0x6660,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_nz32_sc151_if',                   None,               None                                    ), # TODO - set target to 'NZ32-SC151' when mbed-os supports this
