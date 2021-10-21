@@ -51,6 +51,8 @@ const board_info_t g_board_info = {
     .daplink_target_url = "http://www.hexiwear.com/",
     .target_cfg = &target_device,
     .prerun_board_config = prerun_board_config,
+    .board_vendor = "Mikroe",
+    .board_name = "Hexiwear",
 };
 
 static void prerun_board_config(void)

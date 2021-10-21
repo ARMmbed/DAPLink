@@ -1,6 +1,6 @@
 /**
  * @file    c027.c
- * @brief   board ID for the Ublox C027 board
+ * @brief   board ID for the u-blox C027 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -26,5 +26,8 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "1234",
     .family_id = kStub_HWReset_FamilyID,
+    .daplink_target_url = "https://os.mbed.com/platforms/u-blox-C027",
     .target_cfg = &target_device,
+    .board_vendor = "u-blox",
+    .board_name = "C027",
 };

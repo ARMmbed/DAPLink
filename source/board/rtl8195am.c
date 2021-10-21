@@ -28,6 +28,8 @@ const board_info_t g_board_info = {
     .board_id = "4600",
     .family_id = kRealtek_Rtl8195am_FamilyID,
     .flags = kEnablePageErase,
+    .daplink_target_url = "https://os.mbed.com/platforms/Realtek-RTL8195AM",
     .target_cfg = &target_device,
+    .board_vendor = "Realtek",
+    .board_name = "RTL8195AM",
 };
-
