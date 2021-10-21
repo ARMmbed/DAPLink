@@ -34,6 +34,13 @@ const char *board_id_nrf51_dongle = "1120";
 const char *board_id_nrf52_dk = "1101";
 const char *board_id_nrf52840_dk = "1102";
 
+const char *board_name_nrf51_mkit = "nRF51822-mKIT";
+const char *board_name_nrf51_dk = "nRF51-DK";
+const char *board_name_nrf51_dongle = "nRF51-Dongle";
+const char *board_name_nrf52_dk = "nRF52-DK";
+const char *board_name_nrf52840_dk = "nRF52840-DK";
+static char board_name[14];
+
 extern target_cfg_t target_device_nrf51822_16;
 extern target_cfg_t target_device_nrf51822_32;
 extern target_cfg_t target_device_nrf52_64;
@@ -84,7 +91,7 @@ static void nrf_prerun_board_config(void)
      *   0 | 0 | 1 |  1100  | nRF51-DK
      *   0 | 1 | 0 |  1101  | nRF52-DK
      *   0 | 1 | 1 |  1102  | nRF52840-DK
-     *   1 | 1 | 1 |  1070  | older nRF51 (mkit)
+     *   1 | 1 | 1 |  1070  | nRF51822-mKIT
      *   1 | 0 | 0 |    undefined
      *   1 | 0 | 1 |    undefined
      *   1 | 1 | 0 |    undefined
@@ -94,6 +101,7 @@ static void nrf_prerun_board_config(void)
         set_target_device(0);
         target_device.rt_family_id = kNordic_Nrf51_FamilyID;
         target_device.rt_board_id = board_id_nrf51_mkit;  // 1070
+        memcpy(board_name, board_name_nrf51_mkit, sizeof(board_name_nrf51_mkit));
         // Note only a setting of 111 is defined
         util_assert(bit2 && bit1);
     } else {
@@ -101,19 +109,22 @@ static void nrf_prerun_board_config(void)
             set_target_device(1);
             target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dk;  // 1100
+            memcpy(board_name, board_name_nrf51_dk, sizeof(board_name_nrf51_dk));
         } else if (!bit2 && !bit1) {
             set_target_device(1);
             target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dongle;  // 1120
-        }
-        else if (bit2 && !bit1) {
+            memcpy(board_name, board_name_nrf51_dongle, sizeof(board_name_nrf51_dongle));
+        } else if (bit2 && !bit1) {
             set_target_device(2);
             target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52_dk;  // 1101
+            memcpy(board_name, board_name_nrf52_dk, sizeof(board_name_nrf52_dk));
         } else { //(bit2 && bit1)
             set_target_device(3);
             target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52840_dk;  // 1102
+            memcpy(board_name, board_name_nrf52840_dk, sizeof(board_name_nrf52840_dk));
         }
     }
 
@@ -137,4 +148,6 @@ const board_info_t g_board_info = {
     .prerun_board_config = nrf_prerun_board_config,
     .swd_set_target_reset = nrf_swd_set_target_reset,
     .target_cfg = &target_device,
+    .board_vendor = "Nordic Semiconductor",
+    .board_name = board_name,
 };

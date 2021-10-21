@@ -1,6 +1,6 @@
 /**
- * @file    stm32f429zi.c
- * @brief   board ID for the STM32 NUCLEO-F429ZI board
+ * @file    ublox_evk_odin_w2.c
+ * @brief   board ID for the u-blox EVK-ODIN-W2 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
@@ -26,5 +26,8 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "1236",
     .family_id = kStub_HWReset_FamilyID,
+    .daplink_target_url = "https://os.mbed.com/platforms/ublox-EVK-ODIN-W2/",
     .target_cfg = &target_device,
+    .board_vendor = "u-blox",
+    .board_name = "EVK-ODIN-W2",
 };

@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the stm32l151
+ * @brief   Target information for the STM32L151CC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -35,4 +35,6 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20000000 + KB(32),
+    .target_vendor                  = "STMicroelectronics",
+    .target_part_number             = "STM32L151CCUx",
 };

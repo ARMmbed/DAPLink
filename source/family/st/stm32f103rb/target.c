@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the
+ * @brief   Target information for the STM32F103RB
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
@@ -35,4 +35,6 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20005000,
+    .target_vendor                  = "STMicroelectronics",
+    .target_part_number             = "STM32F103RB",
 };

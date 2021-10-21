@@ -1,6 +1,6 @@
 /**
- * @file    stm32f103rb.c
- * @brief   board ID for the STM32 NUCLEO-F103RB board
+ * @file    stm32f411re.c
+ * @brief   board information for STMicroelectronics NUCLEO-F411RE
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -27,4 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "0740",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,
+    .board_vendor = "STMicroelectronics",
+    .board_name = "NUCLEO-F411RE",
 };

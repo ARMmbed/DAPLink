@@ -26,7 +26,7 @@
 
 static uint8_t target_set_state_by_board(target_state_t state)
 {
-    
+
     if (RESET_PROGRAM == state) {
         LPC_GPIO->SET[PIN_PWH_PORT] = PIN_PWH;
         osDelay(10);
@@ -40,4 +40,6 @@ const board_info_t g_board_info = {
     .family_id = kToshiba_Tz_FamilyID,
     .target_set_state = target_set_state_by_board,
     .target_cfg = &target_device,
+    .board_vendor = "Cerevo",
+    .board_name = "BlueNinja",
 };

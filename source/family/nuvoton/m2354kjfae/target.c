@@ -44,4 +44,6 @@ target_cfg_t target_device = {
     .ram_regions[0].end             = 0x20000000 + 0x40000,
     .ram_regions[1].start           = 0x30000000,
     .ram_regions[1].end             = 0x30000000 + 0x40000,
+    .target_vendor                  = "Nuvoton",
+    .target_part_number             = "M2354KJFAE",
 };

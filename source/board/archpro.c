@@ -1,6 +1,6 @@
 /**
  * @file    archpro.c
- * @brief   board ID for the Seeed Studio ArchPro board
+ * @brief   board ID for the Seeed Studio Arch Pro board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -27,5 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "9004",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,
+    .board_vendor = "Seeed Studio",
+    .board_name = "Arch Pro",
 };
-

@@ -38,4 +38,6 @@ target_cfg_t target_device = {
     .flash_regions[1].flash_algo    = (program_target_t *)&M251_LD_4_flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20008000,
+    .target_vendor                  = "Nuvoton",
+    .target_part_number             = "M252KG6AE",
 };

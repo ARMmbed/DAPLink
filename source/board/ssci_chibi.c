@@ -1,6 +1,6 @@
 /**
  * @file    sscity.c
- * @brief   board ID for the Switch Science ty51822r3 board
+ * @brief   board ID for the Switch Science mbed TY51822r3 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -29,6 +29,8 @@ const board_info_t g_board_info = {
     .board_id = "1021",
     .family_id = kNordic_Nrf51_FamilyID,
     .daplink_drive_name = "MBED       ",
+    .daplink_target_url = "https://os.mbed.com/platforms/Switch-Science-mbed-TY51822r3",
     .target_cfg = &target_device_nrf51822_16,
+    .board_vendor = "Switch Science",
+    .board_name = "mbed TY51822r3",
 };
-
