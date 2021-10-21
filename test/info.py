@@ -72,7 +72,6 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archlink_if",                        False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                            False,      0x0000,     "bin"       ),
     ("lpc11u35_c027_if",                            False,      0x0000,     "bin"       ),
-    ("sam3u2c_ncs36510rf_if",                       False,      0x8000,     "bin"       ),
     ("kl26z_nina_b1_if",                            False,      0x8000,     "bin"       ),
     ("lpc11u35_lpc4088dm_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc4088qsb_if",                      False,      0x0000,     "bin"       ),
@@ -188,7 +187,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1102,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52840-DK'                    ),
     (   0x1114,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
     (   0x1120,     VENDOR_TO_FAMILY('Nordic', 1),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
-    (   0x1200,     VENDOR_TO_FAMILY('Stub', 3),        'sam3u2c_ncs36510rf_if',                    'sam3u2c_bl',       None                                    ), # TODO - Set to 'ncs36510' when non-zero flash addresses are supported
     (   0x1234,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
     (   0x1236,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_ublox_evk_odin_w2_if',         'stm32f103xb_bl',   'ublox-EVK-ODIN-W2'                     ),
     (   0x1237,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_ublox_evk_nina_b1_if',             'sam3u2c_bl',       'U-BLOX-EVK-NINA-B1'                    ),
