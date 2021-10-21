@@ -406,10 +406,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/nz32_sc151.yaml
-    lpc11u35_ro359b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/ro359b.yaml
     lpc11u35_rtl8195am_if:
         - *module_if
         - *module_hic_lpc11u35
