@@ -91,7 +91,6 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_wizwiki_w7500_eco_if',               False,      0x0000,     "bin"       ),
     ('lpc11u35_wizwiki_w7500p_if',                  False,      0x0000,     "bin"       ),
     ("sam3u2c_ublox_evk_nina_b1_if",                True,       0x5000,     "bin"       ),
-    ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
     ("lpc11u35_rtl8195am_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_a_if',                         False,      0x0000,     "bin"       ),
@@ -233,7 +232,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0x9904,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                               ),
-    (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'kl26z_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k26f_if',                                  None,               None                                    ),
@@ -339,7 +337,6 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'SSCI-MBIT',
     'BlueNinja',
     'U-BLOX-EVK-NINA-B1',
-    'VNG-VBLUno51',
     'REALTEK-RTL8195AM']
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[4] for config in

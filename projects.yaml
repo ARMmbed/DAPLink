@@ -438,10 +438,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/tiny.yaml
-    lpc11u35_vbluno51_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/vbluno51.yaml
     lpc11u35_wio3g_if:
         - *module_if
         - *module_hic_lpc11u35
