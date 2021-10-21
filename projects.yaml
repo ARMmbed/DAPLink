@@ -438,10 +438,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/tiny.yaml
-    lpc11u35_wizwiki_w7500_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wizwiki_w7500.yaml
     lpc11u35_wizwiki_w7500p_if:
         - *module_if
         - *module_hic_lpc11u35
