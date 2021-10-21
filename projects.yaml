@@ -323,10 +323,6 @@ projects:
         - *module_if
         - *module_hic_kl27z
         - records/board/microbitv2.yaml
-    lpc11u35_6lowpan_borderrouterhat_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/6LoWPAN_BorderRouterHAT.yaml
     lpc11u35_6lowpan_borderrouterusb_if:
         - *module_if
         - *module_hic_lpc11u35
