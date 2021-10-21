@@ -86,7 +86,6 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_xdot_l151_if",                          False,      0x8000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterhat_if',         None,       0x0000,     "bin"       ),
     ('lpc11u35_6lowpan_borderrouterusb_if',         None,       0x0000,     "bin"       ),
-    ('lpc11u35_6lowpan_borderrouterethernet_if',    None,       0x0000,     "bin"       ),
     ('lpc11u35_gr_peach_if',                        None,       0x0000,     "bin"       ),
     ('lpc11u35_gr_lychee_if',                       None,       0x0000,     "bin"       ),
     ('lpc11u35_nz32_sc151_if',                      False,      0x0000,     "bin"       ),
@@ -222,7 +221,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x7010,     VENDOR_TO_FAMILY('Toshiba', 1),     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja-CDP-TZ01B' when mbed-os supports this
     (   0x7402,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
     (   0x7403,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
-    (   0x7404,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
     (   0x8080,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
     (   0x8081,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
     (   0x9004,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'                    ),
