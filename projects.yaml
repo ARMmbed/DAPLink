@@ -287,10 +287,6 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/rapid_iot.yaml
-    k20dx_rblnano_if:
-        - *module_if
-        - *module_hic_k20dx
-        - records/board/rblnano.yaml
     k20dx_twrke18f_if:
         - *module_if
         - *module_hic_k20dx
