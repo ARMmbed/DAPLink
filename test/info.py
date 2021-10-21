@@ -65,7 +65,6 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
-    ("lpc11u35_wio3g_if",                           False,      0x0000,     "bin"       ),
     ("lpc11u35_wiobg96_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_wio_emw3166_if",                     False,      0x0000,     "bin"       ),
     ("lpc11u35_hrm1017_if",                         False,      0x0000,     "bin"       ),
@@ -223,7 +222,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9011,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
-    (   0x9014,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio3g_if',                        None,               None                                    ),
     (   0x9015,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wiobg96_if',                      None,               None                                    ),
     (   0x9016,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9017,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio_emw3166_if',                  None,               'WIO_EMW3166'                           ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
