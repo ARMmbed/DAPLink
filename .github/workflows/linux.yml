@@ -69,7 +69,7 @@ jobs:
     - name: Compile
       run:  |
         export PATH="/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH"
-        python tools/progen_compile.py --release --parallel -v -v --ignore-failures
+        python tools/progen_compile.py --release --parallel -v
         (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
         mkdir bootloaders
         cp projectfiles/make_gcc_arm/*_bl/build/*_crc.{bin,hex} bootloaders

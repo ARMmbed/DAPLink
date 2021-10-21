@@ -49,7 +49,7 @@ jobs:
 
     - name: Compile
       run:  |
-        python tools/progen_compile.py -t cmake_gcc_arm -g mingw-make --release --parallel -v --ignore-failures
+        python tools/progen_compile.py -t cmake_gcc_arm -g mingw-make --release --parallel -v
       shell: cmd
 
     - name: Upload test artifacts
