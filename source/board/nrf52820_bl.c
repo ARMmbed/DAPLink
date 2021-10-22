@@ -3,7 +3,7 @@
  * @brief   board ID and meta-data for HIC based on Nordic Semiconductor nRF52820
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
