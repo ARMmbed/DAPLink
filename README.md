@@ -1,7 +1,11 @@
 [![DAPLink](/docs/images/daplink-website-logo-link.png)](https://armmbed.github.io/DAPLink/)
 
-**Note:** The master branch requires an Arm Compiler 5 or Keil MDK license to build. See the
-[develop](https://github.com/ARMmbed/DAPLink/tree/develop) branch for gcc and Arm
+# Warning: Development frozen on `main` branch
+
+All development and pull requests should now happen on [`develop`](https://github.com/ARMmbed/DAPLink/tree/develop) branch where we are preparing the next version.
+
+**Note:** The `main` branch requires an Arm Compiler 5 or Keil MDK license to build. See the
+[`develop`](https://github.com/ARMmbed/DAPLink/tree/develop) branch for gcc and Arm
 Compiler 6 support. As soon as testing is complete, gcc will become the default compiler and AC5 support will be
 dropped.
 
@@ -30,9 +34,10 @@ There are many board builds (board = HIC + target combination) created from this
 
 ## Contribute
 
-We welcome contributions to DAPLink in any area. Look for an interesting feature or defect [under
-issues](https://github.com/ARMmbed/DAPLink/issues), or start a new thread to engage with the
-developers and maintainers.
+We welcome contributions to DAPLink in any area. Look for an interesting feature or defect
+[under issues](https://github.com/ARMmbed/DAPLink/issues). Start a new thread [in the
+discussions](https://github.com/ARMmbed/DAPLink/discussions) to engage with the developers
+and maintainers.
 
 Please see the [contribution guidelines](CONTRIBUTING.md) for detailed requirements for
 contributions.
