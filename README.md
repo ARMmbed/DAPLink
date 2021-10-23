@@ -3,14 +3,6 @@
 
 [![Linux Build (develop)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml/badge.svg?branch=develop)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml)
 
-# Warning: Development branch
-
-This is is a development branch of DAPLink:
-- It adds support for the GCC (`gcc_arm`) and ARMC6 (`armclang`) compilers. ARMC5 (`armcc`) will be deprecated.
-- It focuses on `progen` support using `make` and `cmake`.
-
-**Note:** The main branch of DAPLink requires an Arm Compiler 5 or Keil MDK license to build.
-
 ----
 
 Arm Mbed DAPLink is an open-source software project that enables programming and debugging application software running on Arm Cortex CPUs. Commonly referred to as interface firmware, DAPLink runs on a secondary MCU that is attached to the SWD or JTAG port of the application MCU. This configuration is found on nearly all development boards. Enumerating as a USB composite device, it creates a bridge between your development computer and the CPU debug access port. DAPLink enables developers with:
@@ -42,9 +34,10 @@ There are many board builds (board = HIC + target combination) created from this
 
 ## Contribute
 
-We welcome contributions to DAPLink in any area. Look for an interesting feature or defect [under
-issues](https://github.com/ARMmbed/DAPLink/issues), or start a new thread to engage with the
-developers and maintainers.
+We welcome contributions to DAPLink in any area. Look for an interesting feature or defect
+[under issues](https://github.com/ARMmbed/DAPLink/issues). Start a new thread [in the
+discussions](https://github.com/ARMmbed/DAPLink/discussions) to engage with the developers
+and maintainers.
 
 Please see the [contribution guidelines](CONTRIBUTING.md) for detailed requirements for
 contributions.
