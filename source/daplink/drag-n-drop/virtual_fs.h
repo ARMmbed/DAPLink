@@ -23,7 +23,7 @@
 #define VIRTUAL_FS_H
 
 #include <stdint.h>
-#include <stdbool.h> 
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,8 +68,8 @@ typedef uint32_t (*vfs_read_cb_t)(uint32_t sector_offset, uint8_t *data, uint32_
 typedef void (*vfs_file_change_cb_t)(const vfs_filename_t filename, vfs_file_change_t change,
                                      vfs_file_t file, vfs_file_t new_file_data);
 
-// Initialize the filesystem with the given size and name
-void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size);
+// Initialize the filesystem with the given name
+void vfs_init(const vfs_filename_t drive_name);
 
 // Get the total size of the virtual filesystem
 uint32_t vfs_get_total_size(void);

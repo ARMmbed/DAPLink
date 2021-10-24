@@ -132,7 +132,7 @@ void vfs_user_build_filesystem()
     uint32_t file_size;
     vfs_file_t file_handle;
     // Setup the filesystem based on target parameters
-    vfs_init(get_daplink_drive_name(), VFS_DISK_SIZE);
+    vfs_init(get_daplink_drive_name());
     // MBED.HTM
     file_size = get_file_size(read_file_mbed_htm);
     vfs_create_file(get_daplink_url_name(), read_file_mbed_htm, 0, file_size);
