@@ -75,16 +75,19 @@ static uint8_t CLOCK_GetOscRangeFromFreq(uint32_t freq);
 static uint32_t CLOCK_GetLircClkFreq(void)
 {
     static const uint32_t lircFreqs[] = {MCG_LIRC_FREQ1, MCG_LIRC_FREQ2};
+    uint32_t freq;
 
     /* Check whether the LIRC is enabled. */
-    if ((MCG->C1 & MCG_C1_IRCLKEN_MASK) || (kMCGLITE_ClkSrcLirc == MCG_S_CLKST_VAL))
+    if (((MCG->C1 & MCG_C1_IRCLKEN_MASK) != 0U) || ((uint8_t)kMCGLITE_ClkSrcLirc == MCG_S_CLKST_VAL))
     {
-        return lircFreqs[MCG_C2_IRCS_VAL];
+        freq = lircFreqs[MCG_C2_IRCS_VAL];
     }
     else
     {
-        return 0U;
+        freq = 0U;
     }
+
+    return freq;
 }
 
 static uint8_t CLOCK_GetOscRangeFromFreq(uint32_t freq)
@@ -114,16 +117,20 @@ static uint8_t CLOCK_GetOscRangeFromFreq(uint32_t freq)
  */
 uint32_t CLOCK_GetOsc0ErClkFreq(void)
 {
-    if (OSC0->CR & OSC_CR_ERCLKEN_MASK)
+    uint32_t freq;
+
+    if ((OSC0->CR & OSC_CR_ERCLKEN_MASK) != 0U)
     {
         /* Please call CLOCK_SetXtal0Freq base on board setting before using OSC0 clock. */
         assert(g_xtal0Freq);
-        return g_xtal0Freq;
+        freq = g_xtal0Freq;
     }
     else
     {
-        return 0U;
+        freq = 0U;
     }
+
+    return freq;
 }
 
 /*!
@@ -162,7 +169,7 @@ uint32_t CLOCK_GetEr32kClkFreq(void)
  */
 uint32_t CLOCK_GetPlatClkFreq(void)
 {
-    return CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1);
+    return CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1U);
 }
 
 /*!
@@ -174,8 +181,8 @@ uint32_t CLOCK_GetFlashClkFreq(void)
 {
     uint32_t freq;
 
-    freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1);
-    freq /= (SIM_CLKDIV1_OUTDIV4_VAL + 1);
+    freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1U);
+    freq /= (SIM_CLKDIV1_OUTDIV4_VAL + 1U);
 
     return freq;
 }
@@ -189,8 +196,8 @@ uint32_t CLOCK_GetBusClkFreq(void)
 {
     uint32_t freq;
 
-    freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1);
-    freq /= (SIM_CLKDIV1_OUTDIV4_VAL + 1);
+    freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1U);
+    freq /= (SIM_CLKDIV1_OUTDIV4_VAL + 1U);
 
     return freq;
 }
@@ -202,7 +209,7 @@ uint32_t CLOCK_GetBusClkFreq(void)
  */
 uint32_t CLOCK_GetCoreSysClkFreq(void)
 {
-    return CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1);
+    return CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1U);
 }
 
 /*!
@@ -223,12 +230,12 @@ uint32_t CLOCK_GetFreq(clock_name_t clockName)
     {
         case kCLOCK_CoreSysClk:
         case kCLOCK_PlatClk:
-            freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1);
+            freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1U);
             break;
         case kCLOCK_BusClk:
         case kCLOCK_FlashClk:
-            freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1);
-            freq /= (SIM_CLKDIV1_OUTDIV4_VAL + 1);
+            freq = CLOCK_GetOutClkFreq() / (SIM_CLKDIV1_OUTDIV1_VAL + 1U);
+            freq /= (SIM_CLKDIV1_OUTDIV4_VAL + 1U);
             break;
         case kCLOCK_Er32kClk:
             freq = CLOCK_GetEr32kClkFreq();
@@ -326,15 +333,19 @@ uint32_t CLOCK_GetInternalRefClkFreq(void)
  */
 uint32_t CLOCK_GetPeriphClkFreq(void)
 {
+    uint32_t freq;
+
     /* Check whether the HIRC is enabled. */
-    if ((MCG->MC & MCG_MC_HIRCEN_MASK) || (kMCGLITE_ClkSrcHirc == MCG_S_CLKST_VAL))
+    if (((MCG->MC & MCG_MC_HIRCEN_MASK) != 0U) || ((uint8_t)kMCGLITE_ClkSrcHirc == MCG_S_CLKST_VAL))
     {
-        return MCG_HIRC_FREQ;
+        freq = MCG_HIRC_FREQ;
     }
     else
     {
-        return 0U;
+        freq = 0U;
     }
+
+    return freq;
 }
 
 /*!
@@ -351,13 +362,13 @@ uint32_t CLOCK_GetOutClkFreq(void)
 
     switch (MCG_S_CLKST_VAL)
     {
-        case kMCGLITE_ClkSrcHirc:
+        case (uint8_t)kMCGLITE_ClkSrcHirc:
             freq = MCG_HIRC_FREQ;
             break;
-        case kMCGLITE_ClkSrcLirc:
+        case (uint8_t)kMCGLITE_ClkSrcLirc:
             freq = CLOCK_GetLircClkFreq() >> MCG_SC_FCRDIV_VAL;
             break;
-        case kMCGLITE_ClkSrcExt:
+        case (uint8_t)kMCGLITE_ClkSrcExt:
             /* Please call CLOCK_SetXtal0Freq base on board setting before using OSC0 clock. */
             assert(g_xtal0Freq);
             freq = g_xtal0Freq;
@@ -383,11 +394,11 @@ mcglite_mode_t CLOCK_GetMode(void)
 
     switch (MCG_S_CLKST_VAL)
     {
-        case kMCGLITE_ClkSrcHirc: /* HIRC */
+        case (uint8_t)kMCGLITE_ClkSrcHirc: /* HIRC */
             mode = kMCGLITE_ModeHirc48M;
             break;
-        case kMCGLITE_ClkSrcLirc: /* LIRC */
-            if (kMCGLITE_Lirc2M == MCG_C2_IRCS_VAL)
+        case (uint8_t)kMCGLITE_ClkSrcLirc: /* LIRC */
+            if ((uint8_t)kMCGLITE_Lirc2M == MCG_C2_IRCS_VAL)
             {
                 mode = kMCGLITE_ModeLirc2M;
             }
@@ -396,7 +407,7 @@ mcglite_mode_t CLOCK_GetMode(void)
                 mode = kMCGLITE_ModeLirc8M;
             }
             break;
-        case kMCGLITE_ClkSrcExt: /* EXT  */
+        case (uint8_t)kMCGLITE_ClkSrcExt: /* EXT  */
             mode = kMCGLITE_ModeExt;
             break;
         default:
@@ -424,11 +435,11 @@ status_t CLOCK_SetMcgliteConfig(mcglite_config_t const *targetConfig)
      * If switch between LIRC8M and LIRC2M, need to switch to HIRC mode first,
      * because could not switch directly.
      */
-    if ((kMCGLITE_ClkSrcLirc == MCG_S_CLKST_VAL) && (kMCGLITE_ClkSrcLirc == targetConfig->outSrc) &&
-        (MCG_C2_IRCS_VAL != targetConfig->ircs))
+    if (((uint8_t)kMCGLITE_ClkSrcLirc == MCG_S_CLKST_VAL) && (kMCGLITE_ClkSrcLirc == targetConfig->outSrc) &&
+        (MCG_C2_IRCS_VAL != (uint8_t)(targetConfig->ircs)))
     {
-        MCG->C1 = (MCG->C1 & ~MCG_C1_CLKS_MASK) | MCG_C1_CLKS(kMCGLITE_ClkSrcHirc);
-        while (kMCGLITE_ClkSrcHirc != MCG_S_CLKST_VAL)
+        MCG->C1 = (uint8_t)((MCG->C1 & ~MCG_C1_CLKS_MASK) | MCG_C1_CLKS(kMCGLITE_ClkSrcHirc));
+        while ((uint8_t)kMCGLITE_ClkSrcHirc != MCG_S_CLKST_VAL)
         {
         }
     }
@@ -436,22 +447,22 @@ status_t CLOCK_SetMcgliteConfig(mcglite_config_t const *targetConfig)
     /* Set configuration now. */
     MCG->SC = MCG_SC_FCRDIV(targetConfig->fcrdiv);
     MCG->MC = MCG_MC_HIRCEN(targetConfig->hircEnableInNotHircMode) | MCG_MC_LIRC_DIV2(targetConfig->lircDiv2);
-    MCG->C2 = (MCG->C2 & ~MCG_C2_IRCS_MASK) | MCG_C2_IRCS(targetConfig->ircs);
+    MCG->C2 = (uint8_t)((MCG->C2 & ~MCG_C2_IRCS_MASK) | MCG_C2_IRCS(targetConfig->ircs));
     MCG->C1 = MCG_C1_CLKS(targetConfig->outSrc) | targetConfig->irclkEnableMode;
 
     /*
      * If external oscillator used and MCG_Lite is set to EXT mode, need to
      * wait for the OSC stable.
      */
-    if ((MCG->C2 & MCG_C2_EREFS0_MASK) && (kMCGLITE_ClkSrcExt == targetConfig->outSrc))
+    if (((MCG->C2 & MCG_C2_EREFS0_MASK) != 0U) && (kMCGLITE_ClkSrcExt == targetConfig->outSrc))
     {
-        while (!(MCG->S & MCG_S_OSCINIT0_MASK))
+        while (0U == (MCG->S & MCG_S_OSCINIT0_MASK))
         {
         }
     }
 
     /* Wait for clock source change completed. */
-    while (targetConfig->outSrc != MCG_S_CLKST_VAL)
+    while ((uint8_t)targetConfig->outSrc != MCG_S_CLKST_VAL)
     {
     }
 
@@ -474,10 +485,10 @@ void CLOCK_InitOsc0(osc_config_t const *config)
 
     MCG->C2 = ((MCG->C2 & MCG_C2_IRCS_MASK) | MCG_C2_RANGE0(range) | (uint8_t)config->workMode);
 
-    if ((kOSC_ModeExt != config->workMode) && (OSC0->CR & OSC_CR_ERCLKEN_MASK))
+    if ((kOSC_ModeExt != config->workMode) && ((OSC0->CR & OSC_CR_ERCLKEN_MASK) != 0U))
     {
         /* Wait for stable. */
-        while (!(MCG->S & MCG_S_OSCINIT0_MASK))
+        while (0U == (MCG->S & MCG_S_OSCINIT0_MASK))
         {
         }
     }
@@ -492,30 +503,4 @@ void CLOCK_DeinitOsc0(void)
 {
     OSC0->CR = 0U;
     MCG->C2 &= MCG_C2_IRCS_MASK;
-}
-
-/*!
- * brief Delay at least for several microseconds.
- * Please note that, this API will calculate the microsecond period with the maximum devices
- * supported CPU frequency, so this API will only delay for at least the given microseconds, if precise
- * delay count was needed, please implement a new timer count to achieve this function.
- *
- * param delay_us  Delay time in unit of microsecond.
- */
-__attribute__((weak)) void SDK_DelayAtLeastUs(uint32_t delay_us)
-{
-    assert(0U != delay_us);
-
-    uint32_t count = (uint32_t)USEC_TO_COUNT(delay_us, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
-
-    /*
-     * Calculate the real delay count depend on the excute instructions cycles,
-     * users can change the divider value to adapt to the real IDE optimise level.
-     */
-    count = (count / 4U);
-
-    for (; count > 0UL; count--)
-    {
-        __NOP();
-    }
 }
