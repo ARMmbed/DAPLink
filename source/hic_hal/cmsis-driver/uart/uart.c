@@ -20,18 +20,13 @@
  */
 
 #include "string.h"
-#include "fsl_device_registers.h"
-#include "fsl_usart_cmsis.h"
 #include "uart.h"
 #include "util.h"
 #include "cortex_m.h"
 #include "circ_buf.h"
 #include "settings.h" // for config_get_overflow_detect
-
-#define USART_INSTANCE (Driver_USART0)
-#define USART_IRQ      (FLEXCOMM0_IRQn)
-
-extern uint32_t SystemCoreClock;
+#include "Driver_USART.h"
+#include "IO_Config.h"
 
 static void clear_buffers(void);
 
@@ -64,18 +59,18 @@ int32_t uart_initialize(void)
 {
     clear_buffers();
     cb_buf.tx_size = 0;
-    USART_INSTANCE.Initialize(uart_handler);
-    USART_INSTANCE.PowerControl(ARM_POWER_FULL);
+    CMSIS_UART_INSTANCE.Initialize(uart_handler);
+    CMSIS_UART_INSTANCE.PowerControl(ARM_POWER_FULL);
 
     return 1;
 }
 
 int32_t uart_uninitialize(void)
 {
-    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
-    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
-    USART_INSTANCE.PowerControl(ARM_POWER_OFF);
-    USART_INSTANCE.Uninitialize();
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+    CMSIS_UART_INSTANCE.PowerControl(ARM_POWER_OFF);
+    CMSIS_UART_INSTANCE.Uninitialize();
     clear_buffers();
     cb_buf.tx_size = 0;
 
@@ -85,14 +80,14 @@ int32_t uart_uninitialize(void)
 int32_t uart_reset(void)
 {
     // disable interrupt
-    NVIC_DisableIRQ(USART_IRQ);
+    NVIC_DisableIRQ(CMSIS_UART_IRQ);
     clear_buffers();
     if (cb_buf.tx_size != 0) {
-        USART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
+        CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
         cb_buf.tx_size = 0;
     }
     // enable interrupt
-    NVIC_EnableIRQ(USART_IRQ);
+    NVIC_EnableIRQ(CMSIS_UART_IRQ);
 
     return 1;
 }
@@ -161,27 +156,27 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
     }
 
-    NVIC_DisableIRQ(USART_IRQ);
+    NVIC_DisableIRQ(CMSIS_UART_IRQ);
     clear_buffers();
     if (cb_buf.tx_size != 0) {
-        USART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
+        CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
         cb_buf.tx_size = 0;
     }
 
     // If there was no Receive() call in progress aborting it is harmless.
-    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
-    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
 
-    uint32_t r = USART_INSTANCE.Control(control, config->Baudrate);
+    uint32_t r = CMSIS_UART_INSTANCE.Control(control, config->Baudrate);
     if (r != ARM_DRIVER_OK) {
         return 0;
     }
-    USART_INSTANCE.Control(ARM_USART_CONTROL_TX, 1);
-    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 1);
-    USART_INSTANCE.Receive(&(cb_buf.rx), 1);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_TX, 1);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_RX, 1);
+    CMSIS_UART_INSTANCE.Receive(&(cb_buf.rx), 1);
 
-    NVIC_ClearPendingIRQ(USART_IRQ);
-    NVIC_EnableIRQ(USART_IRQ);
+    NVIC_ClearPendingIRQ(CMSIS_UART_IRQ);
+    NVIC_EnableIRQ(CMSIS_UART_IRQ);
 
     return 1;
 }
@@ -215,7 +210,7 @@ static void uart_start_tx_transfer() {
     }
     cb_buf.tx_size = tx_size;
     if (tx_size) {
-        USART_INSTANCE.Send(buf, tx_size);
+        CMSIS_UART_INSTANCE.Send(buf, tx_size);
     }
 }
 
@@ -254,7 +249,7 @@ void uart_handler(uint32_t event) {
         } else {
             // Drop character
         }
-        USART_INSTANCE.Receive(&(cb_buf.rx), 1);
+        CMSIS_UART_INSTANCE.Receive(&(cb_buf.rx), 1);
     }
 
     if (event & ARM_USART_EVENT_SEND_COMPLETE) {
