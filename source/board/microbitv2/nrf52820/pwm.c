@@ -93,6 +93,8 @@ static void pwm_stop()
     NVIC_DisableIRQ(PWM_IRQ);
     NRF_PPI->CHENCLR = NRF_PPI->CHENSET;
     PWM_TIMER->TASKS_STOP = 1;
+    //https://infocenter.nordicsemi.com/topic/errata_nRF52820_Rev3/ERR/nRF52820/Rev3/latest/anomaly_820_78.html
+    PWM_TIMER->TASKS_SHUTDOWN = 1;
 }
 
 static void pwm_start()

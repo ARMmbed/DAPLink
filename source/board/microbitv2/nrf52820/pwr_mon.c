@@ -223,7 +223,8 @@ uint32_t pwr_mon_get_vin_mv(void)
 
 uint32_t pwr_mon_get_vbat_mv(void)
 {
-    uint32_t bat = pwr_mon_get_vbat_mv_imp( 11100, 3300);
+    // CODAL needs a reply within 5ms
+    uint32_t bat = pwr_mon_get_vbat_mv_imp( 3000, 3300);
 
 #ifdef PWR_MON_DEBUG
     debug_msg("bat %d\n", (int) bat);
