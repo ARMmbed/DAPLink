@@ -92,11 +92,11 @@ static void I2C_SignalEvent(uint32_t event) {
         debug_i2c_data((uint8_t *)"g", 1);
     }
     if (event & ARM_I2C_EVENT_SLAVE_RECEIVE) {
-        int32_t ret = I2Cdrv->SlaveReceive(&g_slave_RX_buff[0], 2 /*I2C_DATA_LENGTH*/);
+        int32_t ret = I2Cdrv->SlaveReceive(&g_slave_RX_buff[0], I2C_DATA_LENGTH);
         debug_i2c_printf("rx[%d] ", ret);
     }
     if (event & ARM_I2C_EVENT_SLAVE_TRANSMIT) {
-        int32_t ret = I2Cdrv->SlaveTransmit(g_slave_TX_buff, 10 /*I2C_DATA_LENGTH*/);
+        int32_t ret = I2Cdrv->SlaveTransmit(&g_slave_TX_buff[0], I2C_DATA_LENGTH);
         debug_i2c_printf("tx[%d] ", ret);
     }
     debug_i2c_data((uint8_t *)".\n", 2);
