@@ -21,6 +21,7 @@
 
 #include "gpio_extra.h"
 #include "compiler.h"
+#include "nrf_nvmc.h"
 #include "dl_nrf_gpio.h"
 
 #define NRF52833_COMBINED_SENSOR_INT_PIN    NRF_GPIO_PIN_MAP(0, 9)
@@ -34,6 +35,15 @@ COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_COMBINED_SENSOR_INT_PIN));
 static const uint32_t COMBINED_SENSOR_INT_PIN = NRF52820_COMBINED_SENSOR_INT_PIN;
 COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_COMBINED_SENSOR_INT_PIN));
 #endif
+
+/* NFC configuration in the User UICR area, needed to configure NFC pins as GPIO */
+#define NRF52833_UICR_NFCPINS_OFFSET            (0x20CUL)
+#define NRF52833_UCIR_NFCPINS_ADDRESS           (NRF_UICR_BASE + NRF52833_UICR_NFCPINS_OFFSET)
+#define NRF52833_UICR_NFCPINS_PROTECT_Pos       (0UL) /*!< Position of PROTECT field. */
+#define NRF52833_UICR_NFCPINS_PROTECT_Msk       (0x1UL << NRF52833_UICR_NFCPINS_PROTECT_Pos) /*!< Bit mask of PROTECT field. */
+#define NRF52833_UICR_NFCPINS_PROTECT_Disabled  (0UL) /*!< Operation as GPIO pins. Same protection as normal GPIO pins. */
+#define NRF52833_UICR_NFCPINS_PROTECT_NFC       (1UL) /*!< Operation as NFC antenna pins. Configures the protection for NFC operation. */
+
 
 void gpio_enable_hid_led()
 {
@@ -57,6 +67,18 @@ void gpio_init_combined_int()
     if (NRF_FICR->INFO.PART == 0x52833) {
         // nRF52833
         COMBINED_SENSOR_INT_PIN = NRF52833_COMBINED_SENSOR_INT_PIN;
+
+        // Configure the NFC pins as GPIO in the UICR if not done already
+        volatile uint32_t* const nrf_uicr_nfcpins = (uint32_t *) NRF52833_UCIR_NFCPINS_ADDRESS;
+        if ((*nrf_uicr_nfcpins & NRF52833_UICR_NFCPINS_PROTECT_Msk) ==
+                (NRF52833_UICR_NFCPINS_PROTECT_NFC << NRF52833_UICR_NFCPINS_PROTECT_Pos)) {
+            nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_WRITE);
+            *nrf_uicr_nfcpins &= ~NRF52833_UICR_NFCPINS_PROTECT_Msk;
+            while (!nrf_nvmc_ready_check(NRF_NVMC));
+            nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
+            // Changes only take effect after a system reset
+            NVIC_SystemReset();
+        }
     } else {
         // nRF52820
         COMBINED_SENSOR_INT_PIN = NRF52820_COMBINED_SENSOR_INT_PIN;
