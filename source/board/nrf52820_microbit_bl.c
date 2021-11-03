@@ -26,6 +26,8 @@
 #include "compiler.h"
 #include "target_board.h"
 #include "target_family.h"
+#include "device.h"
+#include "gpio.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == 0x00008000);
@@ -65,3 +67,16 @@ const board_info_t g_board_info = {
     .daplink_target_url         = "https://microbit.org/device/?id=@B&v=@V&bl=1",
     .target_cfg                 = &target_device,
 };
+
+bool reset_button_pressed()
+{
+    bool btn_pressed = false;
+    // Bypass button check if we are waking from System OFF via GPIO (reset button)
+    if (NRF_POWER->RESETREAS & POWER_RESETREAS_OFF_Msk) {
+        // Do not clear the flag as it might be needed in the DAPlink interface
+        btn_pressed = false;
+    } else {
+        btn_pressed = gpio_get_reset_btn();
+    }
+    return btn_pressed;
+}

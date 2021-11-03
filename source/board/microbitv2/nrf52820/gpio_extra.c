@@ -77,6 +77,7 @@ void gpio_init_combined_int()
             while (!nrf_nvmc_ready_check(NRF_NVMC));
             nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
             // Changes only take effect after a system reset
+            // TODO: This does not seem to reset the system correctly, it hangs somewhere
             NVIC_SystemReset();
         }
     } else {
