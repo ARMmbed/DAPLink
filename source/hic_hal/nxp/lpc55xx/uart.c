@@ -64,8 +64,8 @@ int32_t uart_initialize(void)
 {
     clear_buffers();
     cb_buf.tx_size = 0;
-    Driver_USART0.Initialize(uart_handler);
-    Driver_USART0.PowerControl(ARM_POWER_FULL);
+    USART_INSTANCE.Initialize(uart_handler);
+    USART_INSTANCE.PowerControl(ARM_POWER_FULL);
 
     return 1;
 }
@@ -74,8 +74,8 @@ int32_t uart_uninitialize(void)
 {
     USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
     USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
-    Driver_USART0.PowerControl(ARM_POWER_OFF);
-    Driver_USART0.Uninitialize();
+    USART_INSTANCE.PowerControl(ARM_POWER_OFF);
+    USART_INSTANCE.Uninitialize();
     clear_buffers();
     cb_buf.tx_size = 0;
 
@@ -99,7 +99,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     switch (config->DataBits) {
         case UART_DATA_BITS_5:
-            control |= UART_DATA_BITS_5;
+            control |= ARM_USART_DATA_BITS_5;
             break;
 
         case UART_DATA_BITS_6:
@@ -107,7 +107,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
 
         case UART_DATA_BITS_7:
-            control |= ARM_USART_DATA_BITS_6;
+            control |= ARM_USART_DATA_BITS_7;
             break;
 
         case UART_DATA_BITS_8: /* fallthrough */
@@ -250,4 +250,3 @@ void uart_handler(uint32_t event) {
         uart_start_tx_transfer();
     }
 }
-
