@@ -24,6 +24,7 @@
 
 #include "IO_Config.h"
 #include "fsl_iocon.h"
+#include "gpio.h"
 
 //**************************************************************************************************
 /**
@@ -452,7 +453,7 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
-//     BITBAND_REG(LED_CONNECTED_GPIO->PDOR, LED_CONNECTED_BIT) = ~bit;
+    gpio_set_leds(LED_T_CONNECTED, bit ? GPIO_LED_ON : GPIO_LED_OFF);
 }
 
 /** Debug Unit: Set status Target Running LED.
@@ -462,7 +463,7 @@ __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 */
 __STATIC_INLINE void LED_RUNNING_OUT(uint32_t bit)
 {
-    ;             // Not available
+    gpio_set_leds(LED_T_RUNNING, bit ? GPIO_LED_ON : GPIO_LED_OFF);
 }
 
 ///@}
