@@ -23,121 +23,18 @@
 
 #include "IO_Config.h"
 
+#include "microbitv2_pins.h"
 #include "pwr_mon_adc.h"
 #include "pwr_mon.h"
 
-// Define to enable debugging
-//#define PWR_MON_DEBUG 1
 
-#ifdef PWR_MON_DEBUG
-
-#define MSC_DEBUG 1
-#include "daplink_debug.h"
-
-uint32_t bat_lo = 0xFFFFFFFF;
-uint32_t bat_hi = 0;
-
-uint32_t vin_lo = 0xFFFFFFFF;
-uint32_t vin_hi = 0;
-
-uint32_t nousb_vin = 0;
-uint32_t nousb_bat = 0;
-
-uint32_t low_vin = 0;
-uint32_t low_bat = 0;
-
-uint32_t dbg_bat[50];
-uint32_t dbg_cc[50];
-uint32_t dbg_count;
-
-uint32_t dbg_bat_nousb[50];
-uint32_t dbg_cc_nousb[50];
-uint32_t dbg_count_nousb;
-#endif // PWR_MON_DEBUG
-
-
-static void power_pins_init();
 uint32_t pwr_mon_get_vbat_mv_imp();
 static uint32_t pwr_mon_comp_mv(uint32_t psel, uint32_t vref, uint32_t *comps_count);
 
 
-// Volatge monitor pins
-// RUN_VBAT_SENSE   Enable Battery Voltage monitor
-// VBAT_SENSE       Battery Voltage monitor
-// VBUS_ABSENT      High when USB power is not connected (WAKE_ON_EDGE)
-
-#define NRF52833_PIN_RUN_VBAT_SENSE         NRF_GPIO_PIN_MAP(0, 31)
-#define NRF52833_PIN_VBAT_SENSE             NRF_GPIO_PIN_MAP(0, 30)
-#define NRF52833_PIN_VBAT_SENSE_COMP        6 //COMP_PSEL_PSEL_AnalogInput6
-#define NRF52833_PIN_VIN_COMP               0 //Not available
-#define NRF52833_PIN_VBUS_ABSENT            NRF_GPIO_PIN_MAP(0, 11)
-
-#define NRF52820_PIN_RUN_VBAT_SENSE         NRF_GPIO_PIN_MAP(0, 2)
-#define NRF52820_PIN_VBAT_SENSE             NRF_GPIO_PIN_MAP(0, 3)
-#define NRF52820_PIN_VBAT_SENSE_COMP        COMP_PSEL_PSEL_AnalogInput1
-#define NRF52820_PIN_VIN_COMP               COMP_PSEL_PSEL_VddhDiv5
-#define NRF52820_PIN_VBUS_ABSENT            NRF_GPIO_PIN_MAP(0, 7)
-
-#ifdef NRF528XX_DYNAMIC_PIN
-
-uint32_t pin_run_vbat_sense;
-uint32_t pin_vbat_sense;
-uint32_t pin_vbat_sense_comp;
-uint32_t pin_vin_comp;
-uint32_t pin_vbus_absent;
-
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52833(NRF52833_PIN_RUN_VBAT_SENSE));
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52833(NRF52833_PIN_VBAT_SENSE));
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52833(NRF52833_PIN_VBUS_ABSENT));
-
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_RUN_VBAT_SENSE));
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_VBAT_SENSE));
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_VBUS_ABSENT));
-#else
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_RUN_VBAT_SENSE));
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_VBAT_SENSE));
-COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_VBUS_ABSENT));
-#endif
-
-#ifdef NRF528XX_DYNAMIC_PIN
-#define PIN_RUN_VBAT_SENSE      pin_run_vbat_sense
-#define PIN_VBAT_SENSE          pin_vbat_sense
-#define PIN_VBAT_SENSE_COMP     pin_vbat_sense_comp
-#define PIN_VIN_COMP            pin_vin_comp
-#define PIN_VBUS_ABSENT         pin_vbus_absent
-#else
-#define PIN_RUN_VBAT_SENSE      NRF52820_PIN_RUN_VBAT_SENSE
-#define PIN_VBAT_SENSE          NRF52820_PIN_VBAT_SENSE
-#define PIN_VBAT_SENSE_COMP     NRF52820_PIN_VBAT_SENSE_COMP
-#define PIN_VIN_COMP            NRF52820_PIN_VIN_COMP
-#define PIN_VBUS_ABSENT         NRF52820_PIN_VBUS_ABSENT
-#endif
-
-static void power_pins_init()
-{
-#ifdef NRF528XX_DYNAMIC_PIN
-    if (NRF_FICR->INFO.PART == 0x52833) {
-        // nRF52833
-        pin_run_vbat_sense  = NRF52833_PIN_RUN_VBAT_SENSE;
-        pin_vbat_sense      = NRF52833_PIN_VBAT_SENSE;
-        pin_vbat_sense_comp = NRF52833_PIN_VBAT_SENSE_COMP;
-        pin_vin_comp        = NRF52833_PIN_VIN_COMP;
-        pin_vbus_absent     = NRF52833_PIN_VBUS_ABSENT;
-    } else {
-        // nRF52820
-        pin_run_vbat_sense  = NRF52820_PIN_RUN_VBAT_SENSE;
-        pin_vbat_sense      = NRF52820_PIN_VBAT_SENSE;
-        pin_vbat_sense_comp = NRF52820_PIN_VBAT_SENSE_COMP;
-        pin_vin_comp        = NRF52820_PIN_VIN_COMP;
-        pin_vbus_absent     = NRF52820_PIN_VBUS_ABSENT;
-    }
-#endif
-}
-
-
 void pwr_mon_init(void)
 {
-    power_pins_init();
+    microbitv2_pins_init();
 
     // Configure VMON_BAT and RUN_VBAT_SENSE
     gpio_cfg_output(GPIO_REG(PIN_RUN_VBAT_SENSE), GPIO_IDX(PIN_RUN_VBAT_SENSE)); 
@@ -177,19 +74,6 @@ power_source_t pwr_mon_get_power_source(void)
         // }
     }
 
-#ifdef PWR_MON_DEBUG
-    if (gpio_read(GPIO_REG(PIN_VBUS_ABSENT), GPIO_IDX(PIN_VBUS_ABSENT))) {
-        nousb_vin = vin_voltage_mv;
-        nousb_bat = bat_voltage_mv;
-        if (bat_voltage_mv < bat_min_voltage) {
-            low_vin = vin_voltage_mv;
-            low_bat = bat_voltage_mv;
-        }
-    }
-    debug_msg("PIN_VBUS_ABSENT %d usb_on %d\n", (int) PIN_VBUS_ABSENT, usb_on ? 1 : 0);
-    debug_msg("vin %d bat %d nousb vin %d bat %d low vin %d bat %d\n", (int) vin_voltage_mv, (int) bat_voltage_mv, (int) nousb_vin, (int) nousb_bat, (int) low_vin, (int) low_bat);
-#endif // PWR_MON_DEBUG
-
     return power_source;
 }
 
@@ -199,24 +83,10 @@ uint32_t pwr_mon_get_vin_mv(void)
     
     if (NRF_FICR->INFO.PART == 0x52833) {
         // nRF52833
-#ifdef PWR_MON_DEBUG
-        debug_msg("pwr_mon_adc_vin\n");
-#endif // PWR_MON_DEBUG
         vin = pwr_mon_adc_vin();
     } else {
-#ifdef PWR_MON_DEBUG
-        debug_msg("pwr_mon_comp_mv(%d)\n", (int) PIN_VIN_COMP);
-#endif // PWR_MON_DEBUG
         vin = pwr_mon_comp_mv(PIN_VIN_COMP, COMP_REFSEL_REFSEL_Int1V2, NULL);
     }
-
-#ifdef PWR_MON_DEBUG
-    if ( gpio_read(GPIO_REG(PIN_VBUS_ABSENT), GPIO_IDX(PIN_VBUS_ABSENT))) {
-        if ( vin_lo > vin) vin_lo = vin;
-        if ( vin_hi < vin) vin_hi = vin;
-    }
-    debug_msg("vin %d low vin %d bat %d\n", (int) vin, (int) low_vin, (int) low_bat);
-#endif // PWR_MON_DEBUG
 
     return vin;
 }
@@ -224,11 +94,7 @@ uint32_t pwr_mon_get_vin_mv(void)
 uint32_t pwr_mon_get_vbat_mv(void)
 {
     // CODAL needs a reply within 5ms
-    uint32_t bat = pwr_mon_get_vbat_mv_imp( 3000, 3300);
-
-#ifdef PWR_MON_DEBUG
-    debug_msg("bat %d\n", (int) bat);
-#endif // PWR_MON_DEBUG
+    uint32_t bat = pwr_mon_get_vbat_mv_imp(3000, 3300);
     return bat;
 }
 
@@ -245,12 +111,6 @@ uint32_t pwr_mon_get_vbat_mv_imp( uint32_t max_us, uint32_t max_mv)
     uint32_t bat;
     uint32_t comps_count = 0;
 
-#ifdef PWR_MON_DEBUG
-    dbg_count = 0;
-    debug_msg("\n");
-    debug_msg("pwr_mon_get_vbat_mv_imp(%d,%d) run %d comp %d\n", (int) max_us, (int) max_mv, (int) PIN_RUN_VBAT_SENSE, (int) PIN_VBAT_SENSE_COMP);
-#endif // PWR_MON_DEBUG
-
     // Enable voltage divider to take measurement
     gpio_write(GPIO_REG(PIN_RUN_VBAT_SENSE), GPIO_IDX(PIN_RUN_VBAT_SENSE), 1);
 
@@ -258,14 +118,6 @@ uint32_t pwr_mon_get_vbat_mv_imp( uint32_t max_us, uint32_t max_mv)
         bat = pwr_mon_comp_mv(PIN_VBAT_SENSE_COMP, COMP_REFSEL_REFSEL_Int1V2, &comps_count);
         // Compensate for voltage divider
         bat = 4017 * bat / 1000;
-
-#ifdef PWR_MON_DEBUG
-        if ( dbg_count < 50) {
-            dbg_bat[dbg_count] = bat;
-            dbg_cc[dbg_count] = comps_count;
-            dbg_count++;
-        }
-#endif // PWR_MON_DEBUG
 
         if ( comps_count >= max_comps) {
             break;
@@ -278,33 +130,6 @@ uint32_t pwr_mon_get_vbat_mv_imp( uint32_t max_us, uint32_t max_mv)
 
     // Disable voltage divider
     gpio_write(GPIO_REG(PIN_RUN_VBAT_SENSE), GPIO_IDX(PIN_RUN_VBAT_SENSE), 0);
-
-#ifdef PWR_MON_DEBUG
-    if ( gpio_read(GPIO_REG(PIN_VBUS_ABSENT), GPIO_IDX(PIN_VBUS_ABSENT))) {
-        for (int i = 0; i < dbg_count; i++) {
-            dbg_bat_nousb[i] = dbg_bat[i];
-            dbg_cc_nousb[i] = dbg_cc[i];
-        }
-        dbg_count_nousb = dbg_count;
-    }
-
-    if ( gpio_read(GPIO_REG(PIN_VBUS_ABSENT), GPIO_IDX(PIN_VBUS_ABSENT))) {
-        if ( bat_lo > bat) bat_lo = bat;
-        if ( bat_hi < bat) bat_hi = bat;
-    }
-
-    // int num =  dbg_count_nousb >= 50 ? 50 : dbg_count_nousb;
-    // for (int i = 0; i < num; i++) {
-    //   debug_msg("%d,%d\n", (int) dbg_cc_nousb[dbg_count_nousb - num + i], (int) dbg_bat_nousb[dbg_count_nousb - num + i]);
-    // }
-
-    // int numnum =  dbg_count >= 50 ? 50 : dbg_count;
-    // for (int i = 0; i < numnum; i++) {
-    //   debug_msg("%d,%d\n", (int) dbg_cc[dbg_count - numnum + i], (int) dbg_bat[dbg_count - numnum + i]);
-    // }
-
-    //debug_msg("vin lo %d hi %d bat lo %d hi %d\n", (int) vin_lo, (int) vin_hi, (int) bat_lo, (int) bat_hi);
-#endif // PWR_MON_DEBUG
 
     return bat;
 }
