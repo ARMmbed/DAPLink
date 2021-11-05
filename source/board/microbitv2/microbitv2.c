@@ -83,15 +83,6 @@ bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 bool do_remount = false;
 
-flashConfig_t gflashConfig = {
-    .key = CFG_KEY,
-    .fileName = STORAGE_CFG_FILENAME,
-    .fileSize = STORAGE_CFG_FILESIZE,
-    .fileVisible = STORAGE_CFG_FILEVISIBLE,
-    .fileEncWindowStart = 0,
-    .fileEncWindowEnd = 0,
-};
-
 extern main_usb_connect_t usb_state;
 extern bool go_to_sleep;
 
@@ -238,14 +229,6 @@ static void prerun_board_config(void)
     i2c_cmds_init();
 
     gpio_init_combined_int();
-
-    // Load Config from Flash if present
-    flashConfig_t * pflashConfigROM;
-    pflashConfigROM = (void *)STORAGE_CONFIG_ADDRESS;
-
-    if (CFG_KEY == pflashConfigROM->key) {
-        memcpy(&gflashConfig, pflashConfigROM, sizeof(flashConfig_t));
-    }
 }
 
 // Handle the reset button behavior, this function is called in the main task every 30ms
@@ -549,11 +532,11 @@ void vfs_user_build_filesystem_hook() {
         }
     }
 
-    // Add encoding window file size. 1B encoded into 2B ASCII
-    file_size = gflashConfig.fileSize + (gflashConfig.fileEncWindowEnd - gflashConfig.fileEncWindowStart);
+    flashConfig_t* storage_cgf = i2c_cmds_get_storage_config();
+    file_size = storage_cgf->fileSize + (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
 
-    if (gflashConfig.fileVisible) {
-        vfs_create_file(gflashConfig.fileName, read_file_data_txt, 0, file_size);
+    if (storage_cgf->fileVisible) {
+        vfs_create_file(storage_cgf->fileName, read_file_data_txt, 0, file_size);
     }
 }
 
@@ -561,17 +544,18 @@ void vfs_user_build_filesystem_hook() {
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t read_address = STORAGE_ADDRESS_START + (VFS_SECTOR_SIZE * sector_offset);
-    uint32_t encoded_data_offset = (gflashConfig.fileEncWindowEnd - gflashConfig.fileEncWindowStart);
+    flashConfig_t* storage_cgf = i2c_cmds_get_storage_config();
+    uint32_t encoded_data_offset = (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
 
     // Ignore out of bound reads
     if ( read_address < (STORAGE_ADDRESS_END + encoded_data_offset) ) {
         for (uint32_t i = 0; i < VFS_SECTOR_SIZE; i++) {
-            if (i + (VFS_SECTOR_SIZE * sector_offset) < gflashConfig.fileEncWindowStart) {
+            if (i + (VFS_SECTOR_SIZE * sector_offset) < storage_cgf->fileEncWindowStart) {
                 // If data is before encoding window, no offset is needed
                 data[i] = *(uint8_t *) (read_address + i);
-            } else if(i + (VFS_SECTOR_SIZE * sector_offset) < (gflashConfig.fileEncWindowStart + encoded_data_offset * 2)) {
+            } else if(i + (VFS_SECTOR_SIZE * sector_offset) < (storage_cgf->fileEncWindowStart + encoded_data_offset * 2)) {
                 // Data inside encoding window needs to consider encoding window start and size
-                uint8_t enc_byte = *(uint8_t *) (STORAGE_ADDRESS_START + ((VFS_SECTOR_SIZE * sector_offset) + gflashConfig.fileEncWindowStart + i ) / 2);
+                uint8_t enc_byte = *(uint8_t *) (STORAGE_ADDRESS_START + ((VFS_SECTOR_SIZE * sector_offset) + storage_cgf->fileEncWindowStart + i ) / 2);
                 if (i % 2 == 0) {
                     // High nibble
                     enc_byte = 0x0F & (enc_byte >> 4);

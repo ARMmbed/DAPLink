@@ -39,7 +39,18 @@ extern bool power_led_sleep_state_on;
 extern bool automatic_sleep_on;
 extern main_shutdown_state_t main_shutdown_state;
 extern bool do_remount;
-extern flashConfig_t gflashConfig;
+
+// 'kvld' in hex - key valid
+#define CFG_KEY             0x6b766c64
+
+flashConfig_t gflashConfig = {
+    .key = CFG_KEY,
+    .fileName = STORAGE_CFG_FILENAME,
+    .fileSize = STORAGE_CFG_FILESIZE,
+    .fileVisible = STORAGE_CFG_FILEVISIBLE,
+    .fileEncWindowStart = 0,
+    .fileEncWindowEnd = 0,
+};
 
 
 static void i2c_write_comms_callback(uint8_t* pData, uint8_t size);
@@ -477,9 +488,19 @@ static void i2c_read_flash_callback(uint8_t* pData, uint8_t size) {
 }
 
 void i2c_cmds_init() {
+    // Load Config from Flash if present
+    flashConfig_t *pflashConfigROM = (flashConfig_t *) STORAGE_CONFIG_ADDRESS;
+    if (CFG_KEY == pflashConfigROM->key) {
+        memcpy(&gflashConfig, pflashConfigROM, sizeof(flashConfig_t));
+    }
+
     i2c_initialize();
     i2c_registerWriteCallback(i2c_write_comms_callback, I2C_SLAVE_NRF_KL_COMMS);
     i2c_registerReadCallback(i2c_read_comms_callback, I2C_SLAVE_NRF_KL_COMMS);
     i2c_registerWriteCallback(i2c_write_flash_callback, I2C_SLAVE_FLASH);
     i2c_registerReadCallback(i2c_read_flash_callback, I2C_SLAVE_FLASH);
+}
+
+flashConfig_t* i2c_cmds_get_storage_config() {
+    return &gflashConfig;
 }
