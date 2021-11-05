@@ -56,6 +56,23 @@ target_cfg_t target_device_nrf52_64 = {
     .target_part_number             = "nRF52832_xxAA",
 };
 
+// target information for nRF52840 with 256 KB RAM / 1024 KB Flash
+target_cfg_t target_device_nrf52840_256 = {
+    .version                        = kTargetConfigVersion,
+    .sectors_info                   = sectors_info_nrf52,
+    .sector_info_length             = (sizeof(sectors_info_nrf52))/(sizeof(sector_info_t)),
+    .flash_regions[0].start         = 0,
+    .flash_regions[0].end           = KB(1024),
+    .flash_regions[0].flags         = kRegionIsDefault,
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_nrf52,    
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20040000,
+    .erase_reset                    = 1,
+    .target_vendor                  = "NordicSemiconductor",
+    .target_part_number             = "nRF52840_xxAA",
+};
+
+
 // target information for nRF52833 with 128 KB RAM / 512 KB Flash
 target_cfg_t target_device_nrf52833 = {
     .version                        = kTargetConfigVersion,

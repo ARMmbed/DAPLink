@@ -144,6 +144,7 @@ PROJECT_RELEASE_INFO = {
     ('max32625_if',                                 False,      0x0000,     "bin"       ),
     ('sam3u2c_if',                                  False,      0x0000,     "bin"       ),
     ('stm32f103xb_if',                              False,      0x0000,     "bin"       ),
+    ('lpc11u35_pitaya_link_if',                     False,      0x0000,     "bin"       ),
 }
 
 # Add new HICs here
@@ -234,6 +235,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1019,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
     (   0x1021,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
     (   0x1022,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ro359b_if',                       None,               None                                    ),
+    (   0x1028,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_pitaya_link_if',                  None,               None                                    ),    
     (   0x1050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1054,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'LPCXpresso54114'                       ),
     (   0x1056,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc54608xpresso_if',               'lpc4322_bl',       'LPCXpresso54608'                       ),
