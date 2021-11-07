@@ -504,3 +504,12 @@ void i2c_cmds_init() {
 flashConfig_t* i2c_cmds_get_storage_config() {
     return &gflashConfig;
 }
+
+void i2c_cmds_reset_storate_config() {
+    gflashConfig = (flashConfig_t) {
+        .key = CFG_KEY,
+        .fileName = STORAGE_CFG_FILENAME,
+        .fileSize = STORAGE_CFG_FILESIZE,
+        .fileVisible = STORAGE_CFG_FILEVISIBLE,
+    };
+}

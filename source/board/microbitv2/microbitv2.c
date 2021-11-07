@@ -497,6 +497,7 @@ bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
     if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
         // Erase last 128KB flash block
         storage_erase_all();
+        i2c_cmds_reset_storate_config();
     }
 
     return false;
