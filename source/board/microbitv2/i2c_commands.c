@@ -515,5 +515,7 @@ void i2c_cmds_reset_storate_config() {
         .fileName = STORAGE_CFG_FILENAME,
         .fileSize = STORAGE_CFG_FILESIZE,
         .fileVisible = STORAGE_CFG_FILEVISIBLE,
+        .fileEncWindowStart = 0,
+        .fileEncWindowEnd = 0,
     };
 }
