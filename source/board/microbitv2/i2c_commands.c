@@ -63,6 +63,10 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
     i2cCommand_t i2cResponse = {0};
     bool assert_interrupt = true;
 
+    if (size < 1) {
+        return;
+    }
+
     switch (pI2cCommand->cmdId) {
         case gReadRequest_c:
             i2cResponse.cmdId = gReadResponse_c;

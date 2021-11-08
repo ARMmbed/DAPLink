@@ -40,7 +40,6 @@ static void power_after();
 static void power_systemoff();
 static void power_wfi();
 
-void POWER_CLOCK_IRQHandler(void);
 void GPIOTE_IRQHandler(void);
 
 
@@ -73,10 +72,6 @@ void power_init()
 
     NRF_GPIOTE->INTENSET = power_gpiote_intenset | ( GPIOTE_INTENSET_PORT_Set << GPIOTE_INTENSET_PORT_Pos);
     NVIC_EnableIRQ(GPIOTE_IRQn);
-
-    // // Enable NRF_POWER interrupt for USB removed/detected
-    // NRF_POWER->INTENSET = POWER_INTENSET_USBREMOVED_Msk | POWER_INTENSET_USBDETECTED_Msk;
-    // NVIC_EnableIRQ(POWER_CLOCK_IRQn);
 }
 
 void power_down()
@@ -169,32 +164,6 @@ static void power_wfi()
     power_after(false /*systemoff*/);
 }
 
-
-// // TODO - It feels wrong to call pwr_mon_get_power_source() and the USB functions in the IRQ handler
-// void POWER_CLOCK_IRQHandler(void)
-// {
-//     if (NRF_POWER->EVENTS_USBDETECTED) {
-//         NRF_POWER->EVENTS_USBDETECTED = 0;
-//         power_source = pwr_mon_get_power_source();
-//         if (power_in_wfi) {
-//             wake_from_usb = 1;
-//         }
-//         usb_pc_connected = true;
-//     }
-
-//     if (NRF_POWER->EVENTS_USBREMOVED) {
-//         NRF_POWER->EVENTS_USBREMOVED = 0;
-//         power_source = pwr_mon_get_power_source();
-//         if (power_in_wfi) {
-//             wake_from_usb = 1;
-//         }
-//         /* Reset USB on cable detach (VBUS falling edge) */
-//         USBD_Reset();
-//         usbd_reset_core();
-//         usb_pc_connected = false;
-//         usb_state = USB_DISCONNECTED;
-//     }
-// }
 
 void GPIOTE_IRQHandler(void)
 {
