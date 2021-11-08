@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/arm_watch_stm32f411.c
-        family:
-            - source/family/st/stm32f411/target.c
