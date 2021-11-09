@@ -22,8 +22,8 @@
 // Flash layout:
 //
 //  [ 0x0000_0000 - 0x0000_FFFF ]:  64 kB - bootloader
-//  [ 0x0001_0000 - 0x0004_FFFF ]: 256 kB - interface
-//  [ 0x0005_0000 - 0x0005_0FFF ]:   4 kB - persistent config (cfgrom)
+//  [ 0x0001_0000 - 0x0003_FBFF ]: 191 kB - interface
+//  [ 0x0003_FC00 - 0x0003_FFFF ]:   1 kB - persistent config (cfgrom)
 //
 // Notes:
 // 1. The interface does not extend to the end of flash because that makes the binary
@@ -34,31 +34,28 @@
 /* Device sizes */
 
 #define DAPLINK_ROM_START               0x00000000 // NS alias
-#define DAPLINK_ROM_SIZE                0x00051000 // 64 kB BL + 256 kB IF + 4 kB config
+#define DAPLINK_ROM_SIZE                0x00040000 // 64 kB BL + 191 kB IF + 1 kB config
 
 #define DAPLINK_RAM_START               0x20000000 // NS alias
-#define DAPLINK_RAM_SIZE                0x00040000 // SRAM 0-3
+#define DAPLINK_RAM_SIZE                0x00018000 // SRAM 0-1
 
 /* ROM sizes */
 
 #define DAPLINK_ROM_BL_START            0x00000000
 #define DAPLINK_ROM_BL_SIZE             0x00010000 // 64 kB bootloader
 
-#define DAPLINK_ROM_CONFIG_ADMIN_START  0x00010000
-#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00000000
-
 #define DAPLINK_ROM_IF_START            0x00010000
-#define DAPLINK_ROM_IF_SIZE             0x00040000
+#define DAPLINK_ROM_IF_SIZE             0x0002FC00 // 191 kB interface
 
-#define DAPLINK_ROM_CONFIG_USER_START   0x00050000
-#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00001000
+#define DAPLINK_ROM_CONFIG_USER_START   0x0003FC00
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000400 // 1 kB config
 
 /* RAM sizes */
 
 #define DAPLINK_RAM_APP_START           0x20000000
-#define DAPLINK_RAM_APP_SIZE            0x0003FF00
+#define DAPLINK_RAM_APP_SIZE            0x00017F00
 
-#define DAPLINK_RAM_SHARED_START        0x2003FF00
+#define DAPLINK_RAM_SHARED_START        0x20017F00
 #define DAPLINK_RAM_SHARED_SIZE         0x00000100
 
 /* Flash Programming Info */
