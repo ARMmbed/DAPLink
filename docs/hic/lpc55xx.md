@@ -8,19 +8,19 @@ Based on LPC55S69JBD64 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet
 - HTQFP64 packaging
 
 In order to support other MCUs from the LPC5500 family, the HIC limits usage
-to one core, 320 KB Flash and 256 KB RAM.
+to one core, 256 KB Flash and 96 KB RAM.
 
 ## Memory Map
 
 | Region   |  Size  | Start       | End         |
 |----------|--------|-------------|-------------|
-| Flash    | 320 KB | 0x0000_0000 | 0x0005_1000 |
-| SRAM     | 256 KB | 0x2000_0000 | 0x2004_0000 |
+| Flash    | 256 KB | 0x0000_0000 | 0x0004_0000 |
+| SRAM     |  96 KB | 0x2000_0000 | 0x2004_0000 |
 | USB RAM  |  16 KB | 0x4010_0000 | 0x4010_4000 |
 
 Bootloader size is 64 KB
 
-## DAPLink default pin assignment 
+## DAPLink default pin assignment
 
 Reference design is based on [MCU-Link](https://www.nxp.com/design/development-boards/lpcxpresso-boards/mcu-link-debug-probe:MCU-LINK).
 
