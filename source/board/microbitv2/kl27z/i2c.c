@@ -46,13 +46,16 @@ static const uint8_t g_slave_busy_error_buff[] = {gErrorResponse_c, gErrorBusy_c
 static uint8_t g_slave_TX_buff_ready = 0;
 static uint8_t g_slave_busy = 0;
 
-static i2cWriteCallback_t pfWriteCommsCallback = NULL;
-static i2cReadCallback_t pfReadCommsCallback = NULL;
-static i2cWriteCallback_t pfWriteFlashCallback = NULL;
-static i2cReadCallback_t pfReadFlashCallback = NULL;
+static i2cCallback_t pfWriteCommsCallback = NULL;
+static i2cCallback_t pfReadCommsCallback = NULL;
+static i2cCallback_t pfWriteFlashCallback = NULL;
+static i2cCallback_t pfReadFlashCallback = NULL;
 
 extern uint8_t i2c_wake_timeout;
-extern bool i2c_allow_sleep;
+static bool i2c_allow_sleep;
+
+static void i2c_clearTxBuffer(void);
+
 
 static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void *userData) {
     i2cCommand_t i2cResponse = {0};
@@ -108,7 +111,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             // Check flag set in kI2C_SlaveReceiveEvent
 
             // Ignore NOP cmd in I2C Write
-            if (!(g_SlaveRxFlag && g_slave_RX_buff[0] == 0x00)) {
+            if (!(g_SlaveRxFlag && g_slave_RX_buff[0] == gNopCmd_c)) {
                 // Only process events if the busy error was not read
                 if (!g_slave_busy) {
                     main_board_event();
@@ -134,7 +137,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
 // Hook function executed in the main task
 void board_custom_event() {
     if (g_SlaveRxFlag) {
-        i2c_clearBuffer();
+        i2c_clearTxBuffer();
         if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
             pfWriteCommsCallback(&g_slave_RX_buff[0], transferredCount);
         }
@@ -184,6 +187,8 @@ void i2c_initialize() {
 
     i2c_init_pins();
 
+    i2c_clearBuffers();
+
     I2C_SlaveGetDefaultConfig(&slaveConfig);
 
     slaveConfig.addressingMode = kI2C_RangeMatch;
@@ -205,7 +210,7 @@ void i2c_deinitialize(void) {
     return ;
 }
 
-i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress)
+i2c_status_t i2c_registerWriteCallback(i2cCallback_t writeCallback, uint8_t slaveAddress)
 {
     i2c_status_t status = I2C_STATUS_SUCCESS;
 
@@ -226,7 +231,7 @@ i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t
     return status;
 }
 
-i2c_status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress)
+i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveAddress)
 {
     i2c_status_t status = I2C_STATUS_SUCCESS;
 
@@ -247,7 +252,14 @@ i2c_status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t sl
     return status;
 }
 
-void i2c_clearBuffer (void) {
+void i2c_clearBuffers(void)
+{
+    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
+}
+
+void i2c_clearTxBuffer(void)
+{
     memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
 }
 
@@ -265,4 +277,9 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
 bool i2c_isBusy()
 {
     return g_s_handle.isBusy;
+}
+
+bool i2c_canSleep()
+{
+    return i2c_allow_sleep;
 }

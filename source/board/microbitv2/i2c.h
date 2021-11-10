@@ -26,15 +26,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/*! i2c Write Callback prototype */
-typedef void (*i2cWriteCallback_t)
-(
-    uint8_t*    pData,
-    uint8_t     size
-);
-
-/*! i2c Read Callback prototype */
-typedef void (*i2cReadCallback_t)
+/*! i2c Read/Write Callback prototype */
+typedef void (*i2cCallback_t)
 (
     uint8_t*    pData,
     uint8_t     size
@@ -50,10 +43,11 @@ typedef enum {
 
 void i2c_initialize(void);
 void i2c_deinitialize(void);
-i2c_status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress);
-i2c_status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress);
-void i2c_clearBuffer(void);
+i2c_status_t i2c_registerWriteCallback(i2cCallback_t writeCallback, uint8_t slaveAddress);
+i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveAddress);
+void i2c_clearBuffers(void);
 void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
 bool i2c_isBusy(void);
+bool i2c_canSleep(void);
 
 #endif /* I2C_H_ */

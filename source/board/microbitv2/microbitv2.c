@@ -75,7 +75,6 @@ volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
 uint8_t i2c_wake_timeout = 0;
-bool i2c_allow_sleep = true;
 power_source_t power_source;
 microbit_if_power_mode_t interface_power_mode = MB_POWER_DOWN;
 bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
@@ -84,7 +83,6 @@ main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 bool do_remount = false;
 
 extern main_usb_connect_t usb_state;
-extern bool go_to_sleep;
 
 extern void main_powerdown_event(void);
 
@@ -324,7 +322,7 @@ void board_30ms_hook()
 
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
     if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING
-        && automatic_sleep_on == true && i2c_isBusy() == false && i2c_wake_timeout == 0 && i2c_allow_sleep) {
+        && automatic_sleep_on == true && i2c_isBusy() == false && i2c_wake_timeout == 0 && i2c_canSleep()) {
         interface_power_mode = MB_POWER_SLEEP;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }
@@ -491,7 +489,7 @@ void board_vfs_stream_closed_hook()
     main_shutdown_state = MAIN_SHUTDOWN_WAITING;
 
     // Clear any pending I2C response
-    i2c_clearBuffer();
+    i2c_clearBuffers();
 
     // Release COMBINED_SENSOR_INT
     gpio_disable_combined_int();
