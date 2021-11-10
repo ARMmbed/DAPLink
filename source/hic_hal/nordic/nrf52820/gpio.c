@@ -33,7 +33,7 @@ void gpio_init(void)
 {
 #ifdef LED_PWR
     gpio_cfg_output(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR));
-    gpio_write(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR), GPIO_LED_STATE(1));
+    gpio_write(GPIO_REG(LED_PWR), GPIO_IDX(LED_PWR), GPIO_LED_STATE(0));
 #endif
 #ifdef LED_CONNECTED
     gpio_cfg_output(GPIO_REG(LED_CONNECTED), GPIO_IDX(LED_CONNECTED));
