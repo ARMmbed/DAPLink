@@ -203,6 +203,11 @@ static inline uint8_t get_led_gamma(uint8_t brightness) {
 // Called in main_task() to init before USB and files are configured
 static void prerun_board_config(void)
 {
+    // HID_LED_DEF is on so the resting state of the orange LED after flashing is on
+    // but turn it off here so it's initially off, then stays off when on battery,
+    // and comes on only when USB enumerates 
+    gpio_set_hid_led(GPIO_LED_OFF);
+
     mb_version_t board_version = read_brd_rev_id();
     set_board_id(board_version);
 
