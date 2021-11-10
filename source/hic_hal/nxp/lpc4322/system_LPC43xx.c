@@ -32,9 +32,9 @@
  -----------------------------------------------------------------------------
    PLL0USB   |    480 MHz     |      XTAL      | External crystal @ 12 MHz
  -----------------------------------------------------------------------------
-    PLL1     |    180 MHz     |      XTAL      | External crystal @ 12 MHz
+    PLL1     |    120 MHz     |      XTAL      | External crystal @ 12 MHz
  -----------------------------------------------------------------------------
-    CPU      |    180 MHz     |      PLL1      | CPU Clock ==  BASE_M4_CLK
+    CPU      |    120 MHz     |      PLL1      | CPU Clock ==  BASE_M4_CLK
  -----------------------------------------------------------------------------
    IDIV A    |     60 MHz     |      PLL1      | To the USB1 peripheral
  -----------------------------------------------------------------------------
@@ -44,7 +44,7 @@
  -----------------------------------------------------------------------------
    IDIV D    |     12 MHz     |      IRC       | Internal oscillator @ 12 MHz
  -----------------------------------------------------------------------------
-   IDIV E    |    5.3 MHz     |      PLL1      | To the LCD controller
+   IDIV E    |    5.2 MHz     |      PLL1      | To the LCD controller
  -----------------------------------------------------------------------------*/
 
 
@@ -93,11 +93,11 @@
 /*----------------------------------------------------------------------------
   Configure integer divider values
  *----------------------------------------------------------------------------*/
-#define IDIVA_IDIV        2             /* Divide input clock by 3            */
+#define IDIVA_IDIV        1             /* Divide input clock by 2            */
 #define IDIVB_IDIV        1             /* Divide input clock by 2            */
 #define IDIVC_IDIV        0             /* Divide input clock by 1            */
 #define IDIVD_IDIV        0             /* Divide input clock by 1            */
-#define IDIVE_IDIV       33             /* Divide input clock by 34           */
+#define IDIVE_IDIV       22             /* Divide input clock by 23           */
 
 
 /*----------------------------------------------------------------------------
@@ -159,13 +159,13 @@
  * N = PLL1_NSEL + 1,     M = PLL1_MSEL + 1,     P = 2 ^ PLL1_PSEL
  *----------------------------------------------------------------------------*/
 
-/* PLL1 output clock: 180MHz, Fcco: 180MHz, N = 1, M = 15, P = x              */
+/* PLL1 output clock: 120MHz, Fcco: 240MHz, N = 1, M = 20, P = 1              */
 #define PLL1_NSEL   0           /* Range [0 -   3]: Pre-divider ratio N       */
-#define PLL1_MSEL  14           /* Range [0 - 255]: Feedback-divider ratio M  */
+#define PLL1_MSEL  19           /* Range [0 - 255]: Feedback-divider ratio M  */
 #define PLL1_PSEL   0           /* Range [0 -   3]: Post-divider ratio P      */
 
 #define PLL1_BYPASS 0           /* 0: Use PLL, 1: PLL is bypassed             */
-#define PLL1_DIRECT 1           /* 0: Use PSEL, 1: Don't use PSEL             */
+#define PLL1_DIRECT 0           /* 0: Use PSEL, 1: Don't use PSEL             */
 #define PLL1_FBSEL  0           /* 0: FCCO is used as PLL feedback            */
                                 /* 1: FCLKOUT is used as PLL feedback         */
 
@@ -185,7 +185,7 @@
  * | up to 193MHz |    8     |
  * | up to 204MHz |    9     |
  *----------------------------------------------------------------------------*/
-#define FLASHCFG_FLASHTIM   9
+#define FLASHCFG_FLASHTIM   5
 
 
 /*----------------------------------------------------------------------------
@@ -316,7 +316,7 @@ uint32_t GetClockFreq (uint32_t clk_src);
 /*----------------------------------------------------------------------------
   System Core Clock variable
  *----------------------------------------------------------------------------*/
-uint32_t SystemCoreClock = 180000000U; /* System Clock Frequency (Core Clock) */
+uint32_t SystemCoreClock = 120000000U; /* System Clock Frequency (Core Clock) */
 
 
 /******************************************************************************
