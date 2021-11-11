@@ -63,6 +63,8 @@ static callbackToExecute_t callbackToExecute = {
 
 static bool g_schedule_clear_tx_buffer = false;
 
+// TODO: This can probably be combined with the busy state for simpler sleep config
+extern uint8_t i2c_wake_timeout;
 static bool i2c_allow_sleep = true;
 
 
@@ -153,10 +155,12 @@ static void i2c_signalEvent(uint32_t event) {
     }
     if (event & ARM_I2C_EVENT_SLAVE_RECEIVE) {
         int32_t ret = I2Cdrv->SlaveReceive(&g_slave_RX_buff[0], I2C_DATA_LENGTH);
+        i2c_wake_timeout = 4;   // 4 * 30ms tick = 120ms timeout
         debug_i2c_printf("rx[%d] ", ret);
     }
     if (event & ARM_I2C_EVENT_SLAVE_TRANSMIT) {
         int32_t ret = I2Cdrv->SlaveTransmit(&g_slave_TX_buff[0], I2C_DATA_LENGTH);
+        i2c_wake_timeout = 4;   // 4 * 30ms tick = 120ms timeout
         debug_i2c_printf("tx[%d] ", ret);
     }
     debug_i2c_data((uint8_t *)".\n", 2);
@@ -166,6 +170,12 @@ static void i2c_signalEvent(uint32_t event) {
 void i2c_initialize()
 {
     i2c_clearBuffers();
+    callbackToExecute.pfCallback = NULL;
+    callbackToExecute.pData = NULL;
+    callbackToExecute.size = 0;
+    g_schedule_clear_tx_buffer = false;
+    i2c_allow_sleep = true;
+
     // I2C addresses configured via default values from RTE_Device.h
     I2Cdrv->Initialize(i2c_signalEvent);
     I2Cdrv->PowerControl(ARM_POWER_FULL);
