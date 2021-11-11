@@ -285,6 +285,7 @@ static int32_t USART_PowerControl (ARM_POWER_STATE state) {
 
       driver_state |= USART_FLAG_POWERED;
 
+      NVIC_SetPriority(UARTE0_UART0_IRQn, NRFX_UARTE_DEFAULT_CONFIG_IRQ_PRIORITY);
       NVIC_ClearPendingIRQ(UARTE0_UART0_IRQn);
       NVIC_EnableIRQ(UARTE0_UART0_IRQn);
       break;

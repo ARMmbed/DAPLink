@@ -53,6 +53,7 @@
 #include "rl_usb.h"
 
 #include "nrf.h"                        /* Device header */
+#include "nrfx.h"
 #include "nrf52_erratas.h"
 
 #define  __NO_USB_LIB_C
@@ -102,7 +103,7 @@ void usbd_enable (void) {
   /* Enable the peripheral */
   NRF_USBD->ENABLE = USBD_ENABLE_ENABLE_Enabled << USBD_ENABLE_ENABLE_Pos;
 
-  /* Waiting for peripheral to enable (max 10 ms), this should take a few µs */
+  /* Waiting for peripheral to enable (max 10 ms), this should take a few ï¿½s */
   for (i = 160000U; i != 0U; i--) {
     if ((NRF_USBD->EVENTCAUSE & USBD_EVENTCAUSE_READY_Msk) != 0U) {
       break;
@@ -190,6 +191,7 @@ void USBD_Init (void) {
   /* Enable only USB Reset interrupt */
   NRF_USBD->INTENSET = USBD_INTEN_USBRESET_Msk;
 
+  NVIC_SetPriority(USBD_IRQn, NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY);
   NVIC_ClearPendingIRQ(USBD_IRQn);
   NVIC_EnableIRQ(USBD_IRQn);
 }
