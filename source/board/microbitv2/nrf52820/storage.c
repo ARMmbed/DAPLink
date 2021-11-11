@@ -40,6 +40,7 @@ uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
 
 uint32_t storage_erase_sector(uint32_t adr)
 {
+    // This operation can take up to 87.5ms
     nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_ERASE);
     nrf_nvmc_page_erase_start(NRF_NVMC, adr);
     while (!nrf_nvmc_ready_check(NRF_NVMC)) {

@@ -37,6 +37,8 @@ extern "C" {
 #define I2C_SLAVE_HID               (0x71U)
 #define I2C_SLAVE_FLASH             (0x72U)
 
+#define I2C_PROTOCOL_VERSION        (0x02)
+
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
     gNopCmd_c        = 0x00,

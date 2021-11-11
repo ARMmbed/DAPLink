@@ -77,7 +77,7 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &board_id_hex, sizeof(board_id_hex));
                 break;
                 case gI2CProtocolVersion_c: {
-                    uint16_t i2c_version = 2;
+                    uint16_t i2c_version = I2C_PROTOCOL_VERSION;
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(i2c_version);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &i2c_version, sizeof(i2c_version));
                 }

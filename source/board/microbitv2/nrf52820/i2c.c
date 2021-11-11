@@ -61,12 +61,12 @@ static callbackToExecute_t callbackToExecute = {
     .size = 0,
 };
 
-static bool scheduleClearTxBuffer = false;
+static bool g_schedule_clear_tx_buffer = false;
 
 static bool i2c_allow_sleep = true;
 
 
-static i2c_status_t scheduleCallback(i2cCallback_t callback, uint8_t* pData, uint8_t size)
+static i2c_status_t i2c_scheduleCallback(i2cCallback_t callback, uint8_t* pData, uint8_t size)
 {
     if (callbackToExecute.pfCallback != NULL) {
         return I2C_STATUS_FAIL;
@@ -84,10 +84,10 @@ static i2c_status_t scheduleCallback(i2cCallback_t callback, uint8_t* pData, uin
 // Hook function executed in the main task
 void board_custom_event()
 {
-    if (scheduleClearTxBuffer) {
+    if (g_schedule_clear_tx_buffer) {
         debug_i2c_data((uint8_t *)"[clTxBf]\n", 9);
         memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
-        scheduleClearTxBuffer = false;
+        g_schedule_clear_tx_buffer = false;
     }
 
     if (callbackToExecute.pfCallback != NULL) {
@@ -101,7 +101,7 @@ void board_custom_event()
     i2c_allow_sleep = true;
 }
 
-static void I2C_SignalEvent(uint32_t event) {
+static void i2c_signalEvent(uint32_t event) {
     static uint32_t prev_event = 0;
 
     debug_i2c_printf("evt[%d] ", event);
@@ -124,11 +124,11 @@ static void I2C_SignalEvent(uint32_t event) {
 
             // Ignore NOP commands and 0 length transmissions
             if ((data_count != 0) && (g_slave_RX_buff[0] != gNopCmd_c)) {
-                scheduleClearTxBuffer = true;
+                g_schedule_clear_tx_buffer = true;
                 if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_0) {
-                    scheduleCallback(pfWriteCommsCallback, &g_slave_RX_buff[0], data_count);
+                    i2c_scheduleCallback(pfWriteCommsCallback, &g_slave_RX_buff[0], data_count);
                 } else if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_1) {
-                    scheduleCallback(pfWriteFlashCallback, &g_slave_RX_buff[0], data_count);
+                    i2c_scheduleCallback(pfWriteFlashCallback, &g_slave_RX_buff[0], data_count);
                 }
             }
         } else if (prev_event & ARM_I2C_EVENT_SLAVE_TRANSMIT) {
@@ -137,9 +137,9 @@ static void I2C_SignalEvent(uint32_t event) {
             for (int i = 0; i < 5; i++) debug_i2c_printf("%02x ", g_slave_TX_buff[i]);
 
             if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_0) {
-                scheduleCallback(pfReadCommsCallback, &g_slave_TX_buff[0], data_count);
+                i2c_scheduleCallback(pfReadCommsCallback, &g_slave_TX_buff[0], data_count);
             } else if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_1) {
-                scheduleCallback(pfReadFlashCallback, &g_slave_TX_buff[0], data_count);
+                i2c_scheduleCallback(pfReadFlashCallback, &g_slave_TX_buff[0], data_count);
             }
         }
     }
@@ -167,7 +167,7 @@ void i2c_initialize()
 {
     i2c_clearBuffers();
     // I2C addresses configured via default values from RTE_Device.h
-    I2Cdrv->Initialize(I2C_SignalEvent);
+    I2Cdrv->Initialize(i2c_signalEvent);
     I2Cdrv->PowerControl(ARM_POWER_FULL);
 }
 
