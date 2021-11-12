@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 #include <string.h>
-#include "swd_host.h"
 #include "DAP_config.h"
 #include "target_family.h"
+#include "swd_host.h"
 
 static void swd_set_target_reset_realtek(uint8_t asserted)
 {

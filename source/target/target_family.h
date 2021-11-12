@@ -65,7 +65,6 @@ enum _vendor_ids {
     kNordic_VendorID = 54,
     kToshiba_VendorID = 92,
     kRenesas_VendorID = 117,
-    kWiznet_VendorID = 122,
     kRealtek_VendorID = 124,
     kAmbiq_VendorID = 120,
 };
@@ -103,7 +102,6 @@ typedef enum _family_id {
     kRealtek_Rtl8195am_FamilyID = CREATE_FAMILY_ID(kRealtek_VendorID, 1),
     kTI_Cc3220sf_FamilyID = CREATE_FAMILY_ID(kTI_VendorID, 1),
     kToshiba_Tz_FamilyID = CREATE_FAMILY_ID(kToshiba_VendorID, 1),
-    kWiznet_W7500_FamilyID = CREATE_FAMILY_ID(kWiznet_VendorID, 1),
     kRenesas_FamilyID = CREATE_FAMILY_ID(kRenesas_VendorID, 1),
     kAmbiq_ama3b1kk_FamilyID = CREATE_FAMILY_ID(kAmbiq_VendorID, 1),
     kMaxim_MAX3262X_FamilyID = CREATE_FAMILY_ID(kMaxim_VendorID, 1),

@@ -47,6 +47,9 @@ static volatile bool g_SlaveCompletionFlag = false;
 static volatile bool g_SlaveRxFlag = false;
 static uint8_t address_match = 0;
 static uint32_t transferredCount = 0;
+static const uint8_t g_slave_busy_error_buff[] = {gErrorResponse_c, gErrorBusy_c};
+static uint8_t g_slave_TX_buff_ready = 0;
+static uint8_t g_slave_busy = 0;
 
 static i2cWriteCallback_t pfWriteCommsCallback = NULL;
 static i2cReadCallback_t pfReadCommsCallback = NULL;
@@ -73,6 +76,8 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size);
 static void i2c_read_flash_callback(uint8_t* pData, uint8_t size);
 
 static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void *userData) {
+    i2cCommand_t i2cResponse = {0};
+
     switch (xfer->event)
     {
         /*  Address match event */
@@ -86,21 +91,31 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
         /*  Transmit request */
         case kI2C_SlaveTransmitEvent:
             /*  Update information for transmit process */
-            xfer->data     = g_slave_TX_buff;
-            xfer->dataSize = I2C_DATA_LENGTH;
+            // Send response if the buffer is ready, otherwise send busy error
+            if (g_slave_TX_buff_ready) {
+                xfer->data     = g_slave_TX_buff;
+                xfer->dataSize = I2C_DATA_LENGTH;
+            } else {
+                xfer->data     = (uint8_t*)g_slave_busy_error_buff;
+                xfer->dataSize = sizeof(g_slave_busy_error_buff);
+                g_slave_busy = 1;
+            }
             g_SlaveRxFlag = false;
             break;
 
         /*  Receive request */
         case kI2C_SlaveReceiveEvent:
             /*  Update information for received process */
+            // We don't need to clear g_slave_RX_buff because we also have the 
+            // transferredCount to know what data is valid
+            xfer->data     = g_slave_RX_buff;
+            xfer->dataSize = I2C_DATA_LENGTH;
+
             // Hack: Default driver can't differentiate between RX or TX on
             // completion event, so we set a flag here. Can't process more
             // than I2C_DATA_LENGTH bytes on RX
-            memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
-            xfer->data     = g_slave_RX_buff;
-            xfer->dataSize = I2C_DATA_LENGTH;
             g_SlaveRxFlag = true;
+
             break;
 
         /*  Transfer done */
@@ -115,9 +130,20 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             
             // Ignore NOP cmd in I2C Write
             if (!(g_SlaveRxFlag && g_slave_RX_buff[0] == 0x00)) {
-                main_board_event();
+                // Only process events if the busy error was not read
+                if (!g_slave_busy) {
+                    main_board_event();
+                } else {
+                    g_slave_busy = 0;
+                }
             }
         
+            // Buffer with response is not ready after an I2C Write inside the IRQ
+            // It will be ready when the task attends the I2C event
+            if(g_SlaveRxFlag) {
+                g_slave_TX_buff_ready = 0;
+            }
+
             i2c_allow_sleep = false;
             break;
 
@@ -130,6 +156,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
 void board_custom_event() {
     
     if (g_SlaveRxFlag) {
+        i2c_clearBuffer();
         if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
             pfWriteCommsCallback(&g_slave_RX_buff[0], transferredCount);
         }
@@ -259,6 +286,7 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
     for (uint32_t i = 0; i < size; i++) { 
             g_slave_TX_buff[position + i] = data[i];
     }
+    g_slave_TX_buff_ready = 1;
 }
 
 static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
@@ -276,7 +304,7 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &board_id_hex, sizeof(board_id_hex));
                 break;
                 case gI2CProtocolVersion_c: {
-                    uint16_t i2c_version = 1;
+                    uint16_t i2c_version = 2;
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(i2c_version);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &i2c_version, sizeof(i2c_version));
                 }
@@ -413,8 +441,6 @@ static void i2c_read_comms_callback(uint8_t* pData, uint8_t size) {
         break;
     }
     
-    i2c_clearBuffer();
-    
     // Release COMBINED_SENSOR_INT
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }
@@ -478,8 +504,6 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
     uint32_t address = storage_address + FLASH_STORAGE_ADDRESS;
     uint32_t length = __REV(pI2cCommand->cmdData.write.length);
     uint32_t data = (uint32_t) pI2cCommand->cmdData.write.data;
-
-    i2c_clearBuffer();
     
     switch (pI2cCommand->cmdId) {
         case gFlashDataWrite_c:
@@ -606,6 +630,44 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                 i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
             }
         break;
+        case gFlashCfgEncWindow_c:
+            if (size == 1) {
+                /* If size is 1 (only cmd id), this means it's a read */
+                uint32_t tempFileEncWindowStart = __REV(gflashConfig.fileEncWindowStart);
+                uint32_t tempFileEncWindowEnd = __REV(gflashConfig.fileEncWindowEnd);
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                i2c_fillBuffer((uint8_t*) &tempFileEncWindowStart, 1, sizeof(gflashConfig.fileEncWindowStart));
+                i2c_fillBuffer((uint8_t*) &tempFileEncWindowEnd, 5, sizeof(gflashConfig.fileEncWindowEnd));
+            } else if (size == 9) {
+                /* If size is 9 (cmd id + 8B data), this means it's a write */
+                uint32_t tempFileEncWindowStart = pI2cCommand->cmdData.data[0] << 24 |
+                                        pI2cCommand->cmdData.data[1] << 16 |
+                                        pI2cCommand->cmdData.data[2] << 8 |
+                                        pI2cCommand->cmdData.data[3] << 0;
+                uint32_t tempFileEncWindowEnd = pI2cCommand->cmdData.data[4] << 24 |
+                                        pI2cCommand->cmdData.data[5] << 16 |
+                                        pI2cCommand->cmdData.data[6] << 8 |
+                                        pI2cCommand->cmdData.data[7] << 0;
+                
+                /* Validate encoding window */
+                if (tempFileEncWindowStart <= tempFileEncWindowEnd) {
+                    gflashConfig.fileEncWindowStart = tempFileEncWindowStart;
+                    tempFileEncWindowStart = __REV(gflashConfig.fileEncWindowStart);
+                    gflashConfig.fileEncWindowEnd = tempFileEncWindowEnd;
+                    tempFileEncWindowEnd = __REV(gflashConfig.fileEncWindowEnd);
+                    
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                    i2c_fillBuffer((uint8_t*) &tempFileEncWindowStart, 1, sizeof(gflashConfig.fileEncWindowStart));
+                    i2c_fillBuffer((uint8_t*) &tempFileEncWindowEnd, 5, sizeof(gflashConfig.fileEncWindowEnd));
+                } else {
+                    pI2cCommand->cmdId = gFlashError_c;
+                    i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+                }
+            } else {
+                pI2cCommand->cmdId = gFlashError_c;
+                i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
+            }
+        break;
         case gFlashCfgFileVisible_c:
             if (size == 1) {
                 /* If size is 1 (only cmd id), this means it's a read */
@@ -649,6 +711,8 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
                 memcpy(gflashConfig.fileName, FLASH_CFG_FILENAME, 11);
                 gflashConfig.fileSize = FLASH_CFG_FILESIZE;
                 gflashConfig.fileVisible = FLASH_CFG_FILEVISIBLE;
+                gflashConfig.fileEncWindowStart = 0;
+                gflashConfig.fileEncWindowEnd = 0;
             }
             i2c_fillBuffer((uint8_t*) pI2cCommand, 0, 1);
         break;
@@ -676,8 +740,6 @@ static void i2c_write_flash_callback(uint8_t* pData, uint8_t size) {
 }
 
 static void i2c_read_flash_callback(uint8_t* pData, uint8_t size) {
-    i2c_clearBuffer();
-    
     // Release COMBINED_SENSOR_INT
     PORT_SetPinMux(COMBINED_SENSOR_INT_PORT, COMBINED_SENSOR_INT_PIN, kPORT_PinDisabledOrAnalog);
 }

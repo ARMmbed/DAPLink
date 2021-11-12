@@ -1,7 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/wizwiki_w7500p.c
-        family:
-            - source/family/wiznet/w7500/target.c
-            - source/family/wiznet/target_reset_wiznet.c

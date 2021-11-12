@@ -71,6 +71,8 @@ flashConfig_t gflashConfig = {
     .fileName = FLASH_CFG_FILENAME,
     .fileSize = FLASH_CFG_FILESIZE,
     .fileVisible = FLASH_CFG_FILEVISIBLE,
+    .fileEncWindowStart = 0,
+    .fileEncWindowEnd = 0,
 };
 
 typedef enum {
@@ -527,7 +529,8 @@ void vfs_user_build_filesystem_hook() {
         }
     }
 
-    file_size = gflashConfig.fileSize;
+    // Add encoding window file size. 1B encoded into 2B ASCII
+    file_size = gflashConfig.fileSize + (gflashConfig.fileEncWindowEnd - gflashConfig.fileEncWindowStart);
 
     if (gflashConfig.fileVisible) {
         vfs_create_file(gflashConfig.fileName, read_file_data_txt, 0, file_size);
@@ -537,9 +540,32 @@ void vfs_user_build_filesystem_hook() {
 // File callback to be used with vfs_add_file to return file contents
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
+    uint32_t read_address = FLASH_STORAGE_ADDRESS + (VFS_SECTOR_SIZE * sector_offset);
+    uint32_t encoded_data_offset = (gflashConfig.fileEncWindowEnd - gflashConfig.fileEncWindowStart);
+
     // Ignore out of bound reads
-    if ( (FLASH_STORAGE_ADDRESS + VFS_SECTOR_SIZE * sector_offset) < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE) ) {
-        memcpy(data, (uint8_t *) (FLASH_STORAGE_ADDRESS + VFS_SECTOR_SIZE * sector_offset), VFS_SECTOR_SIZE);
+    if ( read_address < (FLASH_CONFIG_ADDRESS + FLASH_INTERFACE_SIZE + encoded_data_offset) ) {
+        for (uint32_t i = 0; i < VFS_SECTOR_SIZE; i++) {
+            if (i + (VFS_SECTOR_SIZE * sector_offset) < gflashConfig.fileEncWindowStart) {
+                // If data is before encoding window, no offset is needed
+                data[i] = *(uint8_t *) (read_address + i);
+            } else if(i + (VFS_SECTOR_SIZE * sector_offset) < (gflashConfig.fileEncWindowStart + encoded_data_offset * 2)) {
+                // Data inside encoding window needs to consider encoding window start and size
+                uint8_t enc_byte = *(uint8_t *) (FLASH_STORAGE_ADDRESS + ((VFS_SECTOR_SIZE * sector_offset) + gflashConfig.fileEncWindowStart + i ) / 2);
+                if (i % 2 == 0) {
+                    // High nibble
+                    enc_byte = 0x0F & (enc_byte >> 4);
+                } else {
+                    // Low nibble
+                    enc_byte = 0x0F & enc_byte;
+                }
+                // Encode one nibble to one ASCII byte
+                data[i] = enc_byte <= 9 ? enc_byte + 0x30 : enc_byte + 0x37;
+            } else {
+                // If data is after encoding window, adjustment is needed
+                data[i] = *(uint8_t *) (read_address + i - encoded_data_offset);
+            }
+        }
     }
 
     return VFS_SECTOR_SIZE;

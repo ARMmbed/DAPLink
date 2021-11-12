@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/cocorico.c
-        family:
-            - source/family/nxp/lpc812/target.c

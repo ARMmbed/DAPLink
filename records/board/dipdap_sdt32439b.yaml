@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/dipdap_sdt32439b.c
-        family:
-            - source/family/st/stm32f439zi/target.c

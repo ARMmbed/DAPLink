@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/ncs36510rf.c
-        family:
-            - source/family/onsemi/ncs36510/target.c

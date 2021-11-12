@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/mbed_cloud_connect.c
-        family:
-            - source/family/st/stm32f439zi/target.c

@@ -1,6 +1,6 @@
 /**
  * @file    gpio.c
- * @brief
+ * @brief   GPIO handling for LPC55xx
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -29,6 +29,11 @@
 #include "fsl_iocon.h"
 #include "fsl_reset.h"
 
+__WEAK void board_gpio_init(void)
+{
+    // Nothing by default
+}
+
 void gpio_init(void)
 {
     // Enable hardfault on unaligned access for the interface only.
@@ -51,19 +56,22 @@ void gpio_init(void)
     RESET_PeripheralReset(kFC3_RST_SHIFT_RSTn);
 
     // Configure pins.
-    IOCON->PIO[PIN_PIO_PORT][LED_CONNECTED] = IOCON_FUNC0 | IOCON_DIGITAL_EN;
-    IOCON->PIO[PIN_PIO_PORT][PIN_HW_VERS_6] = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_OPENDRAIN_EN;
-    IOCON->PIO[PIN_PIO_PORT][PIN_HW_VERS_7] = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_OPENDRAIN_EN;
+    IOCON->PIO[LED_A_PORT][LED_A_PIN] = IOCON_FUNC0 | IOCON_DIGITAL_EN;
+    IOCON->PIO[PIN_PIO_PORT][PIN_RESET] = IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_OPENDRAIN_EN;
+
+    // Set RESET to input
+    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_RESET_MASK;
 
     // Turn off LED.
-    GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = 1;
-    // Set LED to output.
-    GPIO->DIRSET[PIN_PIO_PORT] = LED_CONNECTED_MASK;
-    // Turn on LED.
-    GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = 1;
+    GPIO->B[LED_A_PORT][LED_A_PIN] = 1;
 
-    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_HW_VERS_6_MASK;
-    GPIO->DIRCLR[PIN_PIO_PORT] = PIN_HW_VERS_7_MASK;
+    // Set LED to output.
+    GPIO->DIRSET[LED_A_PORT] = LED_A_MASK;
+
+    // Turn on LED.
+    GPIO->B[LED_A_PORT][LED_A_PIN] = 0;
+
+    board_gpio_init();
 }
 
 void gpio_set_board_power(bool powerEnabled)
@@ -71,28 +79,35 @@ void gpio_set_board_power(bool powerEnabled)
     // No target power control in this circuit.
 }
 
-void gpio_set_hid_led(gpio_led_state_t state)
+__WEAK void gpio_set_leds(uint32_t leds, gpio_led_state_t state)
 {
     // LED is active low, so set to inverse of the enum value.
-    GPIO->B[PIN_PIO_PORT][LED_CONNECTED] = !(uint8_t)state;
+    if (leds & (LED_T_CONNECTED | LED_T_HID | LED_T_CDC | LED_T_MSC)) {
+        GPIO->B[LED_A_PORT][LED_A_PIN] = (uint8_t)((state == GPIO_LED_ON) ? 0 : 1);
+    }
+}
+
+void gpio_set_hid_led(gpio_led_state_t state)
+{
+    gpio_set_leds(LED_T_HID, state);
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
-    gpio_set_hid_led(state);
+    gpio_set_leds(LED_T_CDC, state);
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
-    gpio_set_hid_led(state);
+    gpio_set_leds(LED_T_MSC, state);
 }
 
-uint8_t gpio_get_reset_btn_no_fwrd(void)
+__WEAK uint8_t gpio_get_reset_btn_no_fwrd(void)
 {
-    return GPIO->B[PIN_PIO_PORT][PIN_HW_VERS_6] ? 0 : 1;
+    return PIN_nRESET_IN() ? 0 : 1;
 }
 
-uint8_t gpio_get_reset_btn_fwrd(void)
+__WEAK uint8_t gpio_get_reset_btn_fwrd(void)
 {
-    return GPIO->B[PIN_PIO_PORT][PIN_HW_VERS_7] ? 0 : 1;
+    return 0;
 }

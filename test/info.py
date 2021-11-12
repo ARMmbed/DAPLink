@@ -65,20 +65,12 @@ PROJECT_RELEASE_INFO = {
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
-    ("lpc11u35_wio3g_if",                           False,      0x0000,     "bin"       ),
-    ("lpc11u35_wiobg96_if",                         False,      0x0000,     "bin"       ),
-    ("lpc11u35_wio_emw3166_if",                     False,      0x0000,     "bin"       ),
     ("lpc11u35_hrm1017_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_sscity_if",                          False,      0x0000,     "bin"       ),
     ("lpc11u35_ssci824_if",                         False,      0x0000,     "bin"       ),
-    ("lpc11u35_ro359b_if",                          False,      0x0000,     "bin"       ),
-    ("k20dx_rbl_if",                                True,       0x5000,     "bin"       ),
-    ("k20dx_rblnano_if",                            True,       0x5000,     "bin"       ),
     ("lpc11u35_archlink_if",                        False,      0x0000,     "bin"       ),
     ("lpc11u35_tiny_if",                            False,      0x0000,     "bin"       ),
     ("lpc11u35_c027_if",                            False,      0x0000,     "bin"       ),
-    ("sam3u2c_ncs36510rf_if",                       False,      0x8000,     "bin"       ),
-    ("kl26z_nina_b1_if",                            False,      0x8000,     "bin"       ),
     ("lpc11u35_lpc4088dm_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc4088qsb_if",                      False,      0x0000,     "bin"       ),
     ('lpc11u35_ssci_chibi_if',                      False,      0x0000,     "bin"       ),
@@ -86,45 +78,12 @@ PROJECT_RELEASE_INFO = {
     ('lpc11u35_ff_lpc546xx_if',                     False,      0x0000,     "bin"       ),
     ('lpc11u35_mini_iot_lpc54018_if',               False,      0x0000,     "bin"       ),
     ("k20dx_xdot_l151_if",                          False,      0x8000,     "bin"       ),
-    ('lpc11u35_6lowpan_borderrouterhat_if',         None,       0x0000,     "bin"       ),
-    ('lpc11u35_6lowpan_borderrouterusb_if',         None,       0x0000,     "bin"       ),
-    ('lpc11u35_6lowpan_borderrouterethernet_if',    None,       0x0000,     "bin"       ),
     ('lpc11u35_gr_peach_if',                        None,       0x0000,     "bin"       ),
     ('lpc11u35_gr_lychee_if',                       None,       0x0000,     "bin"       ),
     ('lpc11u35_nz32_sc151_if',                      False,      0x0000,     "bin"       ),
-    ('lpc11u35_wizwiki_w7500_if',                   False,      0x0000,     "bin"       ),
-    ('lpc11u35_wizwiki_w7500_eco_if',               False,      0x0000,     "bin"       ),
-    ('lpc11u35_wizwiki_w7500p_if',                  False,      0x0000,     "bin"       ),
     ("sam3u2c_ublox_evk_nina_b1_if",                True,       0x5000,     "bin"       ),
-    ("lpc11u35_vbluno51_if",                        False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtconnect04s_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mbed_cloud_connect_if',              False,      0x0000,     "bin"       ),
     ("lpc11u35_rtl8195am_if",                       False,      0x0000,     "bin"       ),
     ("lpc11u35_96b_nitrogen_if",                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_mxchip_emw3166_if',              False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_nina_b112_if',                   False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_murata_abz_078_if',              False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_rak811_if',                      False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_wise1510_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_wise1530_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_wise1570_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_laird_bl652_if',                 False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_usi_wm_bn_bm_22_if',             False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_sdt52832b_if',                False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_sdt32429b_if',                False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_sdt32439b_if',                False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_sdt64b_if',                   False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_sdt51822b_if',                False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_ublox_odin_w2_if',               False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_mts_dragonfly_if',               False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_mts_xdot_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_dipdap_cc3220sf_if',                 False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_laird_bl654_if',                 False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_murata_bl241_if',                False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_stm_s2lp_if',                    False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_stm32l475_if',                   False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_aconno_acn52832_if',             False,      0x0000,     "bin"       ),
-    ('lpc11u35_mtb_stm32f439_if',                   False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_a_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_eflash_if',                  False,      0x0000,     "bin"       ),
@@ -142,6 +101,7 @@ PROJECT_RELEASE_INFO = {
     ('lpc55s69_if',                                 False,      0x10000,    "bin"       ),
     ('max32620_if',                                 False,      0x0000,     "bin"       ),
     ('max32625_if',                                 False,      0x0000,     "bin"       ),
+    ('nrf52820_if',                                 False,      0x0000,     "bin"       ),
     ('sam3u2c_if',                                  False,      0x0000,     "bin"       ),
     ('stm32f103xb_if',                              False,      0x0000,     "bin"       ),
     ('lpc11u35_pitaya_link_if',                     False,      0x0000,     "bin"       ),
@@ -201,25 +161,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
-    (   0x0423,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max78000fthr_if',                 'max32625_bl',      'MAX78000'                              ),
-    (   0x0450,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_ublox_odin_w2_if',            None,               None                                    ),
-    (   0x0451,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mxchip_emw3166_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0453,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_xdot_if',                 None,               None                                    ),
-    (   0x0454,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_mts_dragonfly_if',            None,               None                                    ),
-    (   0x0455,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_nina_b112_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0456,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_murata_abz_078_if',           None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0457,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_rak811_if',                   None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0458,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1510_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0459,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1530_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0460,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_wise1570_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0461,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_laird_bl652_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0462,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_usi_wm_bn_bm_22_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0465,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_laird_bl654_if',              None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0466,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_murata_bl241_if',             None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0467,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm_s2lp_if',                 None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0468,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm32l475_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0469,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mtb_stm32f439_if',                None,               None                                    ), # TODO - set target when mbed-os supports this
-    (   0x0472,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_mtb_aconno_acn52832_if',          None,               None                                    ), # TODO - set target when mbed-os supports this
     (   0x0700,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f072rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F072RB'                      ),
@@ -234,7 +175,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1018,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
     (   0x1021,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
-    (   0x1022,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ro359b_if',                       None,               None                                    ),
     (   0x1028,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_pitaya_link_if',                  None,               None                                    ),    
     (   0x1050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1054,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'LPCXpresso54114'                       ),
@@ -242,48 +182,28 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1060,     VENDOR_TO_FAMILY('NXP', 0),         'lpc11u35_lpc4088qsb_if',                   None,               'EA-LPC4088'                            ),
     (   0x1062,     VENDOR_TO_FAMILY('NXP', 0),         'lpc11u35_lpc4088dm_if',                    None,               'EA-LPC4088-Display-Module'             ),
     (   0x1070,     VENDOR_TO_FAMILY('Nordic', 1),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51822'                       ),
-    (   0x1090,     VENDOR_TO_FAMILY('Nordic', 1),      'k20dx_rbl_if',                             'k20dx_bl',         'RedBearLab-nRF51822'                   ),
-    (   0x1095,     VENDOR_TO_FAMILY('Nordic', 1),      'k20dx_rblnano_if',                         'k20dx_bl',         'RedBearLab-BLE-Nano'                   ),
     (   0x1100,     VENDOR_TO_FAMILY('Nordic', 1),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-DK'                       ),
     (   0x1101,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52-DK'                       ),
     (   0x1102,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF52840-DK'                    ),
     (   0x1114,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci1114_if',                     None,               'LPC1114FN28'                           ),
     (   0x1120,     VENDOR_TO_FAMILY('Nordic', 1),      'sam3u2c_mkit_dk_dongle_nrf5x_if',          'sam3u2c_bl',       'Nordic-nRF51-Dongle'                   ),
-    (   0x1200,     VENDOR_TO_FAMILY('Stub', 3),        'sam3u2c_ncs36510rf_if',                    'sam3u2c_bl',       None                                    ), # TODO - Set to 'ncs36510' when non-zero flash addresses are supported
     (   0x1234,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_c027_if',                         None,               'u-blox-C027'                           ),
     (   0x1236,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_ublox_evk_odin_w2_if',         'stm32f103xb_bl',   'ublox-EVK-ODIN-W2'                     ),
     (   0x1237,     VENDOR_TO_FAMILY('Nordic', 2),      'sam3u2c_ublox_evk_nina_b1_if',             'sam3u2c_bl',       'U-BLOX-EVK-NINA-B1'                    ),
-    (   0x1238,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_nina_b1_if',                         'kl26z_bl',         'u-blox-NINA-B1'                        ),
     (   0x1304,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_pfm_m487km_if',          'm48ssidae_bl',     None                                    ),
     (   0x1309,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m252kg_if',              'm48ssidae_bl',     None                                    ),
     (   0x1310,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m263a_if',           'm48ssidae_bl',     None                                    ),
     (   0x1312,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m2354_if',               'm48ssidae_bl',     None                                    ),
-    (   0x2201,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_if',                None,               'WIZwiki-W7500'                         ),
-    (   0x2202,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500_eco_if',            None,               'WIZwiki-W7500ECO'                      ),
-    (   0x2203,     VENDOR_TO_FAMILY('Wiznet', 1),      'lpc11u35_wizwiki_w7500p_if',               None,               'WIZwiki-W7500P'                        ),
-    (   0x2410,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_mbed_cloud_connect_if',           None,               None                                    ),
     (   0x2600,     VENDOR_TO_FAMILY('Nordic', 2),      'k20dx_ep_agora_if',                        None,               None                                    ),
     (   0x2601,     VENDOR_TO_FAMILY('NXP', 0),         'k20dx_ep_kairos_if',                       None,               None                                    ),
-    (   0x3104,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_dipdap_sdt52832b_if',             None,               None                                    ),
-    (   0x3108,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32429b_if',             None,               None                                    ),
-    (   0x3105,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_dipdap_sdt64b_if',                None,               None                                    ),
-    (   0x3103,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_dipdap_sdt51822b_if',             None,               None                                    ),
-    (   0x3110,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_dipdap_sdt32439b_if',             None,               None                                    ),
-    (   0x3300,     VENDOR_TO_FAMILY('TI', 1),          'lpc11u35_dipdap_cc3220sf_if',              None,               'CC3220SF'                              ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
     (   0x5006,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_a_if',                      None,               'ARM_MUSCA_A1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_eflash_if',               None,               'ARM_MUSCA_B1'                          ),
-    (   0x5050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_arm_watch_stm32f411_if',          None,               None                                    ),
-    (   0x5051,     VENDOR_TO_FAMILY('Stub', 3),        'lpc11u35_arm_watch_efm32_if',              None,               None                                    ),
-    (   0x5052,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_arm_watch_nrf51_if',              None,               None                                    ),
     (   0x5500,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
     (   0x5501,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - Set to 'Renesas-GR-LYCHEE' once this target builds
     (   0x6660,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_nz32_sc151_if',                   None,               None                                    ), # TODO - set target to 'NZ32-SC151' when mbed-os supports this
     (   0x7010,     VENDOR_TO_FAMILY('Toshiba', 1),     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja-CDP-TZ01B' when mbed-os supports this
-    (   0x7402,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterhat_if',      None,               'mbed-6LoWPAN-Border-Router-HAT'        ),
-    (   0x7403,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterusb_if',      None,               'mbed-6LoWPAN-Border-Router-USB'        ),
-    (   0x7404,     VENDOR_TO_FAMILY('NXP', 1),         'lpc11u35_6lowpan_borderrouterethernet_if', None,               'mbed-6LoWPAN-Border-Router-ETHERNET'   ),
     (   0x8080,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
     (   0x8081,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
     (   0x9004,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'                    ),
@@ -291,18 +211,12 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9011,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
-    (   0x9014,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio3g_if',                        None,               None                                    ),
-    (   0x9015,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wiobg96_if',                      None,               None                                    ),
     (   0x9016,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
-    (   0x9017,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_wio_emw3166_if',                  None,               'WIO_EMW3166'                           ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
     (   0x9900,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0x9904,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                               ),
-    (   0xC000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_cocorico_if',                     None,               'CoCo-ri-Co'                            ),
-    (   0xC006,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_vbluno51_if',                     None,               'VBLUNO51'                              ),
-    (   0xC005,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_mtconnect04s_if',                 None,               'MtConnect04S'                          ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'kl26z_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k26f_if',                                  None,               None                                    ),
@@ -311,6 +225,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'lpc55s69_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_if',                              None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'nrf52820_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'sam3u2c_if',                               None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_if',                           None,               None                                    ),
 ]
@@ -352,7 +267,6 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
     0x0218,  # FRDM-KL82Z
-    0x1022,  # RO359B (K24F)
     0x0201,  # KW41Z
 ])
 
@@ -372,25 +286,18 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0421,  # MAX32660EVSYS
     0x0422,  # MAX32666FTHR
     0x0423,  # MAX78000FTHR
-    0x0450,  # mtb_ublox_odin_w2
-    0x0456,  # lpc11u35_mtb_murata_abz_078_if
-    0x0457,  # lpc11u35_mtb_rak811_if
     0x0460,  # WISE-1570
-    0x0468,  # lpc11u35_mtb_stm32l475_if
-    0x0469,  # lpc11u35_mtb_stm32f439_if
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
     0x1304,  # NuMaker-PFM-M487KM
     0x1309,  # NuMaker-M252KG
     0x1310,  # NuMaker-IoT-M263A
     0x1312,  # NuMaker-M2354
-    0x2410,  # lpc11u35_mbed_cloud_connect_if
     0x3103,  # dipdap_sdt51822b
     0x3104,  # dipdap_sdt52832b
     0x3105,  # dipdap_sdt64b
     0x3108,  # dipdap_sdt32429b
     0x3110,  # dipdap_sdt32439b
-    0x3300,  # dipdap_cc3220sf
     0x4600,  # REALTEK-RTL8195AM
     0x5500,  # GR-PEACH
     0x5501,  # GR-LYCHEE
@@ -415,7 +322,6 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'SSCI-MBIT',
     'BlueNinja',
     'U-BLOX-EVK-NINA-B1',
-    'VNG-VBLUno51',
     'REALTEK-RTL8195AM']
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[4] for config in
