@@ -33,5 +33,5 @@ const board_info_t g_board_info = {
     .daplink_target_url = "https://wiki.makerdiary.com/pitaya-link/",
     .target_cfg = &target_device_nrf52840,
     .board_vendor = "makerdiary",
-    .board_name = "Pitaya-Link CMSIS-DAP Debug Probe",
+    .board_name = "Pitaya-Link",
 };
