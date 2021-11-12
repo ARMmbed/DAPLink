@@ -28,7 +28,7 @@
 #include "pwr_mon.h"
 
 
-uint32_t pwr_mon_get_vbat_mv_imp();
+uint32_t pwr_mon_get_vbat_mv_imp(uint32_t max_us, uint32_t max_mv);
 static uint32_t pwr_mon_comp_mv(uint32_t psel, uint32_t vref, uint32_t *comps_count);
 
 

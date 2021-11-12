@@ -36,9 +36,9 @@
 
 
 static void power_before(bool systemoff);
-static void power_after();
-static void power_systemoff();
-static void power_wfi();
+static void power_after(void);
+static void power_systemoff(void);
+static void power_wfi(void);
 
 static void power_gpio_set_sense(NRF_GPIO_Type *reg, uint32_t idx, nrf_gpio_pin_sense_t sense);
 
@@ -164,7 +164,7 @@ static void power_wfi()
 {
     power_before(false /*systemoff*/);
     __WFI();
-    power_after(false /*systemoff*/);
+    power_after();
 }
 
 

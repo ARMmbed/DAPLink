@@ -78,6 +78,6 @@ COMPILER_ASSERT(GPIO_CHECK_PRESENT_NRF52820(NRF52820_PIN_VBUS_ABSENT));
 #endif
 
 
-void microbitv2_pins_init();
+void microbitv2_pins_init(void);
 
 #endif /* MICROBITV2_PINS_H_ */

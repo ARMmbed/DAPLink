@@ -27,10 +27,9 @@
 #include "pwm.h"
 
 
-static void pwm_stop();
-static void pwm_start();
-static void pwm_configure();
-static void pwm_mark255(uint8_t duty);
+static void pwm_stop(void);
+static void pwm_start(void);
+static void pwm_configure(void);
 
 #define PWM_TIMER       NRF_TIMER3
 #define PWM_IRQ         TIMER3_IRQn

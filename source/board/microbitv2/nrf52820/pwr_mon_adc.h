@@ -31,7 +31,7 @@ extern "C" {
  * Measures VDDH voltage using SAADC peripheral
  * @return Voltage in millivolts.
  */
-uint32_t pwr_mon_adc_vin();
+uint32_t pwr_mon_adc_vin(void);
 
 
 #ifdef __cplusplus
