@@ -22,7 +22,7 @@
 #include "target_family.h"
 #include "target_board.h"
 
-extern target_cfg_t target_device_nrf52840_256;
+extern target_cfg_t target_device_nrf52840;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
@@ -31,5 +31,7 @@ const board_info_t g_board_info = {
     .daplink_url_name = "PRODINFOHTM",
     .daplink_drive_name = "PITAYA-LINK",
     .daplink_target_url = "https://wiki.makerdiary.com/pitaya-link/",
-    .target_cfg = &target_device_nrf52840_256,
+    .target_cfg = &target_device_nrf52840,
+    .board_vendor = "makerdiary",
+    .board_name = "Pitaya-Link CMSIS-DAP Debug Probe",
 };
