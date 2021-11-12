@@ -22,14 +22,13 @@
  */
 
 #ifndef TARGET_MCU_CORTEX_A
+#include "device.h"
 #include "cmsis_os2.h"
 #include "target_config.h"
-#include "swd_host.h"
-#include "debug_cm.h"
 #include "DAP_config.h"
 #include "DAP.h"
 #include "target_family.h"
-#include "device.h"
+#include "swd_host.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.

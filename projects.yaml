@@ -66,21 +66,25 @@ module:
         - records/rtos/rtos-cm33.yaml
         - records/hic_hal/lpc55s69.yaml
         - records/usb/usb-bulk.yaml
-    hic_sam3u2c: &module_hic_sam3u2c
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/sam3u2c.yaml
-    hic_stm32f103xb: &module_hic_stm32f103xb
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stm32f103xb.yaml
+    hic_m48ssidae: &module_hic_m48ssidae
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/m48ssidae.yaml
     hic_max32620: &module_hic_max32620
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/max32620.yaml
     hic_max32625: &module_hic_max32625
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/max32625.yaml
-    hic_m48ssidae: &module_hic_m48ssidae
+    hic_nrf52820: &module_hic_nrf52820
         - records/rtos/rtos-cm4.yaml
-        - records/hic_hal/m48ssidae.yaml
+        - records/hic_hal/nrf52820.yaml
+        - records/usb/usb-bulk.yaml
+    hic_sam3u2c: &module_hic_sam3u2c
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/sam3u2c.yaml
+    hic_stm32f103xb: &module_hic_stm32f103xb
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stm32f103xb.yaml
 
 projects:
     # HIC bootloaders and all target interfaces
@@ -160,6 +164,14 @@ projects:
         - *module_hic_max32625
         - records/family/all_family.yaml
         - records/usb/usb-bulk.yaml
+    nrf52820_bl:
+        - *module_bl
+        - records/hic_hal/nrf52820.yaml
+        - records/board/nrf52820_bl.yaml
+    nrf52820_if:
+        - *module_if
+        - *module_hic_nrf52820
+        - records/family/all_family.yaml
     sam3u2c_bl:
         - *module_bl
         - records/hic_hal/sam3u2c.yaml
