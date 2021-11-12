@@ -39,7 +39,6 @@ void pwr_mon_init(void)
     // Configure VMON_BAT and RUN_VBAT_SENSE
     gpio_cfg_output(GPIO_REG(PIN_RUN_VBAT_SENSE), GPIO_IDX(PIN_RUN_VBAT_SENSE)); 
     gpio_cfg_input(GPIO_REG(PIN_VBAT_SENSE), GPIO_IDX(PIN_VBAT_SENSE), NRF_GPIO_PIN_NOPULL);
-    gpio_cfg_input(GPIO_REG(PIN_VBUS_ABSENT), GPIO_IDX(PIN_VBUS_ABSENT), NRF_GPIO_PIN_NOPULL);
 }
 
 
