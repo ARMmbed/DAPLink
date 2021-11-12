@@ -105,6 +105,11 @@ __WEAK bool reset_button_pressed()
     return gpio_get_reset_btn();
 }
 
+__WEAK void board_bootloader_init()
+{
+    return;
+}
+
 // Timer task, set flags every 30mS and 90mS
 void timer_task_30mS(void * arg)
 {
@@ -264,6 +269,8 @@ int main(void)
     gpio_init();
     // init settings
     config_init();
+    // Hook for custom boards initialisation
+    board_bootloader_init();
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app

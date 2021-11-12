@@ -28,6 +28,7 @@
 #include "target_family.h"
 #include "device.h"
 #include "gpio.h"
+#include "nrf.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == 0x00008000);
@@ -79,4 +80,14 @@ bool reset_button_pressed()
         btn_pressed = gpio_get_reset_btn();
     }
     return btn_pressed;
+}
+
+bool board_bootloader_init()
+{
+    // Lock the bootloader flash, only protects until reset,
+    // so needs to be executed in the bootloader on every startup
+    uint8_t acl_region = 0;
+    NRF_ACL->ACL[acl_region].ADDR = DAPLINK_ROM_BL_START;
+    NRF_ACL->ACL[acl_region].SIZE = DAPLINK_ROM_BL_SIZE;
+    NRF_ACL->ACL[acl_region].PERM = ACL_ACL_PERM_WRITE_Disable << ACL_ACL_PERM_WRITE_Pos;
 }
