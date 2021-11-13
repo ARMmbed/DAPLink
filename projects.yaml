@@ -418,6 +418,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/nz32_sc151.yaml
+    lpc11u35_pitaya_link_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/pitaya_link.yaml
     lpc11u35_rtl8195am_if:
         - *module_if
         - *module_hic_lpc11u35
