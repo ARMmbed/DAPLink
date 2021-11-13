@@ -153,7 +153,8 @@ static mb_version_t read_brd_rev_id(void) {
         board_version = BOARD_VERSION_2_DEF;
     }
 
-    return board_version;
+    return BOARD_VERSION_2_0;
+    //return board_version;
 }
 
 #elif defined(INTERFACE_NRF52820)
@@ -245,6 +246,7 @@ void handle_reset_button()
         if (!reset_pressed && (gpio_get_reset_btn_fwrd() || wake_from_reset)) {
             // Reset button pressed
             target_set_state(RESET_PROGRAM);
+            i2c_clearBuffers();
             reset_pressed = 1;
             gpio_reset_count = 0;
             wake_from_reset = 0;
