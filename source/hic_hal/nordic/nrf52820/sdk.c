@@ -24,6 +24,7 @@
 #include "daplink.h"
 #include "compiler.h"
 #include "util.h"
+#include "nrfx_clock.h"
 
 #ifdef NRF528XX_DYNAMIC_PIN
 uint32_t uart_tx_pin;
@@ -80,4 +81,6 @@ void sdk_init()
         i2c_sda_pin = NRF52820_I2C_SDA_PIN;
     }
 #endif
+
+    nrfx_clock_enable();
 }
