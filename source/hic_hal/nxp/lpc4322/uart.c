@@ -257,7 +257,11 @@ int32_t uart_get_configuration(UART_Configuration *config)
     return 1;
 }
 
-int32_t uart_write_free(void)
+void uart_set_control_line_state(uint16_t ctrl_bmp)
+{
+}
+
+OAint32_t uart_write_free(void)
 {
     return circ_buf_count_free(&write_buffer);
 }
