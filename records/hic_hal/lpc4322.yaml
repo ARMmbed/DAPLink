@@ -11,9 +11,11 @@ common:
         - OS_CLOCK=96000000
     includes:
         - source/hic_hal/nxp/lpc4322
+        - source/hic_hal/nxp/lpc4322/RTE_Driver
     sources:
         hic_hal:
             - source/hic_hal/nxp/lpc4322
+            - source/hic_hal/nxp/lpc4322/RTE_Driver
 
 tool_specific:
     uvision:

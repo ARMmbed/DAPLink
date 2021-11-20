@@ -1,5 +1,5 @@
-/* -------------------------------------------------------------------------- 
- * Copyright (c) 2013-2016 Arm Limited (or its affiliates). All 
+/* --------------------------------------------------------------------------
+ * Copyright (c) 2013-2016 Arm Limited (or its affiliates). All
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -1125,12 +1125,12 @@
 // </e> USART0 (Universal synchronous asynchronous receiver transmitter) [Driver_USART0]
 
 // <e> UART1 (Universal asynchronous receiver transmitter) [Driver_USART1]
-#define   RTE_UART1                     0
+#define   RTE_UART1                     1
 
 //   <h> Pin Configuration
 //     <o> TX <0=>Not used <1=>P1_13 <2=>P3_4 <3=>P5_6 <4=>PC_13 <5=>PE_11
 //     <i> UART0 Serial Output pin
-#define   RTE_UART1_TX_ID               2
+#define   RTE_UART1_TX_ID               0
 #if      (RTE_UART1_TX_ID == 0)
   #define RTE_UART1_TX_PIN_EN           0
 #elif    (RTE_UART1_TX_ID == 1)
@@ -1193,7 +1193,7 @@
 
 //     <h> Modem Lines
 //       <o> CTS <0=>Not used <1=>P1_11 <2=>P5_4 <3=>PC_2 <4=>PE_7
-#define   RTE_UART1_CTS_ID              1
+#define   RTE_UART1_CTS_ID              0
 #if      (RTE_UART1_CTS_ID == 0)
   #define RTE_UART1_CTS_PIN_EN          0
 #elif    (RTE_UART1_CTS_ID == 1)
@@ -1219,7 +1219,7 @@
   #define RTE_UART1_CTS_PIN_EN          1
 #endif
 //       <o> RTS <0=>Not used <1=>P1_9  <2=>P5_2 <3=>PC_3 <4=>PE_5
-#define   RTE_UART1_RTS_ID              1
+#define   RTE_UART1_RTS_ID              0
 #if      (RTE_UART1_RTS_ID == 0)
   #define RTE_UART1_RTS_PIN_EN          0
 #elif    (RTE_UART1_RTS_ID == 1)
@@ -1245,7 +1245,7 @@
   #define RTE_UART1_RTS_PIN_EN          1
 #endif
 //       <o> DCD <0=>Not used <1=>P1_12 <2=>P5_5 <3=>PC_11 <4=>PE_9
-#define   RTE_UART1_DCD_ID              1
+#define   RTE_UART1_DCD_ID              0
 #if      (RTE_UART1_DCD_ID == 0)
   #define RTE_UART1_DCD_PIN_EN          0
 #elif    (RTE_UART1_DCD_ID == 1)
@@ -1271,7 +1271,7 @@
   #define RTE_UART1_DCD_PIN_EN          1
 #endif
 //       <o> DSR <0=>Not used <1=>P1_7 <2=>P5_0 <3=>PC_10 <4=>PE_8
-#define   RTE_UART1_DSR_ID              1
+#define   RTE_UART1_DSR_ID              0
 #if      (RTE_UART1_DSR_ID == 0)
   #define RTE_UART1_DSR_PIN_EN          0
 #elif    (RTE_UART1_DSR_ID == 1)
@@ -1297,7 +1297,7 @@
   #define RTE_UART1_DSR_PIN_EN          1
 #endif
 //       <o> DTR <0=>Not used <1=>P1_8  <2=>P5_1 <3=>PC_12 <4=>PE_10
-#define   RTE_UART1_DTR_ID              1
+#define   RTE_UART1_DTR_ID              0
 #if      (RTE_UART1_DTR_ID == 0)
   #define RTE_UART1_DTR_PIN_EN          0
 #elif    (RTE_UART1_DTR_ID == 1)
@@ -1323,7 +1323,7 @@
   #define RTE_UART1_DTR_PIN_EN          1
 #endif
 //       <o> RI <0=>Not used <1=>P1_10 <2=>P5_3 <3=>PC_1 <4=>PE_6
-#define   RTE_UART1_RI_ID               1
+#define   RTE_UART1_RI_ID               0
 #if      (RTE_UART1_RI_ID == 0)
   #define RTE_UART1_RI_PIN_EN           0
 #elif    (RTE_UART1_RI_ID == 1)
