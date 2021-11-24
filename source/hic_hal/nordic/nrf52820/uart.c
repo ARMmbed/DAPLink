@@ -42,6 +42,8 @@ circ_buf_t write_buffer;
 uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
+uint32_t cur_control;
+uint32_t cur_baud;
 
 struct {
     // Number of bytes pending to be transferred. This is 0 if there is no
@@ -65,6 +67,8 @@ int32_t uart_initialize(void)
     cb_buf.tx_size = 0;
     USART_INSTANCE.Initialize(uart_handler);
     USART_INSTANCE.PowerControl(ARM_POWER_FULL);
+    cur_control = 0;
+    cur_baud = 0;
 
     return 1;
 }
@@ -155,6 +159,12 @@ int32_t uart_set_configuration(UART_Configuration *config)
             control |= ARM_USART_FLOW_CONTROL_RTS_CTS;
             break;
     }
+
+    if ((control == cur_control) && (config->Baudrate == cur_baud)) {
+        return 1;
+    }
+    cur_control = control;
+    cur_baud = config->Baudrate;
 
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
