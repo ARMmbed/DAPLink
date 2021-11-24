@@ -42,6 +42,7 @@ circ_buf_t write_buffer;
 uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
+uint16_t cur_line_state;
 uint32_t cur_control;
 uint32_t cur_baud;
 
@@ -67,6 +68,7 @@ int32_t uart_initialize(void)
     cb_buf.tx_size = 0;
     USART_INSTANCE.Initialize(uart_handler);
     USART_INSTANCE.PowerControl(ARM_POWER_FULL);
+    cur_line_state = 0;
     cur_control = 0;
     cur_baud = 0;
 
@@ -194,6 +196,10 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 void uart_set_control_line_state(uint16_t ctrl_bmp)
 {
+    if (ctrl_bmp != cur_line_state) {
+        uart_reset();
+        cur_line_state = ctrl_bmp;
+    }
 }
 
 int32_t uart_write_free(void)
