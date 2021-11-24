@@ -24,6 +24,9 @@
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 
+#ifndef CDC_ACM_DEFAULT_BAUDRATE
+#define CDC_ACM_DEFAULT_BAUDRATE 9600
+#endif
 
 /* Module global variables                                                    */
 
@@ -153,7 +156,7 @@ __WEAK int32_t USBD_CDC_ACM_Initialize(void)
     ptr_data_received           = USBD_CDC_ACM_ReceiveBuf;
     ptr_data_read               = USBD_CDC_ACM_ReceiveBuf;
     control_line_state          = 0;
-    line_coding.dwDTERate       = 9600;
+    line_coding.dwDTERate       = CDC_ACM_DEFAULT_BAUDRATE;
     line_coding.bCharFormat     = 0;
     line_coding.bParityType     = 0;
     line_coding.bDataBits       = 8;
@@ -205,7 +208,7 @@ __WEAK int32_t USBD_CDC_ACM_Reset(void)
     ptr_data_read               = USBD_CDC_ACM_ReceiveBuf;
     control_line_state          = 0;
     USBD_CDC_ACM_PortReset();
-    line_coding.dwDTERate       = 9600;
+    line_coding.dwDTERate       = CDC_ACM_DEFAULT_BAUDRATE;
     line_coding.bCharFormat     = 0;
     line_coding.bParityType     = 0;
     line_coding.bDataBits       = 8;
