@@ -29,6 +29,14 @@
 #include "device.h"
 #include "gpio.h"
 #include "nrf.h"
+#include "nrf_nvmc.h"
+
+/* NFC configuration in the User UICR area, needed to configure NFC pins as GPIO */
+#define NRF52833_UICR_NFCPINS_OFFSET            (0x20CUL)
+#define NRF52833_UCIR_NFCPINS_ADDRESS           (NRF_UICR_BASE + NRF52833_UICR_NFCPINS_OFFSET)
+#define NRF52833_UICR_NFCPINS_PROTECT_Pos       (0UL) /*!< Position of PROTECT field. */
+#define NRF52833_UICR_NFCPINS_PROTECT_Msk       (0x1UL << NRF52833_UICR_NFCPINS_PROTECT_Pos) /*!< Bit mask of PROTECT field. */
+#define NRF52833_UICR_NFCPINS_PROTECT_NFC       (1UL) /*!< Operation as NFC antenna pins. Configures the protection for NFC operation. */
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == 0x00008000);
@@ -84,10 +92,42 @@ bool reset_button_pressed()
 
 bool board_bootloader_init()
 {
-    // Lock the bootloader flash, only protects until reset,
-    // so needs to be executed in the bootloader on every startup
-    uint8_t acl_region = 0;
-    NRF_ACL->ACL[acl_region].ADDR = DAPLINK_ROM_BL_START;
-    NRF_ACL->ACL[acl_region].SIZE = DAPLINK_ROM_BL_SIZE;
-    NRF_ACL->ACL[acl_region].PERM = ACL_ACL_PERM_WRITE_Disable << ACL_ACL_PERM_WRITE_Pos;
+    uint32_t apply_protection = 0;
+
+    if (NRF_FICR->INFO.PART == 0x52833) {
+        // nRF52833
+        // Apply the flash protection if the NFC pins are not configured as GPIO
+        volatile uint32_t* const nrf_uicr_nfcpins = (uint32_t *) NRF52833_UCIR_NFCPINS_ADDRESS;
+        if ((*nrf_uicr_nfcpins & NRF52833_UICR_NFCPINS_PROTECT_Msk) ==
+                (NRF52833_UICR_NFCPINS_PROTECT_NFC << NRF52833_UICR_NFCPINS_PROTECT_Pos)) {
+            apply_protection = 1;
+        }
+    }
+
+    if (!apply_protection) {
+        uint32_t pin_bootmode;
+        if (NRF_FICR->INFO.PART == 0x52833) {
+            // nRF52833
+            pin_bootmode  = NRF_GPIO_PIN_MAP(0, 10);
+        } else {
+            // nRF52820
+            pin_bootmode  = NRF_GPIO_PIN_MAP(0, 17);
+        }
+
+        NRF_GPIO_Type *reg  = GPIO_REG(pin_bootmode);
+        uint32_t idx        = GPIO_IDX(pin_bootmode);
+        gpio_cfg_input(reg, idx, NRF_GPIO_PIN_PULLUP);
+        apply_protection = gpio_read(reg, idx);
+        gpio_cfg(reg, idx, NRF_GPIO_PIN_DIR_INPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
+                NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
+    }
+
+    if (apply_protection) {
+        // Lock the bootloader flash, only protects until reset,
+        // so needs to be executed in the bootloader on every startup
+        uint8_t acl_region = 0;
+        NRF_ACL->ACL[acl_region].ADDR = DAPLINK_ROM_BL_START;
+        NRF_ACL->ACL[acl_region].SIZE = DAPLINK_ROM_BL_SIZE;
+        NRF_ACL->ACL[acl_region].PERM = ACL_ACL_PERM_WRITE_Disable << ACL_ACL_PERM_WRITE_Pos;
+    }
 }
