@@ -82,5 +82,7 @@ void sdk_init()
     }
 #endif
 
-    nrfx_clock_enable();
+    if (!nrfx_clock_hfclk_is_running()) {
+        nrfx_clock_hfclk_start();
+    }
 }
