@@ -143,7 +143,7 @@ static const uint8_t REG_TEMP = 0x00;
 uint8_t i2c_buf[12];
 uint8_t ret;
 /* for QSPI data transfer */
-uint8_t qspi_data;
+uint8_t qspi_data[12];
 
 void protocol_bridging(void);
 static void MX_ADC1_Init(void);
@@ -669,7 +669,6 @@ void protocol_bridging()
 			
 			HAL_Delay(100);
 			MX_I2C3_Init();
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
 			I2C_Tx_Rx();
 			buf1 = 0;
 			buf2 = 0;
@@ -678,7 +677,7 @@ void protocol_bridging()
 			buf5 = 0;
 			buf6 = 0;
 			buf7 = 0;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
 			
 		}
 		else if(protocol == 2)
@@ -1267,10 +1266,10 @@ static void MX_ADC1_Init(void)
 	{
 		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV128;
 	}
-	else if (buf1 == 9)
-	{
-		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV256;
-	}
+	// else if (buf1 == 9)
+	// {
+		// hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV256;
+	// }
 	else
 	{
 		hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
@@ -1525,27 +1524,22 @@ static void SPI_Tx_Rx(void)
 
 static void I2C_Tx_Rx(void)
 {
-	// i2c_buf[0] = REG_TEMP;
-	// ret = HAL_I2C_Master_Transmit(&hi2c3, ADDR, i2c_buf, 1, 200);
-	// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);  //green led on
-	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   //red led off
-	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //blue led off
-	// ret = HAL_I2C_Master_Receive(&hi2c3, ADDR, i2c_buf, 2, 200);
-	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);   //green led off
-	// HAL_Delay(1000);
-}
-
-static void ADC_Tx_Rx(void)
-{
-	// HAL_ADC_Start(&hadc1);
-	// HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	// raw = HAL_ADC_GetValue(&hadc1);
+	i2c_buf[0] = REG_TEMP;
+	ret = HAL_I2C_Master_Transmit(&hi2c3, ADDR, i2c_buf, 1, 100);
+	ret = HAL_I2C_Master_Receive(&hi2c3, ADDR, i2c_buf, 2, 100);
 }
 
 static void USART_Tx_Rx(void)
 {
-	// HAL_USART_Receive(&husart1, message, sizeof(message), HAL_MAX_DELAY);
-	// HAL_USART_Transmit(&husart1, message, sizeof(message), HAL_MAX_DELAY);
+	HAL_USART_Transmit(&husart1, message, strlen((char*)message), 100);
+	HAL_USART_Receive(&husart1, message, strlen((char*)message), 100);
+}
+
+static void ADC_Tx_Rx(void)
+{
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, 100);
+	raw = HAL_ADC_GetValue(&hadc1);
 }
 
 static void QSPI_Tx_Rx(void)
