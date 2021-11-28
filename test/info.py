@@ -139,6 +139,7 @@ PROJECT_RELEASE_INFO = {
     ('max32625_if',                                 False,      0x0000,     "bin"       ),
     ('sam3u2c_if',                                  False,      0x0000,     "bin"       ),
     ('stm32f103xb_if',                              False,      0x0000,     "bin"       ),
+    ('stm32wb55xx_if',                              False,      0x0000,     "bin"       ),
 }
 
 # Add new HICs here
@@ -311,6 +312,7 @@ HIC_STRING_TO_ID = {
     'lpc4322': 0x97969905,
     'max32625': 0x97969906,
     'stm32f103xb': 0x97969908,
+    'stm32wb55xx': 0x9796990E,
     'k26f': 0x97969909,
     'kl27z': 0x9796990B,
     'm48ssidae': 0x97969921,

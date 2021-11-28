@@ -46,3 +46,22 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32wbxx/gcc
+        misc:
+            libraries:
+                - m
+                - gcc
+                - c
+                - nosys
+            common_flags:
+                - -Os
+                - -g3
+                # - -Wall
+                - -Werror
+                - -ffunction-sections
+                - -fdata-sections
+                - -std=gnu99
+                - -fshort-wchar
+                - -fno-common
+                - -ffreestanding
+                - -fverbose-asm
+                - -mno-unaligned-access

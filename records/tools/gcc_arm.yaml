@@ -5,7 +5,7 @@ tool_specific:
         macros:
             -
         linker_file:
-            - source/daplink/daplink.ld
+            - source/hic_hal/stm32/stm32wbxx/gcc/stm32wbxx.ld
         misc:
             libraries:
                 - m
