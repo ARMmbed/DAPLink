@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- 
- * Copyright (c) 2013-2020 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2013-2019 Arm Limited (or its affiliates). All 
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * $Date:        20. Januar 2020
- * $Revision:    V2.8
+ * $Date:        30. April 2019
+ * $Revision:    V2.7
  *
  * Project:      USART Driver Definitions for NXP LPC43xx
  * -------------------------------------------------------------------------- */
@@ -32,7 +32,6 @@
 #include "GPDMA_LPC43xx.h"
 
 #include "RTE_Device.h"
-#include "RTE_Components.h"
 
 // Clock Control Unit register
 #define CCU_CLK_CFG_RUN              (1U << 0)
@@ -293,13 +292,12 @@ typedef const struct {
   USART_PINS              pins;          // USART pins configuration
   USART_CLOCKS            clk;           // USART clocks configuration
   USART_RESET             rst;           // USART reset configuration
-  int32_t                 irq_num;       // USART IRQ Number
+  IRQn_Type               irq_num;       // USART IRQ Number
   uint32_t                trig_lvl;      // FIFO Trigger level
   USART_DMA              *dma_tx;
   USART_DMA              *dma_rx;
   USART_INFO             *info;          // Run-Time Information
-  uint16_t                sc_oversamp;   // SmartCard oversampling ratio
-  uint8_t                 reserved[2];   // Reserved
+  float                   sc_oversamp;   // SmartCard oversampling ratio
 } USART_RESOURCES;
 
 // Global functions and variables exported by driver .c module */

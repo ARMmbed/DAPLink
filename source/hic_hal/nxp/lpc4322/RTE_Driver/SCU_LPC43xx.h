@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- 
- * Copyright (c) 2013-2020 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2013-2019 Arm Limited (or its affiliates). All 
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * $Date:        20. Januar 2020
- * $Revision:    V1.2
+ * $Date:        30. April 2019
+ * $Revision:    V1.1
  *
  * Project:      SCU Driver Definitions for NXP LPC43xx
  * -------------------------------------------------------------------------- */
@@ -31,7 +31,6 @@
 typedef struct _PIN_ID {
   uint8_t       port;
   uint8_t       num;
-  uint8_t       reserved[2];
   uint32_t      config_val;
 } PIN_ID;
 
