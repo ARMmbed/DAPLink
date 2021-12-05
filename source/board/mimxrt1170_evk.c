@@ -27,8 +27,10 @@ const board_info_t g_board_info = {
     .board_id = "0244",
     .family_id = kNXP_Mimxrt_FamilyID,
     .flags = kEnablePageErase,
-    .daplink_url_name   = "PRODINFOHTM",
+    .daplink_url_name = "PRODINFOHTM",
     .daplink_drive_name = "RT1170-EVK",
     .daplink_target_url = "http://www.nxp.com/imxrt1170evk",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "MIMXRT1170-EVK",
 };
