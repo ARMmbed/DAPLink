@@ -261,7 +261,7 @@ void uart_set_control_line_state(uint16_t ctrl_bmp)
 {
 }
 
-OAint32_t uart_write_free(void)
+int32_t uart_write_free(void)
 {
     return circ_buf_count_free(&write_buffer);
 }
