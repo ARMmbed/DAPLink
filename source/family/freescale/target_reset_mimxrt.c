@@ -46,6 +46,7 @@ static void prerun_target_config(void)
     target_set_state(RESET_RUN);
 }
 
+#ifdef DAPLINK_MIMXRT_TARGET
 static uint8_t validate_bin_nvic(const uint8_t *buf)
 {
     if(buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')
@@ -61,6 +62,7 @@ static uint8_t validate_bin_nvic(const uint8_t *buf)
 
     return 0;
 }
+#endif
 
 const target_family_descriptor_t g_nxp_mimxrt = {
     .family_id = kNXP_Mimxrt_FamilyID,
@@ -68,5 +70,7 @@ const target_family_descriptor_t g_nxp_mimxrt = {
     .soft_reset_type = VECTRESET,
     .target_before_init_debug = target_before_init_debug,
     .prerun_target_config = prerun_target_config,
+#ifdef DAPLINK_MIMXRT_TARGET
     .validate_bin_nvic = validate_bin_nvic,
+#endif
 };
