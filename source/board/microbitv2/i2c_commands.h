@@ -22,19 +22,27 @@
 #ifndef I2C_COMMANDS_H
 #define I2C_COMMANDS_H
 
+#include <stdint.h>
 #include <stdbool.h>
 
 #include "cmsis_compiler.h"
 #include "virtual_fs.h"
-#include "fsl_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* 7-bit addresses */
 #define I2C_SLAVE_NRF_KL_COMMS      (0x70U)
 #define I2C_SLAVE_HID               (0x71U)
 #define I2C_SLAVE_FLASH             (0x72U)
+
+// Busy flag not yet implemented in nRF52
+#if defined(INTERFACE_NRF52820)
+#define I2C_PROTOCOL_VERSION        (0x01)
+#else 
+#define I2C_PROTOCOL_VERSION        (0x02)
+#endif
 
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
@@ -174,26 +182,9 @@ typedef __PACKED_STRUCT i2cFlashCmd_tag {
     } cmdData;
 } i2cFlashCmd_t;
 
-/*! i2c Write Callback prototype */
-typedef void (*i2cWriteCallback_t)
-(
-    uint8_t*    pData,
-    uint8_t     size
-);
-
-/*! i2c Read Callback prototype */
-typedef void (*i2cReadCallback_t)
-(
-    uint8_t*    pData,
-    uint8_t     size
-);
-
-void i2c_initialize(void);
-void i2c_deinitialize(void);
-status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress);
-status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress);
-void i2c_clearBuffer(void); 
-void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
+void i2c_cmds_init(void);
+flashConfig_t* i2c_cmds_get_storage_config(void);
+void i2c_cmds_reset_storate_config(void);
 
 #ifdef __cplusplus
 }

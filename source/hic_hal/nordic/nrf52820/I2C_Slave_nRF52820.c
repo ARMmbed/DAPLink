@@ -86,12 +86,16 @@ static void twis_event_handler (nrfx_twis_evt_t const * p_event, I2C_RESOURCES *
 
   switch (p_event->type) {
     case NRFX_TWIS_EVT_READ_REQ:
-      if (nrfx_twis_is_waiting_tx_buff(&i2c->nrfx_twis)) {
+      // TODO: Check if this fix is correct
+      // if (nrfx_twis_is_waiting_tx_buff(&i2c->nrfx_twis)) {
+      if (p_event->data.buf_req) {
         event |= ARM_I2C_EVENT_SLAVE_TRANSMIT;
       }
       break;
     case NRFX_TWIS_EVT_WRITE_REQ:
-      if (nrfx_twis_is_waiting_rx_buff(&i2c->nrfx_twis)) {
+      // TODO: Check if this fix is correct
+      // if (nrfx_twis_is_waiting_rx_buff(&i2c->nrfx_twis)) {
+      if (p_event->data.buf_req) {
         event |= ARM_I2C_EVENT_SLAVE_RECEIVE;
       }
       break;
@@ -120,6 +124,12 @@ static void twis_event_handler (nrfx_twis_evt_t const * p_event, I2C_RESOURCES *
   }
 
   if (i2c->info->cb_event != NULL) {
+    uint8_t address = nrf_twis_match_get(i2c->nrfx_twis.p_reg);
+    if (address == 0) {
+      event |= EXTENSION_I2C_EVENT_SLAVE_ADDR_0;
+    } else if (address == 1) {
+      event |= EXTENSION_I2C_EVENT_SLAVE_ADDR_1;
+    }
     i2c->info->cb_event (event);
   }
 }

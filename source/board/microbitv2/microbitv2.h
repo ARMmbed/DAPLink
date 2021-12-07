@@ -35,16 +35,11 @@
 #define PWR_LED_SLEEP_STATE_DEFAULT     true
 #define AUTOMATIC_SLEEP_DEFAULT         true
 
-#define FLASH_CONFIG_ADDRESS        (0x00020000)
-#define FLASH_CONFIG_SIZE           (0x00000400)
-#define FLASH_INTERFACE_SIZE        (128*1024)
-#define FLASH_STORAGE_ADDRESS       (0x00020400)
-#define FLASH_CFG_FILENAME          "DATA    BIN"
-#define FLASH_CFG_FILESIZE          (126*1024)
-#define FLASH_CFG_FILEVISIBLE       false
-
-// 'kvld' in hex - key valid
-#define CFG_KEY             0x6b766c64
+// define the reset button presses
+#define RESET_SHORT_PRESS       10   // x 30ms debounce time = 300ms
+#define RESET_MID_PRESS         80   // x 30ms debounce time = 2400ms
+#define RESET_LONG_PRESS        120  // x 30ms debounce time = 3600ms
+#define RESET_MAX_LENGTH_PRESS  RESET_LONG_PRESS
 
 typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_WAITING = 0,

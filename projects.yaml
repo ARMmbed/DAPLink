@@ -511,6 +511,14 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max78000fthr.yaml
+    nrf52820_microbit_bl:
+        - *module_bl
+        - records/hic_hal/nrf52820.yaml
+        - records/board/nrf52820_microbit_bl.yaml
+    nrf52820_microbit_if:
+        - *module_if
+        - *module_hic_nrf52820
+        - records/board/microbitv2_nrf52820.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c

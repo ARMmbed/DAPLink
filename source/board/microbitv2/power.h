@@ -22,32 +22,32 @@
 #ifndef POWER_H_
 #define POWER_H_
 
-#include "fsl_common.h"
-#include "fsl_smc.h"
-
-/* Power mode definition used in application. */
-typedef enum _app_power_mode
+typedef enum _microbit_power_mode_t
 {
-    kAPP_PowerModeMin = 0,
-    kAPP_PowerModeRun,   /* Normal RUN mode */
-    kAPP_PowerModeWait,  /* WAIT mode. */
-    kAPP_PowerModeStop,  /* STOP mode. */
-    kAPP_PowerModeVlpr,  /* VLPR mode. */
-    kAPP_PowerModeVlpw,  /* VLPW mode. */
-    kAPP_PowerModeVlps,  /* VLPS mode. */
-    kAPP_PowerModeLls,   /* LLS mode. */
-    kAPP_PowerModeVlls0, /* VLLS0 mode. */
-    kAPP_PowerModeVlls1, /* VLLS1 mode. */
-    kAPP_PowerModeVlls3, /* VLLS3 mode. */
-    kAPP_PowerModeMax
-} app_power_mode_t;
+    MB_POWER_RUNNING = 0x01,
+    MB_POWER_SLEEP = 0x06,  // KL27 VLPS
+    MB_POWER_DOWN = 0x08,   // KL27 VLLS0
+} microbit_if_power_mode_t;
 
+/** 
+ * Initialises the required resources to switch between different power modes.
+ */
 void power_init(void);
 
-/* Lowest power mode available in KL27*/
-void power_enter_VLLS0(void);
+/**
+ * Lowest power mode available in the Interface MCU.
+ * Wakes up via reset button press or falling edge of VBUS_ABSENT (previously
+ * named WAKE_ON_EDGE).
+ * 
+ */
+void power_down(void);
 
-/* Lowest power mode that allows I2C operation with address match wakeup */
-void power_enter_VLPS(void);
+/**
+ * Lowest power mode that wakes up on I2C operation with address match wakeup.
+ * Also wakes up via reset button, VBUS_ABSENT (previously named WAKE_ON_EDGE).
+ * Does not wake up on UART traffic.
+ * Resumes operation on wake up.
+ */
+void power_sleep(void);
 
 #endif /* POWER_H_ */

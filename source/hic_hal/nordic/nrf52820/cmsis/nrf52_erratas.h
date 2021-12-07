@@ -1031,7 +1031,9 @@ static bool nrf52_errata_20(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -1865,7 +1867,9 @@ static bool nrf52_errata_36(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -2717,7 +2721,9 @@ static bool nrf52_errata_55(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -3189,7 +3195,9 @@ static bool nrf52_errata_66(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -4018,7 +4026,9 @@ static bool nrf52_errata_78(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -4594,7 +4604,9 @@ static bool nrf52_errata_87(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -6568,7 +6580,9 @@ static bool nrf52_errata_136(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -8034,7 +8048,9 @@ static bool nrf52_errata_170(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -8268,7 +8284,9 @@ static bool nrf52_errata_173(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -8480,7 +8498,9 @@ static bool nrf52_errata_176(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -9007,7 +9027,9 @@ static bool nrf52_errata_183(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -9123,7 +9145,9 @@ static bool nrf52_errata_184(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -9277,7 +9301,9 @@ static bool nrf52_errata_187(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -9407,7 +9433,9 @@ static bool nrf52_errata_190(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -9721,7 +9749,9 @@ static bool nrf52_errata_194(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -9889,7 +9919,9 @@ static bool nrf52_errata_196(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -10553,7 +10585,9 @@ static bool nrf52_errata_210(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -10661,7 +10695,9 @@ static bool nrf52_errata_211(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -10803,7 +10839,9 @@ static bool nrf52_errata_212(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -11267,7 +11305,9 @@ static bool nrf52_errata_218(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -11409,7 +11449,9 @@ static bool nrf52_errata_219(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -11551,7 +11593,9 @@ static bool nrf52_errata_223(void)
             uint32_t var1 = *(uint32_t *)0x10000130ul;
             uint32_t var2 = *(uint32_t *)0x10000134ul;
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -11611,7 +11655,9 @@ static bool nrf52_errata_225(void)
             uint32_t var1 = *(uint32_t *)0x10000130ul;
             uint32_t var2 = *(uint32_t *)0x10000134ul;
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -11713,7 +11759,9 @@ static bool nrf52_errata_228(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -11945,7 +11993,9 @@ static bool nrf52_errata_233(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12047,7 +12097,9 @@ static bool nrf52_errata_236(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12161,7 +12213,9 @@ static bool nrf52_errata_237(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12347,7 +12401,9 @@ static bool nrf52_errata_243(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12535,7 +12591,9 @@ static bool nrf52_errata_245(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12663,7 +12721,9 @@ static bool nrf52_errata_246(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12789,7 +12849,9 @@ static bool nrf52_errata_248(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12910,7 +12972,9 @@ static bool nrf52_errata_249(void)
                 }
             }
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)
@@ -12970,7 +13034,9 @@ static bool nrf52_errata_250(void)
             uint32_t var1 = *(uint32_t *)0x10000130ul;
             uint32_t var2 = *(uint32_t *)0x10000134ul;
         #endif
-        #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        // DAPLink change: Ensure the nRF52833 check is performed in nRF52820 builds as well
+        // #if defined (NRF52833_XXAA) || defined (DEVELOP_IN_NRF52833)
+        #if defined (NRF52833_XXAA) || defined (NRF52820_XXAA)
             if (var1 == 0x0D)
             {
                 switch(var2)

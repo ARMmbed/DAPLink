@@ -1,9 +1,9 @@
 /**
- * @file    flexio_pwm.h
+ * @file    gpio_extra.h
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright 2020 NXP
+ * Copyright 2021 Micro:bit Educational Foundation
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,23 +18,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef FLEXIO_PWM_H_
-#define FLEXIO_PWM_H_
 
-#include "IO_Config.h"
+#ifndef GPIO_EXTRA_H
+#define GPIO_EXTRA_H
+
+#include "gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void flexio_pwm_init(void);
-void flexio_pwm_init_pins(void);
-void flexio_pwm_deinit_pins(void);
-void flexio_pwm_set_dutycycle(uint8_t duty);
+void gpio_enable_hid_led(void);
+void gpio_disable_hid_led(void);
+
+void gpio_init_combined_int(void);
+void gpio_disable_combined_int(void);
+void gpio_assert_combined_int(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FLEXIO_PWM_H_ */
+#endif

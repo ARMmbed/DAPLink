@@ -45,7 +45,7 @@
 // <e> NRFX_CLOCK_ENABLED - nrfx_clock - CLOCK peripheral driver
 //==========================================================
 #ifndef NRFX_CLOCK_ENABLED
-#define NRFX_CLOCK_ENABLED 0
+#define NRFX_CLOCK_ENABLED 1
 #endif
 // <o> NRFX_CLOCK_CONFIG_LF_SRC  - LF Clock Source
 
@@ -56,7 +56,7 @@
 // <196609=> External Full Swing
 
 #ifndef NRFX_CLOCK_CONFIG_LF_SRC
-#define NRFX_CLOCK_CONFIG_LF_SRC 1
+#define NRFX_CLOCK_CONFIG_LF_SRC 0
 #endif
 
 // <q> NRFX_CLOCK_CONFIG_LF_CAL_ENABLED  - Enables LF Clock Calibration Support
@@ -1276,7 +1276,7 @@
 // <7=> 7
 
 #ifndef NRFX_TWIS_DEFAULT_CONFIG_IRQ_PRIORITY
-#define NRFX_TWIS_DEFAULT_CONFIG_IRQ_PRIORITY 7
+#define NRFX_TWIS_DEFAULT_CONFIG_IRQ_PRIORITY 1
 #endif
 
 // <e> NRFX_TWIS_CONFIG_LOG_ENABLED - Enables logging in the module.
@@ -1442,7 +1442,7 @@
 // <7=> 7
 
 #ifndef NRFX_UARTE_DEFAULT_CONFIG_IRQ_PRIORITY
-#define NRFX_UARTE_DEFAULT_CONFIG_IRQ_PRIORITY 7
+#define NRFX_UARTE_DEFAULT_CONFIG_IRQ_PRIORITY 3
 #endif
 
 // <e> NRFX_UARTE_CONFIG_LOG_ENABLED - Enables logging in the module.
@@ -1595,7 +1595,7 @@
 // <7=> 7
 
 #ifndef NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY
-#define NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY 7
+#define NRFX_USBD_DEFAULT_CONFIG_IRQ_PRIORITY 2
 #endif
 
 // <q> USBD_CONFIG_DMASCHEDULER_ISO_BOOST  - Give priority to isochronous transfers

@@ -31,7 +31,6 @@
 #define USART_IRQ      (UARTE0_UART0_IRQn)
 
 extern ARM_DRIVER_USART USART_INSTANCE;
-extern uint32_t SystemCoreClock;
 
 static void clear_buffers(void);
 
@@ -43,6 +42,9 @@ circ_buf_t write_buffer;
 uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
+uint16_t cur_line_state;
+uint32_t cur_control;
+uint32_t cur_baud;
 
 struct {
     // Number of bytes pending to be transferred. This is 0 if there is no
@@ -64,8 +66,11 @@ int32_t uart_initialize(void)
 {
     clear_buffers();
     cb_buf.tx_size = 0;
-    Driver_USART0.Initialize(uart_handler);
-    Driver_USART0.PowerControl(ARM_POWER_FULL);
+    USART_INSTANCE.Initialize(uart_handler);
+    USART_INSTANCE.PowerControl(ARM_POWER_FULL);
+    cur_line_state = 0;
+    cur_control = 0;
+    cur_baud = 0;
 
     return 1;
 }
@@ -74,8 +79,8 @@ int32_t uart_uninitialize(void)
 {
     USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
     USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
-    Driver_USART0.PowerControl(ARM_POWER_OFF);
-    Driver_USART0.Uninitialize();
+    USART_INSTANCE.PowerControl(ARM_POWER_OFF);
+    USART_INSTANCE.Uninitialize();
     clear_buffers();
     cb_buf.tx_size = 0;
 
@@ -99,7 +104,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     switch (config->DataBits) {
         case UART_DATA_BITS_5:
-            control |= UART_DATA_BITS_5;
+            control |= ARM_USART_DATA_BITS_5;
             break;
 
         case UART_DATA_BITS_6:
@@ -107,7 +112,7 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
 
         case UART_DATA_BITS_7:
-            control |= ARM_USART_DATA_BITS_6;
+            control |= ARM_USART_DATA_BITS_7;
             break;
 
         case UART_DATA_BITS_8: /* fallthrough */
@@ -157,6 +162,12 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
     }
 
+    if ((control == cur_control) && (config->Baudrate == cur_baud)) {
+        return 1;
+    }
+    cur_control = control;
+    cur_baud = config->Baudrate;
+
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
 
@@ -181,6 +192,14 @@ int32_t uart_set_configuration(UART_Configuration *config)
 int32_t uart_get_configuration(UART_Configuration *config)
 {
     return 1;
+}
+
+void uart_set_control_line_state(uint16_t ctrl_bmp)
+{
+    if (ctrl_bmp != cur_line_state) {
+        uart_reset();
+        cur_line_state = ctrl_bmp;
+    }
 }
 
 int32_t uart_write_free(void)

@@ -149,6 +149,7 @@ int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
  */
 int32_t USBD_CDC_ACM_PortSetControlLineState(uint16_t ctrl_bmp)
 {
+    uart_set_control_line_state(ctrl_bmp);
     return (1);
 }
 
