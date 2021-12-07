@@ -244,7 +244,7 @@ uint32_t	CGU_Init(uint32_t wantedFreq)
     // Setup PLL1 to 204MHz
     // 0. Select IRC as BASE_M4_CLK source
     CGU_EntityConnect(CGU_CLKSRC_IRC, CGU_BASE_M4);
-    SystemCoreClock = 96000000;
+    SystemCoreClock = 120000000;
     // 1. Enable the crystal oscillator
     CGU_SetXTALOSC(12000000);
     CGU_EnableEntity(CGU_CLKSRC_XTAL_OSC, ENABLE);

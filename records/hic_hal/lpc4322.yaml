@@ -8,12 +8,14 @@ common:
         - CORE_M4
         - INTERNAL_FLASH
         - DAPLINK_HIC_ID=0x97969905  # DAPLINK_HIC_ID_LPC4322
-        - OS_CLOCK=96000000
+        - OS_CLOCK=120000000
     includes:
         - source/hic_hal/nxp/lpc4322
+        - source/hic_hal/nxp/lpc4322/RTE_Driver
     sources:
         hic_hal:
             - source/hic_hal/nxp/lpc4322
+            - source/hic_hal/nxp/lpc4322/RTE_Driver
 
 tool_specific:
     uvision:
@@ -32,6 +34,8 @@ tool_specific:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/armcc
     gcc_arm:
+        linker_file:
+            - source/hic_hal/nxp/lpc4322/gcc/lpc4322.ld
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc4322/gcc

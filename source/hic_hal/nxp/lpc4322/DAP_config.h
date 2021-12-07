@@ -97,14 +97,16 @@ typedef unsigned int    BOOL;
 /// This configuration settings is used to optimize the communication performance with the
 /// debugger and depends on the USB peripheral. For devices with limited RAM or USB buffer the
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
-#define DAP_PACKET_COUNT      1              ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
+#define DAP_PACKET_COUNT        8               ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
 
 /// Indicate that UART Serial Wire Output (SWO) trace is available.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#if !defined(SWO_UART)
 #define SWO_UART                0               ///< SWO UART:  1 = available, 0 = not available
+#endif
 
 /// USART Driver instance number for the UART SWO.
-#define SWO_UART_DRIVER         0               ///< USART Driver instance number (Driver_USART#).
+#define SWO_UART_DRIVER         1               ///< USART Driver instance number (Driver_USART#).
 
 /// Maximum SWO UART Baudrate
 #define SWO_UART_MAX_BAUDRATE   10000000U       ///< SWO UART Maximum Baudrate in Hz
@@ -155,8 +157,6 @@ typedef unsigned int    BOOL;
 
 // State of Reset Ouput Enable buffer
 extern bool gpio_reset_pin_is_input;
-
-
 
 //**************************************************************************************************
 /**
@@ -440,6 +440,11 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
+    if (bit) {
+        X_SET(LED_CONNECTED);
+    } else {
+        X_CLR(LED_CONNECTED);
+    }
 }
 
 /** Debug Unit: Set status Target Running LED.
