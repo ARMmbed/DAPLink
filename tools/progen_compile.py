@@ -100,14 +100,18 @@ if args.release:
     if len(args.projects) > 0:
         logger.warning("A release can should only be done on all packages")
     version_git_dir = os.path.join(daplink_dir, "source", "daplink")
-    generate_version_file(version_git_dir)
+    error = generate_version_file(version_git_dir)
+    if error:
+        exit(-1)
 
 # Build the project(s)
 cores = get_core_count() if args.parallel else 1
 projects = args.projects if len(args.projects) > 0 else project_list
 generator = generate.Generator(PROJECTS_YAML)
 for p_name in projects:
+    p_valid = False
     for project in generator.generate(p_name):
+        p_valid = True
         failed = False
         if hasattr(project, 'workspace_name') and (project.workspace_name is not None):
             logger.info("Generating %s for %s in workspace %s", toolchain, project.name, project.workspace_name)
@@ -126,6 +130,8 @@ for p_name in projects:
                 failed = True
         if failed and not args.ignore_failures:
             exit(-1)
+    if not p_valid:
+        exit(-1)
 
 # Generate images with boardid / familyid for supported configurations
 if args.release or args.supported:
