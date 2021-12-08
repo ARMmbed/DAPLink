@@ -32,6 +32,7 @@ PROJECT_RELEASE_INFO = {
     ("kl26z_artemis_dk_if",                         False,      0x8000,     "hex"       ),
     ("kl26z_microbit_if",                           False,      0x8000,     "hex"       ),
     ("kl27z_microbit_if",                           False,      0x8000,     "hex"       ),
+    ("nrf52820_microbit_if",                        False,      0x8000,     "hex"       ),
     ("lpc11u35_lpc812xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc11u35_lpc824xpresso_if",                   False,      0x0000,     "bin"       ),
     ("lpc4322_lpc54114xpresso_if",                  False,      0x10000,    "bin"       ),
@@ -216,6 +217,8 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
     (   0x9904,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
+    (   0x9905,     VENDOR_TO_FAMILY('Nordic', 2),      'nrf52820_microbit_if',                     'nrf52820_bl',      'Microbitv2'                            ),
+    (   0x9906,     VENDOR_TO_FAMILY('Nordic', 2),      'nrf52820_microbit_if',                     'nrf52820_bl',      'Microbitv2'                            ),
     (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                               ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'kl26z_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_if',                                 None,               None                                    ),
@@ -233,17 +236,18 @@ SUPPORTED_CONFIGURATIONS = [
 # Add new HICs here
 HIC_STRING_TO_ID = {
     'k20dx': 0x97969900,
-    'kl26z': 0x97969901,
-    'lpc11u35': 0x97969902,
-    'sam3u2c': 0x97969903,
-    'max32620': 0x97969904,
-    'lpc4322': 0x97969905,
-    'max32625': 0x97969906,
-    'stm32f103xb': 0x97969908,
     'k26f': 0x97969909,
+    'kl26z': 0x97969901,
     'kl27z': 0x9796990B,
-    'm48ssidae': 0x97969921,
+    'lpc11u35': 0x97969902,
+    'lpc4322': 0x97969905,
     'lpc55s69': 0x4C504355,
+    'm48ssidae': 0x97969921,
+    'max32620': 0x97969904,
+    'max32625': 0x97969906,
+    'nrf52820': 0x6E052820,
+    'sam3u2c': 0x97969903,
+    'stm32f103xb': 0x97969908,
 }
 
 BOARD_ID_LOCKED_WHEN_ERASED = set([
