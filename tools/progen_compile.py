@@ -100,7 +100,9 @@ if args.release:
     if len(args.projects) > 0:
         logger.warning("A release can should only be done on all packages")
     version_git_dir = os.path.join(daplink_dir, "source", "daplink")
-    generate_version_file(version_git_dir)
+    error = generate_version_file(version_git_dir)
+    if error:
+        exit(-1)
 
 # Build the project(s)
 cores = get_core_count() if args.parallel else 1

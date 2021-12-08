@@ -77,7 +77,9 @@ def main():
         print("Error - this script must be run from the tools directory")
         exit(-1)
     version_git_dir = os.path.join(daplink_dir, "source", "daplink")
-    generate_version_file(version_git_dir)
+    error = generate_version_file(version_git_dir)
+    if error:
+        exit(-1)
     if not args.projects == []: 
         for project in args.projects:
             print("Compiling %s" % project)
