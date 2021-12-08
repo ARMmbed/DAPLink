@@ -12,3 +12,4 @@ numpy
 pyelftools
 fuzzywuzzy
 jsonschema
+pyyaml>=6.0,<7.0
