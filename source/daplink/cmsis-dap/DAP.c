@@ -110,9 +110,11 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
                 ((TIMESTAMP_CLOCK != 0U) ? (1U << 5) : 0U) |
                 ((SWO_STREAM != 0U)      ? (1U << 6) : 0U) |
                 ((DAP_UART != 0U)        ? (1U << 7) : 0U);
-
+      length = 1U;
+#if (DAP_UART != 0)
       info[1] = ((DAP_UART_USB_COM_PORT != 0) ? (1U << 0) : 0U);
       length = 2U;
+#endif
       break;
     case DAP_ID_TIMESTAMP_CLOCK:
 #if (TIMESTAMP_CLOCK != 0U)
