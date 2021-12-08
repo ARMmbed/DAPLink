@@ -46,7 +46,7 @@ static int32_t reset(void);
 
 #define UART_IRQn  USART0_IRQn
 #define LPC_USART  LPC_USART0
-#define UART_IRQHandler  UART0_IRQHandler
+#define UART_IRQHandler  USART0_IRQHandler
 
 // UART Control Pin           P2_2:  GPIO5[2]
 #define PORT_UARTCTRL         5
