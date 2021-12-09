@@ -6,7 +6,7 @@ requests
 intelhex
 enum34
 pyusb
-mbed-cli==1.8.*
+mbed-cli==1.10.*
 bs4
 numpy
 pyelftools
