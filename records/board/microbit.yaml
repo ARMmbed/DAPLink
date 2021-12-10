@@ -4,6 +4,7 @@ common:
         - CDC_LED_DEF=GPIO_LED_ON
         - MSC_LED_DEF=GPIO_LED_ON
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
+        - CDC_ACM_DEFAULT_BAUDRATE=115200
     sources:
         board:
             - source/board/microbit.c
