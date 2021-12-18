@@ -24,9 +24,21 @@
 #include "uart.h"
 #include "compiler.h"
 #include "daplink.h"
+#include "IO_Config.h"
 
 // This GPIO configuration is only valid for the SAM3U2C
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
+
+// support for dynamic assignment of SWD signals
+Pio *pin_nRESET_port            = PIN_nRESET_PORT;  // GPIO port for nRESET signal
+Pio *pin_SWCLK_port             = PIN_SWCLK_PORT;   // GPIO port for SWCLK signal
+Pio *pin_SWDIO_port             = PIN_SWDIO_PORT;   // GPIO port for SWDIO signal
+unsigned long pin_nRESET_bit    = PIN_nRESET_BIT;   // GPIO bit for nRESET signal
+unsigned long pin_SWCLK_bit     = PIN_SWCLK_BIT;    // GPIO bit for SWCLK signal
+unsigned long pin_SWDIO_bit     = PIN_SWDIO_BIT;    // GPIO bit for SWDIO signal
+unsigned long pin_nRESET        = PIN_nRESET;       // GPIO mask for nRESET signal
+unsigned long pin_SWCLK         = PIN_SWCLK;        // GPIO mask for SWCLK signal
+unsigned long pin_SWDIO         = PIN_SWDIO;        // GPIO mask for SWDIO signal
 
 void gpio_init(void)
 {
