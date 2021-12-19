@@ -133,13 +133,14 @@ static void nrf_prerun_board_config(void)
     PIOB->PIO_PUDR = (1 << 3); // Disable pull-up
 
     // EXTERNAL TARGET DETECTION
-    // - only for nRF51-DK and nRF52-DK, so far
+    // - supports nRF51-DK, nRF52-DK, nRF52840-DK
     // - nRF51-Dongle (discontinued) has no external target lines
     // - nRF51822-mKIT (discontinued), no external target lines
-    // - nRF52840-DK has external/shielf SWD lines and is consistent with nRF51-DK / nRF52-DK
-    // - (nRF52840-Dongle has no interface MCU)
     // - need to code shield detection and priority between external and shield-mounted targets
-    if ( (!bit2 && bit1) || (bit2 && !bit1) ) {
+
+    if ( !bit3 && (bit2 || bit1) ) {
+        // 001 / 010 / 011 above
+        
         // EXT_VTG (high if external target is powered)
         PIOB->PIO_PUDR = (1 << 6); // pull-up disable
         PIOB->PIO_ODR  = (1 << 6); // input
