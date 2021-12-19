@@ -77,9 +77,9 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
 
 // shield SWDIO/TMS In/Out Pin
 #ifndef PIN_SH_SWDIO
-#define PIN_SH_SWDIO_PORT          PIOB
-#define PIN_SH_SWDIO_BIT           19
-#define PIN_SH_SWDIO               (1UL << PIN_SH_SWDIO_BIT)
+#define PIN_SH_SWDIO_PORT           PIOB
+#define PIN_SH_SWDIO_BIT            19
+#define PIN_SH_SWDIO                (1UL << PIN_SH_SWDIO_BIT)
 #endif
 
 #endif

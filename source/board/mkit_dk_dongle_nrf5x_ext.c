@@ -68,6 +68,8 @@ static void nrf_prerun_board_config(void)
     uint8_t bit1;
     uint8_t bit2;
     uint8_t bit3;
+    uint8_t target_ext;
+    uint8_t target_shield;
 
     PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
     PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2
@@ -147,15 +149,36 @@ static void nrf_prerun_board_config(void)
         PIOB->PIO_PER  = (1 << 6); // GPIO control
         bit1 = (PIOB->PIO_PDSR >> 6) & 1;  // Read PB6
 
-        // EXT_GND_DETECT (high if no external target is connected)
+        // EXT_GND_DETECT (low if external target is connected)
         PIOB->PIO_PUER = (1 << 18); // pull-up enable
         PIOB->PIO_ODR  = (1 << 18); // input
         PIOB->PIO_PER  = (1 << 18); // GPIO control
+        // insert delay?
         bit2 = (PIOB->PIO_PDSR >> 18) & 1; // Read PB18
         PIOB->PIO_PUDR = (1 << 18); // pull-up disable
 
+        // nonzero if external target detected
+        target_ext = bit1 & !bit2;
+
+        // SH_VTG (high if external target is powered)
+        PIOB->PIO_PUDR = (1 << 5); // pull-up disable
+        PIOB->PIO_ODR  = (1 << 5); // input
+        PIOB->PIO_PER  = (1 << 5); // GPIO control
+        bit1 = (PIOB->PIO_PDSR >> 5) & 1;  // Read PB5
+
+        // SH_GND_DETECT (low if external target is connected)
+        PIOB->PIO_PUER = (1 << 23); // pull-up enable
+        PIOB->PIO_ODR  = (1 << 23); // input
+        PIOB->PIO_PER  = (1 << 23); // GPIO control
+        // insert delay?
+        bit2 = (PIOB->PIO_PDSR >> 23) & 1; // Read PB23
+        PIOB->PIO_PUDR = (1 << 23); // pull-up disable
+
+        // nonzero if external target detected
+        target_shield  = bit1 & !bit2;
+
         // if external target is detected, re-route SWD signals
-        if (bit1 && !bit2) {
+        if (target_ext) {
             pin_nRESET_port = PIN_EXT_nRESET_PORT;
             pin_nRESET_bit  = PIN_EXT_nRESET_BIT;
             pin_nRESET      = PIN_EXT_nRESET;
@@ -167,13 +190,25 @@ static void nrf_prerun_board_config(void)
             pin_SWDIO_port  = PIN_EXT_SWDIO_PORT;
             pin_SWDIO_bit   = PIN_EXT_SWDIO_BIT;
             pin_SWDIO       = PIN_EXT_SWDIO; 
+        } else if (target_shield) {
+            pin_nRESET_port = PIN_SH_nRESET_PORT;
+            pin_nRESET_bit  = PIN_SH_nRESET_BIT;
+            pin_nRESET      = PIN_SH_nRESET;
+
+            pin_SWCLK_port  = PIN_SH_SWCLK_PORT;
+            pin_SWCLK_bit   = PIN_SH_SWCLK_BIT;
+            pin_SWCLK       = PIN_SH_SWCLK;
+
+            pin_SWDIO_port  = PIN_SH_SWDIO_PORT;
+            pin_SWDIO_bit   = PIN_SH_SWDIO_BIT;
+            pin_SWDIO       = PIN_SH_SWDIO; 
         }
 
-        // switch on red LED if external target is in use
+        // switch on red LED if external or shield target is in use
         PIOA->PIO_PUDR = (1 << 28); // pull-up disable
         PIOA->PIO_OER  = (1 << 28); // output
         PIOA->PIO_PER  = (1 << 28); // GPIO control
-        if (bit1 && !bit2)
+        if (target_ext || target_shield)
             PIOA->PIO_CODR = (1 << 28); // set low
         else
             PIOA->PIO_SODR = (1 << 28); // set high        
