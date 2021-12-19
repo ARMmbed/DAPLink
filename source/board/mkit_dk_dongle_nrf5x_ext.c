@@ -134,6 +134,10 @@ static void nrf_prerun_board_config(void)
 
     // EXTERNAL TARGET DETECTION
     // - only for nRF51-DK and nRF52-DK, so far
+    // - nRF51-Dongle (discontinued) has no external target lines
+    // - nRF51822-mKIT (discontinued), no external target lines
+    // - nRF52840-DK has external/shielf SWD lines and is consistent with nRF51-DK / nRF52-DK
+    // - (nRF52840-Dongle has no interface MCU)
     // - need to code shield detection and priority between external and shield-mounted targets
     if ( (!bit2 && bit1) || (bit2 && !bit1) ) {
         // EXT_VTG (high if external target is powered)
