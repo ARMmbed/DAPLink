@@ -26,5 +26,6 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0764",
     .family_id = kStub_HWReset_FamilyID,
+	.daplink_drive_name = 		"DIS_L4IOT  ",
     .target_cfg = &target_device,
 };
