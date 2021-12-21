@@ -2,7 +2,7 @@ common:
     macros:
         - IO_CONFIG_OVERRIDE
     includes:
-        - source/board/override_sam3u2c_nrf5x_dk_ext
+        - source/board/override_nrf5x_dk_ext
     sources:
         board:
             - source/board/nrf5x_dk_ext.c
