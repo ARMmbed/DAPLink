@@ -1,6 +1,6 @@
 /**
  * @file    IO_Config_Override.c
- * @brief   Alternative IO for LPC11U35 based Hardware Interface Circuit
+ * @brief   Alternative IO for nRF5x-DK boards
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -22,64 +22,107 @@
 #ifndef __IO_CONFIG_OVERRIDE_H__
 #define __IO_CONFIG_OVERRIDE_H__
 
+#include "sam3u2c.h"
+#include "daplink.h"
+
 // This GPIO configuration is only valid for the SAM3U2C HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
 
 // DAP LED
-#define PIN_DAP_LED_PORT        PIOA
-#define PIN_DAP_LED_BIT         29
-#define PIN_DAP_LED             (1UL << PIN_DAP_LED_BIT)
+#define PIN_DAP_LED_PORT           PIOA
+#define PIN_DAP_LED_BIT            29
+#define PIN_DAP_LED                (1UL << PIN_DAP_LED_BIT)
 
 // MSD LED
-#define PIN_MSD_LED_PORT        PIOA
-#define PIN_MSD_LED_BIT         29
-#define PIN_MSD_LED             (1UL << PIN_MSD_LED_BIT)
+#define PIN_MSD_LED_PORT           PIOA
+#define PIN_MSD_LED_BIT            29
+#define PIN_MSD_LED                (1UL << PIN_MSD_LED_BIT)
 
 // CDC LED
-#define PIN_CDC_LED_PORT        PIOA
-#define PIN_CDC_LED_BIT         29
-#define PIN_CDC_LED             (1UL << PIN_CDC_LED_BIT)
+#define PIN_CDC_LED_PORT           PIOA
+#define PIN_CDC_LED_BIT            29
+#define PIN_CDC_LED                (1UL << PIN_CDC_LED_BIT)
+
+// Non-Forwarded Reset in PIN - Not used
+
+// Forwarded Reset in PIN
+#define PIN_RESET_IN_FWRD_PORT     PIOA
+#define PIN_RESET_IN_FWRD_BIT      25
+#define PIN_RESET_IN_FWRD          (1UL << PIN_RESET_IN_FWRD_BIT)
+
+// support for dynamic assignment of SWD signals
+extern Pio *pin_nreset_port;            // GPIO port for nRESET signal
+extern Pio *pin_swclk_port;             // GPIO port for SWCLK signal
+extern Pio *pin_swdio_port;             // GPIO port for SWDIO signal
+extern unsigned long pin_nreset_bit;    // GPIO pin for nRESET signal
+extern unsigned long pin_swclk_bit;     // GPIO pin for SWCLK signal
+extern unsigned long pin_swdio_bit;     // GPIO pin for SWDIO signal
+extern unsigned long pin_nreset;        // GPIO mask for nRESET signal
+extern unsigned long pin_swclk;         // GPIO mask for SWCLK signal
+extern unsigned long pin_swdio;         // GPIO msak for SWDIO signal
+
+// dynamic nRESET OUT Pin
+#define PIN_nRESET_PORT            pin_nreset_port
+#define PIN_nRESET_BIT             pin_nreset_bit
+#define PIN_nRESET                 pin_nreset
+
+// dynamic SWCLK/TCK Pin
+#define PIN_SWCLK_PORT             pin_swclk_port
+#define PIN_SWCLK_BIT              pin_swclk_bit
+#define PIN_SWCLK                  pin_swclk
+
+// dynamic SWDIO/TMS In/Out Pin
+#define PIN_SWDIO_PORT             pin_swdio_port
+#define PIN_SWDIO_BIT              pin_swdio_bit
+#define PIN_SWDIO                  pin_swdio
+
+// internal nRESET OUT Pin
+#define PIN_OB_nRESET_PORT          PIOA
+#define PIN_OB_nRESET_BIT           4
+#define PIN_OB_nRESET               (1UL << PIN_OB_nRESET_BIT)
+
+// internal SWCLK/TCK Pin
+#define PIN_OB_SWCLK_PORT           PIOA
+#define PIN_OB_SWCLK_BIT            17
+#define PIN_OB_SWCLK                (1UL << PIN_OB_SWCLK_BIT)
+
+// internal SWDIO/TMS In/Out Pin
+#define PIN_OB_SWDIO_PORT           PIOA
+#define PIN_OB_SWDIO_BIT            18
+#define PIN_OB_SWDIO                (1UL << PIN_OB_SWDIO_BIT)
 
 // external nRESET OUT Pin
-#ifndef PIN_EXT_nRESET
 #define PIN_EXT_nRESET_PORT         PIOB
 #define PIN_EXT_nRESET_BIT          17
 #define PIN_EXT_nRESET              (1UL << PIN_EXT_nRESET_BIT)
-#endif
 
 // external SWCLK/TCK Pin
-#ifndef PIN_EXT_SWCLK
 #define PIN_EXT_SWCLK_PORT          PIOB
 #define PIN_EXT_SWCLK_BIT           10
 #define PIN_EXT_SWCLK               (1UL << PIN_EXT_SWCLK_BIT)
-#endif
 
 // external SWDIO/TMS In/Out Pin
-#ifndef PIN_EXT_SWDIO
 #define PIN_EXT_SWDIO_PORT          PIOB
 #define PIN_EXT_SWDIO_BIT           9
 #define PIN_EXT_SWDIO               (1UL << PIN_EXT_SWDIO_BIT)
-#endif
 
 // shield nRESET OUT Pin
-#ifndef PIN_SH_nRESET
 #define PIN_SH_nRESET_PORT          PIOB
 #define PIN_SH_nRESET_BIT           22
 #define PIN_SH_nRESET               (1UL << PIN_SH_nRESET_BIT)
-#endif
 
 // shield SWCLK/TCK Pin
-#ifndef PIN_SH_SWCLK
 #define PIN_SH_SWCLK_PORT           PIOB
 #define PIN_SH_SWCLK_BIT            20
 #define PIN_SH_SWCLK                (1UL << PIN_SH_SWCLK_BIT)
-#endif
 
 // shield SWDIO/TMS In/Out Pin
-#ifndef PIN_SH_SWDIO
 #define PIN_SH_SWDIO_PORT           PIOB
 #define PIN_SH_SWDIO_BIT            19
 #define PIN_SH_SWDIO                (1UL << PIN_SH_SWDIO_BIT)
-#endif
+
+// TDI Pin - Not used
+
+// SWO/TDO Pin - Not used
 
 #endif

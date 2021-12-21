@@ -48,6 +48,17 @@ extern target_cfg_t target_device_nrf52840;
 target_cfg_t target_device;
 static uint8_t device_type;
 
+// support for dynamic assignment of SWD signals
+Pio *pin_nreset_port = PIN_OB_nRESET_PORT;        // GPIO port for nRESET signal
+Pio *pin_swclk_port =  PIN_OB_SWCLK_PORT;         // GPIO port for SWCLK signal
+Pio *pin_swdio_port =  PIN_OB_SWDIO_PORT;         // GPIO port for SWDIO signal
+unsigned long pin_nreset_bit = PIN_OB_nRESET_BIT; // GPIO pin for nRESET signal
+unsigned long pin_swclk_bit  = PIN_OB_SWCLK_BIT;  // GPIO pin for SWCLK signal
+unsigned long pin_swdio_bit  = PIN_OB_SWDIO_BIT;  // GPIO pin for SWDIO signal
+unsigned long pin_nreset = PIN_OB_nRESET;         // GPIO mask for nRESET signal
+unsigned long pin_swclk =  PIN_OB_SWCLK;          // GPIO mask for SWCLK signal
+unsigned long pin_swdio =  PIN_OB_SWDIO;          // GPIO msak for SWDIO signal
+
 static void set_target_device(uint32_t device)
 {
     device_type = device;
@@ -142,7 +153,7 @@ static void nrf_prerun_board_config(void)
 
     if ( !bit3 && (bit2 || bit1) ) {
         // 001 / 010 / 011 above
-        
+
         // EXT_VTG (high if external target is powered)
         PIOB->PIO_PUDR = (1 << 6); // pull-up disable
         PIOB->PIO_ODR  = (1 << 6); // input
@@ -179,29 +190,29 @@ static void nrf_prerun_board_config(void)
 
         // if external target is detected, re-route SWD signals
         if (target_ext) {
-            pin_nRESET_port = PIN_EXT_nRESET_PORT;
-            pin_nRESET_bit  = PIN_EXT_nRESET_BIT;
-            pin_nRESET      = PIN_EXT_nRESET;
+            pin_nreset_port = PIN_EXT_nRESET_PORT;
+            pin_nreset_bit  = PIN_EXT_nRESET_BIT;
+            pin_nreset      = PIN_EXT_nRESET;
 
-            pin_SWCLK_port  = PIN_EXT_SWCLK_PORT;
-            pin_SWCLK_bit   = PIN_EXT_SWCLK_BIT;
-            pin_SWCLK       = PIN_EXT_SWCLK;
+            pin_swclk_port  = PIN_EXT_SWCLK_PORT;
+            pin_swclk_bit   = PIN_EXT_SWCLK_BIT;
+            pin_swclk       = PIN_EXT_SWCLK;
 
-            pin_SWDIO_port  = PIN_EXT_SWDIO_PORT;
-            pin_SWDIO_bit   = PIN_EXT_SWDIO_BIT;
-            pin_SWDIO       = PIN_EXT_SWDIO; 
+            pin_swdio_port  = PIN_EXT_SWDIO_PORT;
+            pin_swdio_bit   = PIN_EXT_SWDIO_BIT;
+            pin_swdio       = PIN_EXT_SWDIO;
         } else if (target_shield) {
-            pin_nRESET_port = PIN_SH_nRESET_PORT;
-            pin_nRESET_bit  = PIN_SH_nRESET_BIT;
-            pin_nRESET      = PIN_SH_nRESET;
+            pin_nreset_port = PIN_SH_nRESET_PORT;
+            pin_nreset_bit  = PIN_SH_nRESET_BIT;
+            pin_nreset      = PIN_SH_nRESET;
 
-            pin_SWCLK_port  = PIN_SH_SWCLK_PORT;
-            pin_SWCLK_bit   = PIN_SH_SWCLK_BIT;
-            pin_SWCLK       = PIN_SH_SWCLK;
+            pin_swclk_port  = PIN_SH_SWCLK_PORT;
+            pin_swclk_bit   = PIN_SH_SWCLK_BIT;
+            pin_swclk       = PIN_SH_SWCLK;
 
-            pin_SWDIO_port  = PIN_SH_SWDIO_PORT;
-            pin_SWDIO_bit   = PIN_SH_SWDIO_BIT;
-            pin_SWDIO       = PIN_SH_SWDIO; 
+            pin_swdio_port  = PIN_SH_SWDIO_PORT;
+            pin_swdio_bit   = PIN_SH_SWDIO_BIT;
+            pin_swdio       = PIN_SH_SWDIO;
         }
 
         // switch on red LED if external or shield target is in use
@@ -211,7 +222,7 @@ static void nrf_prerun_board_config(void)
         if (target_ext || target_shield)
             PIOA->PIO_CODR = (1 << 28); // set low
         else
-            PIOA->PIO_SODR = (1 << 28); // set high        
+            PIOA->PIO_SODR = (1 << 28); // set high
     }
 }
 
