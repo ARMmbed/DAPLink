@@ -2,10 +2,10 @@ common:
     macros:
         - IO_CONFIG_OVERRIDE
     includes:
-        - source/board/override_mkit_dk_dongle_nrf5x_ext
+        - source/board/override_sam3u2c_nrf5x_dk_ext
     sources:
         board:
-            - source/board/mkit_dk_dongle_nrf5x_ext.c
+            - source/board/nrf5x_dk_ext.c
         family:
             - source/family/nordic/nrf51822/target_nrf51.c
             - source/family/nordic/nrf52/target.c
