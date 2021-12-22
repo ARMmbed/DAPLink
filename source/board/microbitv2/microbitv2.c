@@ -47,7 +47,19 @@
 #include "adc.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+#include "fsl_tpm.h"
 
+volatile bool tpmIsrFlag = false;
+uint32_t tpm_source_clock;
+
+void TPM0_IRQHandler(void)
+{
+    /* Clear interrupt flag.*/
+    TPM_ClearStatusFlags(TPM0, kTPM_TimeOverflowFlag);
+    tpmIsrFlag = true;
+    TPM_StopTimer(TPM0);
+    __DSB();
+}
 #endif
 
 #ifdef DRAG_N_DROP_SUPPORT
@@ -109,6 +121,25 @@ static mb_version_t read_brd_rev_id(void) {
     mb_version_t board_version = BOARD_VERSION_2_DEF;
     uint32_t board_rev_id_adc = 0;
     uint32_t board_rev_id_mv = 0;
+    
+    tpm_config_t tpmInfo;
+
+    /* Select the clock source for the TPM counter as kCLOCK_McgIrc48MClk */
+    CLOCK_SetTpmClock(1U);
+    
+    TPM_GetDefaultConfig(&tpmInfo);
+    
+    /* TPM clock divide by TPM_PRESCALER */
+    tpmInfo.prescale = kTPM_Prescale_Divide_4;
+
+    /* Initialize TPM module */
+    TPM_Init(TPM0, &tpmInfo);
+
+    TPM_EnableInterrupts(TPM0, kTPM_TimeOverflowInterruptEnable);
+
+    EnableIRQ(TPM0_IRQn);
+    
+    tpm_source_clock = (CLOCK_GetFreq(kCLOCK_McgIrc48MClk) / 4);
 
     // Set Board Rev ID pin as output but pin disabled
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_PinDisabledOrAnalog);
@@ -118,19 +149,26 @@ static mb_version_t read_brd_rev_id(void) {
     adc_init();
 
     // 1. Discharge capacitor
+    /* Set timer period 3ms*/
+    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(3000U, tpm_source_clock));
     //    Drive BRD_REV_ID pin to low
     GPIO_PortClear(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_MuxAsGpio);
     //    Add a 3ms delay to allow the 100nF Cap to discharge
     //    at least 5*RC with 4700R.
-    for (uint32_t count = 16 * 3000; count > 0UL; count--);
+    TPM_StartTimer(TPM0, kTPM_SystemClock);
+    while (false == tpmIsrFlag);
+    tpmIsrFlag = false;
 
     // 2. Charge capacitor for 100us
+    /* Set timer period slightly below 100us to account for overheads */
+    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(98U, tpm_source_clock));
     //    Drive BRD_REV_ID pin to high
     GPIO_PortSet(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
     //    Add a ~100us delay
-    //    3 clock cycles per loop at -O2 ARMCC optimization
-    for (uint32_t count = 1600; count > 0UL; count--);
+    TPM_StartTimer(TPM0, kTPM_SystemClock);
+    while (false == tpmIsrFlag);
+    tpmIsrFlag = false;
     //    Change pin to ADC (High-Z). Capacitor will stop charging
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_PinDisabledOrAnalog);
 
@@ -139,12 +177,16 @@ static mb_version_t read_brd_rev_id(void) {
     board_rev_id_mv = board_rev_id_adc * 3300 / 0xFFF;  // Convert ADC 12-bit value to mV with 3.3V reference
 
     // 4. Discharge capacitor
+    /* Set timer period 3ms*/
+    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(3000U, tpm_source_clock));
     //    Drive BRD_REV_ID pin to low
     GPIO_PortClear(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
     PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_MuxAsGpio);
     //    Add a 3ms delay to allow the 100nF Cap to discharge
     //    at least 5*RC with 4700R.
-    for (uint32_t count = 16 * 3000; count > 0UL; count--);
+    TPM_StartTimer(TPM0, kTPM_SystemClock);
+    while (false == tpmIsrFlag);
+    tpmIsrFlag = false;
 
     // 5. Identify board ID depending on voltage
     if ( board_rev_id_mv > BRD_ID_1_LOWER_THR_V && board_rev_id_mv < BRD_ID_1_UPPER_THR_V) {
@@ -153,8 +195,7 @@ static mb_version_t read_brd_rev_id(void) {
         board_version = BOARD_VERSION_2_DEF;
     }
 
-    return BOARD_VERSION_2_0;
-    //return board_version;
+    return board_version;
 }
 
 #elif defined(INTERFACE_NRF52820)
