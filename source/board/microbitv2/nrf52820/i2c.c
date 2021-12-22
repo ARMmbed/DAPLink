@@ -64,6 +64,8 @@ static callbackToExecute_t callbackToExecute = {
 static uint8_t i2c_wake_timeout = 0;
 static bool i2c_allow_sleep = true;
 
+static void i2c_clearTxBuffer(void);
+
 
 static void i2c_scheduleCallback(i2cCallback_t callback, uint8_t* pData, uint8_t size)
 {
@@ -97,7 +99,7 @@ void board_custom_event()
     if ((pfReadCommsCallback != NULL && evtCallback == pfReadCommsCallback) ||
         (pfReadFlashCallback != NULL && evtCallback == pfReadFlashCallback)) {
         debug_i2c_data((uint8_t *)"[clrTx]\n", 8);
-        memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+        i2c_clearTxBuffer();
     }
 }
 
@@ -225,7 +227,7 @@ i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveA
 
 void i2c_clearBuffers()
 {
-    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    i2c_clearTxBuffer();
     memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
     callbackToExecute.pfCallback = NULL;
     callbackToExecute.pData = NULL;
@@ -233,13 +235,22 @@ void i2c_clearBuffers()
     i2c_allow_sleep = true;
 }
 
+void i2c_clearTxBuffer()
+{
+    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    // Set the buffer with the "busy flag"
+    // TODO: This can be later removed and updated in CODAL to interpret 0x00
+    //       as the busy flag
+    g_slave_TX_buff[0] = gErrorResponse_c;
+    g_slave_TX_buff[1] = gErrorBusy_c;
+}
+
 void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
 {
     if ((position + size) > I2C_DATA_LENGTH) {
         return;
     }
-    // TODO: Taken from KL27 code, replace with memcpy?
-    for (uint32_t i = 0; i < size; i++) { 
+    for (uint32_t i = 0; i < size; i++) {
         g_slave_TX_buff[position + i] = data[i];
     }
     i2c_allow_sleep = false;

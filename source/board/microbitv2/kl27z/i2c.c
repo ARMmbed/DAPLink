@@ -42,9 +42,6 @@ static volatile bool g_SlaveCompletionFlag = false;
 static volatile bool g_SlaveRxFlag = false;
 static uint8_t address_match = 0;
 static uint32_t transferredCount = 0;
-static const uint8_t g_slave_busy_error_buff[] = {gErrorResponse_c, gErrorBusy_c};
-static uint8_t g_slave_TX_buff_ready = 0;
-static uint8_t g_slave_busy = 0;
 
 static i2cCallback_t pfWriteCommsCallback = NULL;
 static i2cCallback_t pfReadCommsCallback = NULL;
@@ -58,8 +55,6 @@ static void i2c_clearTxBuffer(void);
 
 
 static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void *userData) {
-    i2cCommand_t i2cResponse = {0};
-
     switch (xfer->event)
     {
         /*  Address match event */
@@ -73,15 +68,8 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
         /*  Transmit request */
         case kI2C_SlaveTransmitEvent:
             /*  Update information for transmit process */
-            // Send response if the buffer is ready, otherwise send busy error
-            if (g_slave_TX_buff_ready) {
-                xfer->data     = g_slave_TX_buff;
-                xfer->dataSize = I2C_DATA_LENGTH;
-            } else {
-                xfer->data     = (uint8_t*)g_slave_busy_error_buff;
-                xfer->dataSize = sizeof(g_slave_busy_error_buff);
-                g_slave_busy = 1;
-            }
+            xfer->data     = g_slave_TX_buff;
+            xfer->dataSize = I2C_DATA_LENGTH;
             g_SlaveRxFlag = false;
             break;
 
@@ -113,17 +101,7 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
             // Ignore NOP cmd in I2C Write
             if (!(g_SlaveRxFlag && g_slave_RX_buff[0] == gNopCmd_c)) {
                 // Only process events if the busy error was not read
-                if (!g_slave_busy) {
-                    main_board_event();
-                } else {
-                    g_slave_busy = 0;
-                }
-            }
-
-            // Buffer with response is not ready after an I2C Write inside the IRQ
-            // It will be ready when the task attends the I2C event
-            if(g_SlaveRxFlag) {
-                g_slave_TX_buff_ready = 0;
+                main_board_event();
             }
 
             i2c_allow_sleep = false;
@@ -137,7 +115,6 @@ static void i2c_slave_callback(I2C_Type *base, i2c_slave_transfer_t *xfer, void 
 // Hook function executed in the main task
 void board_custom_event() {
     if (g_SlaveRxFlag) {
-        i2c_clearTxBuffer();
         if (pfWriteCommsCallback && address_match == I2C_SLAVE_NRF_KL_COMMS) {
             pfWriteCommsCallback(&g_slave_RX_buff[0], transferredCount);
         }
@@ -151,6 +128,7 @@ void board_custom_event() {
         if (pfReadFlashCallback && address_match == I2C_SLAVE_FLASH) {
             pfReadFlashCallback(&g_slave_TX_buff[0], transferredCount);
         }
+        i2c_clearTxBuffer();
     }
     i2c_allow_sleep = true;
 }
@@ -261,6 +239,11 @@ void i2c_clearBuffers(void)
 void i2c_clearTxBuffer(void)
 {
     memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    // Set the buffer with the "busy flag"
+    // TODO: This can be later removed and updated in CODAL to interpret 0x00
+    //       as the busy flag
+    g_slave_TX_buff[0] = gErrorResponse_c;
+    g_slave_TX_buff[1] = gErrorBusy_c;
 }
 
 void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
@@ -271,13 +254,11 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
     for (uint32_t i = 0; i < size; i++) {
             g_slave_TX_buff[position + i] = data[i];
     }
-    g_slave_TX_buff_ready = 1;
 }
 
 void i2c_fillBufferHead(uint8_t data)
 {
     g_slave_TX_buff[0] = data;
-    g_slave_TX_buff_ready = 1;
 }
 
 bool i2c_canSleep()

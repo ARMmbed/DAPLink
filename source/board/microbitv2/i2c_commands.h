@@ -36,12 +36,7 @@ extern "C" {
 #define I2C_SLAVE_HID               (0x71U)
 #define I2C_SLAVE_FLASH             (0x72U)
 
-// Busy flag not yet implemented in nRF52
-#if defined(INTERFACE_NRF52820)
-#define I2C_PROTOCOL_VERSION        (0x01)
-#else 
 #define I2C_PROTOCOL_VERSION        (0x02)
-#endif
 
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
