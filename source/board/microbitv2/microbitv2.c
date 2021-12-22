@@ -161,8 +161,8 @@ static mb_version_t read_brd_rev_id(void) {
     tpmIsrFlag = false;
 
     // 2. Charge capacitor for 100us
-    /* Set timer period 100us*/
-    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(100U, tpm_source_clock));
+    /* Set timer period slightly below 100us to account for overheads */
+    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(98U, tpm_source_clock));
     //    Drive BRD_REV_ID pin to high
     GPIO_PortSet(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
     //    Add a ~100us delay
@@ -195,8 +195,7 @@ static mb_version_t read_brd_rev_id(void) {
         board_version = BOARD_VERSION_2_DEF;
     }
 
-    return BOARD_VERSION_2_0;
-    //return board_version;
+    return board_version;
 }
 
 #elif defined(INTERFACE_NRF52820)
