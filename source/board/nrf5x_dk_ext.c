@@ -28,12 +28,10 @@
 #include "target_board.h"
 
 // BOARD_ID pointer will be set during run time to point to one of these
-const char *board_id_invalid = "0000";
 const char *board_id_nrf51_dk = "1100";
 const char *board_id_nrf52_dk = "1101";
 const char *board_id_nrf52840_dk = "1102";
 
-const char *board_name_invalid = "UNSUPPORTED";
 const char *board_name_nrf51_dk = "nRF51-DK";
 const char *board_name_nrf52_dk = "nRF52-DK";
 const char *board_name_nrf52840_dk = "nRF52840-DK";
@@ -46,9 +44,14 @@ extern target_cfg_t target_device_invalid;
 extern target_cfg_t target_device_nrf51822_32;
 extern target_cfg_t target_device_nrf52_64;
 extern target_cfg_t target_device_nrf52840;
-target_cfg_t target_device;
 
-static uint8_t board_supported;
+target_cfg_t target_device = { // invalid by default
+    .version        = kTargetConfigVersion,
+    .rt_family_id   = kStub_HWReset_FamilyID,
+    .rt_board_id    = "0000",
+};
+
+static uint8_t board_supported = 0;
 static uint8_t target_ext;
 static uint8_t target_shield;
 
@@ -70,15 +73,6 @@ static void nrf_prerun_board_config(void)
     uint8_t bit2;
     uint8_t bit3;
     uint8_t gpio_id;
-
-    // invalidate board
-    memcpy(board_name, board_name_invalid, sizeof(board_name_invalid));
-    board_supported = 0;
-
-    // invalidate target_device
-    target_device = target_device_invalid;
-    target_device.rt_family_id = kStub_HWReset_FamilyID;
-    target_device.rt_board_id = board_id_invalid;
 
     PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
     PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2

@@ -55,8 +55,3 @@ target_cfg_t target_device_nrf51822_32 = {
     .target_vendor                  = "NordicSemiconductor",
     .target_part_number             = "nRF51822_xxAA",
 };
-
-// invalid target configuration
-target_cfg_t target_device_invalid = {
-    .version                        = kTargetConfigVersion,
-};
