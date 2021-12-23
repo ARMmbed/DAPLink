@@ -57,7 +57,7 @@ NO_OPTIMIZE_POST
 // NULL and will elide the entire expression. However, the board and target info may be modified
 // using the post processor script, changing what the code sees at runtime.
 NO_OPTIMIZE_PRE
-uint8_t NO_OPTIMIZE_INLINE flash_algo_valid(void)
+__WEAK uint8_t NO_OPTIMIZE_INLINE flash_algo_valid(void)
 {
     return (g_board_info.target_cfg != 0);
 }

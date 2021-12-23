@@ -28,25 +28,23 @@
 #include "target_board.h"
 
 // BOARD_ID pointer will be set during run time to point to one of these
-const char *board_id_nrf51_mkit = "1070";
 const char *board_id_nrf51_dk = "1100";
-const char *board_id_nrf51_dongle = "1120";
 const char *board_id_nrf52_dk = "1101";
 const char *board_id_nrf52840_dk = "1102";
 
-const char *board_name_nrf51_mkit = "nRF51822-mKIT";
 const char *board_name_nrf51_dk = "nRF51-DK";
-const char *board_name_nrf51_dongle = "nRF51-Dongle";
 const char *board_name_nrf52_dk = "nRF52-DK";
 const char *board_name_nrf52840_dk = "nRF52840-DK";
 static char board_name[14];
 
-extern target_cfg_t target_device_nrf51822_16;
 extern target_cfg_t target_device_nrf51822_32;
 extern target_cfg_t target_device_nrf52_64;
 extern target_cfg_t target_device_nrf52840;
 target_cfg_t target_device;
-static uint8_t device_type;
+
+static uint8_t board_supported = 0;
+static uint8_t target_ext;
+static uint8_t target_shield;
 
 // support for dynamic assignment of SWD signals
 Pio *pin_nreset_port = PIN_OB_nRESET_PORT;        // GPIO port for nRESET signal
@@ -59,28 +57,12 @@ unsigned long pin_nreset = PIN_OB_nRESET;         // GPIO mask for nRESET signal
 unsigned long pin_swclk =  PIN_OB_SWCLK;          // GPIO mask for SWCLK signal
 unsigned long pin_swdio =  PIN_OB_SWDIO;          // GPIO msak for SWDIO signal
 
-static void set_target_device(uint32_t device)
-{
-    device_type = device;
-    if (device == 0) {
-        target_device = target_device_nrf51822_16;
-    } else if (device == 1) {
-        target_device = target_device_nrf51822_32;
-    } else if (device == 2) {
-        target_device = target_device_nrf52_64;
-    } else if (device == 3) {
-        target_device = target_device_nrf52840;
-    }
-}
-
 static void nrf_prerun_board_config(void)
 {
     // Work around for setting the correct board id based on GPIOs
     uint8_t bit1;
     uint8_t bit2;
     uint8_t bit3;
-    uint8_t target_ext;
-    uint8_t target_shield;
 
     PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
     PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2
@@ -96,48 +78,40 @@ static void nrf_prerun_board_config(void)
     bit2 = (PIOB->PIO_PDSR >> 2) & 1; // Read PB2
     bit3 = (PIOB->PIO_PDSR >> 3) & 1; // Read PB3
 
-    /* pins translate to board-ids as follow
+    /* Pins translate to board-ids as follow.
+     * Starred IDs are those supported here.
      *
      *  PB3|PB2|PB1|BOARD ID| BOARD
      *  ----------------------------------
      *   0 | 0 | 0 |  1120  | nRF51-Dongle
-     *   0 | 0 | 1 |  1100  | nRF51-DK
-     *   0 | 1 | 0 |  1101  | nRF52-DK
-     *   0 | 1 | 1 |  1102  | nRF52840-DK
+     *   0 | 0 | 1 |  1100  | nRF51-DK*
+     *   0 | 1 | 0 |  1101  | nRF52-DK*
+     *   0 | 1 | 1 |  1102  | nRF52840-DK*
      *   1 | 1 | 1 |  1070  | nRF51822-mKIT
      *   1 | 0 | 0 |    undefined
      *   1 | 0 | 1 |    undefined
      *   1 | 1 | 0 |    undefined
      */
 
-    if (bit3) {
-        set_target_device(0);
-        target_device.rt_family_id = kNordic_Nrf51_FamilyID;
-        target_device.rt_board_id = board_id_nrf51_mkit;  // 1070
-        memcpy(board_name, board_name_nrf51_mkit, sizeof(board_name_nrf51_mkit));
-        // Note only a setting of 111 is defined
-        util_assert(bit2 && bit1);
-    } else {
+    if (!bit3) {    
         if (!bit2 && bit1) {
-            set_target_device(1);
+            target_device = target_device_nrf51822_32;
             target_device.rt_family_id = kNordic_Nrf51_FamilyID;
             target_device.rt_board_id = board_id_nrf51_dk;  // 1100
             memcpy(board_name, board_name_nrf51_dk, sizeof(board_name_nrf51_dk));
-        } else if (!bit2 && !bit1) {
-            set_target_device(1);
-            target_device.rt_family_id = kNordic_Nrf51_FamilyID;
-            target_device.rt_board_id = board_id_nrf51_dongle;  // 1120
-            memcpy(board_name, board_name_nrf51_dongle, sizeof(board_name_nrf51_dongle));
+            board_supported = 1;
         } else if (bit2 && !bit1) {
-            set_target_device(2);
+            target_device = target_device_nrf52_64;
             target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52_dk;  // 1101
             memcpy(board_name, board_name_nrf52_dk, sizeof(board_name_nrf52_dk));
-        } else { //(bit2 && bit1)
-            set_target_device(3);
+            board_supported = 1;
+        } else if (bit2 && bit1) {
+            target_device = target_device_nrf52840;
             target_device.rt_family_id = kNordic_Nrf52_FamilyID;
             target_device.rt_board_id = board_id_nrf52840_dk;  // 1102
             memcpy(board_name, board_name_nrf52840_dk, sizeof(board_name_nrf52840_dk));
+            board_supported = 1;
         }
     }
 
@@ -145,92 +119,91 @@ static void nrf_prerun_board_config(void)
     PIOB->PIO_PUDR = (1 << 2); // Disable pull-up
     PIOB->PIO_PUDR = (1 << 3); // Disable pull-up
 
-    // EXTERNAL TARGET DETECTION
-    // - supports nRF51-DK, nRF52-DK, nRF52840-DK
-    // - nRF51-Dongle (discontinued) has no external target lines
-    // - nRF51822-mKIT (discontinued), no external target lines
-    // - need to code shield detection and priority between external and shield-mounted targets
+    if (!board_supported)
+        return;
 
-    if ( !bit3 && (bit2 || bit1) ) {
-        // 001 / 010 / 011 above
+    // External target detection:
+    // supports nRF51-DK, nRF52-DK, nRF52840-DK
 
-        // EXT_VTG (high if external target is powered)
-        PIOB->PIO_PUDR = (1 << 6); // pull-up disable
-        PIOB->PIO_ODR  = (1 << 6); // input
-        PIOB->PIO_PER  = (1 << 6); // GPIO control
-        bit1 = (PIOB->PIO_PDSR >> 6) & 1;  // Read PB6
+    // EXT_VTG (high if external target is powered)
+    PIOB->PIO_PUDR = (1 << 6); // pull-up disable
+    PIOB->PIO_ODR  = (1 << 6); // input
+    PIOB->PIO_PER  = (1 << 6); // GPIO control
+    bit1 = (PIOB->PIO_PDSR >> 6) & 1;  // Read PB6
 
-        // EXT_GND_DETECT (low if external target is connected)
-        PIOB->PIO_PUER = (1 << 18); // pull-up enable
-        PIOB->PIO_ODR  = (1 << 18); // input
-        PIOB->PIO_PER  = (1 << 18); // GPIO control
-        // insert delay?
-        bit2 = (PIOB->PIO_PDSR >> 18) & 1; // Read PB18
-        PIOB->PIO_PUDR = (1 << 18); // pull-up disable
+    // EXT_GND_DETECT (low if external target is connected)
+    PIOB->PIO_PUER = (1 << 18); // pull-up enable
+    PIOB->PIO_ODR  = (1 << 18); // input
+    PIOB->PIO_PER  = (1 << 18); // GPIO control
+    bit2 = (PIOB->PIO_PDSR >> 18) & 1; // Read PB18
+    PIOB->PIO_PUDR = (1 << 18); // pull-up disable
 
-        // nonzero if external target detected
-        target_ext = bit1 & !bit2;
+    // nonzero if external target is detected
+    target_ext = bit1 & !bit2;
 
-        // SH_VTG (high if external target is powered)
-        PIOB->PIO_PUDR = (1 << 5); // pull-up disable
-        PIOB->PIO_ODR  = (1 << 5); // input
-        PIOB->PIO_PER  = (1 << 5); // GPIO control
-        bit1 = (PIOB->PIO_PDSR >> 5) & 1;  // Read PB5
+    // SH_VTG (high if shield-mounted target is powered)
+    PIOB->PIO_PUDR = (1 << 5); // pull-up disable
+    PIOB->PIO_ODR  = (1 << 5); // input
+    PIOB->PIO_PER  = (1 << 5); // GPIO control
+    bit1 = (PIOB->PIO_PDSR >> 5) & 1;  // Read PB5
 
-        // SH_GND_DETECT (low if external target is connected)
-        PIOB->PIO_PUER = (1 << 23); // pull-up enable
-        PIOB->PIO_ODR  = (1 << 23); // input
-        PIOB->PIO_PER  = (1 << 23); // GPIO control
-        // insert delay?
-        bit2 = (PIOB->PIO_PDSR >> 23) & 1; // Read PB23
-        PIOB->PIO_PUDR = (1 << 23); // pull-up disable
+    // SH_GND_DETECT (low if shield-mounted target is connected)
+    PIOB->PIO_PUER = (1 << 23); // pull-up enable
+    PIOB->PIO_ODR  = (1 << 23); // input
+    PIOB->PIO_PER  = (1 << 23); // GPIO control
+    bit2 = (PIOB->PIO_PDSR >> 23) & 1; // Read PB23
+    PIOB->PIO_PUDR = (1 << 23); // pull-up disable
 
-        // nonzero if external target detected
-        target_shield  = bit1 & !bit2;
+    // nonzero if shield-mounted target is detected
+    target_shield  = bit1 & !bit2;
 
-        // if external target is detected, re-route SWD signals
-        if (target_ext) {
-            pin_nreset_port = PIN_EXT_nRESET_PORT;
-            pin_nreset_bit  = PIN_EXT_nRESET_BIT;
-            pin_nreset      = PIN_EXT_nRESET;
+    // if external/shield target is detected, re-route SWD signals
+    if (target_ext) {
+        pin_nreset_port = PIN_EXT_nRESET_PORT;
+        pin_nreset_bit  = PIN_EXT_nRESET_BIT;
+        pin_nreset      = PIN_EXT_nRESET;
 
-            pin_swclk_port  = PIN_EXT_SWCLK_PORT;
-            pin_swclk_bit   = PIN_EXT_SWCLK_BIT;
-            pin_swclk       = PIN_EXT_SWCLK;
+        pin_swclk_port  = PIN_EXT_SWCLK_PORT;
+        pin_swclk_bit   = PIN_EXT_SWCLK_BIT;
+        pin_swclk       = PIN_EXT_SWCLK;
 
-            pin_swdio_port  = PIN_EXT_SWDIO_PORT;
-            pin_swdio_bit   = PIN_EXT_SWDIO_BIT;
-            pin_swdio       = PIN_EXT_SWDIO;
-        } else if (target_shield) {
-            pin_nreset_port = PIN_SH_nRESET_PORT;
-            pin_nreset_bit  = PIN_SH_nRESET_BIT;
-            pin_nreset      = PIN_SH_nRESET;
+        pin_swdio_port  = PIN_EXT_SWDIO_PORT;
+        pin_swdio_bit   = PIN_EXT_SWDIO_BIT;
+        pin_swdio       = PIN_EXT_SWDIO;
 
-            pin_swclk_port  = PIN_SH_SWCLK_PORT;
-            pin_swclk_bit   = PIN_SH_SWCLK_BIT;
-            pin_swclk       = PIN_SH_SWCLK;
+    } else if (target_shield) {
+        pin_nreset_port = PIN_SH_nRESET_PORT;
+        pin_nreset_bit  = PIN_SH_nRESET_BIT;
+        pin_nreset      = PIN_SH_nRESET;
 
-            pin_swdio_port  = PIN_SH_SWDIO_PORT;
-            pin_swdio_bit   = PIN_SH_SWDIO_BIT;
-            pin_swdio       = PIN_SH_SWDIO;
-        }
+        pin_swclk_port  = PIN_SH_SWCLK_PORT;
+        pin_swclk_bit   = PIN_SH_SWCLK_BIT;
+        pin_swclk       = PIN_SH_SWCLK;
 
-        // switch on red LED if external or shield target is in use
-        PIOA->PIO_PUDR = (1 << 28); // pull-up disable
-        PIOA->PIO_OER  = (1 << 28); // output
-        PIOA->PIO_PER  = (1 << 28); // GPIO control
-        if (target_ext || target_shield)
-            PIOA->PIO_CODR = (1 << 28); // set low
-        else
-            PIOA->PIO_SODR = (1 << 28); // set high
+        pin_swdio_port  = PIN_SH_SWDIO_PORT;
+        pin_swdio_bit   = PIN_SH_SWDIO_BIT;
+        pin_swdio       = PIN_SH_SWDIO;
     }
+
+    // switch on red LED if external/shield target is in use
+    PIOA->PIO_PUDR = (1 << 28); // pull-up disable
+    PIOA->PIO_OER  = (1 << 28); // output
+    PIOA->PIO_PER  = (1 << 28); // GPIO control
+    if (target_ext || target_shield)
+        PIOA->PIO_CODR = (1 << 28); // set low
+    else
+        PIOA->PIO_SODR = (1 << 28); // set high
+}
+
+// Overrides flash_algo_valid() in source/target/target_board.c .
+// Only enables MSD when a supported board is detected and the on-board target is enabled.
+uint8_t flash_algo_valid(void)
+{
+    return (board_supported && !target_ext && !target_shield);
 }
 
 static void nrf_swd_set_target_reset(uint8_t asserted){
-    if (asserted && device_type == 0) {
-        PIOA->PIO_OER = PIN_SWDIO;
-        PIOA->PIO_OER = PIN_SWCLK;
-    } else if(!asserted) {
+    if(!asserted) {
         PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
     }
 }
