@@ -28,21 +28,27 @@
 #include "target_board.h"
 
 // BOARD_ID pointer will be set during run time to point to one of these
+const char *board_id_invalid = "0000";
 const char *board_id_nrf51_dk = "1100";
 const char *board_id_nrf52_dk = "1101";
 const char *board_id_nrf52840_dk = "1102";
 
+const char *board_name_invalid = "UNSUPPORTED";
 const char *board_name_nrf51_dk = "nRF51-DK";
 const char *board_name_nrf52_dk = "nRF52-DK";
 const char *board_name_nrf52840_dk = "nRF52840-DK";
-static char board_name[14];
+static char board_name[24]; // needs to be >= longest board name + longest suffix + 1
 
+const char *suffix_ext_str = " (ext)";
+const char *suffix_shield_str = " (shield)";
+
+extern target_cfg_t target_device_invalid;
 extern target_cfg_t target_device_nrf51822_32;
 extern target_cfg_t target_device_nrf52_64;
 extern target_cfg_t target_device_nrf52840;
 target_cfg_t target_device;
 
-static uint8_t board_supported = 0;
+static uint8_t board_supported;
 static uint8_t target_ext;
 static uint8_t target_shield;
 
@@ -63,6 +69,16 @@ static void nrf_prerun_board_config(void)
     uint8_t bit1;
     uint8_t bit2;
     uint8_t bit3;
+    uint8_t gpio_id;
+
+    // invalidate board
+    memcpy(board_name, board_name_invalid, sizeof(board_name_invalid));
+    board_supported = 0;
+
+    // invalidate target_device
+    target_device = target_device_invalid;
+    target_device.rt_family_id = kStub_HWReset_FamilyID;
+    target_device.rt_board_id = board_id_invalid;
 
     PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
     PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2
@@ -77,6 +93,12 @@ static void nrf_prerun_board_config(void)
     bit1 = (PIOB->PIO_PDSR >> 1) & 1; // Read PB1
     bit2 = (PIOB->PIO_PDSR >> 2) & 1; // Read PB2
     bit3 = (PIOB->PIO_PDSR >> 3) & 1; // Read PB3
+
+    PIOB->PIO_PUDR = (1 << 1); // Disable pull-up
+    PIOB->PIO_PUDR = (1 << 2); // Disable pull-up
+    PIOB->PIO_PUDR = (1 << 3); // Disable pull-up
+
+    gpio_id = (bit3 << 2) | (bit2 << 1) | bit1;
 
     /* Pins translate to board-ids as follow.
      * Starred IDs are those supported here.
@@ -93,32 +115,28 @@ static void nrf_prerun_board_config(void)
      *   1 | 1 | 0 |    undefined
      */
 
-    if (!bit3) {    
-        if (!bit2 && bit1) {
-            target_device = target_device_nrf51822_32;
-            target_device.rt_family_id = kNordic_Nrf51_FamilyID;
-            target_device.rt_board_id = board_id_nrf51_dk;  // 1100
+    // if board is supported, set board name
+    switch (gpio_id) {
+        case 0x01: // nRF-51 DK
             memcpy(board_name, board_name_nrf51_dk, sizeof(board_name_nrf51_dk));
             board_supported = 1;
-        } else if (bit2 && !bit1) {
-            target_device = target_device_nrf52_64;
-            target_device.rt_family_id = kNordic_Nrf52_FamilyID;
-            target_device.rt_board_id = board_id_nrf52_dk;  // 1101
+            break;
+
+        case 0x02: // nRF52-DK
             memcpy(board_name, board_name_nrf52_dk, sizeof(board_name_nrf52_dk));
             board_supported = 1;
-        } else if (bit2 && bit1) {
-            target_device = target_device_nrf52840;
-            target_device.rt_family_id = kNordic_Nrf52_FamilyID;
-            target_device.rt_board_id = board_id_nrf52840_dk;  // 1102
+            break;
+
+        case 0x03: // nRF52840-DK
             memcpy(board_name, board_name_nrf52840_dk, sizeof(board_name_nrf52840_dk));
             board_supported = 1;
-        }
+            break;
+
+        default:
+            board_supported = 0;
     }
 
-    PIOB->PIO_PUDR = (1 << 1); // Disable pull-up
-    PIOB->PIO_PUDR = (1 << 2); // Disable pull-up
-    PIOB->PIO_PUDR = (1 << 3); // Disable pull-up
-
+    // if board is unsupported, we are done.
     if (!board_supported)
         return;
 
@@ -171,6 +189,9 @@ static void nrf_prerun_board_config(void)
         pin_swdio_bit   = PIN_EXT_SWDIO_BIT;
         pin_swdio       = PIN_EXT_SWDIO;
 
+        // append suffix to board name
+        memcpy(board_name + strlen(board_name), suffix_ext_str, sizeof(suffix_ext_str));
+
     } else if (target_shield) {
         pin_nreset_port = PIN_SH_nRESET_PORT;
         pin_nreset_bit  = PIN_SH_nRESET_BIT;
@@ -183,6 +204,33 @@ static void nrf_prerun_board_config(void)
         pin_swdio_port  = PIN_SH_SWDIO_PORT;
         pin_swdio_bit   = PIN_SH_SWDIO_BIT;
         pin_swdio       = PIN_SH_SWDIO;
+
+        // append suffix to board name
+        memcpy(board_name + strlen(board_name), suffix_shield_str, sizeof(suffix_shield_str));
+
+    } else { // OB target
+        switch (gpio_id) {
+            case 0x01: // nRF-51 DK
+                target_device = target_device_nrf51822_32;
+                target_device.rt_family_id = kNordic_Nrf51_FamilyID;
+                target_device.rt_board_id = board_id_nrf51_dk;
+                break;
+
+            case 0x02: // nRF52-DK
+                target_device = target_device_nrf52_64;
+                target_device.rt_family_id = kNordic_Nrf52_FamilyID;
+                target_device.rt_board_id = board_id_nrf52_dk;
+                break;
+
+            case 0x03: // nRF52840-DK
+                target_device = target_device_nrf52840;
+                target_device.rt_family_id = kNordic_Nrf52_FamilyID;
+                target_device.rt_board_id = board_id_nrf52840_dk;
+                break;
+
+            default: // never reached
+                ;
+        }
     }
 
     // switch on red LED if external/shield target is in use
