@@ -5,6 +5,7 @@
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
  * Copyright 2020 NXP
+ * Copyright 2021 Micro:bit Educational Foundation
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -41,43 +42,13 @@
 #include "led_error_app.h"
 #include "storage.h"
 #include "gpio_extra.h"
-
-#if defined(INTERFACE_KL27Z)
-
-#include "adc.h"
-#include "fsl_port.h"
-#include "fsl_gpio.h"
-#include "fsl_tpm.h"
-
-volatile bool tpmIsrFlag = false;
-uint32_t tpm_source_clock;
-
-void TPM0_IRQHandler(void)
-{
-    /* Clear interrupt flag.*/
-    TPM_ClearStatusFlags(TPM0, kTPM_TimeOverflowFlag);
-    tpmIsrFlag = true;
-    TPM_StopTimer(TPM0);
-    __DSB();
-}
-#endif
+#include "board_id.h"
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "flash_intf.h"
 #endif
 
-const char * const board_id_mb_2_default = "9903";
-const char * const board_id_mb_2_0 = "9904";
-const char * const board_id_mb_2_2_833 = "9905";
-const char * const board_id_mb_2_2_820 = "9906";
-
-typedef enum {
-    BOARD_VERSION_2_DEF = 0x9903,
-    BOARD_VERSION_2_0 = 0x9904,
-    BOARD_VERSION_2_2_833 = 0x9905,
-    BOARD_VERSION_2_2_820 = 0x9906,
-} mb_version_t;
-
+// Declared in intelhex.c
 uint16_t board_id_hex_default = BOARD_VERSION_2_DEF;
 uint16_t board_id_hex = BOARD_VERSION_2_DEF;
 
@@ -110,124 +81,25 @@ static uint16_t gpio_reset_count = 0;
 // button state
 static uint8_t reset_pressed = 0;
 
-#if defined(INTERFACE_KL27Z)
-// Board Rev ID detection. Reads BRD_REV_ID voltage
-// Depends on gpio_init() to have been executed already
-static mb_version_t read_brd_rev_id(void) {
-    gpio_pin_config_t pin_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    mb_version_t board_version = BOARD_VERSION_2_DEF;
-    uint32_t board_rev_id_adc = 0;
-    uint32_t board_rev_id_mv = 0;
-    
-    tpm_config_t tpmInfo;
-
-    /* Select the clock source for the TPM counter as kCLOCK_McgIrc48MClk */
-    CLOCK_SetTpmClock(1U);
-    
-    TPM_GetDefaultConfig(&tpmInfo);
-    
-    /* TPM clock divide by TPM_PRESCALER */
-    tpmInfo.prescale = kTPM_Prescale_Divide_4;
-
-    /* Initialize TPM module */
-    TPM_Init(TPM0, &tpmInfo);
-
-    TPM_EnableInterrupts(TPM0, kTPM_TimeOverflowInterruptEnable);
-
-    EnableIRQ(TPM0_IRQn);
-    
-    tpm_source_clock = (CLOCK_GetFreq(kCLOCK_McgIrc48MClk) / 4);
-
-    // Set Board Rev ID pin as output but pin disabled
-    PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_PinDisabledOrAnalog);
-    PORT_SetPinDriveStrength(PIN_BOARD_REV_ID_PORT, PIN_BOARD_REV_ID_BIT, kPORT_HighDriveStrength);
-    GPIO_PinInit(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID_BIT, &pin_config);
-
-    adc_init();
-
-    // 1. Discharge capacitor
-    /* Set timer period 3ms*/
-    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(3000U, tpm_source_clock));
-    //    Drive BRD_REV_ID pin to low
-    GPIO_PortClear(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
-    PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_MuxAsGpio);
-    //    Add a 3ms delay to allow the 100nF Cap to discharge
-    //    at least 5*RC with 4700R.
-    TPM_StartTimer(TPM0, kTPM_SystemClock);
-    while (false == tpmIsrFlag);
-    tpmIsrFlag = false;
-
-    // 2. Charge capacitor for 100us
-    /* Set timer period slightly below 100us to account for overheads */
-    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(98U, tpm_source_clock));
-    //    Drive BRD_REV_ID pin to high
-    GPIO_PortSet(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
-    //    Add a ~100us delay
-    TPM_StartTimer(TPM0, kTPM_SystemClock);
-    while (false == tpmIsrFlag);
-    tpmIsrFlag = false;
-    //    Change pin to ADC (High-Z). Capacitor will stop charging
-    PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_PinDisabledOrAnalog);
-
-    // 3. Take ADC measurement
-    board_rev_id_adc = adc_read_channel(0, PIN_BOARD_REV_ID_ADC_CH, PIN_BOARD_REV_ID_ADC_MUX);
-    board_rev_id_mv = board_rev_id_adc * 3300 / 0xFFF;  // Convert ADC 12-bit value to mV with 3.3V reference
-
-    // 4. Discharge capacitor
-    /* Set timer period 3ms*/
-    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(3000U, tpm_source_clock));
-    //    Drive BRD_REV_ID pin to low
-    GPIO_PortClear(PIN_BOARD_REV_ID_GPIO, PIN_BOARD_REV_ID);
-    PORT_SetPinMux(PIN_BOARD_REV_ID_PORT , PIN_BOARD_REV_ID_BIT,  kPORT_MuxAsGpio);
-    //    Add a 3ms delay to allow the 100nF Cap to discharge
-    //    at least 5*RC with 4700R.
-    TPM_StartTimer(TPM0, kTPM_SystemClock);
-    while (false == tpmIsrFlag);
-    tpmIsrFlag = false;
-
-    // 5. Identify board ID depending on voltage
-    if ( board_rev_id_mv > BRD_ID_1_LOWER_THR_V && board_rev_id_mv < BRD_ID_1_UPPER_THR_V) {
-        board_version = BOARD_VERSION_2_0;
-    } else {
-        board_version = BOARD_VERSION_2_DEF;
-    }
-
-    return board_version;
-}
-
-#elif defined(INTERFACE_NRF52820)
-
-static mb_version_t read_brd_rev_id(void)
-{
-    switch (NRF_FICR->INFO.PART) {
-        case 0x52833: return BOARD_VERSION_2_2_833;
-        case 0x52820: return BOARD_VERSION_2_2_820;
-        default: return BOARD_VERSION_2_DEF;
-    }
-}
-#endif
 
 static void set_board_id(mb_version_t board_version) {
     switch (board_version) {
         case BOARD_VERSION_2_0:
-            g_board_info.target_cfg->rt_board_id = board_id_mb_2_0;
+            g_board_info.target_cfg->rt_board_id = BOARD_ID_MB_2_0;
             board_id_hex = BOARD_VERSION_2_0;
             break;
         case BOARD_VERSION_2_2_833:
-            g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_833;
+            g_board_info.target_cfg->rt_board_id = BOARD_ID_MB_2_2_833;
             board_id_hex = BOARD_VERSION_2_2_833;
             break;
         case BOARD_VERSION_2_2_820:
-            g_board_info.target_cfg->rt_board_id = board_id_mb_2_2_820;
+            g_board_info.target_cfg->rt_board_id = BOARD_ID_MB_2_2_820;
             board_id_hex = BOARD_VERSION_2_2_820;
             break;
         case BOARD_VERSION_2_DEF:
             /* Intentional fall-through */
         default:
-            g_board_info.target_cfg->rt_board_id = board_id_mb_2_default;
+            g_board_info.target_cfg->rt_board_id = BOARD_ID_MB_2_DEFAULT;
             board_id_hex = BOARD_VERSION_2_DEF;
             break;
     }
@@ -245,10 +117,10 @@ static void prerun_board_config(void)
 {
     // HID_LED_DEF is on so the resting state of the orange LED after flashing is on
     // but turn it off here so it's initially off, then stays off when on battery,
-    // and comes on only when USB enumerates 
+    // and comes on only when USB enumerates
     gpio_set_hid_led(GPIO_LED_OFF);
 
-    mb_version_t board_version = read_brd_rev_id();
+    mb_version_t board_version = board_id_detect();
     set_board_id(board_version);
 
     // init power monitoring

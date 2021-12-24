@@ -26,6 +26,7 @@
 #include "target_family.h"
 #include "fsl_device_registers.h"
 #include "gpio.h"
+#include "board_id.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
@@ -59,7 +60,7 @@ const target_family_descriptor_t *g_target_family = NULL;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "9903",
+    .board_id = BOARD_ID_MB_2_DEFAULT,
     .daplink_url_name =       "HELP_FAQHTM",
     .daplink_drive_name =       "MAINTENANCE",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V&bl=1",

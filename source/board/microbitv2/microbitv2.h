@@ -25,9 +25,6 @@
 #define M0_RESERVED_VECT_OFFSET     (4 * 4)
 #define M0_RESERVED_VECT_SIZE       (3 * 4) // Size for mem fault, bus fault and usage fault vectors
 
-#define BRD_ID_1_UPPER_THR_V        935   // Upper threshold in mV for 100nF and 4700R
-#define BRD_ID_1_LOWER_THR_V        268   // Lower threshold in mV for 100nF and 4700R
-
 #define PWR_LED_ON_MAX_BRIGHTNESS       255 // Max LED Brightness (PC Connected)
 #define PWR_LED_INIT_FADE_BRIGHTNESS    200 // Initial fade LED Brightness
 #define PWR_LED_ON_BATT_BRIGHTNESS      100 // LED Brightness while being powered by battery

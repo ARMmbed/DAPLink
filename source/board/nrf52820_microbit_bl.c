@@ -1,7 +1,7 @@
 /**
  * @file    nrf52820_bl.c
  * @brief   board ID, meta-data, and additional configuration for micro:bit
- *          nRF52820 HIC 
+ *          nRF52820 HIC
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2021, ARM Limited, All Rights Reserved
@@ -30,6 +30,7 @@
 #include "gpio.h"
 #include "nrf.h"
 #include "nrf_nvmc.h"
+#include "board_id.h"
 
 /* NFC configuration in the User UICR area, needed to configure NFC pins as GPIO */
 #define NRF52833_UICR_NFCPINS_OFFSET            (0x20CUL)
@@ -72,7 +73,7 @@ const target_family_descriptor_t *g_target_family = NULL;
 // Mainly used to identify which interface hex file to download from the micro:bit help page
 const board_info_t g_board_info = {
     .info_version               = kBoardInfoVersion,
-    .board_id                   = "9905",
+    .board_id                   = BOARD_ID_MB_2_2_833,
     .daplink_url_name           = "HELP_FAQHTM",
     .daplink_drive_name         = "MAINTENANCE",
     .daplink_target_url         = "https://microbit.org/device/?id=@B&v=@V&bl=1",
