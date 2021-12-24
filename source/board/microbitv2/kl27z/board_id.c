@@ -24,8 +24,8 @@
 
 #include "board_id.h"
 #include "timer_wait.h"
-
 #include "adc.h"
+
 #include "fsl_port.h"
 #include "fsl_gpio.h"
 
