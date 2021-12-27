@@ -35,7 +35,7 @@ const char *board_id_nrf52840_dk = "1102";
 const char *board_name_nrf51_dk = "nRF51-DK";
 const char *board_name_nrf52_dk = "nRF52-DK";
 const char *board_name_nrf52840_dk = "nRF52840-DK";
-static char board_name[24]; // needs to be >= longest board name + longest suffix + 1
+static char board_name[24] = "UNKNOWN"; // needs to be >= longest board name + longest suffix + 1
 
 const char *suffix_ext_str = " (ext)";
 const char *suffix_shield_str = " (shield)";
@@ -113,19 +113,19 @@ static void nrf_prerun_board_config(void)
     switch (gpio_id) {
         case 0x01: // nRF-51 DK
             target_device.rt_board_id = board_id_nrf51_dk;
-            memcpy(board_name, board_name_nrf51_dk, sizeof(board_name_nrf51_dk));
+            strcpy(board_name, board_name_nrf51_dk);
             board_supported = 1;
             break;
 
         case 0x02: // nRF52-DK
             target_device.rt_board_id = board_id_nrf52_dk;
-            memcpy(board_name, board_name_nrf52_dk, sizeof(board_name_nrf52_dk));
+            strcpy(board_name, board_name_nrf52_dk);
             board_supported = 1;
             break;
 
         case 0x03: // nRF52840-DK
             target_device.rt_board_id = board_id_nrf52840_dk;
-            memcpy(board_name, board_name_nrf52840_dk, sizeof(board_name_nrf52840_dk));
+            strcpy(board_name, board_name_nrf52840_dk);
             board_supported = 1;
             break;
 
@@ -187,7 +187,7 @@ static void nrf_prerun_board_config(void)
         pin_swdio       = PIN_EXT_SWDIO;
 
         // append suffix to board name
-        memcpy(board_name + strlen(board_name), suffix_ext_str, sizeof(suffix_ext_str));
+        strcpy(board_name + strlen(board_name), suffix_ext_str);
 
     } else if (target_shield) {
         pin_nreset_port = PIN_SH_nRESET_PORT;
@@ -203,7 +203,7 @@ static void nrf_prerun_board_config(void)
         pin_swdio       = PIN_SH_SWDIO;
 
         // append suffix to board name
-        memcpy(board_name + strlen(board_name), suffix_shield_str, sizeof(suffix_shield_str));
+        strcpy(board_name + strlen(board_name), suffix_shield_str);
 
     } else { // OB target
         switch (gpio_id) {
