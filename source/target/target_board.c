@@ -30,7 +30,7 @@
 // modified using the post processor script, changing what the code sees at runtime.
 
 NO_OPTIMIZE_PRE
-const char * NO_OPTIMIZE_INLINE get_board_id(void)
+__WEAK const char * NO_OPTIMIZE_INLINE get_board_id(void)
 {
     if (g_board_info.target_cfg && g_board_info.target_cfg->rt_board_id) {
         return g_board_info.target_cfg->rt_board_id; //flexible board id
@@ -41,7 +41,7 @@ const char * NO_OPTIMIZE_INLINE get_board_id(void)
 NO_OPTIMIZE_POST
 
 NO_OPTIMIZE_PRE
-uint16_t NO_OPTIMIZE_INLINE get_family_id(void)
+__WEAK uint16_t NO_OPTIMIZE_INLINE get_family_id(void)
 {
     if (g_board_info.target_cfg && g_board_info.target_cfg->rt_family_id) {
         return g_board_info.target_cfg->rt_family_id; //flexible family id
@@ -57,7 +57,7 @@ NO_OPTIMIZE_POST
 // NULL and will elide the entire expression. However, the board and target info may be modified
 // using the post processor script, changing what the code sees at runtime.
 NO_OPTIMIZE_PRE
-uint8_t NO_OPTIMIZE_INLINE flash_algo_valid(void)
+__WEAK uint8_t NO_OPTIMIZE_INLINE flash_algo_valid(void)
 {
     return (g_board_info.target_cfg != 0);
 }

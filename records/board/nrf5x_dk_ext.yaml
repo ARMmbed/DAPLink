@@ -1,0 +1,13 @@
+common:
+    macros:
+        - IO_CONFIG_OVERRIDE
+    includes:
+        - source/board/override_nrf5x_dk_ext
+    sources:
+        board:
+            - source/board/nrf5x_dk_ext.c
+        family:
+            - source/family/nordic/nrf51822/target_nrf51.c
+            - source/family/nordic/nrf52/target.c
+            - source/family/nordic/target_reset_nrf51.c
+            - source/family/nordic/target_reset_nrf52.c

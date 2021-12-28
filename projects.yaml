@@ -531,6 +531,10 @@ projects:
         - *module_if
         - *module_hic_sam3u2c
         - records/board/mkit_dk_dongle_nrf5x.yaml
+    sam3u2c_nrf5x_dk_ext_if:
+        - *module_if
+        - *module_hic_sam3u2c
+        - records/board/nrf5x_dk_ext.yaml
     sam3u2c_ublox_evk_nina_b1_if:
         - *module_if
         - *module_hic_sam3u2c
