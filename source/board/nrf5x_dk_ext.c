@@ -69,10 +69,7 @@ unsigned long pin_swdio =  PIN_OB_SWDIO;          // GPIO msak for SWDIO signal
 static void nrf_prerun_board_config(void)
 {
     // Work around for setting the correct board id based on GPIOs
-    uint8_t bit1;
-    uint8_t bit2;
-    uint8_t bit3;
-    uint8_t gpio_id;
+    uint8_t bit1, bit2, bit3, gpio_id;
 
     PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
     PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2
@@ -137,37 +134,37 @@ static void nrf_prerun_board_config(void)
     // External target detection:
     // supports nRF51-DK, nRF52-DK, nRF52840-DK
 
-    // EXT_VTG (high if external target is powered)
+    // Configure GPIO for detection
+    // - EXT_VTG (high if external target is powered)
     PIOB->PIO_PUDR = (1 << 6); // pull-up disable
     PIOB->PIO_ODR  = (1 << 6); // input
     PIOB->PIO_PER  = (1 << 6); // GPIO control
-    bit1 = (PIOB->PIO_PDSR >> 6) & 1;  // Read PB6
-
-    // EXT_GND_DETECT (low if external target is connected)
+    // - EXT_GND_DETECT (low if external target is connected)
     PIOB->PIO_PUER = (1 << 18); // pull-up enable
     PIOB->PIO_ODR  = (1 << 18); // input
     PIOB->PIO_PER  = (1 << 18); // GPIO control
-    bit2 = (PIOB->PIO_PDSR >> 18) & 1; // Read PB18
-    PIOB->PIO_PUDR = (1 << 18); // pull-up disable
-
-    // nonzero if external target is detected
-    target_ext = bit1 & !bit2;
-
-    // SH_VTG (high if shield-mounted target is powered)
+    // - SH_VTG (high if shield-mounted target is powered)
     PIOB->PIO_PUDR = (1 << 5); // pull-up disable
     PIOB->PIO_ODR  = (1 << 5); // input
     PIOB->PIO_PER  = (1 << 5); // GPIO control
-    bit1 = (PIOB->PIO_PDSR >> 5) & 1;  // Read PB5
-
-    // SH_GND_DETECT (low if shield-mounted target is connected)
+    // - SH_GND_DETECT (low if shield-mounted target is connected)
     PIOB->PIO_PUER = (1 << 23); // pull-up enable
     PIOB->PIO_ODR  = (1 << 23); // input
     PIOB->PIO_PER  = (1 << 23); // GPIO control
-    bit2 = (PIOB->PIO_PDSR >> 23) & 1; // Read PB23
-    PIOB->PIO_PUDR = (1 << 23); // pull-up disable
+
+    // nonzero if external target is detected
+    bit1 = (PIOB->PIO_PDSR >> 6) & 1;  // Read PB6
+    bit2 = (PIOB->PIO_PDSR >> 18) & 1; // Read PB18
+    target_ext = bit1 & !bit2;
 
     // nonzero if shield-mounted target is detected
-    target_shield  = bit1 & !bit2;
+    bit1 = (PIOB->PIO_PDSR >> 5) & 1;  // Read PB5
+    bit2 = (PIOB->PIO_PDSR >> 23) & 1; // Read PB23
+    target_shield = bit1 & !bit2;
+
+    // Disable pull-ups for detection
+    PIOB->PIO_PUDR = (1 << 18); // pull-up disable
+    PIOB->PIO_PUDR = (1 << 23); // pull-up disable
 
     // if external/shield target is detected, re-route SWD signals
     if (target_ext) {
