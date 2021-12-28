@@ -25,6 +25,7 @@
 #include "fsl_pmc.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+#include "fsl_tpm.h"
 
 #define ADC_VBG_CHANNEL     27U
 #define ADC_VBG_MUX         (kADC16_ChannelMuxA)
@@ -37,6 +38,11 @@
 static void pwr_mon_bandgap_init(void);
 static uint32_t pwr_mon_read_vbg(uint32_t channelGroup);
 static uint32_t pwr_mon_adc_to_mv(uint32_t raw_adc);
+
+void TPM0_IRQHandler(void);
+
+extern volatile bool tpmIsrFlag;
+extern uint32_t tpm_source_clock;
 
 void pwr_mon_init(void)
 {
@@ -85,11 +91,15 @@ power_source_t pwr_mon_get_power_source(void) {
 }
 
 uint32_t pwr_mon_get_vbat_mv(void) {
+    /* Set timer period 3ms*/
+    TPM_SetTimerPeriod(TPM0, USEC_TO_COUNT(3000U, tpm_source_clock));
     // Enable voltage divider to take measurement
     GPIO_PinWrite(PIN_RUN_VBAT_SENSE_GPIO, PIN_RUN_VBAT_SENSE_BIT, 1);
     // Add a ~3ms delay to allow the 100nF capacitors to charge to about 3*RC.
-    // 3 clock cycles per loop at -O2 ARMCC optimization
-    for (uint32_t count = 48000; count > 0UL; count--); 
+    TPM_StartTimer(TPM0, kTPM_SystemClock);
+    while (false == tpmIsrFlag);
+    tpmIsrFlag = false;
+
     uint32_t bat_adc = adc_read_channel(0, PIN_VMON_BAT_ADC_CH, PIN_VMON_BAT_ADC_MUX);
     // Disable voltage divider
     GPIO_PinWrite(PIN_RUN_VBAT_SENSE_GPIO, PIN_RUN_VBAT_SENSE_BIT, 0);

@@ -1,9 +1,9 @@
 /**
  * @file    target.c
- * @brief   Target information for the i.MXRT1050 (HyperFlash)
+ * @brief   Target information for the NXP MIMXRT1170-EVK board.
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2020 - 2021 NXP, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,17 +24,17 @@
 // The file flash_blob.c must only be included in target.c
 #include "flash_blob.c"
 
-// target information
+ // target information
 target_cfg_t target_device = {
     .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
-    .flash_regions[0].start         = 0x60000000,
-    .flash_regions[0].end           = 0x60000000 + MB(64),
+    .flash_regions[0].start         = 0x30000000,
+    .flash_regions[0].end           = 0x30000000 + MB(16),
     .flash_regions[0].flags         = kRegionIsDefault,
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20000000 + KB(512),
     .target_vendor                  = "NXP",
-    .target_part_number             = "MIMXRT1052DVL6A",
+    .target_part_number             = "MIMXRT1176DVMAA",
 };

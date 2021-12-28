@@ -1,9 +1,9 @@
 /**
- * @file    mimxrt1050_evk.c
- * @brief   board ID for the NXP MIMXRT1050-EVK board
+ * @file    mimxrt1170_evk.c
+ * @brief   board ID for the NXP MIMXRT1170-EVK board.
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2020 - 2021 NXP, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,12 +24,13 @@
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0227",
+    .board_id = "0244",
     .family_id = kNXP_Mimxrt_FamilyID,
+    .flags = kEnablePageErase,
     .daplink_url_name = "PRODINFOHTM",
-    .daplink_drive_name = "RT1050-EVK",
-    .daplink_target_url = "http://www.nxp.com/imxrt1050evk",
+    .daplink_drive_name = "RT1170-EVK",
+    .daplink_target_url = "http://www.nxp.com/imxrt1170evk",
     .target_cfg = &target_device,
     .board_vendor = "NXP",
-    .board_name = "MIMXRT1050-EVKB",
+    .board_name = "MIMXRT1170-EVK",
 };
