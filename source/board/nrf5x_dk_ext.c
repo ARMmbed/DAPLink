@@ -112,19 +112,16 @@ static void nrf_prerun_board_config(void)
     // if board is supported, set board name
     switch (gpio_id) {
         case 0x01: // nRF-51 DK
-            target_device.rt_board_id = board_id_nrf51_dk;
             strcpy(board_name, board_name_nrf51_dk);
             board_supported = 1;
             break;
 
         case 0x02: // nRF52-DK
-            target_device.rt_board_id = board_id_nrf52_dk;
             strcpy(board_name, board_name_nrf52_dk);
             board_supported = 1;
             break;
 
         case 0x03: // nRF52840-DK
-            target_device.rt_board_id = board_id_nrf52840_dk;
             strcpy(board_name, board_name_nrf52840_dk);
             board_supported = 1;
             break;
