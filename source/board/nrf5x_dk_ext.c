@@ -155,12 +155,12 @@ static void nrf_prerun_board_config(void)
     // nonzero if external target is detected
     bit1 = (PIOB->PIO_PDSR >> 6) & 1;  // Read PB6
     bit2 = (PIOB->PIO_PDSR >> 18) & 1; // Read PB18
-    target_ext = bit1 & !bit2;
+    target_ext = bit1 | !bit2;
 
     // nonzero if shield-mounted target is detected
     bit1 = (PIOB->PIO_PDSR >> 5) & 1;  // Read PB5
     bit2 = (PIOB->PIO_PDSR >> 23) & 1; // Read PB23
-    target_shield = bit1 & !bit2;
+    target_shield = bit1 | !bit2;
 
     // Disable pull-ups for detection
     PIOB->PIO_PUDR = (1 << 18); // pull-up disable
