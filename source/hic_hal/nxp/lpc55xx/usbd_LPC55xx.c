@@ -628,7 +628,8 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
 
         memcpy(pData, dataptr, cnt);
 
-        *ptr = N_BYTES(EPBufInfo[EP_OUT_IDX(EPNum)].buf_len) |
+        *ptr = (*ptr & (EP_TYPE | EP_RF_TV)) |
+               N_BYTES(EPBufInfo[EP_OUT_IDX(EPNum)].buf_len) |
                BUF_ADDR(EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr) |
                EP_BUF_ACTIVE;
 
