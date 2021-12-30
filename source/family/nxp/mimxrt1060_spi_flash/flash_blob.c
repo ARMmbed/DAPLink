@@ -139,10 +139,10 @@ static const program_target_t flash = {
     {
         0x20000001,
         0x20000934,
-        0x20000c00
+        0x20008000
     },
 
-    0x20000000 + 0x00000A00,                         // mem buffer location
+    0x20000000 + 0x00004000,                         // mem buffer location
     0x20000000,                                      // location to write prog_blob in target RAM
     sizeof(MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob), // prog_blob size
     MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob,         // address of prog_blob
