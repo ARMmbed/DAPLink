@@ -42,8 +42,8 @@ HEADER_SIZE = 4
 STACK_SIZE = 0x800
 
 DAPLINK_TEMPLATE = \
-"""/* Flash OS Routines (Automagically Generated)
- *
+"""/*{%- if algo.flash_info.name %} Flash algorithm for {{ algo.flash_info.name.decode('utf-8') }}
+ *{% endif %}
  * DAPLink Interface Firmware
  * Copyright (c) {{year}} {{copyright_owner}}
  * SPDX-License-Identifier: Apache-2.0
@@ -282,8 +282,8 @@ def main():
             'header_size': HEADER_SIZE,
             'entry': args.blob_start,
             'stack_pointer': sp,
-            'year': datetime.now().year,
-            'copyright_owner': args.copyright or "Arm Limited",
+            'year': datetime.now().year if args.copyright else ("2009-%d" % datetime.now().year),
+            'copyright_owner': args.copyright or "Arm Limited, All Rights Reserved",
         }
 
         text = algo.process_template(tmpl, data_dict)
