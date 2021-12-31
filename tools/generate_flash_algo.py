@@ -28,9 +28,18 @@ import struct
 from datetime import datetime
 from pyocd.target.pack.flash_algo import PackFlashAlgo
 
-BLOB_HEADER = '0xe00abe00,'
+# This header consists of two instructions:
+#
+# ```
+# bkpt  #0
+# b     .-2     # branch to the bkpt
+# ```
+#
+# Before running a flash algo operation, LR is set to the address of the `bkpt` instruction,
+# so when the operation function returns it will halt the CPU.
+BLOB_HEADER = '0xe7fdbe00,'
 HEADER_SIZE = 4
-STACK_SIZE = 0x400
+STACK_SIZE = 0x800
 
 DAPLINK_TEMPLATE = \
 """/* Flash OS Routines (Automagically Generated)
@@ -179,7 +188,6 @@ class PackFlashAlgoGenerator(PackFlashAlgo):
             data_dict = dict(data_dict)
         assert "algo" not in data_dict, "algo already set by user data"
         data_dict["algo"] = self
-        data_dict["algo_size"] = len(self.algo_data)
 
         template = jinja2.Template(template_text)
         return template.render(data_dict)
@@ -216,6 +224,33 @@ def main():
 
         print(algo.flash_info)
 
+        # Allocate stack after algo and its rw/zi data, with bottom rounded to 8 bytes.
+        stack_base = (args.blob_start + HEADER_SIZE
+                        + algo.rw_start + algo.rw_size # rw_start incorporates instruction size
+                        + algo.zi_size)
+        stack_base = (stack_base + 7) // 8 * 8
+        # Stack top rounded to at least 256 bytes
+        sp = stack_base + args.stack_size
+        if algo.page_size > 256:
+            sp = (sp + algo.page_size - 1) // algo.page_size * algo.page_size
+        else:
+            sp = (sp + 255) // 256 * 256
+
+        print(f"load addr:   {args.blob_start:#010x}")
+        print(f"header:      {HEADER_SIZE:#x} bytes")
+        print(f"data:        {len(algo.algo_data):#x} bytes")
+        print(f"ro:          {algo.ro_start:#010x} + {algo.ro_size:#x} bytes")
+        print(f"rw:          {algo.rw_start:#010x} + {algo.rw_size:#x} bytes")
+        print(f"zi:          {algo.zi_start:#010x} + {algo.zi_size:#x} bytes")
+        print(f"stack:       {stack_base:#010x} .. {sp:#010x} ({sp - stack_base:#x} bytes)")
+        print(f"buffer:      {sp:#010x} .. {sp + algo.page_size:#010x} ({algo.page_size:#x} bytes)")
+
+        print("\nSymbol offsets:")
+        for n, v in sorted(algo.symbols.items(), key=lambda x: x[1]):
+            if v >= 0xffffffff:
+                continue
+            print(f"{n}:{' ' * (11 - len(n))} {v:#010x}")
+
         if args.info_only:
             return
 
@@ -236,17 +271,12 @@ def main():
         hash = hashlib.sha256()
         hash.update(flm_content)
 
-        # Allocate stack after algo and its rw data, with top and bottom rounded to 256 bytes.
-        stack_base = args.blob_start + HEADER_SIZE + algo.rw_start + algo.rw_size
-        stack_base = (stack_base + 7) // 8 * 8
-        sp = stack_base + args.stack_size
-        sp = (sp + 255) // 256 * 256
-
         data_dict = {
             'filename': os.path.split(args.elf_path)[-1],
             'digest': hash.hexdigest(),
             'file_size': len(flm_content),
             'pack_file': pack_file,
+            'algo_size': len(algo.algo_data),
             'name': os.path.splitext(os.path.split(args.elf_path)[-1])[0],
             'prog_header': BLOB_HEADER,
             'header_size': HEADER_SIZE,
