@@ -1,5 +1,7 @@
-/* Flash OS Routines (Automagically Generated)
- * Copyright (c) 2009-2021 Arm Limited
+/* Flash algorithm for MIMXRT106x 8mB QuadSPI NOR Flash
+ *
+ * DAPLink Interface Firmware
+ * Copyright (c) 2009-2021 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +17,12 @@
  * limitations under the License.
  */
 
+// Generated from 'MIMXRT106x_QSPI_4KB_SEC.FLM' (MIMXRT106x 8mB QuadSPI NOR Flash)
+// Originating from 'NXP.MIMXRT1062_DFP.13.1.1.pack'
+// digest = 4b2722f4859e5a519ee072466d51eb02e131fbffbe5d8bdffdf025e5f71923ad, file size = 2847664
+// algo version = 0x101, algo size = 2880 (0xb40)
 static const uint32_t MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob[] = {
-    0xE00ABE00,
+    0xe7fdbe00,
     0x4770ba40, 0x4770ba40, 0x4770ba40, 0x4770bac0, 0x4770bac0, 0x4770bac0, 0x4855b51c, 0x48559000,
     0x08498901, 0x81010049, 0x890a4953, 0x00520852, 0x8802810a, 0x07522304, 0xda022a00, 0x439a8802,
     0x88088002, 0xd5020740, 0x43988808, 0x484c8008, 0x6041494a, 0x6081494b, 0x22806801, 0x22204391,
@@ -122,7 +128,7 @@ static const uint32_t flash_size = 0x00800000;
 * at address flash_start + flash_size.
 */
 static const sector_info_t sectors_info[] = {
-    0x60000000, 0x00010000,
+    {0x60000000, 0x00010000},
 };
 
 static const program_target_t flash = {
@@ -131,7 +137,7 @@ static const program_target_t flash = {
     0x20000125, // EraseChip
     0x20000139, // EraseSector
     0x20000157, // ProgramPage
-    0x0,        // Verify
+    0x00000000, // Verify
 
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
@@ -139,12 +145,17 @@ static const program_target_t flash = {
     {
         0x20000001,
         0x20000934,
-        0x20000c00
+        0x20001400
     },
 
-    0x20000000 + 0x00000A00,                         // mem buffer location
-    0x20000000,                                      // location to write prog_blob in target RAM
-    sizeof(MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob), // prog_blob size
-    MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob,         // address of prog_blob
-    0x00000100                                       // ram_to_flash_bytes_to_be_written
+    // mem buffer location
+    0x20001400,
+    // location to write prog_blob in target RAM
+    0x20000000,
+    // prog_blob size
+    sizeof(MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob),
+    // address of prog_blob
+    MIMXRT106x_QSPI_4KB_SEC_flash_prog_blob,
+    // ram_to_flash_bytes_to_be_written
+    0x00000100
 };

@@ -21,7 +21,6 @@
 
 #include "swd_host.h"
 #include "info.h"
-#include "target_config.h"
 #include "target_family.h"
 #include "cmsis_os2.h"
 
@@ -49,14 +48,10 @@ static void prerun_target_config(void)
 #ifdef DAPLINK_MIMXRT_TARGET
 static uint8_t validate_bin_nvic(const uint8_t *buf)
 {
-    if(buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')
-    {
-        target_device.flash_regions[0].start = 0x30000400;
-        return 1;
-    }
-    else if(buf[0] == 0xFF && buf[1] == 0xFF && buf[2] == 0xFF && buf[3] == 0xFF)
-    {
-        target_device.flash_regions[0].start = 0x30000000;
+    // Flash Configuration Block
+    // https://www.nxp.com/docs/en/nxp/application-notes/AN12238.pdf
+    if ((buf[0] == 'F' && buf[1] == 'C' && buf[2] == 'F' && buf[3] == 'B')) {
+        // FlexSPI Configuration Block
         return 1;
     }
 

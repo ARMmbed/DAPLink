@@ -142,14 +142,16 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0220,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x0224,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
     (   0x0225,     VENDOR_TO_FAMILY('NXP', 1),         'k26f_frdmk32w042_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32W042' when mbed-os supports this
-    (   0x0226,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1020_evk_qspi_if',             'k20dx_bl',         None                                    ), # TODO - set target to 'MIMX6RT1050' when mbed-os supports this
-    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         None                                    ), # TODO - set target to 'MIMX6RT1050' when mbed-os supports this
-    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_qspi_if',             'k20dx_bl',         None                                    ), # TODO - set target to 'MIMX6RT1050' when mbed-os supports this
+    (   0x0226,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1020_evk_qspi_if',             'k20dx_bl',         'MIMXRT1020'                            ),
+    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         'MIMXRT1050-HYPER'                      ),
+    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_qspi_if',             'k20dx_bl',         'MIMXRT1050-QSPI'                       ),
     (   0x0228,     VENDOR_TO_FAMILY('NXP', 4),         'k20dx_rapid_iot_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'Rapid-IoT' when mbed-os supports this
+    (   0x0229,     VENDOR_TO_FAMILY('NXP', 3),         'lpc4322_mimxrt1060_evk_qspi_if',           'lpc4322_bl',       'MIMXRT1060'                            ),
     (   0x0230,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x0231,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x0236,     VENDOR_TO_FAMILY('NXP', 0),         'lpc4322_lpc55s69xpresso_if',               'lpc4322_bl',       'LPCXpresso55S69'                       ),
     (   0x0240,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
+    (   0x0244,     VENDOR_TO_FAMILY('NXP', 3),         'lpc4322_mimxrt1170_evk_qspi_if',           'lpc4322_bl',       'MIMXRT1170'                            ),
     (   0x0250,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmkw24d_if',                       'k20dx_bl',         'FRDM-KW24D512'                         ),
     (   0x0260,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl26z_if',                       'k20dx_bl',         None                                    ),
     (   0x0261,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
@@ -176,7 +178,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1018,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
     (   0x1021,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
-    (   0x1028,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_pitaya_link_if',                  None,               None                                    ),    
+    (   0x1028,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_pitaya_link_if',                  None,               None                                    ),
     (   0x1050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1054,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'LPCXpresso54114'                       ),
     (   0x1056,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc54608xpresso_if',               'lpc4322_bl',       'LPCXpresso54608'                       ),
