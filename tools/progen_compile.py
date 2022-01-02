@@ -90,7 +90,10 @@ if toolchain not in toolchains:
 
 # armcc does not support Cortex-M33 and lpc55s69 is not ported to armclang
 if 'armc' in toolchain:
-    project_list = filter(lambda p: not p.startswith("lpc55"), project_list)
+    project_list = list(filter(lambda p: not p.startswith("lpc55"), project_list))
+# musca projects are too large to fit when compiled with gcc. LTO should fix that but it does not work (yet)
+if 'gcc' in toolchain and args.release:
+    project_list = list(filter(lambda p: "musca" not in p, project_list))
 
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
@@ -173,7 +176,7 @@ if args.release:
         except yaml.YAMLError as ex:
             print("Found yaml parse error", ex)
 
-    release_dir = args.release_folder + "_%04i" % release_version 
+    release_dir = args.release_folder + "_%04i" % release_version
     if os.path.exists(release_dir):
         logger.info("Deleting: %s" % release_dir)
         shutil.rmtree(release_dir, ignore_errors=True)
