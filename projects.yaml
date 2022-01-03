@@ -136,7 +136,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/family/all_family.yaml
-        - records/usb/usb-bulk.yaml
     lpc4322_bl:
         - *module_bl
         - records/hic_hal/lpc4322.yaml
