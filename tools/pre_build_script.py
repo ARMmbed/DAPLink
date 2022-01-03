@@ -21,6 +21,7 @@ from __future__ import print_function
 
 import sys
 import os
+import re
 import argparse
 from subprocess import check_output, CalledProcessError
 
@@ -63,8 +64,9 @@ def generate_version_file(version_git_dir):
     # Get the git description.
     print("#> Getting git description")
     try:
-        git_description = check_output("git describe HEAD --always --tags", shell=True)
+        git_description = check_output("git describe HEAD --always --tags --long", shell=True)
         git_description = git_description.decode().strip()
+        git_description = re.sub(r'-0-g([0-9a-f]+)$', r'-g\1', git_description)
     except:
         print("#> ERROR: Failed to get git description, do you have git.exe in your PATH environment variable?")
         return 1
