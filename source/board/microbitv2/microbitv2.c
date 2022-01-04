@@ -406,7 +406,7 @@ void board_vfs_stream_closed_hook()
     reset_power_led_state();
 
     // Clear any pending I2C response
-    i2c_clearBuffers();
+    i2c_clearState();
 
     // Release COMBINED_SENSOR_INT
     gpio_disable_combined_int();
@@ -522,7 +522,7 @@ uint8_t usbd_hid_no_activity(uint8_t *buf)
 static uint8_t target_set_state_microbit(target_state_t state)
 {
     if (state == RESET_RUN) {
-        i2c_clearBuffers();
+        i2c_clearState();
         reset_power_led_state();
     }
     return 0;

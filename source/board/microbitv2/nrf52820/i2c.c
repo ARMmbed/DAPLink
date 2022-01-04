@@ -171,7 +171,7 @@ static void i2c_signalEvent(uint32_t event) {
 
 void i2c_initialize()
 {
-    i2c_clearBuffers();
+    i2c_clearState();
 
     // I2C addresses configured via default values from RTE_Device.h
     I2Cdrv->Initialize(i2c_signalEvent);
@@ -225,13 +225,14 @@ i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveA
     return status;
 }
 
-void i2c_clearBuffers()
+void i2c_clearState()
 {
     i2c_clearTxBuffer();
     memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
     callbackToExecute.pfCallback = NULL;
     callbackToExecute.pData = NULL;
     callbackToExecute.size = 0;
+    i2c_wake_timeout = 0;
     i2c_allow_sleep = true;
 }
 
@@ -250,9 +251,7 @@ void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
     if ((position + size) > I2C_DATA_LENGTH) {
         return;
     }
-    for (uint32_t i = 0; i < size; i++) {
-        g_slave_TX_buff[position + i] = data[i];
-    }
+    memcpy(g_slave_TX_buff + position, data, size);
     i2c_allow_sleep = false;
 }
 

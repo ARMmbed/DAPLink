@@ -165,7 +165,7 @@ void i2c_initialize() {
 
     i2c_init_pins();
 
-    i2c_clearBuffers();
+    i2c_clearState();
 
     I2C_SlaveGetDefaultConfig(&slaveConfig);
 
@@ -230,10 +230,16 @@ i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveA
     return status;
 }
 
-void i2c_clearBuffers(void)
+void i2c_clearState(void)
 {
-    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    i2c_clearTxBuffer();
     memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
+    g_SlaveCompletionFlag = false;
+    g_SlaveRxFlag = false;
+    address_match = 0;
+    transferredCount = 0;
+    i2c_wake_timeout = 0;
+    i2c_allow_sleep = true;
 }
 
 void i2c_clearTxBuffer(void)
@@ -250,15 +256,14 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
     if ((position + size) > I2C_DATA_LENGTH) {
         return;
     }
-
-    for (uint32_t i = 0; i < size; i++) {
-            g_slave_TX_buff[position + i] = data[i];
-    }
+    memcpy(g_slave_TX_buff + position, data, size);
+    i2c_allow_sleep = false;
 }
 
 void i2c_fillBufferHead(uint8_t data)
 {
     g_slave_TX_buff[0] = data;
+    i2c_allow_sleep = false;
 }
 
 bool i2c_canSleep()
