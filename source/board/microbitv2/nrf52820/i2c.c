@@ -61,8 +61,7 @@ static callbackToExecute_t callbackToExecute = {
     .size = 0,
 };
 
-// TODO: This can probably be combined with the busy state for simpler sleep config
-extern uint8_t i2c_wake_timeout;
+static uint8_t i2c_wake_timeout = 0;
 static bool i2c_allow_sleep = true;
 
 
@@ -246,13 +245,16 @@ void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
     i2c_allow_sleep = false;
 }
 
-bool i2c_isBusy()
-{
-    ARM_I2C_STATUS status = I2Cdrv->GetStatus();
-    return status.busy;
-}
-
 bool i2c_canSleep()
 {
-    return i2c_allow_sleep;
+
+    ARM_I2C_STATUS status = I2Cdrv->GetStatus();
+    return i2c_allow_sleep && !status.busy && i2c_wake_timeout == 0;
+}
+
+void i2c_30ms_tick()
+{
+    if (i2c_wake_timeout > 0) {
+        i2c_wake_timeout--;
+    }
 }

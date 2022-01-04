@@ -51,8 +51,8 @@ static i2cCallback_t pfReadCommsCallback = NULL;
 static i2cCallback_t pfWriteFlashCallback = NULL;
 static i2cCallback_t pfReadFlashCallback = NULL;
 
-extern uint8_t i2c_wake_timeout;
-static bool i2c_allow_sleep;
+static uint8_t i2c_wake_timeout = 0;
+static bool i2c_allow_sleep = true;
 
 static void i2c_clearTxBuffer(void);
 
@@ -274,12 +274,14 @@ void i2c_fillBuffer (uint8_t* data, uint32_t position, uint32_t size) {
     g_slave_TX_buff_ready = 1;
 }
 
-bool i2c_isBusy()
-{
-    return g_s_handle.isBusy;
-}
-
 bool i2c_canSleep()
 {
-    return i2c_allow_sleep;
+    return i2c_allow_sleep && !g_s_handle.isBusy && i2c_wake_timeout == 0;
+}
+
+void i2c_30ms_tick()
+{
+    if (i2c_wake_timeout > 0) {
+        i2c_wake_timeout--;
+    }
 }

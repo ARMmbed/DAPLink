@@ -57,7 +57,6 @@ extern target_cfg_t target_device_nrf52833;
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
-uint8_t i2c_wake_timeout = 0;
 power_source_t power_source;
 microbit_if_power_mode_t interface_power_mode = MB_POWER_DOWN;
 bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
@@ -231,13 +230,11 @@ void board_30ms_hook()
         }
     }
 
-    if (i2c_wake_timeout > 0) {
-        i2c_wake_timeout--;
-    }
+    i2c_30ms_tick();
 
     // Enter light sleep if USB is not enumerated and main_shutdown_state is idle
     if (usb_state == USB_DISCONNECTED && !usb_pc_connected && main_shutdown_state == MAIN_SHUTDOWN_WAITING
-        && automatic_sleep_on == true && i2c_isBusy() == false && i2c_wake_timeout == 0 && i2c_canSleep()) {
+        && automatic_sleep_on == true && i2c_canSleep()) {
         interface_power_mode = MB_POWER_SLEEP;
         main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
     }

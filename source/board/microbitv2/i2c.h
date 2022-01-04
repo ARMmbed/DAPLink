@@ -47,7 +47,9 @@ i2c_status_t i2c_registerWriteCallback(i2cCallback_t writeCallback, uint8_t slav
 i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveAddress);
 void i2c_clearBuffers(void);
 void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
-bool i2c_isBusy(void);
+/* Returns true if I2C activity is idle and device can go too sleep. */
 bool i2c_canSleep(void);
+/* This functions needs to be called at a 30ms interval. */
+void i2c_30ms_tick(void);
 
 #endif /* I2C_H_ */
