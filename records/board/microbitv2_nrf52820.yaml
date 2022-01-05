@@ -6,7 +6,6 @@ common:
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
         # - DELAY_FAST_CYCLES=2U          # Fast delay needed to reach 8MHz SWD clock speed
         # - DAP_DEFAULT_SWJ_CLOCK=8000000
-        - BOARD_EXTRA_BUFFER=100
         - CDC_ACM_DEFAULT_BAUDRATE=115200
     includes:
         - source/board/microbitv2/

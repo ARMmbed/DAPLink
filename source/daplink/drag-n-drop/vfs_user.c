@@ -45,11 +45,6 @@
 //! device.  This is to accomodate for hex file programming.
 #define VFS_DISK_SIZE (MB(64))
 
-// Additional buffer space to display more than 512 bytes in DETAILS.TXT
-#if !defined(BOARD_EXTRA_BUFFER)
-#define BOARD_EXTRA_BUFFER 0
-#endif
-
 //! @brief Constants for magic action or config files.
 //!
 //! The "magic files" are files with a special name that if created on the USB MSC volume, will
