@@ -62,6 +62,10 @@ module:
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/lpc11u35.yaml
         - records/usb/usb-hid.yaml
+    hic_lpc11u35_bulk: &module_hic_lpc11u35_bulk
+        - records/rtos/rtos-cm0.yaml
+        - records/hic_hal/lpc11u35.yaml
+        - records/usb/usb-bulk.yaml
     hic_lpc4322: &module_hic_lpc4322
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/lpc4322.yaml
@@ -134,9 +138,8 @@ projects:
         - records/family/all_family.yaml
     lpc11u35_if:
         - *module_if
-        - *module_hic_lpc11u35
+        - *module_hic_lpc11u35_bulk
         - records/family/all_family.yaml
-        - records/usb/usb-bulk.yaml
     lpc4322_bl:
         - *module_bl
         - records/hic_hal/lpc4322.yaml
