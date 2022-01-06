@@ -69,9 +69,10 @@ extern "C"
 #define INBUF_DISABLE	  (0 << 6)	// Input buffer
 #define FILTER_ENABLE	  (0 << 7)	// Glitch filter (for signals below 30MHz)
 #define FILTER_DISABLE	  (1 << 7)	// No glitch filter (for signals above 30MHz)
-#define DRIVE_8MA         (1 << 8)	// Drive strength of 8mA
-#define DRIVE_14MA        (1 << 9)	// Drive strength of 14mA
-#define DRIVE_20MA        (3 << 8)	// Drive strength of 20mA
+#define DRIVE_4MA         (0 << 8)	// Normal-drive: drive strength of 4mA (default)
+#define DRIVE_8MA         (1 << 8)	// Medium-drive: drive strength of 8mA
+#define DRIVE_14MA        (2 << 8)	// High-drive: drive strength of 14mA
+#define DRIVE_20MA        (3 << 8)	// Ultra high-drive: drive strength of 20mA
 
 
 /* Configuration examples for various I/O pins */
@@ -107,7 +108,7 @@ extern "C"
  * @{
  */
 
-void scu_pinmux(uint8_t port, uint8_t pin, uint8_t mode, uint8_t func);
+void scu_pinmux(uint8_t port, uint8_t pin, uint16_t mode, uint8_t func);
 
 /**
  * @}
