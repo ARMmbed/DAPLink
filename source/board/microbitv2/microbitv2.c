@@ -142,6 +142,7 @@ static void prerun_board_config(void)
     uint8_t gamma_led_dc = get_led_gamma(power_led_max_duty_cycle);
     pwm_set_dutycycle(gamma_led_dc);
 
+    storage_init();
     i2c_cmds_init();
 
     gpio_init_combined_int();
@@ -410,9 +411,7 @@ void board_vfs_stream_closed_hook()
 bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
 {
     if (!memcmp(filename, "ERASE   ACT", sizeof(vfs_filename_t))) {
-        // Erase last 128KB flash block
         storage_erase_all();
-        i2c_cmds_reset_storate_config();
     }
 
     return false;
@@ -448,7 +447,7 @@ void vfs_user_build_filesystem_hook() {
         }
     }
 
-    flashConfig_t* storage_cgf = i2c_cmds_get_storage_config();
+    flashConfig_t* storage_cgf = storage_get_cfg();
     file_size = storage_cgf->fileSize + (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
 
     if (storage_cgf->fileVisible) {
@@ -460,7 +459,7 @@ void vfs_user_build_filesystem_hook() {
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t read_address = STORAGE_ADDRESS_START + (VFS_SECTOR_SIZE * sector_offset);
-    flashConfig_t* storage_cgf = i2c_cmds_get_storage_config();
+    flashConfig_t* storage_cgf = storage_get_cfg();
     uint32_t encoded_data_offset = (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
 
     // Ignore out of bound reads

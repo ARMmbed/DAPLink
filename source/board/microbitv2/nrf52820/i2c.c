@@ -245,9 +245,14 @@ void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
     i2c_allow_sleep = false;
 }
 
+void i2c_fillBufferHead(uint8_t data)
+{
+    g_slave_TX_buff[0] = data;
+    i2c_allow_sleep = false;
+}
+
 bool i2c_canSleep()
 {
-
     ARM_I2C_STATUS status = I2Cdrv->GetStatus();
     return i2c_allow_sleep && !status.busy && i2c_wake_timeout == 0;
 }

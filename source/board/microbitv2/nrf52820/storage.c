@@ -23,7 +23,7 @@
 
 #include "nrf_nvmc.h"
 
-uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
+storage_status_t storage_program_flash(uint32_t adr, uint32_t sz, uint8_t *buf)
 {
     uint32_t *buf_32 = (uint32_t *)buf;
     nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_WRITE);
@@ -35,10 +35,10 @@ uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
     }
     nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
 
-    return 0;
+    return STORAGE_SUCCESS;
 }
 
-uint32_t storage_erase_sector(uint32_t adr)
+storage_status_t storage_erase_flash_page(uint32_t adr)
 {
     // This operation can take up to 87.5ms
     nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_ERASE);
@@ -48,19 +48,5 @@ uint32_t storage_erase_sector(uint32_t adr)
     }
     nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
 
-    return 0;
-}
-
-uint32_t storage_erase_all()
-{
-    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_ERASE);
-    for (uint32_t adr = STORAGE_FLASH_ADDRESS_START; adr < STORAGE_FLASH_ADDRESS_END; adr += STORAGE_SECTOR_SIZE) {
-        nrf_nvmc_page_erase_start(NRF_NVMC, adr);
-        while (!nrf_nvmc_ready_check(NRF_NVMC)) {
-            // Wait for controller to be ready
-        }
-    }
-    nrf_nvmc_mode_set(NRF_NVMC, NRF_NVMC_MODE_READONLY);
-
-    return 0;
+    return STORAGE_SUCCESS;
 }

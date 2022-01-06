@@ -25,35 +25,28 @@
 
 extern flash_config_t g_flash;
 
-uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf)
+storage_status_t storage_program_flash(uint32_t adr, uint32_t sz, uint8_t *buf)
 {
     /* Verify data is word aligned */
     util_assert(!((uint32_t)buf & 0x3));
-    
+
     int status = FLASH_Program(&g_flash, adr, (uint32_t *) buf, sz);
-    if (status == kStatus_Success)
-    {
+    if (status == kStatus_Success) {
         // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
         status = FLASH_VerifyProgram(&g_flash, adr, sz,
                               (uint32_t *) buf, kFLASH_marginValueUser,
                               NULL, NULL);
     }
-    return status;
+
+    return (status == kStatus_Success) ? STORAGE_SUCCESS : STORAGE_ERROR;
 }
 
-uint32_t storage_erase_sector(uint32_t adr)
+storage_status_t storage_erase_flash_page(uint32_t adr)
 {
     int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_apiEraseKey);
-    if (status == kStatus_Success)
-    {
+    if (status == kStatus_Success) {
         status = FLASH_VerifyErase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_marginValueNormal);
     }
-    return status;
-}
 
-uint32_t storage_erase_all()
-{
-    int status = FLASH_Erase(&g_flash, STORAGE_CONFIG_ADDRESS, g_flash.PFlashTotalSize / g_flash.PFlashBlockCount, kFLASH_apiEraseKey);
-    // TODO: Should we verify erase? Might be slow
-    return status;
+    return (status == kStatus_Success) ? STORAGE_SUCCESS : STORAGE_ERROR;
 }
