@@ -60,7 +60,6 @@ PROJECT_RELEASE_INFO = {
     ("k20dx_hvpke18f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1020_evk_qspi_if",                True,       0x8000,     "bin"       ),
     ("k20dx_mimxrt1050_evk_hyper_if",               True,       0x8000,     "bin"       ),
-    ("k20dx_mimxrt1050_evk_qspi_if",                True,       0x8000,     "bin"       ),
     ("lpc4322_mimxrt1060_evk_qspi_if",              False,      0x10000,    "bin"       ),
     ("lpc4322_mimxrt1170_evk_qspi_if",              False,      0x10000,    "bin"       ),
     ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
@@ -147,8 +146,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0224,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
     (   0x0225,     VENDOR_TO_FAMILY('NXP', 1),         'k26f_frdmk32w042_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32W042' when mbed-os supports this
     (   0x0226,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1020_evk_qspi_if',             'k20dx_bl',         'MIMXRT1020'                            ),
-    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         'MIMXRT1050-HYPER'                      ),
-    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_qspi_if',             'k20dx_bl',         'MIMXRT1050-QSPI'                       ),
+    (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         'MIMXRT1050'                            ),
     (   0x0228,     VENDOR_TO_FAMILY('NXP', 4),         'k20dx_rapid_iot_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'Rapid-IoT' when mbed-os supports this
     (   0x0229,     VENDOR_TO_FAMILY('NXP', 3),         'lpc4322_mimxrt1060_evk_qspi_if',           'lpc4322_bl',       'MIMXRT1060'                            ),
     (   0x0230,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
