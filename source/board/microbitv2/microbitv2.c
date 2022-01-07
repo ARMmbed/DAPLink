@@ -447,7 +447,7 @@ void vfs_user_build_filesystem_hook() {
         }
     }
 
-    flashConfig_t* storage_cgf = storage_get_cfg();
+    storage_cfg_t* storage_cgf = storage_get_cfg();
     file_size = storage_cgf->fileSize + (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
 
     if (storage_cgf->fileVisible) {
@@ -459,7 +459,7 @@ void vfs_user_build_filesystem_hook() {
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t read_address = STORAGE_ADDRESS_START + (VFS_SECTOR_SIZE * sector_offset);
-    flashConfig_t* storage_cgf = storage_get_cfg();
+    storage_cfg_t* storage_cgf = storage_get_cfg();
     uint32_t encoded_data_offset = (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
 
     // Ignore out of bound reads

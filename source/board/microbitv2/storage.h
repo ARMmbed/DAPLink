@@ -55,14 +55,14 @@ extern "C" {
 #define STORAGE_CFG_FILEVISIBLE     false
 #define STORAGE_CFG_FILESIZE        (STORAGE_SIZE - STORAGE_SECTOR_SIZE)
 
-typedef __PACKED_STRUCT flashConfig_tag {
+typedef __PACKED_STRUCT storage_cfg_tag {
     uint32_t        key;            // Magic key to indicate a valid record
-    vfs_filename_t  fileName;
+    char            fileName[STORAGE_CFG_FILENAME_SIZE];
+    uint8_t         fileVisible;
     uint32_t        fileSize;
-    bool            fileVisible;
     uint32_t        fileEncWindowStart;
     uint32_t        fileEncWindowEnd;
-} flashConfig_t;
+} storage_cfg_t;
 
 typedef enum {
     STORAGE_SUCCESS = 0,
@@ -77,7 +77,7 @@ storage_status_t storage_erase_range(uint32_t star_adr, uint32_t end_adr);
 storage_status_t storage_erase_all(void);
 storage_status_t storage_program_flash(uint32_t adr, uint32_t sz, uint8_t *buf);
 storage_status_t storage_erase_flash_page(uint32_t adr);
-flashConfig_t* storage_get_cfg(void);
+storage_cfg_t* storage_get_cfg(void);
 storage_status_t storage_cfg_write(void);
 storage_status_t storage_cfg_erase(void);
 storage_status_t storage_cfg_set_filename(const char * const filename);

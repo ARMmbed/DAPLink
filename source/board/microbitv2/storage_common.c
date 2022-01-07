@@ -27,14 +27,14 @@
 #include "cmsis_compiler.h"
 
 
-// 'kvld' in hex - key valid
-#define CFG_KEY             0x6b766c64
+// 'scfg' in hex - key valid
+#define STORAGE_CFG_KEY             0x73636667
 
-flashConfig_t gflashConfig = {
-    .key = CFG_KEY,
+static storage_cfg_t s_storage_cfg = {
+    .key = STORAGE_CFG_KEY,
     .fileName = STORAGE_CFG_FILENAME,
-    .fileSize = STORAGE_CFG_FILESIZE,
     .fileVisible = STORAGE_CFG_FILEVISIBLE,
+    .fileSize = STORAGE_CFG_FILESIZE,
     .fileEncWindowStart = 0,
     .fileEncWindowEnd = 0,
 };
@@ -43,19 +43,19 @@ flashConfig_t gflashConfig = {
 void storate_reset_config()
 {
     // Return flash config (RAM) to default values
-    gflashConfig.key = CFG_KEY;
-    memcpy(gflashConfig.fileName, STORAGE_CFG_FILENAME, 11);
-    gflashConfig.fileSize = STORAGE_CFG_FILESIZE;
-    gflashConfig.fileVisible = STORAGE_CFG_FILEVISIBLE;
-    gflashConfig.fileEncWindowStart = 0;
-    gflashConfig.fileEncWindowEnd = 0;
+    s_storage_cfg.key = STORAGE_CFG_KEY;
+    memcpy(s_storage_cfg.fileName, STORAGE_CFG_FILENAME, 11);
+    s_storage_cfg.fileVisible = STORAGE_CFG_FILEVISIBLE;
+    s_storage_cfg.fileSize = STORAGE_CFG_FILESIZE;
+    s_storage_cfg.fileEncWindowStart = 0;
+    s_storage_cfg.fileEncWindowEnd = 0;
 }
 
 void storage_init() {
     // Load Config from Flash if present
-    flashConfig_t *pflashConfigROM = (flashConfig_t *)STORAGE_CONFIG_ADDRESS;
-    if (CFG_KEY == pflashConfigROM->key) {
-        memcpy(&gflashConfig, pflashConfigROM, sizeof(flashConfig_t));
+    storage_cfg_t *pflashConfigROM = (storage_cfg_t *)STORAGE_CONFIG_ADDRESS;
+    if (STORAGE_CFG_KEY == pflashConfigROM->key) {
+        memcpy(&s_storage_cfg, pflashConfigROM, sizeof(storage_cfg_t));
     } else {
         storate_reset_config();
     }
@@ -67,10 +67,10 @@ storage_status_t storage_cfg_write()
 
     // Check first is config is already present in flash
     // If differences are found, erase and write new config
-    if (0 != memcmp(&gflashConfig, (void *)STORAGE_CONFIG_ADDRESS, sizeof(flashConfig_t))) {
+    if (0 != memcmp(&s_storage_cfg, (void *)STORAGE_CONFIG_ADDRESS, sizeof(storage_cfg_t))) {
         status = storage_erase_flash_page(STORAGE_CONFIG_ADDRESS);
         if (status == STORAGE_SUCCESS) {
-            status = storage_program_flash(STORAGE_CONFIG_ADDRESS, sizeof(flashConfig_t), (uint8_t *) &gflashConfig);
+            status = storage_program_flash(STORAGE_CONFIG_ADDRESS, sizeof(storage_cfg_t), (uint8_t *) &s_storage_cfg);
         }
     }
     return status;
@@ -88,9 +88,9 @@ storage_status_t storage_cfg_erase()
     return status;
 }
 
-flashConfig_t* storage_get_cfg(void)
+storage_cfg_t* storage_get_cfg(void)
 {
-    return &gflashConfig;
+    return &s_storage_cfg;
 }
 
 bool storage_file_extension_allowed(const vfs_filename_t filename)
@@ -123,11 +123,11 @@ storage_status_t storage_cfg_set_filename(const char * const filename)
     if (filename_valid(filename)) {
         // Check allowed extensions (.bin, .txt, .csv, .htm, .wav)
         if (storage_file_extension_allowed(filename)) {
-            memcpy(gflashConfig.fileName, filename, 11);
+            memcpy(s_storage_cfg.fileName, filename, 11);
         } else {
             // If disallowed extension is requested, .bin will be used
-            memcpy(gflashConfig.fileName, filename, 8);
-            memcpy(&gflashConfig.fileName[8], "BIN", 3);
+            memcpy(s_storage_cfg.fileName, filename, 8);
+            memcpy(&s_storage_cfg.fileName[8], "BIN", 3);
         }
     } else {
         status = STORAGE_ERROR;
@@ -139,7 +139,7 @@ storage_status_t storage_cfg_set_file_size(const uint32_t file_size)
 {
     uint32_t status = STORAGE_SUCCESS;
     if (file_size <= STORAGE_SIZE) {
-        gflashConfig.fileSize = file_size;
+        s_storage_cfg.fileSize = file_size;
     } else {
         status = STORAGE_ERROR;
     }
@@ -148,7 +148,7 @@ storage_status_t storage_cfg_set_file_size(const uint32_t file_size)
 
 storage_status_t storage_cfg_set_file_visible(const bool file_visible)
 {
-    gflashConfig.fileVisible = file_visible;
+    s_storage_cfg.fileVisible = file_visible;
     return STORAGE_SUCCESS;
 }
 
@@ -161,17 +161,17 @@ storage_status_t storage_cfg_set_encoding_window(const uint32_t start, const uin
 
 char* storage_cfg_get_filename(void)
 {
-    return &gflashConfig.fileName[0];
+    return &s_storage_cfg.fileName[0];
 }
 
 uint32_t storage_cfg_get_file_size(void)
 {
-    return gflashConfig.fileSize;
+    return s_storage_cfg.fileSize;
 }
 
 uint8_t storage_cfg_get_file_visible(void)
 {
-    return gflashConfig.fileVisible;
+    return s_storage_cfg.fileVisible;
 }
 
 uint32_t storage_cfg_get_encoding_start()
