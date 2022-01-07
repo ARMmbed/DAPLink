@@ -418,7 +418,6 @@ bool vfs_user_magic_file_hook(const vfs_filename_t filename, bool *do_remount)
 }
 
 void vfs_user_build_filesystem_hook() {
-    uint32_t file_size;
     error_t status;
     error_t error = vfs_mngr_get_transfer_status();
 
@@ -447,11 +446,14 @@ void vfs_user_build_filesystem_hook() {
         }
     }
 
-    storage_cfg_t* storage_cgf = storage_get_cfg();
-    file_size = storage_cgf->fileSize + (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
+    uint32_t storage_enc_start = storage_cfg_get_encoding_start();
+    uint32_t storage_enc_end = storage_cfg_get_encoding_end();
+    uint32_t file_size = storage_cfg_get_file_size();
+    // Each byte within the encoding window is converted into an ASCII 2 byte character
+    file_size += storage_enc_end - storage_enc_start;
 
-    if (storage_cgf->fileVisible) {
-        vfs_create_file(storage_cgf->fileName, read_file_data_txt, 0, file_size);
+    if (storage_cfg_get_file_visible()) {
+        vfs_create_file(storage_cfg_get_filename(), read_file_data_txt, 0, file_size);
     }
 }
 
@@ -459,18 +461,19 @@ void vfs_user_build_filesystem_hook() {
 static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32_t num_sectors)
 {
     uint32_t read_address = STORAGE_ADDRESS_START + (VFS_SECTOR_SIZE * sector_offset);
-    storage_cfg_t* storage_cgf = storage_get_cfg();
-    uint32_t encoded_data_offset = (storage_cgf->fileEncWindowEnd - storage_cgf->fileEncWindowStart);
+    uint32_t storage_enc_start = storage_cfg_get_encoding_start();
+    uint32_t storage_enc_end = storage_cfg_get_encoding_end();
+    uint32_t encoded_data_offset = (storage_enc_end - storage_enc_start);
 
     // Ignore out of bound reads
     if ( read_address < (STORAGE_ADDRESS_END + encoded_data_offset) ) {
         for (uint32_t i = 0; i < VFS_SECTOR_SIZE; i++) {
-            if (i + (VFS_SECTOR_SIZE * sector_offset) < storage_cgf->fileEncWindowStart) {
+            if (i + (VFS_SECTOR_SIZE * sector_offset) < storage_enc_start) {
                 // If data is before encoding window, no offset is needed
                 data[i] = *(uint8_t *) (read_address + i);
-            } else if(i + (VFS_SECTOR_SIZE * sector_offset) < (storage_cgf->fileEncWindowStart + encoded_data_offset * 2)) {
+            } else if(i + (VFS_SECTOR_SIZE * sector_offset) < (storage_enc_start + encoded_data_offset * 2)) {
                 // Data inside encoding window needs to consider encoding window start and size
-                uint8_t enc_byte = *(uint8_t *) (STORAGE_ADDRESS_START + ((VFS_SECTOR_SIZE * sector_offset) + storage_cgf->fileEncWindowStart + i ) / 2);
+                uint8_t enc_byte = *(uint8_t *) (STORAGE_ADDRESS_START + ((VFS_SECTOR_SIZE * sector_offset) + storage_enc_start + i ) / 2);
                 if (i % 2 == 0) {
                     // High nibble
                     enc_byte = 0x0F & (enc_byte >> 4);

@@ -30,6 +30,16 @@
 // 'scfg' in hex - key valid
 #define STORAGE_CFG_KEY             0x73636667
 
+typedef __PACKED_STRUCT storage_cfg_tag {
+    uint32_t        key;            // Magic key to indicate a valid record
+    char            fileName[STORAGE_CFG_FILENAME_SIZE];
+    uint8_t         fileVisible;
+    uint32_t        fileSize;
+    uint32_t        fileEncWindowStart;
+    uint32_t        fileEncWindowEnd;
+} storage_cfg_t;
+
+
 static storage_cfg_t s_storage_cfg = {
     .key = STORAGE_CFG_KEY,
     .fileName = STORAGE_CFG_FILENAME,
@@ -86,11 +96,6 @@ storage_status_t storage_cfg_erase()
         storate_reset_config();
     }
     return status;
-}
-
-storage_cfg_t* storage_get_cfg(void)
-{
-    return &s_storage_cfg;
 }
 
 bool storage_file_extension_allowed(const vfs_filename_t filename)
