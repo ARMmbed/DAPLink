@@ -4,8 +4,10 @@ Based on ATSAM3U2C chip ([Datasheet](https://ww1.microchip.com/downloads/en/Devi
 - Cortex-M3 96 Mhz
 - 128 KB Flash
 - 36 KB RAM
-- High-speed USB 2.0 device controller
+- High-speed USB 2.0 device controller: up to 7 bi-directional endpoints including EP0 (*)
 - LQFP100 packaging
+
+(*) "up to 7 bidirectional Endpoints" (source: Datasheet](https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6430-32-bit-Cortex-M3-Microcontroller-SAM3U4-SAM3U2-SAM3U1_Datasheet.pdf))
 
 ## Memory Map
 
@@ -16,7 +18,7 @@ Based on ATSAM3U2C chip ([Datasheet](https://ww1.microchip.com/downloads/en/Devi
 
 Bootloader size is 32 KB
 
-## DAPLink default pin assignment 
+## DAPLink default pin assignment
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|

@@ -4,8 +4,10 @@ Based on MKL27Z256VFM4 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet
 - Cortex-M0+ 48 Mhz
 - 256 KB Flash
 - 32 KB RAM
-- Full-speed USB 2.0 device controller
+- Full-speed USB 2.0 device controller: up to 16 bi-directional endpoints including EP0 (*)
 - HVQFN32 packaging
+
+(*) "16 bidirectional endpoints can be supported" (source: [KL27P64M48SF6RM :lock:](https://www.nxp.com/webapp/Download?colCode=KL27P64M48SF6RM))
 
 ## Memory Map
 
@@ -16,7 +18,7 @@ Based on MKL27Z256VFM4 chip ([Data Sheet](https://www.nxp.com/docs/en/data-sheet
 
 Bootloader size is 32 KB
 
-## DAPLink default pin assignment 
+## DAPLink default pin assignment
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|

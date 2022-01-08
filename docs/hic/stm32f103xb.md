@@ -4,8 +4,10 @@ Based on STM32F103CBT6 chip ([Datasheet](https://www.st.com/resource/en/datashee
 - Cortex-M3 72 Mhz
 - 128 KB Flash
 - 20 KB RAM
-- Full-speed USB 2.0 device controller
+- Full-speed USB 2.0 device controller: up to 8 bi-directional endpoints including EP0 (*)
 - UFQFPN48 packaging
+
+(*) "Configurable number of endpoints from 1 to 8", "up to 16 mono-directional or 8 bidirectional endpoints can be used". (source: [RM0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf))
 
 ## Memory Map
 
@@ -16,7 +18,7 @@ Based on STM32F103CBT6 chip ([Datasheet](https://www.st.com/resource/en/datashee
 
 Bootloader size is 48 KB
 
-## DAPLink default pin assignment 
+## DAPLink default pin assignment
 
 | Signal      | I/O | Symbol  | Pin |
 |-------------|:---:|---------|:---:|
