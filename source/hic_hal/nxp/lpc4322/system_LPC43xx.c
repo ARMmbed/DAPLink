@@ -335,6 +335,23 @@ static unsigned ndec_new(unsigned nsel)
                 return x;
     }
 }
+
+#define PLL0_PSEL_MAX (1<<5)
+/* post-divider: compute pdec from psel */
+static unsigned pdec_new(unsigned psel)
+{
+    unsigned x=0x10, ip;
+    switch (psel)
+    {
+        case 0: return 0xFFFFFFFF;
+        case 1: return 0x62;
+        case 2: return 0x42;
+        default:
+                for (ip = psel; ip <= PLL0_PSEL_MAX; ip++)
+                    x = ((x ^ x>>2) & 1) << 4 | x>>1 & 0x3F;
+                return x;
+    }
+}
 /******************************************************************************
  * SetClock
  ******************************************************************************/
@@ -463,19 +480,7 @@ static void SetClock (void) {
   LPC_CGU->PLL0USB_NP_DIV = (x << 12);
 
   /* P divider                                                                */
-  x = 0x10;
-  switch (PLL0USB_P) {
-    case 0:  x = 0xFFFFFFFF;
-      break;
-    case 1:  x = 0x00000062;
-      break;
-    case 2:  x = 0x00000042;
-      break;
-    default:
-      for (i = PLL0USB_P; i <= 0x200; i++) {
-        x = (((x ^ (x >> 2)) & 1) << 4) | ((x >> 1) &0x0F);
-      }
-  }
+  x = pdec_new(PLL0USB_P);
   LPC_CGU->PLL0USB_NP_DIV |= x;
 
   LPC_CGU->PLL0USB_CTRL  = (PLL0USB_CLK_SEL   << 24) | /* Clock source sel    */
