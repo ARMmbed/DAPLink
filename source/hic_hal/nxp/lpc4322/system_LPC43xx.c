@@ -385,6 +385,14 @@ unsigned anadeci_new(unsigned msel)
     }
     return (msel & 0x3c) + 4;
 }
+
+/* bandwidth: compute selp from msel */
+unsigned anadecp_new(unsigned msel)
+{
+    if (msel < 60) return (msel>>1) + 1;
+    return 31;
+}
+
 /******************************************************************************
  * SetClock
  ******************************************************************************/
@@ -483,8 +491,7 @@ static void SetClock (void) {
   /* M divider                                                                */
   x = mdec_new(PLL0USB_M);
 
-  if (PLL0USB_M < 60) selp = (PLL0USB_M >> 1) + 1;
-  else        selp = 31;
+  selp = anadecp_new(PLL0USB_M);
   seli = anadeci_new(PLL0USB_M);
   LPC_CGU->PLL0USB_MDIV   =  (selp   << 17) |
                              (seli   << 22) |
