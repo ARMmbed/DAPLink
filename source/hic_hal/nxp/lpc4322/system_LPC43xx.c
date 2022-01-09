@@ -352,6 +352,23 @@ static unsigned pdec_new(unsigned psel)
                 return x;
     }
 }
+
+#define PLL0_MSEL_MAX (1<<15)
+/* multiplier: compute mdec from msel */
+static unsigned mdec_new (unsigned msel)
+{
+    unsigned x=0x4000, im;
+    switch (msel)
+    {
+        case 0: return 0xFFFFFFFF;
+        case 1: return 0x18003;
+        case 2: return 0x10003;
+        default:
+                for (im = msel; im <= PLL0_MSEL_MAX; im++)
+                    x = (((x ^ (x >> 1)) & 1) << 14) | ((x >> 1) & 0xFFFF);
+                return x;
+    }
+}
 /******************************************************************************
  * SetClock
  ******************************************************************************/
@@ -448,19 +465,7 @@ static void SetClock (void) {
   LPC_CGU->PLL0USB_CTRL  |= 1;
 
   /* M divider                                                                */
-  x = 0x00004000;
-  switch (PLL0USB_M) {
-    case 0:  x = 0xFFFFFFFF;
-      break;
-    case 1:  x = 0x00018003;
-      break;
-    case 2:  x = 0x00010003;
-      break;
-    default:
-      for (i = PLL0USB_M; i <= 0x8000; i++) {
-        x = (((x ^ (x >> 1)) & 1) << 14) | ((x >> 1) & 0x3FFF);
-      }
-  }
+  x = mdec_new(PLL0USB_M);
 
   if (PLL0USB_M < 60) selp = (PLL0USB_M >> 1) + 1;
   else        selp = 31;
