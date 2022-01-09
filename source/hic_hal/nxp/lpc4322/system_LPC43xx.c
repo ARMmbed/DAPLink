@@ -465,7 +465,7 @@ static void SetClock (void) {
 
   /* CPU base clock is in the mid frequency range before final clock set      */
   LPC_CGU->BASE_M4_CLK     = (0x01 << 11) |  /* Autoblock En                  */
-                             (0x09 << 24) ;  /* Clock source: PLL1            */
+                             (CLK_SRC_PLL1 << 24) ;  /* Clock source: PLL1    */
 
   /* Wait 20us */
   WaitUs(20, (CLK_XTAL * (PLL1_MSEL + 1)) / ((PLL1_NSEL + 1) * 2));
@@ -576,7 +576,7 @@ uint32_t MeasureFreq (uint32_t clk_sel) {
     }
   }
   fcnt = (LPC_CGU->FREQ_MON >> 9) & 0x3FFF;
-  fout = fcnt * (12000000U/511U);                 /* FCNT * (IRC_CLK / RCNT)  */
+  fout = fcnt * (CLK_IRC/511U);                 /* FCNT * (IRC_CLK / RCNT)  */
 
   return (fout);
 }
