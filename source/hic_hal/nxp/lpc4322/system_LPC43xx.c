@@ -319,6 +319,17 @@ uint32_t GetClockFreq (uint32_t clk_src);
 uint32_t SystemCoreClock = 120000000U; /* System Clock Frequency (Core Clock) */
 
 
+/*----------------------------------------------------------------------------
+  Approximate delay function (must be used after SystemCoreClockUpdate() call)
+ *----------------------------------------------------------------------------*/
+static void WaitUs(uint32_t us, uint32_t clock_hz)
+{
+    us *= (clock_hz / 1000000) / 3;
+
+    while (us--);
+}
+
+
 #define PLL0_NSEL_MAX (1<<8)
 /* pre-divider: compute ndec from nsel */
 static unsigned ndec_new(unsigned nsel)
@@ -417,7 +428,7 @@ static void SetClock (void) {
                            (0 << 2) ;   /* Low-frequency mode                 */
 
   /* Wait ~250us @ 12MHz */
-  for (i = 1500; i; i--);
+  WaitUs(250, CLK_XTAL);
 
 #ifdef USE_SPIFI
 /* configure SPIFI clk to IRC via IDIVA (later IDIVA is configured to PLL1/3) */
@@ -456,8 +467,8 @@ static void SetClock (void) {
   LPC_CGU->BASE_M4_CLK     = (0x01 << 11) |  /* Autoblock En                  */
                              (0x09 << 24) ;  /* Clock source: PLL1            */
 
-  /* Max. BASE_M4_CLK frequency here is 102MHz, wait at least 20us */
-  for (i = 1050; i; i--);                    /* Wait minimum 2100 cycles      */
+  /* Wait 20us */
+  WaitUs(20, (CLK_XTAL * (PLL1_MSEL + 1)) / ((PLL1_NSEL + 1) * 2));
 #endif
   /* Configure PLL1                                                           */
   LPC_CGU->PLL1_CTRL = (0            << 0) | /* PLL1 Enabled                  */
@@ -544,17 +555,6 @@ static void SetClock (void) {
                         (IDIVE_IDIV     <<  2) |  /* IDIV                     */
                         (1              << 11) |  /* Autoblock En             */
                         (IDIVE_CLK_SEL  << 24) ;  /* Clock source             */
-}
-
-
-/*----------------------------------------------------------------------------
-  Approximate delay function (must be used after SystemCoreClockUpdate() call)
- *----------------------------------------------------------------------------*/
-#define CPU_NANOSEC(x) (((uint64_t)(x) * SystemCoreClock)/1000000000)
-
-static void WaitUs (uint32_t us) {
-  uint32_t cyc = us * CPU_NANOSEC(1000)/4;
-  while(cyc--);
 }
 
 
