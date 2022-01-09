@@ -319,6 +319,22 @@ uint32_t GetClockFreq (uint32_t clk_src);
 uint32_t SystemCoreClock = 120000000U; /* System Clock Frequency (Core Clock) */
 
 
+#define PLL0_NSEL_MAX (1<<8)
+/* pre-divider: compute ndec from nsel */
+static unsigned ndec_new(unsigned nsel)
+{
+    unsigned x=0x80, in;
+    switch (nsel)
+    {
+        case 0: return 0xFFFFFFFF;
+        case 1: return 0x302;
+        case 2: return 0x202;
+        default:
+                for (in = nsel; in <= PLL0_NSEL_MAX; in++)
+                    x = ((x ^ x>>2 ^ x>>3 ^ x>>4) & 1) << 7 | x>>1 & 0xFF;
+                return x;
+    }
+}
 /******************************************************************************
  * SetClock
  ******************************************************************************/
@@ -443,19 +459,7 @@ static void SetClock (void) {
                              (x      <<  0);
 
   /* N divider                                                                */
-  x = 0x80;
-  switch (PLL0USB_N) {
-    case 0:  x = 0xFFFFFFFF;
-      break;
-    case 1:  x = 0x00000302;
-      break;
-    case 2:  x = 0x00000202;
-      break;
-    default:
-      for (i = PLL0USB_N; i <= 0x0100; i++) {
-        x =(((x ^ (x >> 2) ^ (x >> 3) ^ (x >> 4)) & 1) << 7) | ((x >> 1) & 0x7F);
-      }
-  }
+  x = ndec_new(PLL0USB_N);
   LPC_CGU->PLL0USB_NP_DIV = (x << 12);
 
   /* P divider                                                                */
