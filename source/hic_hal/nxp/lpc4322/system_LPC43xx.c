@@ -523,6 +523,7 @@ static void SetClock (void) {
                            (PLL0USB_DIRECTI   << 2 ) | /* Direct input        */
                            (PLL0USB_BYPASS    << 1 ) | /* PLL bypass          */
                            (0                 << 0 ) ; /* PLL0USB Enabled     */
+  LPC_CREG->CREG0 &= ~(1 << 5);                        // Enable USB0 PHY power.
   while (!(LPC_CGU->PLL0USB_STAT & 1));
 
 
