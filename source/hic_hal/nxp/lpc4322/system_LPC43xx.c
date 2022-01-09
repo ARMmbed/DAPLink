@@ -369,6 +369,22 @@ static unsigned mdec_new (unsigned msel)
                 return x;
     }
 }
+
+/* bandwidth: compute seli from msel */
+unsigned anadeci_new(unsigned msel)
+{
+    unsigned tmp;
+    if (msel > 16384) return 1;
+    if (msel > 8192) return 2;
+    if (msel > 2048) return 4;
+    if (msel >= 501) return 8;
+    if (msel >= 60)
+    {
+        tmp=1024/(msel+9);
+        return ( 1024 == ( tmp*(msel+9)) ) == 0 ? tmp*4 : (tmp+1)*4 ;
+    }
+    return (msel & 0x3c) + 4;
+}
 /******************************************************************************
  * SetClock
  ******************************************************************************/
@@ -469,13 +485,7 @@ static void SetClock (void) {
 
   if (PLL0USB_M < 60) selp = (PLL0USB_M >> 1) + 1;
   else        selp = 31;
-
-  if      (PLL0USB_M > 16384) seli = 1;
-  else if (PLL0USB_M >  8192) seli = 2;
-  else if (PLL0USB_M >  2048) seli = 4;
-  else if (PLL0USB_M >=  501) seli = 8;
-  else if (PLL0USB_M >=   60) seli = 4 * (1024 / (PLL0USB_M + 9));
-  else                        seli = (PLL0USB_M & 0x3C) + 4;
+  seli = anadeci_new(PLL0USB_M);
   LPC_CGU->PLL0USB_MDIV   =  (selp   << 17) |
                              (seli   << 22) |
                              (x      <<  0);
