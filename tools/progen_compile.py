@@ -94,6 +94,8 @@ if 'armc' in toolchain:
 # musca projects are too large to fit when compiled with gcc. LTO should fix that but it does not work (yet)
 if 'gcc' in toolchain and args.release:
     project_list = list(filter(lambda p: "musca" not in p, project_list))
+# remove all test projects from list
+project_list = list(filter(lambda p: not p.endswith("test_if"), project_list))
 
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
