@@ -68,9 +68,11 @@ target_cfg_t target_device = {
 // bootloader has no family
 const target_family_descriptor_t *g_target_family = NULL;
 
+// Use the 9905 board ID in the bootloader for both nRF52833 and nRF52820
+// Mainly used to identify which interface hex file to download from the micro:bit help page
 const board_info_t g_board_info = {
     .info_version               = kBoardInfoVersion,
-    .board_id                   = "0000",
+    .board_id                   = "9905",
     .daplink_url_name           = "HELP_FAQHTM",
     .daplink_drive_name         = "MAINTENANCE",
     .daplink_target_url         = "https://microbit.org/device/?id=@B&v=@V&bl=1",
