@@ -7,7 +7,7 @@ common:
         - INTERFACE_LPC55XX
         - CPU_LPC55S69JBD64_cm33_core0
         - DAPLINK_HIC_ID=0x4C504355  # DAPLINK_HIC_ID_LPC55XX
-        - OS_CLOCK=150000000
+        - OS_CLOCK=96000000
     includes:
         - source/hic_hal/nxp/lpc55xx
         - source/hic_hal/nxp/lpc55xx/LPC55S69
