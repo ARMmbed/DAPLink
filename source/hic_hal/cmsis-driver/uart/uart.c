@@ -190,6 +190,8 @@ int32_t uart_set_configuration(UART_Configuration *config)
     NVIC_ClearPendingIRQ(CMSIS_UART_IRQ);
     NVIC_EnableIRQ(CMSIS_UART_IRQ);
 
+    uart_reset();
+
     return 1;
 }
 
