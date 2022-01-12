@@ -59,7 +59,7 @@ const target_family_descriptor_t *g_target_family = NULL;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0000",
+    .board_id = "9903",
     .daplink_url_name =       "HELP_FAQHTM",
     .daplink_drive_name =       "MAINTENANCE",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V&bl=1",
