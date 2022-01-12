@@ -115,11 +115,8 @@ void power_sleep()
 
 static void power_before(bool systemoff)
 {
-    // TODO - wait for USB transmit to computer to finish?
-    /* Wait for debug console output finished. */
-    // while (!(LPUART_STAT_TC_MASK & UART->STAT))
-    // {
-    // }
+    // KL27 waits "for debug console output finished" by checking (LPUART_STAT_TC_MASK & UART->STAT),
+    // but we never get here with USB connected, so there is no need to wait
 
     uart_uninitialize(); // disables RX and TX pins
 
@@ -190,8 +187,8 @@ static void power_after()
     PORT_SWD_SETUP();
     
     uart_initialize();
-    // i2c_deinitialize();
-    // i2c_initialize();
+    // The KL27 code calls i2c_deinitialize() and i2c_initialize()
+    // but tests have indicated this is not necessary here
 }
 
 
