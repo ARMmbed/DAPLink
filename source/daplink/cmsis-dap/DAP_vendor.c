@@ -121,7 +121,20 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += ((write_len + 1) << 16) | 1;
         break;
     }
-    case ID_DAP_Vendor5:  break;
+    case ID_DAP_GetInterfaceCapabilities: {
+        // Response consists of a 1-byte count of capability words, followed by
+        // that number of 32-bit words encoded as little endian. Currently the
+        // capability word count will only ever be 1.
+        uint32_t caps = get_interface_capabilities();
+        *response++ = 1; // response word count
+        *response++ = (caps >> 0) & 0xff;
+        *response++ = (caps >> 8) & 0xff;
+        *response++ = (caps >> 16) & 0xff;
+        *response++ = (caps >> 24) & 0xff;
+        num += (0 << 16)                    // request bytes consumed
+                | (1 + sizeof(uint32_t));   // response bytes sent
+        break;
+    }
     case ID_DAP_Vendor6:  break;
     case ID_DAP_Vendor7:  break;
     case ID_DAP_SetUSBTestMode: {
@@ -209,6 +222,14 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
   }
 
   return (num);
+}
+
+/*!
+ * @brief Return the DAPLink-specific capabilities of this firmware.
+ */
+__WEAK uint32_t get_interface_capabilities(void) {
+    return kCapability_FileFormatBinary
+            | kCapability_FileFormatIntelHex;
 }
 
 ///@}
