@@ -187,6 +187,8 @@ int32_t uart_set_configuration(UART_Configuration *config)
     NVIC_ClearPendingIRQ(USART_IRQ);
     NVIC_EnableIRQ(USART_IRQ);
 
+    uart_reset();
+
     return 1;
 }
 
