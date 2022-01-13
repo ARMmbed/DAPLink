@@ -148,6 +148,14 @@ static void prerun_board_config(void)
     gpio_init_combined_int();
 }
 
+// Return reset button and LED to default state
+static void reset_power_led_state()
+{
+    reset_pressed = 0;
+    power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
+    main_shutdown_state = MAIN_SHUTDOWN_WAITING;
+}
+
 // Handle the reset button behavior, this function is called in the main task every 30ms
 void handle_reset_button()
 {
@@ -159,7 +167,6 @@ void handle_reset_button()
         if (!reset_pressed && (gpio_get_reset_btn_fwrd() || wake_from_reset)) {
             // Reset button pressed
             target_set_state(RESET_PROGRAM);
-            i2c_clearBuffers();
             reset_pressed = 1;
             gpio_reset_count = 0;
             wake_from_reset = 0;
@@ -396,10 +403,7 @@ void board_usb_sof_event(void)
 
 void board_vfs_stream_closed_hook()
 {
-    // Return reset button and LED to default state
-    reset_pressed = 0;
-    power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
-    main_shutdown_state = MAIN_SHUTDOWN_WAITING;
+    reset_power_led_state();
 
     // Clear any pending I2C response
     i2c_clearBuffers();
@@ -513,14 +517,26 @@ uint8_t usbd_hid_no_activity(uint8_t *buf)
         return 0;
 }
 
+// This function is called before the rest of target_set_state code, so it will
+// reset the micro:bit specific features state before the target state is executed
+static uint8_t target_set_state_microbit(target_state_t state)
+{
+    if (state == RESET_RUN) {
+        i2c_clearBuffers();
+        reset_power_led_state();
+    }
+    return 0;
+}
+
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .family_id = kNordic_Nrf52_FamilyID,
-    .daplink_url_name =       "MICROBITHTM",
-    .daplink_drive_name =       "MICROBIT",
+    .daplink_url_name = "MICROBITHTM",
+    .daplink_drive_name = "MICROBIT",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device_nrf52833,
+    .target_set_state = target_set_state_microbit,
     .board_vendor = "Micro:bit Educational Foundation",
     .board_name = "BBC micro:bit V2",
 };
