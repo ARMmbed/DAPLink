@@ -172,11 +172,14 @@ void sdk_init(void)
 //! - Configure the USB PHY and USB1 clocks.
 void hic_enable_usb_clocks(void)
 {
-    // For the interface, switch to 150 MHz before enabling USB. The bootloader will stay at 96 MHz
-    // so it can always write internal flash.
-#if defined(DAPLINK_IF)
-    BOARD_BootClockPLL150M();
-#endif
+    // Switching to 150 MHz for interface is disabled because it prevents
+    // interface from writing configuration and updating bootloader.
+    // #if defined(DAPLINK_IF)
+    //     // For the interface, switch to 150 MHz before enabling USB.
+    //     // The bootloader will stay at 96 MHz so it can always write
+    //     // internal flash.
+    //     BOARD_BootClockPLL150M();
+    // #endif
 
     NVIC_ClearPendingIRQ(USB1_IRQn);
     NVIC_ClearPendingIRQ(USB1_NEEDCLK_IRQn);

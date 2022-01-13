@@ -50,6 +50,7 @@ struct {
     volatile uint32_t tx_size;
 
     uint8_t rx;
+    uint8_t tx;
 } cb_buf;
 
 void uart_handler(uint32_t event);
@@ -192,41 +193,23 @@ int32_t uart_write_free(void)
     return circ_buf_count_free(&write_buffer);
 }
 
-// Start a new TX transfer if there are bytes pending to be transferred on the
-// write_buffer buffer. The transferred bytes are not removed from the circular
-// by this function, only the event handler will remove them once the transfer
-// is done.
-static void uart_start_tx_transfer() {
-    uint32_t tx_size = 0;
-    const uint8_t* buf = circ_buf_peek(&write_buffer, &tx_size);
-    if (tx_size > BUFFER_SIZE / 4) {
-        // The bytes being transferred remain on the circular buffer memory
-        // until the transfer is done. Limiting the UART transfer size
-        // allows the uart_handler to clear those bytes earlier.
-        tx_size = BUFFER_SIZE / 4;
-    }
-    cb_buf.tx_size = tx_size;
-    if (tx_size) {
-        USART_INSTANCE.Send(buf, tx_size);
-    }
-}
-
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
     if (size == 0) {
         return 0;
     }
 
+    // Disable interrupts to prevent the uart_handler from modifying the
+    // circular buffer at the same time.
+    NVIC_DisableIRQ(USART_IRQ);
     uint32_t cnt = circ_buf_write(&write_buffer, data, size);
-    if (cb_buf.tx_size == 0) {
-        // There's no pending transfer and the value of cb_buf.tx_size will not
-        // change to non-zero by the event handler once it is zero. Note that it
-        // is entirely possible that we transferred all the bytes we added to
-        // the circular buffer in this function by the time we are in this
-        // branch, in that case uart_start_tx_transfer() would not schedule any
-        // transfer.
-        uart_start_tx_transfer();
+    if (cb_buf.tx_size == 0 && circ_buf_count_used(&write_buffer) > 0) {
+        // There's no pending transfer, so we need to start the process.
+        cb_buf.tx = circ_buf_pop(&write_buffer);
+        USART_INSTANCE.Send(&(cb_buf.tx), 1);
+        cb_buf.tx_size = 1;
     }
+    NVIC_EnableIRQ(USART_IRQ);
 
     return cnt;
 }
@@ -250,7 +233,13 @@ void uart_handler(uint32_t event) {
     }
 
     if (event & ARM_USART_EVENT_SEND_COMPLETE) {
-        circ_buf_pop_n(&write_buffer, cb_buf.tx_size);
-        uart_start_tx_transfer();
+        if (circ_buf_count_used(&write_buffer) > 0) {
+            cb_buf.tx = circ_buf_pop(&write_buffer);
+            USART_INSTANCE.Send(&(cb_buf.tx), 1);
+        } else {
+            // Signals that next call to uart_write_data() should start a
+            // transfer.
+            cb_buf.tx_size = 0;
+        }
     }
 }

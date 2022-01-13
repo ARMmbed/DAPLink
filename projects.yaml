@@ -590,3 +590,11 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/ublox_evk_odin_w2.yaml
+
+
+    # Test projects
+    lpc55s69_nrf52840dk_test_if:
+        - *module_if
+        - *module_hic_lpc55s69
+        - records/board/lpc55s69_nrf52840dk.yaml
+        - records/board/mcu_link.yaml

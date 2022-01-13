@@ -1,7 +1,7 @@
 # lpc55xx HIC
 
 Based on LPC55S69JBD64 chip ([Data Sheet](https://www.nxp.com/docs/en/nxp/data-sheets/LPC55S6x_DS.pdf)):
-- Cortex-M33 150 Mhz (cores)
+- Cortex-M33 96 MHz (2 cores up to 150 Mhz)
 - 640 KB Flash
 - 320 KB RAM
 - High-speed USB 2.0 host/device controller: 8 bi-directional endpoints including EP0 (*)
