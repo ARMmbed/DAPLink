@@ -65,6 +65,7 @@ parser.add_argument('projects', help='Selectively compile only the firmware spec
 parser.add_argument('--release', dest='release', action='store_true', help='Create a release with the yaml version file')
 parser.add_argument('--release-folder', type=str, default='firmware', help='Directory to create and place files in')
 parser.add_argument('--supported', dest='supported', action='store_true', help='Generate the images with official identifiers')
+parser.add_argument('--test', dest='test', action='store_true', help='Add test binaries to release')
 parser.add_argument('--toolchain', '-t', type=str, help='Toolchain (default: make_gcc_arm)')
 parser.add_argument('--generator', '-g', type=str, help='CMake Toolchain Generator (default: make)')
 parser.add_argument('--clean', dest='clean', action='store_true', help='Rebuild or delete build folder before compile')
@@ -95,7 +96,8 @@ if 'armc' in toolchain:
 if 'gcc' in toolchain and args.release:
     project_list = list(filter(lambda p: "musca" not in p, project_list))
 # remove all test projects from list
-project_list = list(filter(lambda p: not p.endswith("test_if"), project_list))
+if not args.test:
+    project_list = list(filter(lambda p: not p.endswith("test_if"), project_list))
 
 logging_level = logging.DEBUG if args.verbosity >= 2 else (logging.INFO if args.verbosity >= 1 else logging.WARNING)
 logging.basicConfig(format="%(asctime)s %(name)020s %(levelname)s\t%(message)s", level=logging_level)
@@ -141,7 +143,7 @@ for p_name in projects:
 # Generate images with boardid / familyid for supported configurations
 if args.release or args.supported:
     sys.path.append(os.path.join(daplink_dir, "test"))
-    from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO
+    from info import SUPPORTED_CONFIGURATIONS, PROJECT_RELEASE_INFO, TEST_RELEASE_INFO
     id_map = {}
     for board_id, family_id, firmware, bootloader, target in SUPPORTED_CONFIGURATIONS:
         if firmware in id_map:
@@ -183,5 +185,7 @@ if args.release:
         logger.info("Deleting: %s" % release_dir)
         shutil.rmtree(release_dir, ignore_errors=True)
     logger.info("Releasing directory: %s" % release_dir)
+
+    release_info = PROJECT_RELEASE_INFO + (TEST_RELEASE_INFO if args.test else [])
     package_release_files("build", release_dir, release_version, "projectfiles/" + toolchain,
-                          PROJECT_RELEASE_INFO, SUPPORTED_CONFIGURATIONS)
+                          release_info, SUPPORTED_CONFIGURATIONS)

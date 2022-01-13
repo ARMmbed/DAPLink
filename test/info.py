@@ -20,7 +20,7 @@ from __future__ import absolute_import
 
 # Name of all projects ready for public release
 # and info on the file to be distributed
-PROJECT_RELEASE_INFO = {
+PROJECT_RELEASE_INFO = [
     # Project Name                                  Legacy      Offset      Extension
     ("k20dx_frdmk22f_if",                           True,       0x8000,     "bin"       ),
     ("k20dx_frdmk64f_if",                           True,       0x5000,     "bin"       ),
@@ -109,7 +109,13 @@ PROJECT_RELEASE_INFO = {
     ('sam3u2c_if',                                  False,      0x0000,     "bin"       ),
     ('stm32f103xb_if',                              False,      0x0000,     "bin"       ),
     ('lpc11u35_pitaya_link_if',                     False,      0x0000,     "bin"       ),
-}
+]
+
+TEST_RELEASE_INFO = [
+    ('lpc55s69_nrf52840dk_test_if',                 False,      0x10000,    "bin"       ),
+    ('stm32f103xb_stm32f207zg_if',                  False,      0x0000,     "bin"       ),
+]
+
 
 # Add new HICs here
 VENDOR_ID = {

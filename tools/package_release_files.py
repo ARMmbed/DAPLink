@@ -204,9 +204,9 @@ if __name__ == "__main__":
     parser.add_argument('dest', help='Directory to create and place files in')
     parser.add_argument('version', type=int, help='Version number of this release')
     parser.add_argument('--toolchain', type=str, default='', help='Toolchain directory if present')
+    parser.add_argument('--test', dest='test', action='store_true', help='Add test binaries to release')
     args = parser.parse_args()
 
-    print("args", args.source, args.dest, args.version, args.toolchain)
-
+    release_info = info.PROJECT_RELEASE_INFO + (info.TEST_RELEASE_INFO if args.test else [])
     package_release_files(args.source, args.dest, args.version, args.toolchain,
-                          info.PROJECT_RELEASE_INFO, info.SUPPORTED_CONFIGURATIONS)
+                          release_info, info.SUPPORTED_CONFIGURATIONS)
