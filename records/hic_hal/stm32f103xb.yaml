@@ -22,6 +22,7 @@ common:
             - source/hic_hal/stm32/stm32f103xb
             - source/hic_hal/stm32/stm32f103xb/cmsis
             - source/hic_hal/stm32/stm32f103xb/STM32F1xx_HAL_Driver/Src
+            - source/hic_hal/cmsis-driver/uart/uart.c
 
 tool_specific:
     uvision:
