@@ -166,10 +166,10 @@ void circ_buf_pop_n(circ_buf_t *circ_buf, uint32_t n)
     state = cortex_int_get_and_disable();
 
     if (circ_buf->tail >= circ_buf->head) {
-        util_assert(circ_buf->tail - circ_buf->head <= n);
+        util_assert(circ_buf->tail - circ_buf->head >= n);
         circ_buf->head += n;
     } else {
-        util_assert(circ_buf->tail + circ_buf->size - circ_buf->head <= n);
+        util_assert(circ_buf->tail + circ_buf->size - circ_buf->head >= n);
         circ_buf->head += n;
         if (circ_buf->head >= circ_buf->size) {
             circ_buf->head -= circ_buf->size;
