@@ -87,6 +87,10 @@ int32_t uart_reset(void)
     // disable interrupt
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
+    if (cb_buf.tx_size != 0) {
+        USART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
+        cb_buf.tx_size = 0;
+    }
     // enable interrupt
     NVIC_EnableIRQ(USART_IRQ);
 
@@ -159,6 +163,10 @@ int32_t uart_set_configuration(UART_Configuration *config)
 
     NVIC_DisableIRQ(USART_IRQ);
     clear_buffers();
+    if (cb_buf.tx_size != 0) {
+        USART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
+        cb_buf.tx_size = 0;
+    }
 
     // If there was no Receive() call in progress aborting it is harmless.
     USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
