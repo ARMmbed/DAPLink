@@ -1,4 +1,6 @@
 common:
+    includes:
+        - source/board/microbitv2/board_id.h
     sources:
         board:
             - source/board/nrf52820_microbit_bl.c

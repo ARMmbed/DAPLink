@@ -210,6 +210,11 @@ static void power_mode_switch(smc_power_state_t curPowerState, app_power_mode_t 
 
 static void power_pre_switch_hook(smc_power_state_t originPowerState, app_power_mode_t targetMode)
 {
+    // TODO: Check if this is necessary, when we have time to test. This has always been in the V2 code.
+    // The comment here is misleading. The code waits for completion of the current byte tranmission,
+    // which is from interface to target. We could possibly move this into uart_uninitialize(),
+    // and consider waiting for the write buffer to empty too, but as this is our only call to uart_uninitialize()
+    // and we never get here with USB connected it may be unnecessary.
     /* Wait for debug console output finished. */
     while (!(LPUART_STAT_TC_MASK & UART->STAT))
     {
@@ -255,6 +260,9 @@ static void power_post_switch_hook(smc_power_state_t originPowerState, app_power
     PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, (port_mux_t)PIN_UART_TX_MUX_ALT);
 
     uart_initialize();
+    // TODO: Check if this is necessary, when we have time to test. This has always been in the V2 code.
+    // It used to be at the end of board_handle_powerdown. We are not aware that this is causing a problem,
+    // but it seems odd if we have been woken by an I2C transaction from the target.
     i2c_deinitialize();
     i2c_initialize();
 }

@@ -19,12 +19,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef STORAGE_H_
 #define STORAGE_H_
 
 #include <stdint.h>
 #include "storage_config.h"
+
+#include "virtual_fs.h"
+#include "cmsis_compiler.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,12 +51,34 @@ extern "C" {
 #define STORAGE_SIZE                (STORAGE_ADDRESS_END - STORAGE_ADDRESS_START)
 #define STORAGE_SECTOR_COUNT        (STORAGE_SIZE / STORAGE_SECTOR_SIZE)
 #define STORAGE_CFG_FILENAME        "DATA    BIN"
+#define STORAGE_CFG_FILENAME_SIZE   11
 #define STORAGE_CFG_FILEVISIBLE     false
 #define STORAGE_CFG_FILESIZE        (STORAGE_SIZE - STORAGE_SECTOR_SIZE)
 
-uint32_t storage_program_page(uint32_t adr, uint32_t sz, uint8_t *buf);
-uint32_t storage_erase_sector(uint32_t adr);
-uint32_t storage_erase_all(void);
+typedef enum {
+    STORAGE_SUCCESS = 0,
+    STORAGE_ERROR
+} storage_status_t;
+
+void storage_init(void);
+uint8_t* storage_get_data_pointer(uint32_t adr);
+storage_status_t storage_write(uint32_t adr, uint32_t sz, uint8_t *buf);
+storage_status_t storage_erase_sector(uint32_t adr);
+storage_status_t storage_erase_range(uint32_t star_adr, uint32_t end_adr);
+storage_status_t storage_erase_all(void);
+storage_status_t storage_program_flash(uint32_t adr, uint32_t sz, uint8_t *buf);
+storage_status_t storage_erase_flash_page(uint32_t adr);
+storage_status_t storage_cfg_write(void);
+storage_status_t storage_cfg_erase(void);
+storage_status_t storage_cfg_set_filename(const char * const filename);
+storage_status_t storage_cfg_set_file_size(const uint32_t file_size);
+storage_status_t storage_cfg_set_file_visible(const bool file_visible);
+storage_status_t storage_cfg_set_encoding_window(const uint32_t start, const uint32_t end);
+char* storage_cfg_get_filename(void);
+uint32_t storage_cfg_get_file_size(void);
+uint8_t storage_cfg_get_file_visible(void);
+uint32_t storage_cfg_get_encoding_start(void);
+uint32_t storage_cfg_get_encoding_end(void);
 
 #ifdef __cplusplus
 }
