@@ -48,9 +48,9 @@
 extern ARM_DRIVER_I2C            Driver_I2C0;
 static ARM_DRIVER_I2C *I2Cdrv = &Driver_I2C0;
 
-static uint8_t g_slave_TX_buff[I2C_DATA_LENGTH] = { 0 };
 static uint16_t g_slave_TX_i = 0;
-static uint8_t g_slave_RX_buff[I2C_DATA_LENGTH] = { 0 };
+static uint8_t __ALIGNED(4) g_slave_TX_buff[I2C_DATA_LENGTH] = { 0 };
+static uint8_t __ALIGNED(4) g_slave_RX_buff[I2C_DATA_LENGTH] = { 0 };
 
 static i2cCallback_t pfWriteCommsCallback = NULL;
 static i2cCallback_t pfReadCommsCallback = NULL;

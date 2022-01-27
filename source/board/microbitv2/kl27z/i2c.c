@@ -35,8 +35,8 @@
 #define I2C_SLAVE_CLK_FREQ CLOCK_GetFreq(I2C1_CLK_SRC)
 
 static uint16_t g_slave_TX_i = 0;
-static uint8_t g_slave_TX_buff[I2C_DATA_LENGTH];
-static uint8_t g_slave_RX_buff[I2C_DATA_LENGTH];
+static uint8_t __ALIGNED(4) g_slave_TX_buff[I2C_DATA_LENGTH];
+static uint8_t __ALIGNED(4) g_slave_RX_buff[I2C_DATA_LENGTH];
 
 i2c_slave_handle_t g_s_handle;
 static volatile bool g_SlaveCompletionFlag = false;
