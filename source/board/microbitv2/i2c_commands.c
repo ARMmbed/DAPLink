@@ -123,6 +123,7 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     if (pI2cCommand->cmdData.writeReqCmd.dataSize == 1) {
                         if (pI2cCommand->cmdData.writeReqCmd.data[0] == MB_POWER_DOWN) {
                             interface_power_mode = MB_POWER_DOWN;
+                            main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
                             i2cResponse.cmdId = gWriteResponse_c;
                             i2cResponse.cmdData.writeRspCmd.propertyId = pI2cCommand->cmdData.writeReqCmd.propertyId;
                         } else {
@@ -191,18 +192,6 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
 }
 
 static void i2c_read_comms_callback(uint8_t* pData, uint8_t size) {
-    i2cCommand_t* pI2cCommand = (i2cCommand_t*) pData;
-
-    switch (pI2cCommand->cmdId) {
-        case gWriteResponse_c:
-            switch (pI2cCommand->cmdData.writeRspCmd.propertyId) {
-                case gPowerMode_c:
-                    main_shutdown_state = MAIN_SHUTDOWN_REQUESTED;
-                break;
-            }
-        break;
-    }
-
     // Release COMBINED_SENSOR_INT
     gpio_disable_combined_int();
 }
