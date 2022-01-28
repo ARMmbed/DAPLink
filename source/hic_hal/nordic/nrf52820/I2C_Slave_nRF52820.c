@@ -417,9 +417,10 @@ static int32_t I2C_Control (uint32_t control, uint32_t arg, I2C_RESOURCES *i2c) 
     case ARM_I2C_ABORT_TRANSFER:
       break;
 
-    default: return ARM_DRIVER_ERROR;
+    default:
+      break;
   }
-  return ARM_DRIVER_OK;
+  return ret;
 }
 
 
