@@ -37,9 +37,9 @@ enum hex_record_t {
 };
 
 typedef union hex_line_t hex_line_t;
-union __attribute__((packed)) hex_line_t {
+__PACKED_UNION hex_line_t {
     uint8_t buf[0x25];
-    struct __attribute__((packed)) {
+    __PACKED_STRUCT {
         uint8_t  byte_count;
         uint16_t address;
         uint8_t  record_type;
@@ -176,6 +176,9 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                             if (((next_address_to_write & 0xffff0000) | line.address) != next_address_to_write) {
                                                 load_unaligned_record = 1;
                                                 status = HEX_PARSE_UNALIGNED;
+                                                // Function will be executed again and will start by finishing to process this record by
+                                                // adding the this line into bin_buf, so the 1st loop iteration should be the next blob byte
+                                                hex_blob++;
                                                 goto hex_parser_exit;
                                             } else {
                                                 // This should be superfluous but it is necessary for GCC
