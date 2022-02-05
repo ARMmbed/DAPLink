@@ -151,7 +151,18 @@ class MassStorageTester(object):
     def _check_data_correct(self, expected_data, _):
         """Return True if the actual data written matches the expected"""
         data_len = len(expected_data)
-        data_loaded = self.board.read_target_memory(self._start, data_len)
+        for retry_count in range(self.RETRY_COUNT):
+            if retry_count > 0:
+                test_info.info('Previous attempts %s' % retry_count)
+            try:
+                data_loaded = self.board.read_target_memory(self._start, data_len)
+            except:
+                time.sleep(self.DELAY_BEFORE_RETRY_S)
+                continue
+            break
+        else:
+            raise Exception("read_target_memory() failed after %i retries" % self.RETRY_COUNT)
+
         return _same(expected_data, data_loaded)
 
     def run(self):
@@ -296,6 +307,8 @@ class MassStorageTester(object):
         assert not failure_expected
         assert not failure_occured
 
+        time.sleep(1)
+
         # If there is expected data then compare
         if self._expected_data:
             if self._check_data_correct(self._expected_data, test_info):
@@ -378,11 +391,12 @@ def test_mass_storage(workspace, parent_test, quick=False):
 
     # Test loading a blank binary - this image should cause a timeout
     #    since it doesn't have a valid vector table
-    test = MassStorageTester(board, test_info, "Load blank binary")
-    test.set_programming_data(blank_bin_contents, 'image.bin')
-    test.set_expected_failure_msg("The transfer timed out.", "transient, user")
-    test.set_expected_data(None, start)
-    test.run()
+    if not quick:
+        test = MassStorageTester(board, test_info, "Load blank binary")
+        test.set_programming_data(blank_bin_contents, 'image.bin')
+        test.set_expected_failure_msg("The transfer timed out.", "transient, user")
+        test.set_expected_data(None, start)
+        test.run()
 
     # Test loading a blank binary with a vector table but padded with 0xFF.
     #    A blank image can lock some devices.
@@ -397,14 +411,15 @@ def test_mass_storage(workspace, parent_test, quick=False):
         test.run()
 
     # Test a normal load with dummy files created beforehand
-    test = MassStorageTester(board, test_info, "Extra Files")
-    test.set_programming_data(hex_file_contents, 'image.hex')
-    test.add_mock_dirs(MOCK_DIR_LIST)
-    test.add_mock_files(MOCK_FILE_LIST)
-    test.add_mock_dirs_after_load(MOCK_DIR_LIST_AFTER)
-    test.add_mock_files_after_load(MOCK_FILE_LIST_AFTER)
-    test.set_expected_data(bin_file_contents, start)
-    test.run()
+    if not quick:
+        test = MassStorageTester(board, test_info, "Extra Files")
+        test.set_programming_data(hex_file_contents, 'image.hex')
+        test.add_mock_dirs(MOCK_DIR_LIST)
+        test.add_mock_files(MOCK_FILE_LIST)
+        test.add_mock_dirs_after_load(MOCK_DIR_LIST_AFTER)
+        test.add_mock_files_after_load(MOCK_FILE_LIST_AFTER)
+        test.set_expected_data(bin_file_contents, start)
+        test.run()
     # Note - it is not unexpected for an "Extra Files" test to fail
     #        when a binary file is loaded, since there is no way to
     #        tell where the end of the file is.
