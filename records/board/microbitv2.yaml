@@ -5,8 +5,7 @@ common:
         - MSC_LED_DEF=GPIO_LED_ON
         - USB_PROD_STR="BBC micro:bit CMSIS-DAP"
         - IO_CONFIG_OVERRIDE
-        - DELAY_FAST_CYCLES=2U          # Fast delay needed to reach 8MHz SWD clock speed
-        - DAP_DEFAULT_SWJ_CLOCK=8000000
+        - DAP_DEFAULT_SWJ_CLOCK=6000000     # Results in one slow delay of 3 cycles 
         - BOARD_USB_BMAXPOWER=0x96
         - CDC_ACM_DEFAULT_BAUDRATE=115200
     includes:
