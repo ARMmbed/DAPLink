@@ -33,18 +33,24 @@
 
 #if DEBUG_I2C
 #include "daplink_debug.h"
-#define debug_i2c_printf    debug_msg
-#define debug_i2c_data      debug_data
+#define debug_i2c_printf        debug_msg
+#define debug_i2c_data          debug_data
+#define debug_i2c_array(a, i)   do {   \
+        for (int x = 0; x < i; x++) debug_msg("%02x ", a[x]); \
+        debug_data((uint8_t *)"\n", 1); \
+    } while(0)
 #else
 #define debug_i2c_printf(...)
 #define debug_i2c_data(...)
+#define debug_i2c_array(...)
 #endif
 
 extern ARM_DRIVER_I2C            Driver_I2C0;
 static ARM_DRIVER_I2C *I2Cdrv = &Driver_I2C0;
 
-static uint8_t g_slave_TX_buff[I2C_DATA_LENGTH] = { 0 };
-static uint8_t g_slave_RX_buff[I2C_DATA_LENGTH] = { 0 };
+static uint16_t g_slave_TX_i = 0;
+static uint8_t __ALIGNED(4) g_slave_TX_buff[I2C_DATA_LENGTH] = { 0 };
+static uint8_t __ALIGNED(4) g_slave_RX_buff[I2C_DATA_LENGTH] = { 0 };
 
 static i2cCallback_t pfWriteCommsCallback = NULL;
 static i2cCallback_t pfReadCommsCallback = NULL;
@@ -64,40 +70,39 @@ static callbackToExecute_t callbackToExecute = {
 static uint8_t i2c_wake_timeout = 0;
 static bool i2c_allow_sleep = true;
 
+static void i2c_clearTxBuffer(void);
+
 
 static void i2c_scheduleCallback(i2cCallback_t callback, uint8_t* pData, uint8_t size)
 {
-    callbackToExecute.pfCallback = callback;
-    callbackToExecute.pData = pData;
-    callbackToExecute.size = size;
-
-    // Raise event so that `board_custom_event()` gets called in the main task
-    main_board_event();
+    if ((callback == pfReadCommsCallback) || (callback == pfReadFlashCallback)) {
+        // Run the I2C TX callback in the interrupt context
+        debug_i2c_data((uint8_t *)"[cbTx]\n", 7);
+        callback(pData, size);
+        i2c_clearTxBuffer();
+    } else {
+        // Raise an RTOS event to run the heavier I2C RX callback in main task
+        callbackToExecute.pfCallback = callback;
+        callbackToExecute.pData = pData;
+        callbackToExecute.size = size;
+        i2c_allow_sleep = false;
+        main_board_event();
+    }
 }
 
 // Hook function executed in the main task
 void board_custom_event()
 {
-    i2cCallback_t evtCallback = NULL;
-
     if (callbackToExecute.pfCallback != NULL) {
-        debug_i2c_data((uint8_t *)"[clbk]\n", 7);
+        debug_i2c_data((uint8_t *)"[cbRx]\n", 7);
         callbackToExecute.pfCallback(callbackToExecute.pData, callbackToExecute.size);
 
         // Clear the callback data
-        evtCallback = callbackToExecute.pfCallback; // Save for later
         callbackToExecute.pfCallback = NULL;
         callbackToExecute.pData = NULL;
         callbackToExecute.size = 0;
 
         i2c_allow_sleep = true;
-    }
-
-    // Clear TX buffer after a TX callback
-    if ((pfReadCommsCallback != NULL && evtCallback == pfReadCommsCallback) ||
-        (pfReadFlashCallback != NULL && evtCallback == pfReadFlashCallback)) {
-        debug_i2c_data((uint8_t *)"[clrTx]\n", 8);
-        memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
     }
 }
 
@@ -116,13 +121,11 @@ static void i2c_signalEvent(uint32_t event) {
 
     if (event & ARM_I2C_EVENT_TRANSFER_DONE) {
         // debug_i2c_data((uint8_t *)"[d", 2);
-        i2c_allow_sleep = false;
 
         if (prev_event & ARM_I2C_EVENT_SLAVE_RECEIVE) {
             int32_t data_count = I2Cdrv->GetDataCount();
-            debug_i2c_printf("[rx][%d] ", data_count);
-            // for (int i = 0; i < data_count; i++) debug_i2c_printf("%02x ", g_slave_RX_buff[i]);
-            debug_i2c_data((uint8_t *)"\n", 1);
+            debug_i2c_printf("[R0%x]\n", g_slave_RX_buff[0]);
+            // debug_i2c_array(g_slave_RX_buff, data_count);
 
             // Ignore NOP commands and 0 length transmissions
             if ((data_count != 0) && (g_slave_RX_buff[0] != gNopCmd_c)) {
@@ -134,9 +137,8 @@ static void i2c_signalEvent(uint32_t event) {
             }
         } else if (prev_event & ARM_I2C_EVENT_SLAVE_TRANSMIT) {
             int32_t data_count = I2Cdrv->GetDataCount();
-            debug_i2c_printf("[tx][%d] ", data_count);
-            // for (int i = 0; i < 5; i++) debug_i2c_printf("%02x ", g_slave_TX_buff[i]);
-            debug_i2c_data((uint8_t *)"\n", 1);
+            debug_i2c_printf("[T0%x]\n", g_slave_TX_buff[0]);
+            // debug_i2c_array(g_slave_TX_buff, 5);
 
             if (event & EXTENSION_I2C_EVENT_SLAVE_ADDR_0) {
                 i2c_scheduleCallback(pfReadCommsCallback, &g_slave_TX_buff[0], data_count);
@@ -169,7 +171,7 @@ static void i2c_signalEvent(uint32_t event) {
 
 void i2c_initialize()
 {
-    i2c_clearBuffers();
+    i2c_clearState();
 
     // I2C addresses configured via default values from RTE_Device.h
     I2Cdrv->Initialize(i2c_signalEvent);
@@ -223,14 +225,24 @@ i2c_status_t i2c_registerReadCallback(i2cCallback_t readCallback, uint8_t slaveA
     return status;
 }
 
-void i2c_clearBuffers()
+void i2c_clearState()
 {
-    memset(&g_slave_TX_buff, 0, sizeof(g_slave_TX_buff));
+    i2c_clearTxBuffer();
     memset(&g_slave_RX_buff, 0, sizeof(g_slave_RX_buff));
     callbackToExecute.pfCallback = NULL;
     callbackToExecute.pData = NULL;
     callbackToExecute.size = 0;
+    i2c_wake_timeout = 0;
     i2c_allow_sleep = true;
+}
+
+void i2c_clearTxBuffer()
+{
+    memset(&g_slave_TX_buff, 0, g_slave_TX_i);
+    g_slave_TX_i = 0;
+    // Set the buffer with the "busy flag"
+    g_slave_TX_buff[0] = gErrorResponse_c;
+    g_slave_TX_buff[1] = gErrorBusy_c;
 }
 
 void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
@@ -238,9 +250,9 @@ void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
     if ((position + size) > I2C_DATA_LENGTH) {
         return;
     }
-    // TODO: Taken from KL27 code, replace with memcpy?
-    for (uint32_t i = 0; i < size; i++) { 
-        g_slave_TX_buff[position + i] = data[i];
+    memcpy(g_slave_TX_buff + position, data, size);
+    if (position + size > g_slave_TX_i) {
+        g_slave_TX_i = position + size;
     }
     i2c_allow_sleep = false;
 }
@@ -248,6 +260,9 @@ void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size)
 void i2c_fillBufferHead(uint8_t data)
 {
     g_slave_TX_buff[0] = data;
+    if (0 == g_slave_TX_i) {
+        g_slave_TX_i = 1;
+    }
     i2c_allow_sleep = false;
 }
 

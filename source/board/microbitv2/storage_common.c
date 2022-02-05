@@ -40,7 +40,7 @@ typedef __PACKED_STRUCT storage_cfg_tag {
 } storage_cfg_t;
 
 
-static storage_cfg_t s_storage_cfg = {
+static storage_cfg_t __ALIGNED(4) s_storage_cfg = {
     .key = STORAGE_CFG_KEY,
     .fileName = STORAGE_CFG_FILENAME,
     .fileVisible = STORAGE_CFG_FILEVISIBLE,
