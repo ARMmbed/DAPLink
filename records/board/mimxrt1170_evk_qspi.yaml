@@ -1,0 +1,11 @@
+common:
+    macros:
+        - DAPLINK_MIMXRT_TARGET
+        - SOFT_RESET=VECTRESET
+        - SWO_UART=1
+    sources:
+        board:
+            - source/board/mimxrt1170_evk.c
+        target:
+            - source/family/nxp/mimxrt1170_spi_flash/target.c
+            - source/family/freescale/target_reset_mimxrt.c

@@ -1,4 +1,6 @@
 common:
+    macros:
+            - SWO_UART=1
     sources:
         board:
             - source/board/lpc55S69xpresso.c

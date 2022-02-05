@@ -39,9 +39,11 @@
 #elif defined (INTERFACE_SAM3U2C)
 #include "sam3u2c.h"
 #elif defined (INTERFACE_STM32F103XB)
-#include "stm32f103xb.h"
+#include "stm32f1xx.h"
 #elif defined (INTERFACE_M48SSIDAE)
 #include "M480.h"
+#elif defined (INTERFACE_NRF52820)
+#include "nrf52820.h"
 #else
 #error "CMSIS core headers needed"
 #endif

@@ -3,7 +3,7 @@
  * @brief   Implementation of vfs_manager.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,7 +21,8 @@
 
 #include <ctype.h>
 
-#include "main.h"
+#include "daplink.h"
+#include DAPLINK_MAIN_HEADER
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "virtual_fs.h"
@@ -29,7 +30,6 @@
 #include "daplink_debug.h"
 #include "info.h"
 #include "settings.h"
-#include "daplink.h"
 #include "util.h"
 #include "version_git.h"
 #include "IO_Config.h"

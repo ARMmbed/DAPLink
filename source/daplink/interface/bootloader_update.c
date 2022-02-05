@@ -3,7 +3,7 @@
  * @brief   Logic to perform a bootloader update when enabled
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2016-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2016-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,10 +28,13 @@
 #include "info.h"
 #include "daplink.h"
 #include "crc.h"
+#include "flash_hal.h"
 
+#if defined(__CC_ARM)
 // Supress the warning 'null argument provided for parameter marked with attribute "nonnull"'
 // since the vector table is at address 0
 #pragma diag_suppress 2748
+#endif
 
 #if !defined(DAPLINK_BOOTLOADER_UPDATE)
     #define DAPLINK_BOOTLOADER_UPDATE       0
@@ -48,11 +51,14 @@
 
 static bool interface_image_valid()
 {
-    uint32_t stored_crc;
+    uint32_t stored_crc = 0;
     uint32_t computed_crc;
-    
-    stored_crc = *(uint32_t *)(DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE - 4);
-    computed_crc = crc32((void *)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
+
+    if (flash_is_readable(DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE - 4, 4)) {
+        stored_crc = *(uint32_t *)(DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE - 4);
+    }
+
+    computed_crc = info_get_crc_interface();
     return computed_crc == stored_crc;
 }
 

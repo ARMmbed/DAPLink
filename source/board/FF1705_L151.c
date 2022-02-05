@@ -28,7 +28,8 @@ const board_info_t g_board_info = {
     .family_id = kStub_HWReset_FamilyID,
     .daplink_url_name =       "FF1705  HTM",
     .daplink_drive_name =       "FF1705     ",
-    .daplink_target_url = "https://mbed.org/device/?code=@U?version=@V?target_id=@T",
+    .daplink_target_url = "https://os.mbed.com/platforms/L-TEK-FF1705",
     .target_cfg = &target_device,
+    .board_vendor = "L-Tek",
+    .board_name = "FF1705",
 };
-

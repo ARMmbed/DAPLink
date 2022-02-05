@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -46,9 +47,11 @@ OPTIONAL_COPY_PATTERN_LIST = [
     "%s_map.html",
 ]
 
-TOOL_DIR = { 
+TOOL_DIR = {
     'uvision' : { 'proj_dir': os.path.join('projectfiles', 'uvision') , 'rel_dir' : 'uvision_release', 'build_dir' : 'build' },
-    'mbedcli' : { 'proj_dir': 'BUILD' , 'rel_dir' : 'mbedcli_release', 'build_dir' : 'ARM-CUSTOM_PROFILE' }        
+    'mbedcli' : { 'proj_dir': 'BUILD' , 'rel_dir' : 'mbedcli_release', 'build_dir' : 'ARM-CUSTOM_PROFILE' },
+    'progen_arm' : { 'proj_dir': 'projectfiles/make_armcc' , 'rel_dir' : 'progen_arm_release', 'build_dir' : 'build' },
+    'progen_gcc' : { 'proj_dir': 'projectfiles/make_gcc_arm' , 'rel_dir' : 'progen_gcc_release', 'build_dir' : 'build' }
 }
 
 def generate_info_files(dir):
@@ -95,7 +98,8 @@ def generate_info_files(dir):
 def main():
     """Copy imporant files for the current release"""
     parser = argparse.ArgumentParser(description='Copy imporant files for the current release')
-    parser.add_argument('--project-tool', type=str, default='uvision', choices=['uvision', 'mbedcli'], help='Choose from uvision and mbedcli')
+    parser.add_argument('--project-tool', type=str, default='uvision', choices=['uvision', 'mbedcli', 'progen_arm', 'progen_gcc'],
+                        help='Choose from uvision and mbedcli')
     args = parser.parse_args()
 
     self_path = os.path.abspath(__file__)
@@ -121,7 +125,7 @@ def main():
     os.mkdir(rel_dir)
 
     generate_info_files(rel_dir)
-    
+
     project_list = os.listdir(proj_dir)
     for project in project_list:
         src_dir = os.path.join(proj_dir, project, build_dir)

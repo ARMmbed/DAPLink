@@ -1,0 +1,6 @@
+common:
+    macros:
+        - USB_PROD_STR="LPC55xx DAPLink Bootloader"
+    sources:
+        board:
+            - source/board/lpc55s69_bl.c

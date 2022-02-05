@@ -353,7 +353,7 @@ typedef enum _dma_request_source
 ** Start of section using anonymous unions
 */
 
-#if defined(__ARMCC_VERSION)
+#if defined(__CC_ARM)
   #pragma push
   #pragma anon_unions
 #elif defined(__CWCC__)
@@ -7664,7 +7664,7 @@ typedef struct {
 ** End of section using anonymous unions
 */
 
-#if defined(__ARMCC_VERSION)
+#if defined(__CC_ARM)
   #pragma pop
 #elif defined(__CWCC__)
   #pragma pop

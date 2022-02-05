@@ -29,7 +29,7 @@
 static uint8_t xdot_set_state(target_state_t state)
 {
     uint32_t val;
-    
+
     if (state == RESET_PROGRAM) {
         swd_init();
         swd_set_target_reset(1);
@@ -78,5 +78,7 @@ const board_info_t g_board_info = {
     .daplink_url_name = "XDOT    HTM",
     .daplink_drive_name =  "XDOT       ",
     .target_cfg = &target_device,
-    .target_set_state = xdot_set_state
+    .target_set_state = xdot_set_state,
+    .board_vendor = "MultiTech",
+    .board_name = "xDot",
 };

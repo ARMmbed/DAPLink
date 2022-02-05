@@ -19,12 +19,13 @@
 ; *
 ; *****************************************************************************/
 
+#include "daplink_defaults.h"
 
 ; <h> Stack Configuration
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000200
+Stack_Size      EQU     DAPLINK_STACK_SIZE
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -35,7 +36,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000000
+Heap_Size       EQU     DAPLINK_HEAP_SIZE
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
@@ -60,12 +61,12 @@ __Vectors       DCD     __initial_sp              ;  0: Top of Stack
                 DCD     BusFault_Handler          ;  5: Bus Fault Handler
                 DCD     UsageFault_Handler        ;  6: Usage Fault Handler
                 DCD     0                         ;  7: Reserved
-                DCD     DAPLINK_BUILD_KEY         ;  8: Build type - BL/IF
-                DCD     DAPLINK_HIC_ID            ;  9: Compatibility
-                DCD     DAPLINK_VERSION           ; 10:Version
+                DCD     DAPLINK_BUILD_KEY         ;  8: DAPLINK: Build type (BL/IF)
+                DCD     DAPLINK_HIC_ID            ;  9: DAPLINK: Compatibility
+                DCD     DAPLINK_VERSION           ; 10: DAPLINK: Version
                 DCD     SVC_Handler               ; 11: SVCall Handler
                 DCD     DebugMon_Handler          ; 12: Debug Monitor Handler
-                DCD     g_board_info              ; 13: Ptr to Board info, family info other target details
+                DCD     g_board_info              ; 13: DAPLINK: Pointer to board/family/target info
                 DCD     PendSV_Handler            ; 14: PendSV Handler
                 DCD     SysTick_Handler           ; 15: SysTick Handler
 

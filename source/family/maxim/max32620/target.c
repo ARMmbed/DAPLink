@@ -25,6 +25,7 @@
 
 /* MAX32620 2MiB Flash, 256KiB RAM */
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = FLASH_BASE,
@@ -33,4 +34,6 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20000000 + KB(256),
+    .target_vendor                  = "Maxim",
+    .target_part_number             = "MAX32620",
 };

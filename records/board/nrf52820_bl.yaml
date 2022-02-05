@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/nrf52820_bl.c

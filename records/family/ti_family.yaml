@@ -1,4 +1,0 @@
-common:
-    sources:
-        target:
-            - source/target/ti/target_reset_ti.c

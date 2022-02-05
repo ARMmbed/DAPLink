@@ -24,33 +24,28 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-#include "IO_Config.h"
+#include "device.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef int cortex_int_state_t;
+typedef uint32_t cortex_int_state_t;
 
-__attribute__((always_inline))
-static cortex_int_state_t cortex_int_get_and_disable(void)
+__STATIC_FORCEINLINE cortex_int_state_t cortex_int_get_and_disable(void)
 {
     cortex_int_state_t state;
-    state = __disable_irq();
+    state = __get_PRIMASK();
+    __disable_irq();
     return state;
 }
 
-__attribute__((always_inline))
-static void cortex_int_restore(cortex_int_state_t state)
+__STATIC_FORCEINLINE void cortex_int_restore(cortex_int_state_t state)
 {
-    if (!state) {
-        __enable_irq();
-    }
+    __set_PRIMASK(state);
 }
 
-__attribute__((always_inline))
-static bool cortex_in_isr(void)
+__STATIC_FORCEINLINE bool cortex_in_isr(void)
 {
     return (__get_xPSR() & 0x1F) != 0;
 }

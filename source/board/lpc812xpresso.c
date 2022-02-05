@@ -27,4 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "1050",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "LPC812Xpresso",
 };

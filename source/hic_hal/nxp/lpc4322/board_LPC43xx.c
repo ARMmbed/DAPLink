@@ -24,8 +24,8 @@
 
 void sdk_init(void)
 {
-    /* Set core clock to 96MHz */
-    CGU_Init(96000000);
+    /* Set core clock to 120MHz */
+    CGU_Init(120000000);
     /* Set up USB0 clock */
     /* Disable PLL first */
     CGU_EnableEntity(CGU_CLKSRC_PLL0, DISABLE);

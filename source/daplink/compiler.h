@@ -22,6 +22,8 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
+#include "cmsis_compiler.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,7 +39,30 @@ extern "C" {
 // conflicts resulting from the same enum being declared multiple times.
 #define COMPILER_ASSERT(e) enum { COMPILER_CONCAT(compiler_assert_, __COUNTER__) = 1/((e) ? 1 : 0) }
 
-#define __at(_addr) __attribute__ ((at(_addr)))
+// Macros to disable optimisation of a function.
+#if (defined(__ICCARM__))
+#define NO_OPTIMIZE_PRE _Pragma("optimize = none")
+#define NO_OPTIMIZE_INLINE
+#define NO_OPTIMIZE_POST
+#elif (defined(__CC_ARM)) /* ARMCC */
+#define NO_OPTIMIZE_PRE _Pragma("push") \
+                        _Pragma("O0")
+#define NO_OPTIMIZE_INLINE
+#define NO_OPTIMIZE_POST _Pragma("pop")
+#define RAM_FUNCTION __attribute__((section("ram_func")))
+#elif (defined(__ARMCC_VERSION)) /* ARMCLANG */
+#define NO_OPTIMIZE_PRE
+#define NO_OPTIMIZE_INLINE
+#define NO_OPTIMIZE_POST
+#define RAM_FUNCTION __attribute__((section("ram_func")))
+#elif (defined(__GNUC__))
+#define NO_OPTIMIZE_PRE
+#define NO_OPTIMIZE_INLINE __attribute__((optimize("O0")))
+#define NO_OPTIMIZE_POST
+#define RAM_FUNCTION __attribute__((long_call, section(".ram_func")))
+#else
+#error "Unknown compiler"
+#endif
 
 #ifdef __cplusplus
 }

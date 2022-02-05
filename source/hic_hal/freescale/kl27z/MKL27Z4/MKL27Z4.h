@@ -318,8 +318,12 @@ typedef enum _dma_request_source
 */
 
 #if defined(__ARMCC_VERSION)
-  #pragma push
-  #pragma anon_unions
+  #if (__ARMCC_VERSION >= 6010050)
+    #pragma clang diagnostic push
+  #else
+    #pragma push
+    #pragma anon_unions
+  #endif
 #elif defined(__CWCC__)
   #pragma push
   #pragma cpp_extensions on
@@ -6249,7 +6253,11 @@ typedef struct {
 */
 
 #if defined(__ARMCC_VERSION)
-  #pragma pop
+  #if (__ARMCC_VERSION >= 6010050)
+    #pragma clang diagnostic pop
+  #else
+    #pragma pop
+  #endif
 #elif defined(__CWCC__)
   #pragma pop
 #elif defined(__GNUC__)

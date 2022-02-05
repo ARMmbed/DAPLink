@@ -1,7 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/dipdap_sdt64b.c
-        family:
-            - source/family/freescale/k64f/target.c
-            - source/family/freescale/target_reset_Kseries.c

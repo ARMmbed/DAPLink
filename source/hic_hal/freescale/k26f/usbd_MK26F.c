@@ -53,8 +53,8 @@ typedef struct __EP {
     uint32_t maxPacket;
 } EP;
 
-EPQH __align(2048) EPQHx[(USBD_EP_NUM + 1) * 2];
-dTD  __align(32) dTDx[(USBD_EP_NUM + 1) * 2];
+EPQH __ALIGNED(2048) EPQHx[(USBD_EP_NUM + 1) * 2];
+dTD  __ALIGNED(32) dTDx[(USBD_EP_NUM + 1) * 2];
 
 EP Ep[(USBD_EP_NUM + 1) * 2];
 uint32_t BufUsed;
@@ -70,17 +70,17 @@ uint32_t cmpl_pnd;
 #if USBD_VENDOR_ENABLE
 /* custom class: user defined buffer size */
 #define EP_BUF_POOL_SIZE 0x1000
-uint8_t __align(4096) EPBufPool[EP_BUF_POOL_SIZE]
+uint8_t __ALIGNED(4096) EPBufPool[EP_BUF_POOL_SIZE]
 #else
 /* supported classes are used */
-uint8_t __align(4096) EPBufPool[
+uint8_t __ALIGNED(4096) EPBufPool[
     USBD_MAX_PACKET0                                                                                                     * 2 +
     USBD_HID_ENABLE     *  (HS(USBD_HID_HS_ENABLE)      ? USBD_HID_HS_WMAXPACKETSIZE     : USBD_HID_WMAXPACKETSIZE)      * 2 +
     USBD_MSC_ENABLE     *  (HS(USBD_MSC_HS_ENABLE)      ? USBD_MSC_HS_WMAXPACKETSIZE     : USBD_MSC_WMAXPACKETSIZE)      * 2 +
     USBD_ADC_ENABLE     *  (HS(USBD_ADC_HS_ENABLE)      ? USBD_ADC_HS_WMAXPACKETSIZE     : USBD_ADC_WMAXPACKETSIZE)          +
     USBD_CDC_ACM_ENABLE * ((HS(USBD_CDC_ACM_HS_ENABLE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE  : USBD_CDC_ACM_WMAXPACKETSIZE)      +
-                           (HS(USBD_CDC_ACM_HS_ENABLE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE1 : USBD_CDC_ACM_WMAXPACKETSIZE1) * 2) + 
-    USBD_BULK_ENABLE     *  (HS(USBD_BULK_HS_ENABLE)      ? USBD_BULK_HS_WMAXPACKETSIZE     : USBD_BULK_WMAXPACKETSIZE)      * 2 
+                           (HS(USBD_CDC_ACM_HS_ENABLE) ? USBD_CDC_ACM_HS_WMAXPACKETSIZE1 : USBD_CDC_ACM_WMAXPACKETSIZE1) * 2) +
+    USBD_BULK_ENABLE     *  (HS(USBD_BULK_HS_ENABLE)      ? USBD_BULK_HS_WMAXPACKETSIZE     : USBD_BULK_WMAXPACKETSIZE)      * 2
 ];
 #endif
 
@@ -158,7 +158,7 @@ void USBD_Init(void)
  *    Return Value:    None
  */
 
-void USBD_Connect(uint32_t con)
+void USBD_Connect(BOOL con)
 {
     if (con) {
         USBHS->USBCMD |= 1;            /* run */
@@ -281,7 +281,7 @@ void USBD_WakeUp(void)
  *    Return Value:    None
  */
 
-void USBD_WakeUpCfg(uint32_t cfg)
+void USBD_WakeUpCfg(BOOL cfg)
 {
     /* Not needed */
 }
@@ -308,7 +308,7 @@ void USBD_SetAddress(uint32_t adr, uint32_t setup)
  *    Return Value:    None
  */
 
-void USBD_Configure(uint32_t cfg)
+void USBD_Configure(BOOL cfg)
 {
     uint32_t i;
 
@@ -582,8 +582,8 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
         while (USBHS->EPSETUPSR & 1);
 
         do {
-            *((__packed uint32_t *) pData)      = EPQHx[EP_OUT_IDX(0)].setup[0];
-            *((__packed uint32_t *)(pData + 4)) = EPQHx[EP_OUT_IDX(0)].setup[1];
+            __UNALIGNED_UINT32_WRITE(pData, EPQHx[EP_OUT_IDX(0)].setup[0]);
+            __UNALIGNED_UINT32_WRITE(pData + 4, EPQHx[EP_OUT_IDX(0)].setup[1]);
             cnt = 8;
             USBHS->USBCMD |= (1UL << 13);
         } while (!(USBHS->USBCMD & (1UL << 13)));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 ARM Limited. All rights reserved.
+ * Copyright (c) 2013-2021 ARM Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -17,8 +17,8 @@
  *
  * ----------------------------------------------------------------------
  *
- * $Date:        1. December 2017
- * $Revision:    V2.0.0
+ * $Date:        29. March 2021
+ * $Revision:    V2.0.1
  *
  * Project:      CMSIS-DAP Source
  * Title:        SWO.c CMSIS-DAP SWO I/O
@@ -32,6 +32,8 @@
 #endif
 #if (SWO_STREAM != 0)
 #include "cmsis_os2.h"
+#define   osObjectsExternal
+#include "osObjects.h"
 #endif
 
 #if (SWO_STREAM != 0)
@@ -42,15 +44,11 @@
 
 #if (SWO_UART != 0)
 
-#ifndef  SWO_USART_PORT
-#define  SWO_USART_PORT 0           /* USART Port Number */
-#endif
-
 // USART Driver
 #define _USART_Driver_(n)  Driver_USART##n
 #define  USART_Driver_(n) _USART_Driver_(n)
-extern ARM_DRIVER_USART    USART_Driver_(SWO_USART_PORT);
-#define pUSART           (&USART_Driver_(SWO_USART_PORT))
+extern ARM_DRIVER_USART    USART_Driver_(SWO_UART_DRIVER);
+#define pUSART           (&USART_Driver_(SWO_UART_DRIVER))
 
 static uint8_t USART_Ready = 0U;
 
@@ -79,7 +77,7 @@ static volatile uint32_t TraceIndexO  = 0U; /* Outgoing Trace Index */
 static volatile uint8_t  TraceUpdate;       /* Trace Update Flag */
 static          uint32_t TraceBlockSize;    /* Current Trace Block Size */
 
-#if (TIMESTAMP_CLOCK != 0U) 
+#if (TIMESTAMP_CLOCK != 0U)
 // Trace Timestamp
 static volatile struct {
   uint32_t index;
@@ -112,14 +110,14 @@ static void USART_Callback (uint32_t event) {
   uint32_t num;
 
   if (event &  ARM_USART_EVENT_RECEIVE_COMPLETE) {
-#if (TIMESTAMP_CLOCK != 0U) 
+#if (TIMESTAMP_CLOCK != 0U)
     TraceTimestamp.tick = TIMESTAMP_GET();
 #endif
     index_o  = TraceIndexO;
     index_i  = TraceIndexI;
     index_i += TraceBlockSize;
     TraceIndexI = index_i;
-#if (TIMESTAMP_CLOCK != 0U) 
+#if (TIMESTAMP_CLOCK != 0U)
     TraceTimestamp.index = index_i;
 #endif
     num   = TRACE_BLOCK_SIZE - (index_i & (TRACE_BLOCK_SIZE - 1U));
@@ -150,10 +148,10 @@ static void USART_Callback (uint32_t event) {
   }
 }
 
-// Enable or disable UART SWO Mode
+// Enable or disable SWO Mode (UART)
 //   enable: enable flag
 //   return: 1 - Success, 0 - Error
-__WEAK uint32_t UART_SWO_Mode (uint32_t enable) {
+__WEAK uint32_t SWO_Mode_UART (uint32_t enable) {
   int32_t status;
 
   USART_Ready = 0U;
@@ -177,10 +175,10 @@ __WEAK uint32_t UART_SWO_Mode (uint32_t enable) {
   return (1U);
 }
 
-// Configure UART SWO Baudrate
+// Configure SWO Baudrate (UART)
 //   baudrate: requested baudrate
 //   return:   actual baudrate or 0 when not configured
-__WEAK uint32_t UART_SWO_Baudrate (uint32_t baudrate) {
+__WEAK uint32_t SWO_Baudrate_UART (uint32_t baudrate) {
   int32_t  status;
   uint32_t index;
   uint32_t num;
@@ -223,14 +221,14 @@ __WEAK uint32_t UART_SWO_Baudrate (uint32_t baudrate) {
   return (baudrate);
 }
 
-// Control UART SWO Capture
+// Control SWO Capture (UART)
 //   active: active flag
 //   return: 1 - Success, 0 - Error
-__WEAK uint32_t UART_SWO_Control (uint32_t active) {
+__WEAK uint32_t SWO_Control_UART (uint32_t active) {
   int32_t status;
 
   if (active) {
-    if (!USART_Ready) { 
+    if (!USART_Ready) {
       return (0U);
     }
     TraceBlockSize = 1U;
@@ -252,17 +250,17 @@ __WEAK uint32_t UART_SWO_Control (uint32_t active) {
   return (1U);
 }
 
-// Start UART SWO Capture
+// Start SWO Capture (UART)
 //   buf: pointer to buffer for capturing
 //   num: number of bytes to capture
-__WEAK void UART_SWO_Capture (uint8_t *buf, uint32_t num) {
+__WEAK void SWO_Capture_UART (uint8_t *buf, uint32_t num) {
   TraceBlockSize = num;
   pUSART->Receive(buf, num);
 }
 
-// Get UART SWO Pending Trace Count
+// Get SWO Pending Trace Count (UART)
 //   return: number of pending trace data bytes
-__WEAK uint32_t UART_SWO_GetCount (void) {
+__WEAK uint32_t SWO_GetCount_UART (void) {
   uint32_t count;
 
   if (pUSART->GetStatus().rx_busy) {
@@ -278,36 +276,36 @@ __WEAK uint32_t UART_SWO_GetCount (void) {
 
 #if (SWO_MANCHESTER != 0)
 
-// Enable or disable Manchester SWO Mode
+// Enable or disable SWO Mode (Manchester)
 //   enable: enable flag
 //   return: 1 - Success, 0 - Error
-__WEAK uint32_t Manchester_SWO_Mode (uint32_t enable) {
+__WEAK uint32_t SWO_Mode_Manchester (uint32_t enable) {
   return (0U);
 }
 
-// Configure Manchester SWO Baudrate
+// Configure SWO Baudrate (Manchester)
 //   baudrate: requested baudrate
 //   return:   actual baudrate or 0 when not configured
-__WEAK uint32_t Manchester_SWO_Baudrate (uint32_t baudrate) {
+__WEAK uint32_t SWO_Baudrate_Manchester (uint32_t baudrate) {
   return (0U);
 }
 
-// Control Manchester SWO Capture
+// Control SWO Capture (Manchester)
 //   active: active flag
 //   return: 1 - Success, 0 - Error
-__WEAK uint32_t Manchester_SWO_Control (uint32_t active) {
+__WEAK uint32_t SWO_Control_Manchester (uint32_t active) {
   return (0U);
 }
 
-// Start Manchester SWO Capture
+// Start SWO Capture (Manchester)
 //   buf: pointer to buffer for capturing
 //   num: number of bytes to capture
-__WEAK void Manchester_SWO_Capture (uint8_t *buf, uint32_t num) {
+__WEAK void SWO_Capture_Manchester (uint8_t *buf, uint32_t num) {
 }
 
-// Get Manchester SWO Pending Trace Count
+// Get SWO Pending Trace Count (Manchester)
 //   return: number of pending trace data bytes
-__WEAK uint32_t Manchester_SWO_GetCount (void) {
+__WEAK uint32_t SWO_GetCount_Manchester (void) {
 }
 
 #endif  /* (SWO_MANCHESTER != 0) */
@@ -331,7 +329,7 @@ static void ClearTrace (void) {
   TraceIndexI   = 0U;
   TraceIndexO   = 0U;
 
-#if (TIMESTAMP_CLOCK != 0U) 
+#if (TIMESTAMP_CLOCK != 0U)
   TraceTimestamp.index = 0U;
   TraceTimestamp.tick  = 0U;
 #endif
@@ -351,13 +349,13 @@ static void ResumeTrace (void) {
 #if (SWO_UART != 0)
         case DAP_SWO_UART:
           TraceStatus = DAP_SWO_CAPTURE_ACTIVE;
-          UART_SWO_Capture(&TraceBuf[index_i], 1U);
+          SWO_Capture_UART(&TraceBuf[index_i], 1U);
           break;
 #endif
 #if (SWO_MANCHESTER != 0)
         case DAP_SWO_MANCHESTER:
           TraceStatus = DAP_SWO_CAPTURE_ACTIVE;
-          Manchester_SWO_Capture(&TraceBuf[index_i], 1U);
+          SWO_Capture_Manchester(&TraceBuf[index_i], 1U);
           break;
 #endif
         default:
@@ -379,12 +377,12 @@ static uint32_t GetTraceCount (void) {
       switch (TraceMode) {
 #if (SWO_UART != 0)
         case DAP_SWO_UART:
-          count += UART_SWO_GetCount();
+          count += SWO_GetCount_UART();
           break;
 #endif
 #if (SWO_MANCHESTER != 0)
         case DAP_SWO_MANCHESTER:
-          count += Manchester_SWO_GetCount();
+          count += SWO_GetCount_Manchester();
           break;
 #endif
         default:
@@ -471,12 +469,12 @@ uint32_t SWO_Mode (const uint8_t *request, uint8_t *response) {
   switch (TraceMode) {
 #if (SWO_UART != 0)
     case DAP_SWO_UART:
-      UART_SWO_Mode(0U);
+      SWO_Mode_UART(0U);
       break;
 #endif
 #if (SWO_MANCHESTER != 0)
     case DAP_SWO_MANCHESTER:
-      Manchester_SWO_Mode(0U);
+      SWO_Mode_Manchester(0U);
       break;
 #endif
     default:
@@ -489,12 +487,12 @@ uint32_t SWO_Mode (const uint8_t *request, uint8_t *response) {
       break;
 #if (SWO_UART != 0)
     case DAP_SWO_UART:
-      result = UART_SWO_Mode(1U);
+      result = SWO_Mode_UART(1U);
       break;
 #endif
 #if (SWO_MANCHESTER != 0)
     case DAP_SWO_MANCHESTER:
-      result = Manchester_SWO_Mode(1U);
+      result = SWO_Mode_Manchester(1U);
       break;
 #endif
     default:
@@ -535,12 +533,12 @@ uint32_t SWO_Baudrate (const uint8_t *request, uint8_t *response) {
   switch (TraceMode) {
 #if (SWO_UART != 0)
     case DAP_SWO_UART:
-      baudrate = UART_SWO_Baudrate(baudrate);
+      baudrate = SWO_Baudrate_UART(baudrate);
       break;
 #endif
 #if (SWO_MANCHESTER != 0)
     case DAP_SWO_MANCHESTER:
-      baudrate = Manchester_SWO_Baudrate(baudrate);
+      baudrate = SWO_Baudrate_Manchester(baudrate);
       break;
 #endif
     default:
@@ -579,12 +577,12 @@ uint32_t SWO_Control (const uint8_t *request, uint8_t *response) {
     switch (TraceMode) {
 #if (SWO_UART != 0)
       case DAP_SWO_UART:
-        result = UART_SWO_Control(active);
+        result = SWO_Control_UART(active);
         break;
 #endif
 #if (SWO_MANCHESTER != 0)
       case DAP_SWO_MANCHESTER:
-        result = Manchester_SWO_Control(active);
+        result = SWO_Control_Manchester(active);
         break;
 #endif
       default:
@@ -642,7 +640,7 @@ uint32_t SWO_ExtendedStatus (const uint8_t *request, uint8_t *response) {
   uint8_t  cmd;
   uint8_t  status;
   uint32_t count;
-#if (TIMESTAMP_CLOCK != 0U) 
+#if (TIMESTAMP_CLOCK != 0U)
   uint32_t index;
   uint32_t tick;
 #endif
@@ -666,7 +664,7 @@ uint32_t SWO_ExtendedStatus (const uint8_t *request, uint8_t *response) {
     num += 4U;
   }
 
-#if (TIMESTAMP_CLOCK != 0U) 
+#if (TIMESTAMP_CLOCK != 0U)
   if (cmd & 0x04U) {
     do {
       TraceUpdate = 0U;

@@ -1,0 +1,47 @@
+tool_specific:
+    armclang:
+        mcu:
+            - cortex-m0
+        macros:
+            - __PROGRAM_START
+        linker_file:
+            - source/daplink/daplink.sct
+        misc:
+            asm_flags:
+                - -g
+                - -x assembler-with-cpp
+                - -masm=auto
+                - -Wa,armasm,--no_unaligned_access
+            cpp_flags:
+                - --target=arm-arm-none-eabi
+            c_flags:
+                - --target=arm-arm-none-eabi
+                - -Oz
+                - -g
+                - --std=c99
+                - -fdata-sections
+                - -ffunction-sections
+                - -fno-builtin
+                - -fshort-enums
+                - -fshort-wchar
+                - -funsigned-char
+                - -masm=auto
+                - -nostdlib
+                - -Wall
+                - -Wno-error=cpp
+                - -Warmcc-pragma-thumb
+                - -Wno-ignored-optimization-argument
+                - -Wno-unused-command-line-argument
+                - -mno-unaligned-access
+            ld_flags:
+                - --bestdebug
+                - --summary_stderr
+                - --info=summarysizes,sizes,totals,unused,veneers
+                - --load_addr_map_info
+                - --xref
+                - --callgraph
+                - --symbols
+            pre_build_script:
+                - tools/pre_build_script.py
+            post_build_script:
+                - tools/post_build_script_armclang.py

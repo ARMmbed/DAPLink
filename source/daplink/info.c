@@ -3,7 +3,7 @@
  * @brief   Implementation of info.h
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -20,7 +20,6 @@
  */
 
 #include <string.h>
-#include "main.h"
 #include "info.h"
 #include "target_config.h"
 #include "read_uid.h"
@@ -29,6 +28,7 @@
 #include "daplink.h"
 #include "settings.h"
 #include "target_board.h"
+#include "flash_hal.h"
 
 static char hex_to_ascii(uint8_t x)
 {
@@ -46,7 +46,6 @@ static uint32_t hic_id = DAPLINK_HIC_ID;
 
 static uint32_t crc_bootloader;
 static uint32_t crc_interface;
-static uint32_t crc_config_admin;
 static uint32_t crc_config_user;
 
 // Strings
@@ -100,22 +99,8 @@ const char *info_get_unique_id_string_descriptor(void)
     return usb_desc_unique_id;
 }
 
-//prevent the compiler to optimize boad and family id
-#if (defined(__ICCARM__))
-#pragma optimize = none
+//prevent the compiler to optimize board and family id
 static void setup_basics(void)
-#elif (defined(__CC_ARM))
-#pragma push
-#pragma O0
-static void setup_basics(void)
-#elif (!defined(__GNUC__))
-/* #pragma GCC push_options */
-/* #pragma GCC optimize("O0") */
-static void __attribute__((optimize("O0"))) setup_basics(void)
-#else
-#error "Unknown compiler"
-#endif
-
 {
     uint8_t i = 0, idx = 0;
     uint16_t family_id = get_family_id();
@@ -149,22 +134,22 @@ static void __attribute__((optimize("O0"))) setup_basics(void)
     string_board_id[4] = 0;
     idx = 0;
     //Family ID
-    string_family_id[idx++] = hex_to_ascii(((family_id >> 12) & 0xF));    
+    string_family_id[idx++] = hex_to_ascii(((family_id >> 12) & 0xF));
     string_family_id[idx++] = hex_to_ascii(((family_id >> 8) & 0xF));
-#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)   //need to change the unique id when the msd is disabled 
+#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)   //need to change the unique id when the msd is disabled
     #if defined(MSC_ENDPOINT)
     if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0){
-        string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF)); 
+        string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF));
     } else {
         string_family_id[idx++] = hex_to_ascii(((family_id >> 4) & 0xF));
     }
     #else //no msd support always have the most significant bit set for family id 2nd byte
-        string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF)); 
+        string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF));
     #endif
 #else
     string_family_id[idx++] = hex_to_ascii(((family_id >> 4) & 0xF));
 #endif
-    string_family_id[idx++] = hex_to_ascii(((family_id) & 0xF));    
+    string_family_id[idx++] = hex_to_ascii(((family_id) & 0xF));
     string_family_id[idx++] = 0;
     // Version
     idx = 0;
@@ -224,40 +209,46 @@ void info_set_uuid_target(uint32_t *uuid_data)
 
 bool info_get_bootloader_present(void)
 {
-    bool present = true;
-
     if (0 == DAPLINK_ROM_BL_SIZE) {
-        present = false;
+        return false;
+    }
+
+    // Check whether we can read the bootloader info.
+    if (!flash_is_readable((uint32_t)info_bl, sizeof(daplink_info_t))) {
+        return false;
     }
 
     if (DAPLINK_BUILD_KEY_BL != info_bl->build_key) {
-        present = false;
+        return false;
     }
 
     if (DAPLINK_HIC_ID != info_bl->hic_id) {
-        present = false;
+        return false;
     }
 
-    return present;
+    return true;
 }
 
 bool info_get_interface_present(void)
 {
-    bool present = true;
-
     if (0 == DAPLINK_ROM_IF_SIZE) {
-        present = false;
+        return false;
+    }
+
+    // Check whether we can read the interface info.
+    if (!flash_is_readable((uint32_t)info_if, sizeof(daplink_info_t))) {
+        return false;
     }
 
     if (DAPLINK_BUILD_KEY_IF != info_if->build_key) {
-        present = false;
+        return false;
     }
 
     if (DAPLINK_HIC_ID != info_if->hic_id) {
-        present = false;
+        return false;
     }
 
-    return present;
+    return true;
 }
 
 bool info_get_config_admin_present(void)
@@ -282,11 +273,6 @@ uint32_t info_get_crc_interface()
     return crc_interface;
 }
 
-uint32_t info_get_crc_config_admin()
-{
-    return crc_config_admin;
-}
-
 uint32_t info_get_crc_config_user()
 {
     return crc_config_user;
@@ -296,23 +282,21 @@ void info_crc_compute()
 {
     crc_bootloader = 0;
     crc_interface = 0;
-    crc_config_admin = 0;
     crc_config_user = 0;
 
     // Compute the CRCs of regions that exist
-    if (DAPLINK_ROM_BL_SIZE > 0) {
+    if ((DAPLINK_ROM_BL_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4)) {
         crc_bootloader = crc32((void *)DAPLINK_ROM_BL_START, DAPLINK_ROM_BL_SIZE - 4);
     }
 
-    if (DAPLINK_ROM_IF_SIZE > 0) {
+    if ((DAPLINK_ROM_IF_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4)) {
         crc_interface = crc32((void *)DAPLINK_ROM_IF_START, DAPLINK_ROM_IF_SIZE - 4);
     }
 
-    if (DAPLINK_ROM_CONFIG_ADMIN_SIZE > 0) {
-        crc_config_admin = crc32((void *)DAPLINK_ROM_CONFIG_ADMIN_START, DAPLINK_ROM_CONFIG_ADMIN_SIZE);
-    }
-
-    if (DAPLINK_ROM_CONFIG_USER_SIZE > 0) {
+    if ((DAPLINK_ROM_CONFIG_USER_SIZE > 0)
+            && flash_is_readable(DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE)) {
         crc_config_user = crc32((void *)DAPLINK_ROM_CONFIG_USER_START, DAPLINK_ROM_CONFIG_USER_SIZE);
     }
 }
@@ -338,9 +322,3 @@ uint32_t info_get_interface_version(void)
     return info_if->version;
 }
 
-#if (defined(__CC_ARM))
-#pragma pop
-#endif
-#if (defined(__GNUC__))
-/* #pragma GCC pop_options */
-#endif

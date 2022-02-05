@@ -1,6 +1,6 @@
 /**
  * @file    lpc55S69xpresso.c
- * @brief   board ID for the NXP LPC54608Xpresso board
+ * @brief   board ID for the NXP LPCXpresso55S69 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -25,11 +25,12 @@
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0236",
-    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
+    .family_id = kNXP_LPC55xx_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =       "PRODINFOHTM",
     .daplink_drive_name =       "LPC55S69",
     .daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso55S69/",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "LPCXpresso55S69",
 };
-

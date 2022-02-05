@@ -29,8 +29,9 @@ optional arguments:
                         Directory with firmware images to test
   --firmware {k20dx_k64f_if,lpc11u35_sscity_if,...} (run script with --help to see full list)
                         Firmware to test
-  --project-tool TOOL    choices=['uvision', 'mbedcli'],'Tool used to compile the project',
-                        default='uvision'
+  --project-tool {make_gcc_arm,make_armclang,make_armcc,cmake_gcc_arm,cmake_armclang,cmake_armcc,uvision,mbedcli}
+                        Tool used to compile the project
+                        default='make_gcc_arm'
   --logdir LOGDIR       Directory to log test results to
   --noloadif            Skip load step for interface.
   --notestendpt         Dont test the interface USB endpoints.
@@ -66,17 +67,17 @@ import shutil
 import argparse
 import subprocess
 from enum import Enum
-from hid_test import test_hid
-from serial_test import test_serial
-from msd_test import test_mass_storage
-from usb_test import test_usb
-from daplink_board import get_all_attached_daplink_boards
+from tests.test_hid import test_hid
+from tests.test_serial import test_serial
+from tests.test_msd import test_mass_storage
+from tests.test_usb import test_usb
+from board import get_all_attached_daplink_boards
 from project_generator.generate import Generator
 from test_info import TestInfo
-from daplink_firmware import load_bundle_from_project, load_bundle_from_release
+from bundle import load_bundle_from_release, load_bundle_from_project
 from firmware import Firmware
 from target import load_target_bundle, build_target_bundle
-from test_daplink import daplink_test
+from tests.test_daplink import daplink_test
 import info
 
 DEFAULT_TEST_DIR = './test_results'
@@ -88,13 +89,13 @@ VERB_ALL = 'All'            # All errors
 VERB_LEVELS = [VERB_MINIMAL, VERB_NORMAL, VERB_VERBOSE, VERB_ALL]
 
 
-def test_endpoints(workspace, parent_test):
+def test_endpoints(workspace, parent_test, quick=False):
     """Run tests to validate DAPLINK fimrware"""
     test_info = parent_test.create_subtest('test_endpoints')
-    test_hid(workspace, test_info)
-    test_serial(workspace, test_info)
-    test_mass_storage(workspace, test_info)
-    test_usb(workspace, test_info)
+    test_hid(workspace, test_info, quick)
+    test_serial(workspace, test_info, quick)
+    test_mass_storage(workspace, test_info, quick)
+    test_usb(workspace, test_info, False, quick)
 
 
 class TestConfiguration(object):
@@ -206,7 +207,7 @@ class TestManager(object):
         assert self._firmware_filter is None
         self._firmware_filter = set(name_list)
 
-    def run_tests(self):
+    def run_tests(self, quick=False):
         """Run all configurations"""
         # Tests can only be run once per TestManager instance
         assert self._state is self._STATE.CONFIGURED
@@ -225,7 +226,7 @@ class TestManager(object):
                            test_configuration.bl_firmware)
             test_info.info("Target: %s" % test_configuration.target)
 
-            
+
             if self._load_if:
                 if_path = test_configuration.if_firmware.hex_path
                 board.load_interface(if_path, test_info)
@@ -238,10 +239,10 @@ class TestManager(object):
             board.set_check_fs_on_remount(True)
 
             if self._test_daplink:
-                daplink_test(test_configuration, test_info)
+                daplink_test(test_configuration, test_info, quick)
 
             if self._test_ep:
-                test_endpoints(test_configuration, test_info)
+                test_endpoints(test_configuration, test_info, quick)
 
             if test_info.get_failed():
                 all_tests_pass = False
@@ -521,6 +522,9 @@ def main():
     firmware_choices = [firmware for firmware in firmware_list if
                         firmware.endswith('_if')]
 
+    progen_toolchains = ['make_gcc_arm', 'make_armclang', 'make_armcc',
+                         'cmake_gcc_arm', 'cmake_armclang', 'cmake_armcc']
+    toolchains = ['uvision', 'mbedcli']
     description = 'DAPLink validation and testing tool'
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--targetdir',
@@ -533,9 +537,9 @@ def main():
     parser.add_argument('--firmwaredir',
                         help='Directory with firmware images to test',
                         default=None)
-    parser.add_argument('--project-tool', choices=['uvision', 'mbedcli'],
+    parser.add_argument('--project-tool', choices=progen_toolchains + toolchains,
                         help='Tool used to compile the project',
-                        default='uvision')
+                        default='make_gcc_arm')
     parser.add_argument('--firmware', help='Firmware to test', action='append',
                         choices=firmware_choices, default=[], required=False)
     parser.add_argument('--logdir', help='Directory to log test results to',
@@ -545,6 +549,8 @@ def main():
     parser.add_argument('--notestendpt', help='Dont test the interface '
                         'USB endpoints.', default=False, action='store_true')
     parser.add_argument('--loadbl', help='Load bootloader before test.',
+                        default=False, action='store_true')
+    parser.add_argument('--quick', help='Run shorter test sequences',
                         default=False, action='store_true')
     parser.add_argument('--testdl', help='Run DAPLink specific tests. '
                         'The DAPLink test tests bootloader updates so use'
@@ -583,7 +589,7 @@ def main():
             print("  images can be built with the RESTful Compile API.")
             print("NOTE: you can skip the endpoint tests altogether ")
             print("with --notestendpt")
-            
+
             exit(-1)
 
         if args.targetdir is not None:
@@ -682,7 +688,7 @@ def main():
         exit(0)
 
     # Run tests
-    tester.run_tests()
+    tester.run_tests(args.quick)
 
     # Print test results
     tester.print_results(args.verbose)

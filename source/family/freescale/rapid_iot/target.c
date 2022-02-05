@@ -28,38 +28,41 @@
 
 // default target information is k64f
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_k64,
     .sector_info_length             = (sizeof(sectors_info_k64))/(sizeof(sector_info_t)),
 #ifdef BOARD_RAPID_IOT
     .flash_regions[0].start         = 0x00014000,
 #else
     .flash_regions[0].start         = 0x00000000,
-#endif    
+#endif
     .flash_regions[0].end           = MB(1),
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash_k64,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_k64,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20030000,
 };
 
 target_cfg_t target_device_kw40 = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_kw40,
     .sector_info_length             = (sizeof(sectors_info_kw40))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(160),
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash_kw40,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_kw40,
     .ram_regions[0].start           = 0x1FFFF000,
     .ram_regions[0].end             = 0x20004000,
 };
 
 target_cfg_t target_device_kw41 = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info_kw41,
     .sector_info_length             = (sizeof(sectors_info_kw41))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0x4000,
     .flash_regions[0].end           = KB(512),
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash_kw41,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash_kw41,
     .ram_regions[0].start           = 0x1FFF8000,
     .ram_regions[0].end             = 0x20018000,
 };

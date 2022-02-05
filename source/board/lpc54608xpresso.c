@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name =       "LPC546XX",
     .daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso54608/",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "LPC54608Xpresso",
 };

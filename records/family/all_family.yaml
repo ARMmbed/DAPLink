@@ -8,7 +8,5 @@ common:
             - source/family/nordic/target_reset_nrf51.c
             - source/family/nordic/target_reset_nrf52.c
             - source/family/realtek/target_reset_realtek_rtl8195am.c
-            - source/family/ti/target_reset_ti.c
             - source/family/toshiba/target_reset_tz.c
-            - source/family/wiznet/target_reset_wiznet.c
             - source/family/renesas/target_reset_rza.c

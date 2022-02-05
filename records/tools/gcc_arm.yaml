@@ -1,0 +1,41 @@
+tool_specific:
+    gcc_arm:
+        macros:
+            - __PROGRAM_START
+        linker_file:
+            - source/daplink/daplink.ld
+        misc:
+            libraries:
+                - m
+                - gcc
+                - c
+                - nosys
+            common_flags:
+                - -Os
+                - -g3
+                # - -Wall
+                - -Werror
+                - -ffunction-sections
+                - -fdata-sections
+                - -std=gnu99
+                - -fshort-wchar
+                - -fno-common
+                - -ffreestanding
+                - -fverbose-asm
+                - -mno-unaligned-access
+            ld_flags:
+                - --specs=nano.specs
+                - --specs=nosys.specs
+                - -Wl,-check-sections
+                - -Wl,-fatal-warnings
+                - -Wl,--gc-sections
+                - -Wl,--no-wchar-size-warning
+                - -Wl,--print-memory-usage
+            pre_build_script:
+                - tools/pre_build_script.py
+            post_build_script:
+                - tools/post_build_script_gcc.py
+    make_gcc_arm:
+        misc:
+            common_flags:
+                - -Wa,-adln=$@.lst

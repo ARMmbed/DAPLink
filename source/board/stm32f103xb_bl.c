@@ -36,11 +36,12 @@ static const sector_info_t sectors_info[] = {
 
 // stm32f103 target information
 target_cfg_t target_device = {
+    .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start     = 0x08000000 + KB(48),
     .flash_regions[0].end       = 0x08000000 + KB(128),
-    .flash_regions[0].flags     = kRegionIsDefault,  
+    .flash_regions[0].flags     = kRegionIsDefault,
     .ram_regions[0].start       = 0x20000000,
     .ram_regions[0].end         = 0x20005000,
     /* .flash_algo not needed for bootloader */
@@ -54,6 +55,6 @@ const board_info_t g_board_info = {
     .board_id = "0000",
     .daplink_url_name =       "HELP_FAQHTM",
     .daplink_drive_name = 		"MAINTENANCE",
-    .daplink_target_url = "https://mbed.com/daplink",
+    .daplink_target_url = "https://daplink.io",
     .target_cfg = &target_device,
 };

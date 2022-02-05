@@ -1,0 +1,48 @@
+tool_specific:
+    armcc:
+        mcu:
+            - cortex-m0
+        macros:
+            - __PROGRAM_START
+        linker_file:
+            - source/daplink/daplink.sct
+        misc:
+            asm_flags:
+                - -g
+            c_flags:
+                - -O2
+                - -Ospace
+                - --gnu
+                - --c99
+                - --asm
+                - --split_sections
+                - --interleave
+                - -g
+            ld_flags:
+                - --bestdebug
+                - --summary_stderr
+                - --load_addr_map_info
+                - --xref
+                - --callgraph
+                - --symbols
+                - --info summarysizes,sizes,totals,unused,veneers
+            pre_build_script:
+                - tools/pre_build_script.py
+            post_build_script:
+                - tools/post_build_script_armcc.py
+    uvision:
+        misc:
+            asm_flags:
+                - -g
+            c_flags:
+                # uvision.uvproj.tmpl specifies:
+                # - O2, space
+                # - C99
+                # - split sections
+                - --gnu
+                - --asm
+                - --interleave
+                - -g
+            ld_flags:
+                - --bestdebug
+

@@ -36,5 +36,8 @@ const board_info_t g_board_info = {
     .board_id = "1237",
     .family_id = kNordic_Nrf52_FamilyID,
     .swd_set_target_reset = nina_swd_set_target_reset,
+    .daplink_target_url = "https://os.mbed.com/platforms/u-blox-EVK-NINA-B1",
     .target_cfg = &target_device_nrf52_64,
+    .board_vendor = "u-blox",
+    .board_name = "EVK-NINA-B1",
 };

@@ -42,6 +42,7 @@ static const sector_info_t sectors_info[] = {
 
 // m48ssidae target information
 target_cfg_t target_device = {
+    .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start     = DAPLINK_ROM_IF_START,
@@ -60,6 +61,6 @@ const board_info_t g_board_info = {
     .board_id                   = "0000",
     .daplink_url_name           = "HELP_FAQHTM",
     .daplink_drive_name         = "MAINTENANCE",
-    .daplink_target_url         = "https://mbed.com/daplink",
+    .daplink_target_url         = "https://daplink.io",
     .target_cfg                 = &target_device,
 };

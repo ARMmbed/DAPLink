@@ -22,19 +22,21 @@
 #ifndef I2C_COMMANDS_H
 #define I2C_COMMANDS_H
 
+#include <stdint.h>
 #include <stdbool.h>
 
 #include "cmsis_compiler.h"
-#include "virtual_fs.h"
-#include "fsl_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* 7-bit addresses */
 #define I2C_SLAVE_NRF_KL_COMMS      (0x70U)
 #define I2C_SLAVE_HID               (0x71U)
 #define I2C_SLAVE_FLASH             (0x72U)
+
+#define I2C_PROTOCOL_VERSION        (0x02)
 
 /*! i2c command Id type enumeration */
 typedef enum cmdId_tag {
@@ -77,7 +79,8 @@ typedef enum errorCode_tag {
     gErrorWrongPropertySize_c   = 0x35,
     gErrorReadDisallowed_c      = 0x36,
     gErrorWriteDisallowed_c     = 0x37,
-    gErrorWriteFail_c           = 0x38
+    gErrorWriteFail_c           = 0x38,
+    gErrorBusy_c                = 0x39
 } errorCode_t;
 
 typedef __PACKED_STRUCT readReqCmd_tag {
@@ -118,13 +121,6 @@ typedef __PACKED_STRUCT i2cCommand_tag {
     } cmdData;
 } i2cCommand_t;
 
-typedef __PACKED_STRUCT flashConfig_tag {
-    uint32_t        key;            // Magic key to indicate a valid record
-    vfs_filename_t  fileName;
-    uint32_t        fileSize;
-    bool            fileVisible;
-} flashConfig_t;
-
 /*! Flash interface command type */
 typedef enum flashCmdId_tag {
     gFlashCfgFileName_c     = 0x01,
@@ -135,6 +131,7 @@ typedef enum flashCmdId_tag {
     gFlashStorageSize_c     = 0x06,
     gFlashSectorSize_c      = 0x07,
     gFlashRemountMSD_c      = 0x08,
+    gFlashCfgEncWindow_c    = 0x09,
     gFlashDataRead_c        = 0x0A,
     gFlashDataWrite_c       = 0x0B,
     gFlashDataErase_c       = 0x0C,
@@ -170,26 +167,7 @@ typedef __PACKED_STRUCT i2cFlashCmd_tag {
     } cmdData;
 } i2cFlashCmd_t;
 
-/*! i2c Write Callback prototype */
-typedef void (*i2cWriteCallback_t)
-(
-    uint8_t*    pData,
-    uint8_t     size
-);
-
-/*! i2c Read Callback prototype */
-typedef void (*i2cReadCallback_t)
-(
-    uint8_t*    pData,
-    uint8_t     size
-);
-
-void i2c_initialize(void);
-void i2c_deinitialize(void);
-status_t i2c_registerWriteCallback(i2cWriteCallback_t writeCallback, uint8_t slaveAddress);
-status_t i2c_registerReadCallback(i2cReadCallback_t readCallback, uint8_t slaveAddress);
-void i2c_clearBuffer(void); 
-void i2c_fillBuffer(uint8_t* data, uint32_t position, uint32_t size);
+void i2c_cmds_init(void);
 
 #ifdef __cplusplus
 }

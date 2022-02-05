@@ -28,6 +28,13 @@
 #include "flash_blob.h"
 #include "util.h"
 
+//! @brief Current target configuration version.
+//!
+//! - Version 1: Initial version.
+enum _target_config_version {
+    kTargetConfigVersion = 1, //!< The current board info version.
+};
+
 //! This can vary from target to target and should be in the structure or flash blob
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
 
@@ -64,6 +71,15 @@ typedef struct __attribute__((__packed__)) target_cfg {
     uint16_t rt_family_id;                      /*!< If assigned, this is a flexible family ID */
     uint8_t erase_reset;                        /*!< Reset after performing an erase */
     uint8_t pad;
+
+    //! @name CMSIS-DAP v2.1 target strings
+    //@{
+    char *target_vendor;        /*!< Must match the Dvendor attribute value of the CMSIS DFP, excluding the
+                                     colon and vendor code suffix when present. Maximum 60 characters including
+                                     terminal NULL. */
+    char *target_part_number;   /*!< Part number of the target device. Must match the Dname attribute value
+                                     of the device's CMSIS DFP. Maximum 60 characters including terminal NULL. */
+    //@}
 } target_cfg_t;
 
 extern target_cfg_t target_device;

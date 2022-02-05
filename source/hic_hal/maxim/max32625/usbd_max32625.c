@@ -397,13 +397,15 @@ U32 USBD_ReadEP (U32 EPNum, U8 *pData, U32 size)
     EPNum &= EPNUM_MASK;
 
     if ((EPNum == 0) && setup_waiting) {
-        cnt = USBD_MAX_PACKET0;
+        cnt = sizeof(USB_SETUP_PACKET);
 
         if (size < cnt) {
-            cnt = size;
+            util_assert(0);
+            return 0;
         }
         setup_waiting = 0;
-        memcpy(pData, (void*)&MXC_USB->setup0, cnt);
+        ((U32 *)pData)[0] = MXC_USB->setup0;
+        ((U32 *)pData)[1] = MXC_USB->setup1;
         sup = (USB_SETUP_PACKET*)pData;
 
         if ( (sup->bmRequestType.Dir == REQUEST_HOST_TO_DEVICE) && (sup->wLength > 0) ) {

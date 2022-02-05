@@ -1,0 +1,9 @@
+common:
+    macros:
+            - SWO_UART=1
+    sources:
+        board:
+            - source/board/lpc55s69_nrf52840dk.c
+        family:
+            - source/family/nordic/nrf52/target.c
+            - source/family/nordic/target_reset_nrf52.c

@@ -28,4 +28,6 @@ const board_info_t g_board_info = {
     .family_id = kNXP_KinetisK_FamilyID,
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-K64F",
 };

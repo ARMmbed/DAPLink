@@ -73,7 +73,7 @@ __heap_limit
                 EXPORT  __Vectors
                 EXPORT  __Vectors_End
                 EXPORT  __Vectors_Size
-
+                IMPORT  g_board_info
 __Vectors       DCD     __initial_sp ; Top of Stack
                 DCD     Reset_Handler  ; Reset Handler
                 DCD     NMI_Handler                         ;NMI Handler
@@ -82,12 +82,12 @@ __Vectors       DCD     __initial_sp ; Top of Stack
                 DCD     BusFault_Handler                    ;Bus Fault Handler
                 DCD     UsageFault_Handler                  ;Usage Fault Handler
                 DCD     0                                   ;Reserved
-                DCD     DAPLINK_BUILD_KEY  ; Build type - BL/IF
-                DCD     DAPLINK_HIC_ID     ; Compatibility
-                DCD     DAPLINK_VERSION    ; Version
+                DCD     DAPLINK_BUILD_KEY                   ;DAPLINK: Build type (BL/IF)
+                DCD     DAPLINK_HIC_ID                      ;DAPLINK: Compatibility
+                DCD     DAPLINK_VERSION                     ;DAPLINK: Version
                 DCD     SVC_Handler                         ;SVCall Handler
                 DCD     DebugMon_Handler                    ;Debug Monitor Handler
-                DCD     0                                   ;Reserved
+                DCD     g_board_info                        ;DAPLINK: Pointer to board/family/target info
                 DCD     PendSV_Handler                      ;PendSV Handler
                 DCD     SysTick_Handler                     ;SysTick Handler
 

@@ -12,14 +12,24 @@ common:
     sources:
         hic_hal:
             - source/hic_hal/maxim/max32625
-            - source/hic_hal/maxim/max32625/armcc
 
 tool_specific:
     uvision:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\maxim\max32625"
-    make_armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource\hic_hal\maxim\max32625"
+        sources:
+            hic_hal:
+                - source/hic_hal/maxim/max32625/armcc
+    armcc:
+        sources:
+            hic_hal:
+                - source/hic_hal/maxim/max32625/armcc
+    armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/maxim/max32625/armcc
+    gcc_arm:
+        sources:
+            hic_hal:
+                - source/hic_hal/maxim/max32625/gcc

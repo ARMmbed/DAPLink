@@ -106,7 +106,7 @@ static uint8_t lpc55s6x_target_set_state(target_state_t state)
 }
 
 const target_family_descriptor_t g_target_family_lpc55S6X = {
-    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
+    .family_id = kNXP_LPC55xx_FamilyID, //ID not maching the predefined family ids
     .target_set_state = lpc55s6x_target_set_state,
 };
 

@@ -1,9 +1,0 @@
-common:
-    sources:
-        macros:
-            - SOFT_RESET=VECTRESET
-        board:
-            - source/board/dipdap_cc3220sf.c
-        family:
-            - source/family/ti/cc3220sf/target.c
-            - source/family/ti/target_reset_ti.c

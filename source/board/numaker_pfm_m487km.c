@@ -1,6 +1,6 @@
 /**
  * @file    numaker_pfm_m487km.c
- * @brief   board ID for the NuMaker-PFM-M487KM board
+ * @brief   board ID for the Nuvoton NuMaker-PFM-M487KM board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2020 Nuvoton Technology Corp. All Rights Reserved
@@ -28,4 +28,6 @@ const board_info_t g_board_info = {
     .family_id   = kStub_SWSysReset_FamilyID,
     .flags       = kEnablePageErase,
     .target_cfg  = &target_device,
+    .board_vendor = "Nuvoton",
+    .board_name = "NuMaker-PFM-M487KM",
 };

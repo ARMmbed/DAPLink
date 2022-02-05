@@ -77,7 +77,9 @@ def main():
         print("Error - this script must be run from the tools directory")
         exit(-1)
     version_git_dir = os.path.join(daplink_dir, "source", "daplink")
-    generate_version_file(version_git_dir)
+    error = generate_version_file(version_git_dir)
+    if error:
+        exit(-1)
     if not args.projects == []: 
         for project in args.projects:
             print("Compiling %s" % project)
@@ -119,6 +121,7 @@ def main():
             shutil.rmtree(release_dir, ignore_errors=True)
         print("Releasing directory: " + release_dir)
         toolchain_dir = args.toolchain+"-CUSTOM_PROFILE"
-        package_release_files(args.build_folder, release_dir, release_version, toolchain_dir)
+        package_release_files(args.build_folder, release_dir, release_version, toolchain_dir,
+                              info.PROJECT_RELEASE_INFO, info.SUPPORTED_CONFIGURATIONS)
 
 main()

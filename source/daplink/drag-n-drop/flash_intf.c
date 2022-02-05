@@ -20,11 +20,8 @@
  */
 
 #include "flash_intf.h"
+#include "compiler.h"
 
-
-__attribute__((weak))
-const flash_intf_t *const flash_intf_iap_protected = 0;
-__attribute__((weak))
-const flash_intf_t *const flash_intf_target = 0;
-__attribute__((weak))
-const flash_intf_t *const flash_intf_target_custom = 0;
+__WEAK const flash_intf_t *const flash_intf_iap_protected = 0;
+__WEAK const flash_intf_t *const flash_intf_target = 0;
+__WEAK const flash_intf_t *const flash_intf_target_custom = 0;

@@ -19,10 +19,10 @@
  * limitations under the License.
  */
 
-#include "swd_host.h"
 #include "DAP_config.h"
 #include "target_family.h"
 #include "target_board.h"
+#include "swd_host.h"
 
 static void swd_set_target_reset_nrf(uint8_t asserted)
 {

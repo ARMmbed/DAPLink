@@ -30,7 +30,7 @@
  *    Return Value:    TRUE - Setup vendor request ok, FALSE - Setup vendor request not supported
  */
 
-__weak BOOL USBD_EndPoint0_Setup_WinUSB_ReqToDevice(void)
+__WEAK BOOL USBD_EndPoint0_Setup_WinUSB_ReqToDevice(void)
 {
     U8  *pD;
     U32 len;

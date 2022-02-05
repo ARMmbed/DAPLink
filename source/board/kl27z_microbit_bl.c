@@ -26,6 +26,7 @@
 #include "target_family.h"
 #include "fsl_device_registers.h"
 #include "gpio.h"
+#include "board_id.h"
 
 // Warning - changing the interface start will break backwards compatibility
 COMPILER_ASSERT(DAPLINK_ROM_IF_START == KB(32));
@@ -44,11 +45,12 @@ static const sector_info_t sectors_info[] = {
 
 // kl26z128 target information
 target_cfg_t target_device = {
+    .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start     = DAPLINK_ROM_IF_START,
     .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
-    .flash_regions[0].flags     = kRegionIsDefault,  
+    .flash_regions[0].flags     = kRegionIsDefault,
     .ram_regions[0].start       = 0x1FFFE000,
     .ram_regions[0].end         = 0x20006000,
 };
@@ -58,7 +60,7 @@ const target_family_descriptor_t *g_target_family = NULL;
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0000",
+    .board_id = BOARD_ID_MB_2_DEFAULT,
     .daplink_url_name =       "HELP_FAQHTM",
     .daplink_drive_name =       "MAINTENANCE",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V&bl=1",
@@ -75,6 +77,6 @@ bool reset_button_pressed()
     else {
         btn_pressed = gpio_get_reset_btn();
     }
-    
+
     return btn_pressed;
 }

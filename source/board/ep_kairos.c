@@ -1,6 +1,6 @@
 /**
- * @file    lpc55S69xpresso.c
- * @brief   board ID for the NXP LPC54608Xpresso board
+ * @file    ep_kairos.c
+ * @brief   board ID for the Embedded Planet Kairos board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -25,7 +25,9 @@
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "2601",
-    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //ID not maching the predefined family ids
+    .family_id = CREATE_FAMILY_ID(kNXP_VendorID, 0), //ID not maching the predefined family ids
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
+    .board_vendor = "Embedded Planet",
+    .board_name = "Kairos",
 };

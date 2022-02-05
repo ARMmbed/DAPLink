@@ -1,6 +1,6 @@
 /**
  * @file    max32666fthr.c
- * @brief   board ID for the Maxim Integrated's max32666fthr
+ * @brief   board ID for the Maxim Integrated's MAX32666FTHR
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .target_cfg = &target_device,
     .daplink_url_name = "MAX32666HTM",
     .daplink_target_url = "http://www.maximintegrated.com/max32666fthr",
+    .board_vendor = "Maxim Integrated",
+    .board_name = "MAX32666FTHR",
 };

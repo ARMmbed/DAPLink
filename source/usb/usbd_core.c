@@ -44,12 +44,6 @@ OS_TID USBD_RTX_CoreTask;           /* USB Core Task ID */
 #endif
 
 
-__asm void $$USBD$$version(void)
-{
-    /* Export a version number symbol for a version control. */
-    EXPORT  __RL_USBD_VER
-__RL_USBD_VER   EQU     0x470
-}
 
 
 /*
@@ -208,7 +202,7 @@ static inline BOOL USBD_ReqGetStatus(void)
 
         case REQUEST_TO_INTERFACE:
             if ((USBD_Configuration != 0) && (USBD_SetupPacket.wIndexL < USBD_NumInterfaces)) {
-                *((__packed U16 *)USBD_EP0Buf) = 0;
+                __UNALIGNED_UINT16_WRITE(USBD_EP0Buf, 0);
                 USBD_EP0Data.pData = USBD_EP0Buf;
             } else {
                 return (__FALSE);
@@ -221,7 +215,7 @@ static inline BOOL USBD_ReqGetStatus(void)
             m = (n & 0x80) ? ((1 << 16) << (n & 0x0F)) : (1 << n);
 
             if (((USBD_Configuration != 0) || ((n & 0x0F) == 0)) && (USBD_EndPointMask & m)) {
-                *((__packed U16 *)USBD_EP0Buf) = (USBD_EndPointHalt & m) ? 1 : 0;
+                __UNALIGNED_UINT16_WRITE(USBD_EP0Buf, (USBD_EndPointHalt & m) ? 1 : 0);
                 USBD_EP0Data.pData = USBD_EP0Buf;
             } else {
                 return (__FALSE);

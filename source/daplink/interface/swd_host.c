@@ -4,7 +4,7 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -22,14 +22,13 @@
  */
 
 #ifndef TARGET_MCU_CORTEX_A
+#include "device.h"
 #include "cmsis_os2.h"
 #include "target_config.h"
-#include "swd_host.h"
-#include "debug_cm.h"
 #include "DAP_config.h"
 #include "DAP.h"
 #include "target_family.h"
-#include "device.h"
+#include "swd_host.h"
 
 // Default NVIC and Core debug base addresses
 // TODO: Read these addresses from ROM.
@@ -1051,35 +1050,39 @@ uint8_t swd_set_target_state_sw(target_state_t state)
             osDelay(2);
             swd_set_target_reset(0);
             osDelay(2);
-        
+
+            if (!swd_init_debug()) {
+                return 0;
+            }
+
             // Power down
             // Per ADIv6 spec. Clear first CSYSPWRUPREQ followed by CDBGPWRUPREQ
             if (!swd_read_dp(DP_CTRL_STAT, &val)) {
                 return 0;
             }
-            
+
             if (!swd_write_dp(DP_CTRL_STAT, val & ~CSYSPWRUPREQ)) {
                 return 0;
             }
-            
+
             // Wait until ACK is deasserted
             do {
                 if (!swd_read_dp(DP_CTRL_STAT, &val)) {
                     return 0;
                 }
-            } while ((val & (CSYSPWRUPACK)) == 1);
-            
+            } while ((val & (CSYSPWRUPACK)) != 0);
+
             if (!swd_write_dp(DP_CTRL_STAT, val & ~CDBGPWRUPREQ)) {
                 return 0;
             }
-            
+
             // Wait until ACK is deasserted
             do {
                 if (!swd_read_dp(DP_CTRL_STAT, &val)) {
                     return 0;
                 }
-            } while ((val & (CDBGPWRUPACK)) == 1);
-        
+            } while ((val & (CDBGPWRUPACK)) != 0);
+
             swd_off();
             break;
 

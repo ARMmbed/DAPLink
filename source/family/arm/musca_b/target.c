@@ -29,6 +29,7 @@
 
 // target information
 target_cfg_t target_device = {
+    .version                     = kTargetConfigVersion,
     .sectors_info                = sectors_info,
     .sector_info_length          = (sizeof(sectors_info))/(sizeof(sector_info_t)),
 
@@ -78,4 +79,7 @@ target_cfg_t target_device = {
     .ram_regions[0].end          = (MUSCA_B_NS_RAM_START + MUSCA_B_RAM_SIZE),
     .ram_regions[1].start        = (MUSCA_B_S_RAM_START),
     .ram_regions[1].end          = (MUSCA_B_S_RAM_START + MUSCA_B_RAM_SIZE),
+
+    .target_vendor               = "ARM",
+    .target_part_number          = "Musca_B1",
 };

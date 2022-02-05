@@ -1,13 +1,7 @@
-[![DAPLink](/docs/images/daplink-website-logo-link.png)](https://armmbed.github.io/DAPLink/)
 
-# Warning: Development frozen on `main` branch
+[![DAPLink](/docs/images/daplink-website-logo-link.png)](https://daplink.io/)
 
-All development and pull requests should now happen on [`develop`](https://github.com/ARMmbed/DAPLink/tree/develop) branch where we are preparing the next version.
-
-**Note:** The `main` branch requires an Arm Compiler 5 or Keil MDK license to build. See the
-[`develop`](https://github.com/ARMmbed/DAPLink/tree/develop) branch for gcc and Arm
-Compiler 6 support. As soon as testing is complete, gcc will become the default compiler and AC5 support will be
-dropped.
+[![Linux Build (develop)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml/badge.svg?branch=develop)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml)
 
 ----
 
@@ -25,12 +19,18 @@ For more detailed usability information [see the users guide.](docs/USERS-GUIDE.
 
 ## Compatibility
 There are many ARM microcontroller-based Hardware Interface Circuits (HICs) that DAPLink interface firmware runs on. These can be found as standalone boards (debugger) or as part of a development kit. Some branded circuits that are known to be IO compatible are:
-* [NXP OpenSDA based on K20, K22 and KL26](http://www.nxp.com/products/software-and-tools/run-time-software/kinetis-software-and-tools/ides-for-kinetis-mcus/opensda-serial-and-debug-adapter:OPENSDA)
+
+* [Maxim Integrated MAX32625PICO based on MAX32625](https://www.maximintegrated.com/en/products/microcontrollers/MAX32625PICO.html)
+* Nuvoton Nu-Link2-Me based on M48SSIDAE
 * [NXP LPC-Link2 based on LPC11U35 or LPC4322](https://www.nxp.com/support/developer-resources/hardware-development-tools/lpcxpresso-boards:LPCXPRESSO-BOARDS)
+* [NXP MCU-LINK on LPC55xx](https://www.nxp.com/design/microcontrollers-developer-resources/mcu-link-debug-probe:MCU-LINK)
+* [NXP OpenSDA based on K20, K22, KL26Z and KL27Z](http://www.nxp.com/products/software-and-tools/run-time-software/kinetis-software-and-tools/ides-for-kinetis-mcus/opensda-serial-and-debug-adapter:OPENSDA)
 * [Segger J-Link OB based on Atmel SAM3U](https://www.segger.com/products/debug-probes/j-link/models/j-link-ob/)
+* [STMicroelectronics ST-LINK/V2 (on NUCLEO boards) based on STM32F103CB](https://www.st.com/en/evaluation-tools/stm32-nucleo-boards.html)
+
 
 ## Releases
-There are many board builds (board = HIC + target combination) created from this repository. Quarterly releases will contain new features and bugfixes. Standalone bugfixes are released once reported, verified and fixed. Both quarterly and bugfix releases will result in the build number being incremented. Many development kits and products ship with DAPLink interface firmware or are capable of running DAPLink firmware. **[The current release builds and instructions for updating DAPLink interface firmware is hosted on the DAPLink release site.](https://armmbed.github.io/DAPLink/)** Release notes and previous release builds can be found under GitHub releases.
+There are many board builds (board = HIC + target combination) created from this repository. Quarterly releases will contain new features and bugfixes. Standalone bugfixes are released once reported, verified and fixed. Both quarterly and bugfix releases will result in the build number being incremented. Many development kits and products ship with DAPLink interface firmware or are capable of running DAPLink firmware. **[The current release builds and instructions for updating DAPLink interface firmware is hosted on the DAPLink release site.](https://daplink.io/)** Release notes and previous release builds can be found under GitHub releases.
 
 ## Contribute
 

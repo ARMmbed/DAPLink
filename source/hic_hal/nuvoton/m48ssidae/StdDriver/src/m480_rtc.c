@@ -15,7 +15,7 @@
  *   3. Neither the name of Nuvoton Technology Corp. nor the names of its contributors
  *      may be used to endorse or promote products derived from this software
  *      without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -324,7 +324,7 @@ void RTC_SetDateAndTime(S_RTC_TIME_DATA_T *sPt)
 {
     uint32_t u32RegCAL, u32RegTIME;
 
-    if (sPt == 0ul) {
+    if (!sPt) {
     } else {
         /*-----------------------------------------------------------------------------------------------------*/
         /* Set RTC 24/12 hour setting and Day of the Week                                                      */

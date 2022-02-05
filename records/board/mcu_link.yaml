@@ -1,0 +1,7 @@
+common:
+    macros:
+        - MCU_LINK_SUPPORT
+        - MCU_LINK_PRO_GREETING
+    sources:
+        board:
+            - source/board/mcu-link.c

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
+ * Copyright (c) 2013-2021 ARM Limited. All rights reserved.
  * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  *
@@ -19,8 +19,8 @@
  *
  * ----------------------------------------------------------------------
  *
- * $Date:        1. December 2017
- * $Revision:    V2.0.0
+ * $Date:        7. September 2021
+ * $Revision:    V2.1.1
  *
  * Project:      CMSIS-DAP Source
  * Title:        DAP.c CMSIS-DAP Commands
@@ -56,9 +56,6 @@
 #define MAX_SWJ_CLOCK(delay_cycles) \
   ((CPU_CLOCK/2U) / (IO_PORT_WRITE_CYCLES + delay_cycles))
 
-#define CLOCK_DELAY(swj_clock) \
- (((CPU_CLOCK/2U) / swj_clock) - IO_PORT_WRITE_CYCLES)
-
 
          DAP_Data_t DAP_Data;           // DAP Data
 volatile uint8_t    DAP_TransferAbort;  // Transfer Abort Flag
@@ -66,10 +63,6 @@ volatile uint8_t    DAP_TransferAbort;  // Transfer Abort Flag
 
 static const char DAP_FW_Ver [] = DAP_FW_VER;
 
-#if TARGET_DEVICE_FIXED
-static const char TargetDeviceVendor [] = TARGET_DEVICE_VENDOR;
-static const char TargetDeviceName   [] = TARGET_DEVICE_NAME;
-#endif
 
 
 // Get DAP Information
@@ -89,24 +82,24 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
     case DAP_ID_SER_NUM:
       length = DAP_GetSerNumString((char *)info);
       break;
-    case DAP_ID_CMSIS_DAP_VER:
+    case DAP_ID_DAP_FW_VER:
       length = (uint8_t)sizeof(DAP_FW_Ver);
       memcpy(info, DAP_FW_Ver, length);
       break;
     case DAP_ID_DEVICE_VENDOR:
-#if TARGET_DEVICE_FIXED
-      length = (uint8_t)sizeof(TargetDeviceVendor);
-      memcpy(info, TargetDeviceVendor, length);
-#endif
+      length = DAP_GetTargetDeviceVendorString((char *)info);
       break;
     case DAP_ID_DEVICE_NAME:
-#if TARGET_DEVICE_FIXED
-      length = (uint8_t)sizeof(TargetDeviceName);
-      memcpy(info, TargetDeviceName, length);
-#endif
+      length = DAP_GetTargetDeviceNameString((char *)info);
+      break;
+    case DAP_ID_BOARD_VENDOR:
+      length = DAP_GetTargetBoardVendorString((char *)info);
+      break;
+    case DAP_ID_BOARD_NAME:
+      length = DAP_GetTargetBoardNameString((char *)info);
       break;
     case DAP_ID_PRODUCT_FW_VER:
-      length = DAP_ProductFirmwareVerString((char *)info);
+      length = DAP_GetProductFirmwareVersionString((char *)info);
       break;
     case DAP_ID_CAPABILITIES:
       info[0] = ((DAP_SWD  != 0)         ? (1U << 0) : 0U) |
@@ -115,8 +108,14 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
                 ((SWO_MANCHESTER != 0)   ? (1U << 3) : 0U) |
                 /* Atomic Commands  */     (1U << 4)       |
                 ((TIMESTAMP_CLOCK != 0U) ? (1U << 5) : 0U) |
-                ((SWO_STREAM != 0U)      ? (1U << 6) : 0U);
+                ((SWO_STREAM != 0U)      ? (1U << 6) : 0U) |
+                ((DAP_UART != 0U)        ? (1U << 7) : 0U);
+#if ((DAP_UART != 0) && (DAP_UART_USB_COM_PORT != 0))
+      info[1] = ((DAP_UART_USB_COM_PORT != 0) ? (1U << 0) : 0U);
+      length = 2U;
+#else
       length = 1U;
+#endif
       break;
     case DAP_ID_TIMESTAMP_CLOCK:
 #if (TIMESTAMP_CLOCK != 0U)
@@ -124,6 +123,24 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
       info[1] = (uint8_t)(TIMESTAMP_CLOCK >>  8);
       info[2] = (uint8_t)(TIMESTAMP_CLOCK >> 16);
       info[3] = (uint8_t)(TIMESTAMP_CLOCK >> 24);
+      length = 4U;
+#endif
+      break;
+    case DAP_ID_UART_RX_BUFFER_SIZE:
+#if (DAP_UART != 0)
+      info[0] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >>  0);
+      info[1] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >>  8);
+      info[2] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >> 16);
+      info[3] = (uint8_t)(DAP_UART_RX_BUFFER_SIZE >> 24);
+      length = 4U;
+#endif
+      break;
+    case DAP_ID_UART_TX_BUFFER_SIZE:
+#if (DAP_UART != 0)
+      info[0] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >>  0);
+      info[1] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >>  8);
+      info[2] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >> 16);
+      info[3] = (uint8_t)(DAP_UART_TX_BUFFER_SIZE >> 24);
       length = 4U;
 #endif
       break;
@@ -368,6 +385,31 @@ static uint32_t DAP_SWJ_Pins(const uint8_t *request, uint8_t *response) {
 }
 
 
+// Common clock delay calculation routine
+//   clock:    requested SWJ frequency in Hertz
+//   return:   void
+static void Set_DAP_Clock_Delay(uint32_t clock) {
+  uint32_t delay;
+
+  if (clock >= MAX_SWJ_CLOCK(DELAY_FAST_CYCLES)) {
+    DAP_Data.fast_clock  = 1U;
+    DAP_Data.clock_delay = 1U;
+  } else {
+    DAP_Data.fast_clock  = 0U;
+
+    delay = ((CPU_CLOCK/2U) + (clock - 1U)) / clock;
+    if (delay > IO_PORT_WRITE_CYCLES) {
+      delay -= IO_PORT_WRITE_CYCLES;
+      delay  = (delay + (DELAY_SLOW_CYCLES - 1U)) / DELAY_SLOW_CYCLES;
+    } else {
+      delay  = 1U;
+    }
+
+    DAP_Data.clock_delay = delay;
+  }
+}
+
+
 // Process SWJ Clock command and prepare response
 //   request:  pointer to request data
 //   response: pointer to response data
@@ -388,22 +430,9 @@ static uint32_t DAP_SWJ_Clock(const uint8_t *request, uint8_t *response) {
     return ((4U << 16) | 1U);
   }
 
-  if (clock >= MAX_SWJ_CLOCK(DELAY_FAST_CYCLES)) {
-    DAP_Data.fast_clock  = 1U;
-    DAP_Data.clock_delay = 1U;
-  } else {
-    DAP_Data.fast_clock  = 0U;
+  DAP_Data.nominal_clock = clock;
 
-    delay = ((CPU_CLOCK/2U) + (clock - 1U)) / clock;
-    if (delay > IO_PORT_WRITE_CYCLES) {
-      delay -= IO_PORT_WRITE_CYCLES;
-      delay  = (delay + (DELAY_SLOW_CYCLES - 1U)) / DELAY_SLOW_CYCLES;
-    } else {
-      delay  = 1U;
-    }
-
-    DAP_Data.clock_delay = delay;
-  }
+  Set_DAP_Clock_Delay(clock);
 
   *response = DAP_OK;
 #else
@@ -1622,7 +1651,7 @@ __WEAK uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *respon
 //   response: pointer to response data
 //   return:   number of bytes in response (lower 16 bits)
 //             number of bytes in request (upper 16 bits)
-__weak uint32_t DAP_ProcessVendorCommandEx(const uint8_t *request, uint8_t *response) {
+__WEAK uint32_t DAP_ProcessVendorCommandEx(const uint8_t *request, uint8_t *response) {
   *response = ID_DAP_Invalid;
   return ((1U << 16) | 1U);
 }
@@ -1735,6 +1764,24 @@ uint32_t DAP_ProcessCommand(const uint8_t *request, uint8_t *response) {
       break;
 #endif
 
+#if (DAP_UART != 0)
+    case ID_DAP_UART_Transport:
+      num = UART_Transport(request, response);
+      break;
+    case ID_DAP_UART_Configure:
+      num = UART_Configure(request, response);
+      break;
+    case ID_DAP_UART_Control:
+      num = UART_Control(request, response);
+      break;
+    case ID_DAP_UART_Status:
+      num = UART_Status(response);
+      break;
+    case ID_DAP_UART_Transfer:
+      num = UART_Transfer(request, response);
+      break;
+#endif
+
     default:
       *(response-1) = ID_DAP_Invalid;
       return ((1U << 16) | 1U);
@@ -1775,6 +1822,7 @@ void DAP_Setup(void) {
 
   // Default settings
   DAP_Data.debug_port  = 0U;
+  DAP_Data.nominal_clock = DAP_DEFAULT_SWJ_CLOCK;
   DAP_Data.transfer.idle_cycles = 0U;
   DAP_Data.transfer.retry_count = 100U;
   DAP_Data.transfer.match_retry = 0U;
@@ -1787,22 +1835,8 @@ void DAP_Setup(void) {
   DAP_Data.jtag_dev.count = 0U;
 #endif
 
-  if (DAP_DEFAULT_SWJ_CLOCK >= MAX_SWJ_CLOCK(DELAY_FAST_CYCLES)) {
-    DAP_Data.fast_clock  = 1U;
-    DAP_Data.clock_delay = 1U;
-  } else {
-    DAP_Data.fast_clock  = 0U;
-
-    uint32_t delay = ((CPU_CLOCK/2U) + (DAP_DEFAULT_SWJ_CLOCK - 1U)) / DAP_DEFAULT_SWJ_CLOCK;
-    if (delay > IO_PORT_WRITE_CYCLES) {
-      delay -= IO_PORT_WRITE_CYCLES;
-      delay  = (delay + (DELAY_SLOW_CYCLES - 1U)) / DELAY_SLOW_CYCLES;
-    } else {
-      delay  = 1U;
-    }
-
-  DAP_Data.clock_delay = delay;
-  }
+  // Sets DAP_Data.fast_clock and DAP_Data.clock_delay.
+  Set_DAP_Clock_Delay(DAP_DEFAULT_SWJ_CLOCK);
 
   DAP_SETUP();  // Device specific setup
 }

@@ -28,4 +28,8 @@ const board_info_t g_board_info = {
     .family_id = kStub_HWReset_FamilyID,
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
+    .daplink_url_name = "MAX32625HTM",
+    .daplink_target_url = "http://www.maximintegrated.com/max32625mbed",
+    .board_vendor = "Maxim Integrated",
+    .board_name = "MAX32625MBED",
 };

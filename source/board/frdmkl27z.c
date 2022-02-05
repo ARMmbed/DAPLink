@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = 	"FRDM-KL27ZD",
     .daplink_target_url = "http://www.nxp.com/frdm-kl27z",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-KL27Z",
 };

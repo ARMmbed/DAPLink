@@ -24,6 +24,9 @@
 #include "rl_usb.h"
 #include "usb_for_lib.h"
 
+#ifndef CDC_ACM_DEFAULT_BAUDRATE
+#define CDC_ACM_DEFAULT_BAUDRATE 9600
+#endif
 
 /* Module global variables                                                    */
 
@@ -55,27 +58,27 @@ CDC_LINE_CODING line_coding;           /*!< Communication settings */
 
 /* Functions that should be provided by user to use standard Virtual COM port
    functionality                                                              */
-__weak int32_t USBD_CDC_ACM_PortInitialize(void)
+__WEAK int32_t USBD_CDC_ACM_PortInitialize(void)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_PortUninitialize(void)
+__WEAK int32_t USBD_CDC_ACM_PortUninitialize(void)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_PortReset(void)
+__WEAK int32_t USBD_CDC_ACM_PortReset(void)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding)
+__WEAK int32_t USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_PortGetLineCoding(CDC_LINE_CODING *line_coding)
+__WEAK int32_t USBD_CDC_ACM_PortGetLineCoding(CDC_LINE_CODING *line_coding)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_PortSetControlLineState(uint16_t ctrl_bmp)
+__WEAK int32_t USBD_CDC_ACM_PortSetControlLineState(uint16_t ctrl_bmp)
 {
     return (0);
 }
@@ -86,7 +89,7 @@ int32_t USBD_CDC_ACM_DataSend(const uint8_t *buf, int32_t len);
 int32_t USBD_CDC_ACM_PutChar(const uint8_t  ch);
 int32_t USBD_CDC_ACM_DataRead(uint8_t *buf, int32_t len);
 int32_t USBD_CDC_ACM_GetChar(void);
-__weak int32_t USBD_CDC_ACM_DataReceived(int32_t len)
+__WEAK int32_t USBD_CDC_ACM_DataReceived(int32_t len)
 {
     return (0);
 }
@@ -95,27 +98,27 @@ int32_t USBD_CDC_ACM_Notify(uint16_t stat);
 
 /* Functions handling CDC ACM requests (can be overridden to provide custom
    handling of CDC ACM requests)                                              */
-__weak int32_t USBD_CDC_ACM_SendEncapsulatedCommand(void)
+__WEAK int32_t USBD_CDC_ACM_SendEncapsulatedCommand(void)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_GetEncapsulatedResponse(void)
+__WEAK int32_t USBD_CDC_ACM_GetEncapsulatedResponse(void)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_SetCommFeature(uint16_t feat)
+__WEAK int32_t USBD_CDC_ACM_SetCommFeature(uint16_t feat)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_GetCommFeature(uint16_t feat)
+__WEAK int32_t USBD_CDC_ACM_GetCommFeature(uint16_t feat)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_ClearCommFeature(uint16_t feat)
+__WEAK int32_t USBD_CDC_ACM_ClearCommFeature(uint16_t feat)
 {
     return (0);
 }
-__weak int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
+__WEAK int32_t USBD_CDC_ACM_SendBreak(uint16_t dur)
 {
     return (0);
 }
@@ -137,7 +140,7 @@ static void USBD_CDC_ACM_EP_BULKIN_HandleData(void);
     \return             1        Function succeeded.
  */
 
-__weak int32_t USBD_CDC_ACM_Initialize(void)
+__WEAK int32_t USBD_CDC_ACM_Initialize(void)
 {
     data_send_access            = 0;
     data_send_active            = 0;
@@ -153,7 +156,7 @@ __weak int32_t USBD_CDC_ACM_Initialize(void)
     ptr_data_received           = USBD_CDC_ACM_ReceiveBuf;
     ptr_data_read               = USBD_CDC_ACM_ReceiveBuf;
     control_line_state          = 0;
-    line_coding.dwDTERate       = 9600;
+    line_coding.dwDTERate       = CDC_ACM_DEFAULT_BAUDRATE;
     line_coding.bCharFormat     = 0;
     line_coding.bParityType     = 0;
     line_coding.bDataBits       = 8;
@@ -170,7 +173,7 @@ __weak int32_t USBD_CDC_ACM_Initialize(void)
     \return             1        Function succeeded.
  */
 
-__weak int32_t USBD_CDC_ACM_Uninitialization(void)
+__WEAK int32_t USBD_CDC_ACM_Uninitialization(void)
 {
     return (USBD_CDC_ACM_PortUninitialize());
 }
@@ -188,7 +191,7 @@ __weak int32_t USBD_CDC_ACM_Uninitialization(void)
     \return             1        Function succeeded.
  */
 
-__weak int32_t USBD_CDC_ACM_Reset(void)
+__WEAK int32_t USBD_CDC_ACM_Reset(void)
 {
     data_send_access            = 0;
     data_send_active            = 0;
@@ -205,7 +208,7 @@ __weak int32_t USBD_CDC_ACM_Reset(void)
     ptr_data_read               = USBD_CDC_ACM_ReceiveBuf;
     control_line_state          = 0;
     USBD_CDC_ACM_PortReset();
-    line_coding.dwDTERate       = 9600;
+    line_coding.dwDTERate       = CDC_ACM_DEFAULT_BAUDRATE;
     line_coding.bCharFormat     = 0;
     line_coding.bParityType     = 0;
     line_coding.bDataBits       = 8;
@@ -222,7 +225,7 @@ __weak int32_t USBD_CDC_ACM_Reset(void)
     \return             1        Function succeeded.
  */
 
-__weak int32_t USBD_CDC_ACM_SetLineCoding(void)
+__WEAK int32_t USBD_CDC_ACM_SetLineCoding(void)
 {
     line_coding.dwDTERate   = (USBD_EP0Buf[0] <<  0) |
                               (USBD_EP0Buf[1] <<  8) |
@@ -244,7 +247,7 @@ __weak int32_t USBD_CDC_ACM_SetLineCoding(void)
     \return             1        Function succeeded.
  */
 
-__weak int32_t USBD_CDC_ACM_GetLineCoding(void)
+__WEAK int32_t USBD_CDC_ACM_GetLineCoding(void)
 {
     if (USBD_CDC_ACM_PortGetLineCoding(&line_coding)) {
         USBD_EP0Buf[0] = (line_coding.dwDTERate >>  0) & 0xFF;
@@ -273,7 +276,7 @@ __weak int32_t USBD_CDC_ACM_GetLineCoding(void)
     \return             1        Function succeeded.
  */
 
-__weak int32_t USBD_CDC_ACM_SetControlLineState(uint16_t ctrl_bmp)
+__WEAK int32_t USBD_CDC_ACM_SetControlLineState(uint16_t ctrl_bmp)
 {
     control_line_state = ctrl_bmp;
     return (USBD_CDC_ACM_PortSetControlLineState(ctrl_bmp));

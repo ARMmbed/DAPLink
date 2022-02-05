@@ -1,6 +1,6 @@
 /**
  * @file    usbd_LPC11Uxx.c
- * @brief   
+ * @brief
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
@@ -49,7 +49,13 @@ typedef struct BUF_INFO {
 } EP_BUF_INFO;
 
 EP_BUF_INFO EPBufInfo[(USBD_EP_NUM + 1) * 2];
-volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __at(EP_LIST_BASE);
+#if defined ( __CC_ARM ) || defined (__ARMCC_VERSION)
+volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((at(EP_LIST_BASE)));
+#elif defined ( __GNUC__ )
+volatile U32 EPList[(USBD_EP_NUM + 1) * 2]  __attribute__((section(".usbram")));
+#else
+#error "Unsupported compiler!"
+#endif
 
 static U32 addr = 3 * 64 + EP_BUF_BASE;
 static U32 ctrl_out_next = 0;
@@ -139,13 +145,16 @@ void USBD_Connect(BOOL con)
 }
 
 
+// Disable optimization of this function. It gets a "iteration 8 invokes undefined behavior
+// [-Waggressive-loop-optimizations]" warning in gcc if optimisation is enabled, for the first
+// loop where EPList[i] is written to disable EPs.
+NO_OPTIMIZE_PRE
 /*
  *  USB Device Reset Function
  *   Called automatically on USB Device Reset
  *    Return Value:    None
  */
-
-void USBD_Reset(void)
+void NO_OPTIMIZE_INLINE USBD_Reset(void)
 {
     U32 i;
     U32 *ptr;
@@ -173,7 +182,7 @@ void USBD_Reset(void)
                       (1UL << 1)     | /* EP0 IN intr enable */
                       (1UL << 31));    /* stat change int en */
 }
-
+NO_OPTIMIZE_POST
 
 /*
  *  USB Device Suspend Function
@@ -552,9 +561,9 @@ U32 USBD_ReadEP(U32 EPNum, U8 *pData, U32 size)
         cnt = EPBufInfo[EP_OUT_IDX(EPNum)].buf_len - ((*ptr >> 16) & 0x3FF);
         dataptr = (U8 *)EPBufInfo[EP_OUT_IDX(EPNum)].buf_ptr;
 
-        while ((timeout-- > 0) && (*ptr & BUF_ACTIVE)); //spin on the hardware until it's done        
+        while ((timeout-- > 0) && (*ptr & BUF_ACTIVE)); //spin on the hardware until it's done
         util_assert(!(*ptr & BUF_ACTIVE)); //check for timeout
-        
+
         if (size < cnt) {
             util_assert(0);
             cnt = size;
@@ -612,7 +621,7 @@ U32 USBD_WriteEP(U32 EPNum, U8 *pData, U32 cnt)
     dataptr = (U32 *)EPBufInfo[EP_IN_IDX(EPNum)].buf_ptr;
 
     for (i = 0; i < (cnt + 3) / 4; i++) {
-        dataptr[i] = * ((__packed U32 *)pData);
+        dataptr[i] = __UNALIGNED_UINT32_READ(pData);
         pData += 4;
     }
 

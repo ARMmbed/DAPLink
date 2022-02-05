@@ -43,23 +43,23 @@ U16 DataFeatReceLen;
 
 
 /* Dummy Weak Functions that need to be provided by user */
-__weak void usbd_hid_init(void)
+__WEAK void usbd_hid_init(void)
 {
 
 }
-__weak int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
+__WEAK int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
 {
     return (0);
 };
-__weak void usbd_hid_set_report(U8  rtype, U8 rid, U8 *buf, int len, U8 req)
+__WEAK void usbd_hid_set_report(U8  rtype, U8 rid, U8 *buf, int len, U8 req)
 {
 
 }
-__weak U8 usbd_hid_get_protocol(void)
+__WEAK U8 usbd_hid_get_protocol(void)
 {
     return (0);
 };
-__weak void usbd_hid_set_protocol(U8  protocol)
+__WEAK void usbd_hid_set_protocol(U8  protocol)
 {
 
 };

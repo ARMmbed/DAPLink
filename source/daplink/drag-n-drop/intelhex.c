@@ -37,9 +37,9 @@ enum hex_record_t {
 };
 
 typedef union hex_line_t hex_line_t;
-union __attribute__((packed)) hex_line_t {
+__PACKED_UNION hex_line_t {
     uint8_t buf[0x25];
-    struct __attribute__((packed)) {
+    __PACKED_STRUCT {
         uint8_t  byte_count;
         uint16_t address;
         uint8_t  record_type;
@@ -82,23 +82,23 @@ static uint8_t validate_checksum(hex_line_t *record)
     return (result == 0);
 }
 
-static hex_line_t line = {0}, shadow_line = {0};
+static hex_line_t line = {0};
 static uint32_t next_address_to_write = 0;
-static uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0;
+static uint8_t low_nibble = 0, idx = 0, record_processed = 0, load_unaligned_record = 0, skip_until_aligned = 0;
 static uint16_t binary_version = 0;
 uint16_t board_id_hex __WEAK;
-uint16_t board_id_hex_min __WEAK;
+uint16_t board_id_hex_default __WEAK;
 
 void reset_hex_parser(void)
 {
     memset(line.buf, 0, sizeof(hex_line_t));
-    memset(shadow_line.buf, 0, sizeof(hex_line_t));
     next_address_to_write = 0;
     low_nibble = 0;
     idx = 0;
     record_processed = 0;
     load_unaligned_record = 0;
     binary_version = 0;
+    skip_until_aligned = 0;
 }
 
 hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t hex_blob_size, uint32_t *hex_parse_cnt, uint8_t *bin_buf, const uint32_t bin_buf_size, uint32_t *bin_buf_address, uint32_t *bin_buf_cnt)
@@ -107,6 +107,16 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
     hexfile_parse_status_t status = HEX_PARSE_UNINIT;
     // reset the amount of data that is being return'd
     *bin_buf_cnt = (uint32_t)0;
+    if (skip_until_aligned) {
+        if (hex_blob[0] == ':') {
+            // This is block is aligned we can stop skipping
+            skip_until_aligned = 0;
+        } else {
+            // This is block is not aligned we can skip it
+            status = HEX_PARSE_OK;
+            goto hex_parser_exit;
+        }
+    }
 
     // we had an exit state where the address was unaligned to the previous record and data count.
     //  Need to pop the last record into the buffer before decoding anthing else since it was
@@ -157,18 +167,22 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                     case CUSTOM_METADATA_RECORD:
                                         binary_version = (uint16_t) line.data[0] << 8 | line.data[1];
                                         break;
+
                                     case DATA_RECORD:
                                     case CUSTOM_DATA_RECORD:
-                                        // keeping a record of the last hex record
-                                        memcpy(shadow_line.buf, line.buf, sizeof(hex_line_t));
-
-                                        if (binary_version == 0 || (binary_version >= board_id_hex_min && binary_version <= board_id_hex)){
+                                        if (binary_version == 0 || binary_version == board_id_hex_default || binary_version == board_id_hex) {
                                             // Only save data from the correct binary
                                             // verify this is a continous block of memory or need to exit and dump
                                             if (((next_address_to_write & 0xffff0000) | line.address) != next_address_to_write) {
                                                 load_unaligned_record = 1;
                                                 status = HEX_PARSE_UNALIGNED;
+                                                // Function will be executed again and will start by finishing to process this record by
+                                                // adding the this line into bin_buf, so the 1st loop iteration should be the next blob byte
+                                                hex_blob++;
                                                 goto hex_parser_exit;
+                                            } else {
+                                                // This should be superfluous but it is necessary for GCC
+                                                load_unaligned_record = 0;
                                             }
 
                                             // move from line buffer back to input buffer
@@ -177,10 +191,13 @@ hexfile_parse_status_t parse_hex_blob(const uint8_t *hex_blob, const uint32_t he
                                             *bin_buf_cnt = (uint32_t)(*bin_buf_cnt) + line.byte_count;
                                             // Save next address to write
                                             next_address_to_write = ((next_address_to_write & 0xffff0000) | line.address) + line.byte_count;
-                                        }
-                                        else {
-                                          status = HEX_PARSE_OK;
-                                          goto hex_parser_exit;
+                                        } else {
+                                            // This is Universal Hex block that does not match our version.
+                                            // We can skip this block and all blocks until we find a
+                                            // block aligned on a record boundary.
+                                            skip_until_aligned = 1;
+                                            status = HEX_PARSE_OK;
+                                            goto hex_parser_exit;
                                         }
                                         break;
 

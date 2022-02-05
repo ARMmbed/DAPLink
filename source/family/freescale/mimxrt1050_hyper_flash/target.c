@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the i.MXRT1050
+ * @brief   Target information for the i.MXRT1050 (HyperFlash)
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -26,12 +26,15 @@
 
 // target information
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0x60000000,
     .flash_regions[0].end           = 0x60000000 + MB(64),
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
-    .ram_regions[0].end             = 0x20000000 + MB(64),
+    .ram_regions[0].end             = 0x20000000 + KB(512),
+    .target_vendor                  = "NXP",
+    .target_part_number             = "MIMXRT1052DVL6A",
 };

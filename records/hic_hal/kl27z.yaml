@@ -21,7 +21,6 @@ common:
             - source/hic_hal/freescale
             - source/hic_hal/freescale/kl27z
             - source/hic_hal/freescale/kl27z/MKL27Z4
-            - source/hic_hal/freescale/kl27z/armcc
         fsl_flash_driver:
             - source/hic_hal/freescale/iap
 
@@ -30,7 +29,16 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\freescale\kl27z"
-    make_armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource\hic_hal\freescale\kl27z"
+        sources:
+            - source/hic_hal/freescale/kl27z/armcc
+    armcc:
+        sources:
+            - source/hic_hal/freescale/kl27z/armcc
+    armclang:
+        sources:
+            - source/hic_hal/freescale/kl27z/armcc
+    gcc_arm:
+        linker_file:
+            - source/hic_hal/freescale/kinetis.ld
+        sources:
+            - source/hic_hal/freescale/kl27z/gcc

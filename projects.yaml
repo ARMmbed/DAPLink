@@ -8,8 +8,9 @@ settings:
 
 module:
     tools: &module_tools
-        - records/tools/make_gcc_arm.yaml
-        - records/tools/make_armcc.yaml
+        - records/tools/gcc_arm.yaml
+        - records/tools/armcc.yaml
+        - records/tools/armclang.yaml
         - records/tools/version.yaml
     bl: &module_bl
         - *module_tools
@@ -24,7 +25,6 @@ module:
     if: &module_if
         - *module_tools
         - records/usb/usb-core.yaml
-        - records/usb/usb-hid.yaml
         - records/usb/usb-msc.yaml
         - records/usb/usb-cdc.yaml
         - records/usb/usb-webusb.yaml
@@ -42,40 +42,65 @@ module:
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/k20dx.yaml
         - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
     hic_k26f: &module_hic_k26f
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/k26f.yaml
         - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
     hic_kl26z: &module_hic_kl26z
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/kl26z.yaml
         - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
     hic_kl27z: &module_hic_kl27z
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/kl27z.yaml
         - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
     hic_lpc11u35: &module_hic_lpc11u35
         - records/rtos/rtos-cm0.yaml
         - records/hic_hal/lpc11u35.yaml
+        - records/usb/usb-hid.yaml
+    hic_lpc11u35_bulk: &module_hic_lpc11u35_bulk
+        - records/rtos/rtos-cm0.yaml
+        - records/hic_hal/lpc11u35.yaml
+        - records/usb/usb-bulk.yaml
     hic_lpc4322: &module_hic_lpc4322
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/lpc4322.yaml
         - records/usb/usb-bulk.yaml
-    hic_sam3u2c: &module_hic_sam3u2c
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/sam3u2c.yaml
-    hic_stm32f103xb: &module_hic_stm32f103xb
-        - records/rtos/rtos-cm3.yaml
-        - records/hic_hal/stm32f103xb.yaml
-    hic_max32620: &module_hic_max32620
-        - records/rtos/rtos-cm4.yaml
-        - records/hic_hal/max32620.yaml
-    hic_max32625: &module_hic_max32625
-        - records/rtos/rtos-cm4.yaml
-        - records/hic_hal/max32625.yaml
+        - records/usb/usb-hid.yaml
+    hic_lpc55s69: &module_hic_lpc55s69
+        - records/rtos/rtos-cm33.yaml
+        - records/hic_hal/lpc55s69.yaml
+        - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
     hic_m48ssidae: &module_hic_m48ssidae
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/m48ssidae.yaml
+        - records/usb/usb-hid.yaml
+    hic_max32620: &module_hic_max32620
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/max32620.yaml
+        - records/usb/usb-hid.yaml
+    hic_max32625: &module_hic_max32625
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/max32625.yaml
+        - records/usb/usb-hid.yaml
+    hic_nrf52820: &module_hic_nrf52820
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/nrf52820.yaml
+        - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
+    hic_sam3u2c: &module_hic_sam3u2c
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/sam3u2c.yaml
+        - records/usb/usb-hid.yaml
+    hic_stm32f103xb: &module_hic_stm32f103xb
+        - records/rtos/rtos-cm3.yaml
+        - records/hic_hal/stm32f103xb.yaml
+        - records/usb/usb-hid.yaml
 
 projects:
     # HIC bootloaders and all target interfaces
@@ -113,9 +138,8 @@ projects:
         - records/family/all_family.yaml
     lpc11u35_if:
         - *module_if
-        - *module_hic_lpc11u35
+        - *module_hic_lpc11u35_bulk
         - records/family/all_family.yaml
-        - records/usb/usb-bulk.yaml
     lpc4322_bl:
         - *module_bl
         - records/hic_hal/lpc4322.yaml
@@ -123,6 +147,15 @@ projects:
     lpc4322_if:
         - *module_if
         - *module_hic_lpc4322
+        - records/family/all_family.yaml
+    lpc55s69_bl:
+        - *module_bl
+        - records/hic_hal/lpc55s69.yaml
+        - records/board/lpc55s69_bl.yaml
+    lpc55s69_if:
+        - *module_if
+        - *module_hic_lpc55s69
+        - records/board/lpc55s69_if.yaml # Sets the USB product string.
         - records/family/all_family.yaml
     m48ssidae_bl:
         - *module_bl
@@ -146,6 +179,14 @@ projects:
         - *module_hic_max32625
         - records/family/all_family.yaml
         - records/usb/usb-bulk.yaml
+    nrf52820_bl:
+        - *module_bl
+        - records/hic_hal/nrf52820.yaml
+        - records/board/nrf52820_bl.yaml
+    nrf52820_if:
+        - *module_if
+        - *module_hic_nrf52820
+        - records/family/all_family.yaml
     sam3u2c_bl:
         - *module_bl
         - records/hic_hal/sam3u2c.yaml
@@ -265,22 +306,10 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/mimxrt1050_evk_hyper.yaml
-    k20dx_mimxrt1050_evk_qspi_if:
-        - *module_if
-        - *module_hic_k20dx
-        - records/board/mimxrt1050_evk_qspi.yaml
     k20dx_rapid_iot_if:
         - *module_if
         - *module_hic_k20dx
         - records/board/rapid_iot.yaml
-    k20dx_rbl_if:
-        - *module_if
-        - *module_hic_k20dx
-        - records/board/rbl.yaml
-    k20dx_rblnano_if:
-        - *module_if
-        - *module_hic_k20dx
-        - records/board/rblnano.yaml
     k20dx_twrke18f_if:
         - *module_if
         - *module_hic_k20dx
@@ -305,10 +334,6 @@ projects:
         - *module_if
         - *module_hic_kl26z
         - records/board/microbit.yaml
-    kl26z_nina_b1_if:
-        - *module_if
-        - *module_hic_kl26z
-        - records/board/nina_b1.yaml
     kl27z_microbit_bl:
         - *module_bl
         - records/hic_hal/kl27z.yaml
@@ -317,18 +342,6 @@ projects:
         - *module_if
         - *module_hic_kl27z
         - records/board/microbitv2.yaml
-    lpc11u35_6lowpan_borderrouterethernet_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/6LoWPAN_BorderRouterETHERNET.yaml
-    lpc11u35_6lowpan_borderrouterhat_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/6LoWPAN_BorderRouterHAT.yaml
-    lpc11u35_6lowpan_borderrouterusb_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/6LoWPAN_BorderRouterUSB.yaml
     lpc11u35_96b_nitrogen_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -349,18 +362,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/archpro.yaml
-    lpc11u35_arm_watch_efm32_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/arm_watch_efm32.yaml
-    lpc11u35_arm_watch_nrf51_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/arm_watch_nrf51.yaml
-    lpc11u35_arm_watch_stm32f411_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/arm_watch_stm32f411.yaml
     lpc11u35_blueninja_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -369,34 +370,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/c027.yaml
-    lpc11u35_cocorico_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/cocorico.yaml
-    lpc11u35_dipdap_cc3220sf_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_cc3220sf.yaml
-    lpc11u35_dipdap_sdt32429b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_sdt32429b.yaml
-    lpc11u35_dipdap_sdt32439b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_sdt32439b.yaml
-    lpc11u35_dipdap_sdt51822b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_sdt51822b.yaml
-    lpc11u35_dipdap_sdt52832b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_sdt52832b.yaml
-    lpc11u35_dipdap_sdt64b_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/dipdap_sdt64b.yaml
     lpc11u35_ff1705_l151_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -433,110 +406,33 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/lpc824xpresso.yaml
-    lpc11u35_mbed_cloud_connect_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mbed_cloud_connect.yaml
     lpc11u35_mini_iot_lpc54018_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/mini_iot_lpc54018.yaml
-    lpc11u35_mtb_aconno_acn52832_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_aconno_acn52832.yaml
-    lpc11u35_mtb_laird_bl652_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_laird_bl652.yaml
-    lpc11u35_mtb_laird_bl654_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_laird_bl654.yaml
-    lpc11u35_mtb_mts_dragonfly_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_mts_dragonfly.yaml
-    lpc11u35_mtb_mts_xdot_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_mts_xdot.yaml
-    lpc11u35_mtb_murata_abz_078_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_murata_abz_078.yaml
-    lpc11u35_mtb_murata_bl241_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_murata_bl241.yaml
-    lpc11u35_mtb_mxchip_emw3166_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_mxchip_emw3166.yaml
-    lpc11u35_mtb_nina_b112_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_nina_b112.yaml
-    lpc11u35_mtb_rak811_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_rak811.yaml
-    lpc11u35_mtb_stm32f439_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_stm32f439.yaml
-    lpc11u35_mtb_stm32l475_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_stm32l475.yaml
-    lpc11u35_mtb_stm_s2lp_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_stm_s2lp.yaml
-    lpc11u35_mtb_ublox_odin_w2_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_ublox_odin_w2.yaml
-    lpc11u35_mtb_usi_wm_bn_bm_22_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_usi_wm_bn_bm_22.yaml
-    lpc11u35_mtb_wise1510_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_wise1510.yaml
-    lpc11u35_mtb_wise1530_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_wise1530.yaml
-    lpc11u35_mtb_wise1570_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtb_wise1570.yaml
-    lpc11u35_mtconnect04s_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/mtconnect04s.yaml
     lpc11u35_musca_a_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/musca_a.yaml
+        - records/tools/gcc_arm_lto.yaml
     lpc11u35_musca_b_eflash_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/musca_b_eflash.yaml
+        - records/tools/gcc_arm_lto.yaml
     lpc11u35_musca_b_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/musca_b.yaml
+        - records/tools/gcc_arm_lto.yaml
     lpc11u35_nz32_sc151_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/nz32_sc151.yaml
-    lpc11u35_ro359b_if:
+    lpc11u35_pitaya_link_if:
         - *module_if
         - *module_hic_lpc11u35
-        - records/board/ro359b.yaml
+        - records/board/pitaya_link.yaml
     lpc11u35_rtl8195am_if:
         - *module_if
         - *module_hic_lpc11u35
@@ -561,34 +457,6 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/tiny.yaml
-    lpc11u35_vbluno51_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/vbluno51.yaml
-    lpc11u35_wio3g_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wio3g.yaml
-    lpc11u35_wio_emw3166_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wio_emw3166.yaml
-    lpc11u35_wiobg96_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wiobg96.yaml
-    lpc11u35_wizwiki_w7500_eco_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wizwiki_w7500_eco.yaml
-    lpc11u35_wizwiki_w7500_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wizwiki_w7500.yaml
-    lpc11u35_wizwiki_w7500p_if:
-        - *module_if
-        - *module_hic_lpc11u35
-        - records/board/wizwiki_w7500p.yaml
     lpc4322_hani_iot_if:
         - *module_if
         - *module_hic_lpc4322
@@ -605,6 +473,23 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/lpc55S69xpresso.yaml
+    lpc4322_mimxrt1060_evk_qspi_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/mimxrt1060_evk_qspi.yaml
+    lpc4322_mimxrt1170_evk_qspi_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/mimxrt1170_evk_qspi.yaml
+    lpc55s69_mculink_bl:
+        - *module_bl
+        - records/hic_hal/lpc55s69.yaml
+        - records/board/lpc55s69_bl.yaml
+        - records/board/mcu_link.yaml
+    lpc55s69_mculink_if:
+        - *module_if
+        - *module_hic_lpc55s69
+        - records/board/mcu_link.yaml
     m48ssidae_numaker_iot_m263a_if:
         - *module_if
         - *module_hic_m48ssidae
@@ -645,14 +530,22 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max78000fthr.yaml
+    nrf52820_microbit_bl:
+        - *module_bl
+        - records/hic_hal/nrf52820.yaml
+        - records/board/nrf52820_microbit_bl.yaml
+    nrf52820_microbit_if:
+        - *module_if
+        - *module_hic_nrf52820
+        - records/board/microbitv2_nrf52820.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c
         - records/board/mkit_dk_dongle_nrf5x.yaml
-    sam3u2c_ncs36510rf_if:
+    sam3u2c_nrf5x_dk_ext_if:
         - *module_if
         - *module_hic_sam3u2c
-        - records/board/ncs36510rf.yaml
+        - records/board/nrf5x_dk_ext.yaml
     sam3u2c_ublox_evk_nina_b1_if:
         - *module_if
         - *module_hic_sam3u2c
@@ -697,3 +590,11 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/ublox_evk_odin_w2.yaml
+
+
+    # Test projects
+    lpc55s69_nrf52840dk_test_if:
+        - *module_if
+        - *module_hic_lpc55s69
+        - records/board/lpc55s69_nrf52840dk.yaml
+        - records/board/mcu_link.yaml

@@ -1,9 +1,9 @@
 /**
- * @file    DAP_config.c
+ * @file    DAP_config.h
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2021, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,20 +22,23 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
-
+#include <stdbool.h>
+#include "IO_Config.h"
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
 \ingroup DAP_ConfigIO_gr
 @{
-Provides definitions about:
+Provides definitions about the hardware and configuration of the Debug Unit.
+
+This information includes:
  - Definition of Cortex-M processor parameters used in CMSIS-DAP Debug Unit.
+ - Debug Unit Identification strings (Vendor, Product, Serial Number).
  - Debug Unit communication packet size.
- - Debug Access Port communication mode (JTAG or SWD).
+ - Debug Access Port supported modes and settings (JTAG/SWD and SWO).
  - Optional information about a connected Target Device (for Evaluation Boards).
 */
 
-#include "LPC43xx.h"                            // Debug Unit Cortex-M Processor Header File
 #include "lpc43xx_scu.h"
 
 typedef unsigned int    BOOL;
@@ -54,10 +57,10 @@ typedef unsigned int    BOOL;
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
 /// Port write operations in the Debug Unit by a Cortex-M MCU. Most Cortex-M processors
-/// requrie 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
+/// require 2 processor cycles for a I/O Port Write operation.  If the Debug Unit uses
 /// a Cortex-M0+ processor with high-speed peripheral I/O only 1 processor cycle might be
 /// required.
-#define IO_PORT_WRITE_CYCLES  2               ///< I/O Cycles: 2=default, 1=Cortex-M0+ fast I/0
+#define IO_PORT_WRITE_CYCLES    2U              ///< I/O Cycles: 2=default, 1=Cortex-M0+ fast I/0
 
 /// Indicate that Serial Wire Debug (SWD) communication mode is available at the Debug Access Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
@@ -81,29 +84,39 @@ typedef unsigned int    BOOL;
 #define DAP_DEFAULT_SWJ_CLOCK 5000000         ///< Default SWD/JTAG clock frequency in Hz.
 
 /// Maximum Package Size for Command and Response data.
-/// This configuration settings is used to optimized the communication performance with the
-/// debugger and depends on the USB peripheral. Change setting to 1024 for High-Speed USB.
-#define DAP_PACKET_SIZE       64              ///< USB: 64 = Full-Speed, 1024 = High-Speed.
+/// This configuration settings is used to optimize the communication performance with the
+/// debugger and depends on the USB peripheral. Typical vales are 64 for Full-speed USB HID or WinUSB,
+/// 1024 for High-speed USB HID and 512 for High-speed USB WinUSB.
+#ifndef HID_ENDPOINT            //HID end points currently set limits to 64
+#define DAP_PACKET_SIZE         512              ///< Specifies Packet Size in bytes.
+#else
+#define DAP_PACKET_SIZE         64              ///< Specifies Packet Size in bytes.
+#endif
 
 /// Maximum Package Buffers for Command and Response data.
-/// This configuration settings is used to optimized the communication performance with the
+/// This configuration settings is used to optimize the communication performance with the
 /// debugger and depends on the USB peripheral. For devices with limited RAM or USB buffer the
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
-#define DAP_PACKET_COUNT      1              ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
+#define DAP_PACKET_COUNT        8               ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
 
 /// Indicate that UART Serial Wire Output (SWO) trace is available.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#if !defined(SWO_UART)
 #define SWO_UART                0               ///< SWO UART:  1 = available, 0 = not available
+#endif
+
+/// USART Driver instance number for the UART SWO.
+#define SWO_UART_DRIVER         1               ///< USART Driver instance number (Driver_USART#).
 
 /// Maximum SWO UART Baudrate
 #define SWO_UART_MAX_BAUDRATE   10000000U       ///< SWO UART Maximum Baudrate in Hz
 
 /// Indicate that Manchester Serial Wire Output (SWO) trace is available.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
-#define SWO_MANCHESTER          0               ///< SWO Manchester:  1 = available, 0 = not available
+#define SWO_MANCHESTER          0               ///< SWO Manchester:  1 = available, 0 = not available.
 
 /// SWO Trace Buffer Size.
-#define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n)
+#define SWO_BUFFER_SIZE         4096U           ///< SWO Trace Buffer Size in bytes (must be 2^n).
 
 /// SWO Streaming Trace.
 #define SWO_STREAM              0               ///< SWO Streaming Trace: 1 = available, 0 = not available.
@@ -111,17 +124,28 @@ typedef unsigned int    BOOL;
 /// Clock frequency of the Test Domain Timer. Timer value is returned with \ref TIMESTAMP_GET.
 #define TIMESTAMP_CLOCK         1000000U      ///< Timestamp clock in Hz (0 = timestamps not supported).
 
+/// Indicate that UART Communication Port is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define DAP_UART                0               ///< DAP UART:  1 = available, 0 = not available.
+
+/// USART Driver instance number for the UART Communication Port.
+#define DAP_UART_DRIVER         1               ///< USART Driver instance number (Driver_USART#).
+
+/// UART Receive Buffer Size.
+#define DAP_UART_RX_BUFFER_SIZE 1024U           ///< Uart Receive Buffer Size in bytes (must be 2^n).
+
+/// UART Transmit Buffer Size.
+#define DAP_UART_TX_BUFFER_SIZE 1024U           ///< Uart Transmit Buffer Size in bytes (must be 2^n).
+
+/// Indicate that UART Communication via USB COM Port is available.
+/// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
+#define DAP_UART_USB_COM_PORT   1               ///< USB COM Port:  1 = available, 0 = not available.
 
 /// Debug Unit is connected to fixed Target Device.
 /// The Debug Unit may be part of an evaluation board and always connected to a fixed
-/// known device.  In this case a Device Vendor and Device Name string is stored which
-/// may be used by the debugger or IDE to configure device parameters.
-#define TARGET_DEVICE_FIXED   0               ///< Target Device: 1 = known, 0 = unknown;
-
-#if TARGET_DEVICE_FIXED
-#define TARGET_DEVICE_VENDOR  ""              ///< String indicating the Silicon Vendor
-#define TARGET_DEVICE_NAME    ""              ///< String indicating the Target Device
-#endif
+/// known device. In this case a Device Vendor, Device Name, Board Vendor and Board Name strings
+/// are stored and may be used by the debugger or IDE to configure device parameters.
+#define TARGET_FIXED            0               ///< Target: 1 = known, 0 = unknown;
 
 ///@}
 
@@ -132,45 +156,7 @@ typedef unsigned int    BOOL;
 #define CCU_CLK_STAT_RUN      (1UL << 0)
 
 // State of Reset Ouput Enable buffer
-extern BOOL gpio_reset_pin_is_input;
-
-// Debug Port I/O Pins
-
-// SWCLK Pin                  P1_17: GPIO0[12]
-#define PORT_SWCLK            0
-#define PIN_SWCLK_IN_BIT      12
-#define PIN_SWCLK             (1<<PIN_SWCLK_IN_BIT)
-
-// SWDIO Pin                  P1_6:  GPIO1[9]
-#define PORT_SWDIO            1
-#define PIN_SWDIO_IN_BIT      9
-#define PIN_SWDIO             (1<<PIN_SWDIO_IN_BIT)
-
-// SWDIO Output Enable Pin    P1_5:  GPIO1[8]
-#define PORT_SWDIO_TXE        1
-#define PIN_SWDIO_TXE_IN_BIT  8
-#define PIN_SWDIO_TXE         (1<<PIN_SWDIO_TXE_IN_BIT)
-
-// nRESET Pin                 P2_5:  GPIO5[5]
-#define PORT_nRESET           5
-#define PIN_nRESET_IN_BIT     5
-#define PIN_nRESET            (1<<PIN_nRESET_IN_BIT)
-
-// nRESET Output Enable Pin   P2_6:  GPIO5[6]
-#define PORT_RESET_TXE        5
-#define PIN_RESET_TXE_IN_BIT  6
-#define PIN_RESET_TXE         (1<<PIN_RESET_TXE_IN_BIT)
-
-// ISP Control Pin          P2_11:  GPIO1[11]
-#define ISPCTRL_PORT        1
-#define ISPCTRL_BIT         11
-
-#define X_SET(str)     LPC_GPIO_PORT->SET[PORT_##str] = PIN_##str
-#define X_CLR(str)     LPC_GPIO_PORT->CLR[PORT_##str] = PIN_##str
-#define X_DIR_OUT(str) LPC_GPIO_PORT->DIR[PORT_##str] |= (PIN_##str)
-#define X_DIR_IN(str)  LPC_GPIO_PORT->DIR[PORT_##str] &= ~(PIN_##str)
-#define X_BYTE(str)    LPC_GPIO_PORT->B[(PORT_##str << 5) + PIN_##str##_IN_BIT]
-
+extern bool gpio_reset_pin_is_input;
 
 //**************************************************************************************************
 /**
@@ -417,12 +403,12 @@ __STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
         // release device hardware reset. (reset INPUT, reset oe LOW=INPUT)
         X_DIR_IN(nRESET);
         X_CLR(RESET_TXE);
-        gpio_reset_pin_is_input = __TRUE;
+        gpio_reset_pin_is_input = true;
         LPC_GPIO_PIN_INT->IST = 0x01;    // ACK any pending edge interrupt
         LPC_GPIO_PIN_INT->SIENF |= 0x1;  // Enable falling edge interrupt
     } else {
         // issue a device hardware reset. (reset OUTPUT+LOW, reset oe HIGH=OUTPUT)
-        gpio_reset_pin_is_input = __FALSE;
+        gpio_reset_pin_is_input = false;
         LPC_GPIO_PIN_INT->CIENF |= 0x1;  // Disable falling edge interrupt
         LPC_GPIO_PIN_INT->IST = 0x01;    // ACK any pending edge interrupt
         X_SET(RESET_TXE);
@@ -454,6 +440,11 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
+    if (bit) {
+        X_SET(LED_CONNECTED);
+    } else {
+        X_CLR(LED_CONNECTED);
+    }
 }
 
 /** Debug Unit: Set status Target Running LED.

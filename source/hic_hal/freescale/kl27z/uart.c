@@ -180,13 +180,17 @@ int32_t uart_set_configuration(UART_Configuration *config)
     // Enable UART interrupt
     NVIC_ClearPendingIRQ(UART_RX_TX_IRQn);
     NVIC_EnableIRQ(UART_RX_TX_IRQn);
-    UART->CTRL |= LPUART_CTRL_RIE_MASK;
+    UART->CTRL |= LPUART_CTRL_RIE_MASK | LPUART_CTRL_ORIE_MASK;
     return 1;
 }
 
 int32_t uart_get_configuration(UART_Configuration *config)
 {
     return 1;
+}
+
+void uart_set_control_line_state(uint16_t ctrl_bmp)
+{
 }
 
 int32_t uart_write_free(void)

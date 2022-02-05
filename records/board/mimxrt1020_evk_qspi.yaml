@@ -1,5 +1,6 @@
 common:
     macros:
+        - DAPLINK_MIMXRT_TARGET
         - SOFT_RESET=VECTRESET
     sources:
         board:

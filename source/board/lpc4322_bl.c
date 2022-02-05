@@ -42,11 +42,12 @@ static const sector_info_t sectors_info[] = {
 
 // lpc4322 target information
 target_cfg_t target_device = {
+    .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
     .sector_info_length         = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start     = DAPLINK_ROM_IF_START,
     .flash_regions[0].end       = DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE,
-    .flash_regions[0].flags     = kRegionIsDefault,  
+    .flash_regions[0].flags     = kRegionIsDefault,
     .ram_regions[0].start       = 0x10000000,
     .ram_regions[0].end         = 0x10008000,
     /* .flash_algo not needed for bootloader */
@@ -60,6 +61,6 @@ const board_info_t g_board_info = {
     .board_id = "0000",
     .daplink_url_name =       "HELP_FAQHTM",
     .daplink_drive_name =       "MAINTENANCE",
-    .daplink_target_url = "https://mbed.com/daplink",
+    .daplink_target_url = "https://daplink.io",
     .target_cfg = &target_device,
 };

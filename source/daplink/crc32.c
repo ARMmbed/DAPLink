@@ -21,6 +21,8 @@
  */
 
 #include "crc.h"
+#include "compiler.h"
+#include "util.h"
 
 #define FALSE	0
 #define TRUE	!FALSE
@@ -73,6 +75,13 @@ typedef unsigned long  crc;
 static unsigned long
 reflect(unsigned long data, unsigned char nBits)
 {
+    // util_assert(nBits <= 32);
+    if (nBits == 32) {
+        // Use bit reverse instruction intrinsic. The CMSIS intrinsic also
+        // provides an implementation for cores that don't have the instruction.
+        return __RBIT(data);
+    }
+
     unsigned long  reflection = 0x00000000;
     unsigned char  bit;
 
@@ -105,7 +114,7 @@ reflect(unsigned long data, unsigned char nBits)
  * Returns:		The CRC of the message.
  *
  *********************************************************************/
-uint32_t
+__WEAK uint32_t
 crc32(const void *data, int nBytes)
 {
     crc            remainder = INITIAL_REMAINDER;
@@ -154,7 +163,7 @@ crc32(const void *data, int nBytes)
  * Returns:		The CRC of the message.
  *
  *********************************************************************/
-uint32_t
+__WEAK uint32_t
 crc32_continue(uint32_t prev_crc, const void *data, int nBytes)
 {
     crc            remainder = REFLECT_REMAINDER(prev_crc ^ FINAL_XOR_VALUE);

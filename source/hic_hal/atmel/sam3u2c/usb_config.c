@@ -1,6 +1,6 @@
 /**
  * @file    usb_config.c
- * @brief   
+ * @brief   USB Device Configuration
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -18,6 +18,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "util.h"
 
 // <e> USB Device
 //   <i> Enable the USB Device functionality
@@ -88,7 +90,7 @@
 //     </e>
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
-#define USBD_STRDESC_MAN            L"ARM"
+#define USBD_STRDESC_MAN            L"Arm"
 #ifndef USB_PROD_STR
 #define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
 #else
@@ -149,6 +151,12 @@
 #define WEBUSB_INTERFACE 0
 #else
 #define WEBUSB_INTERFACE 1
+#endif
+
+#ifndef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#define WINUSB_INTERFACE 1
 #endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
@@ -319,6 +327,7 @@
 //            <256=> 256 Bytes <512=> 512 Bytes <1024=> 1024 Bytes
 //       </h>
 //     </e>
+
 #ifndef CDC_ENDPOINT
 #define CDC_ENDPOINT 0
 #else
@@ -399,7 +408,7 @@
 
 #define USBD_IF_NUM_MAX             (USBD_BULK_ENABLE+USBD_WEBUSB_ENABLE+USBD_HID_ENABLE+USBD_MSC_ENABLE+(USBD_ADC_ENABLE*2)+(USBD_CDC_ACM_ENABLE*2)+USBD_CLS_ENABLE)
 #define USBD_MULTI_IF               (USBD_CDC_ACM_ENABLE*(USBD_HID_ENABLE|USBD_MSC_ENABLE|USBD_ADC_ENABLE|USBD_CLS_ENABLE|USBD_WEBUSB_ENABLE|USBD_BULK_ENABLE))
-#define MAX(x, y)                   (((x) < (y)) ? (y) : (x))
+// #define MAX(x, y)                   (((x) < (y)) ? (y) : (x))
 #define USBD_EP_NUM_CALC0           MAX((USBD_HID_ENABLE    *(USBD_HID_EP_INTIN     )), (USBD_HID_ENABLE    *(USBD_HID_EP_INTOUT!=0)*(USBD_HID_EP_INTOUT)))
 #define USBD_EP_NUM_CALC1           MAX((USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKIN    )), (USBD_MSC_ENABLE    *(USBD_MSC_EP_BULKOUT)))
 #define USBD_EP_NUM_CALC2           MAX((USBD_ADC_ENABLE    *(USBD_ADC_EP_ISOOUT    )), (USBD_CDC_ACM_ENABLE*(USBD_CDC_ACM_EP_INTIN)))
@@ -485,7 +494,7 @@
 #define USBD_HID_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2)
 #define USBD_WEBUSB_IF_STR_NUM     (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE)
 #define USBD_MSC_IF_STR_NUM        (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE)
-#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_BULK_ENABLE)
+#define USBD_BULK_IF_STR_NUM       (3+USBD_STRDESC_SER_ENABLE+USBD_ADC_ENABLE*3+USBD_CDC_ACM_ENABLE*2+USBD_HID_ENABLE+USBD_WEBUSB_ENABLE+USBD_MSC_ENABLE)
 
 #if    (USBD_HID_ENABLE)
 #if    (USBD_HID_HS_ENABLE)

@@ -1,6 +1,6 @@
 /**
- * @file    iotmodule_lpc54018.c
- * @brief   board ID for the NXP LPC54608Xpresso board
+ * @file    mini_iot_lpc54018.c
+ * @brief   board ID for the NXP LPC54018 IoT Module board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2018-2019, ARM Limited, All Rights Reserved
@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name =     "MINI-54018",
     .daplink_target_url =  "https://os.mbed.com/platforms/LPC54018IoTModule/",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "LPC54018 IoT Module",
 };

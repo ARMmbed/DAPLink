@@ -26,12 +26,15 @@
 
 // target information
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
     .flash_regions[0].end           = KB(512),
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x1FFF8000,
     .ram_regions[0].end             = 0x20018000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "MKW41Z512xxx4",
 };

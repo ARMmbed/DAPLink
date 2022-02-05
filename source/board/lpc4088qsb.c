@@ -25,6 +25,8 @@
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "1060",
-    .family_id = VENDOR_TO_FAMILY(kNXP_VendorID, 0), //custom
+    .family_id = CREATE_FAMILY_ID(kNXP_VendorID, 0), //custom
     .target_cfg = &target_device,
+    .board_vendor = "Embedded Artists",
+    .board_name = "LPC4088 QuickStart Board",
 };

@@ -26,7 +26,7 @@
 #include <string.h>
 
 //! @brief Creates a family ID from a vendor ID and family index within that vendor.
-#define VENDOR_TO_FAMILY(vendor, family) ((vendor) << 8 | (family))
+#define CREATE_FAMILY_ID(vendor, family) ((vendor) << 8 | (family))
 
 //! @brief States into which the target can be placed.
 //!
@@ -65,14 +65,13 @@ enum _vendor_ids {
     kNordic_VendorID = 54,
     kToshiba_VendorID = 92,
     kRenesas_VendorID = 117,
-    kWiznet_VendorID = 122,
     kRealtek_VendorID = 124,
     kAmbiq_VendorID = 120,
 };
 
 //! @brief Unique IDs for device families supported by DAPLink.
 //!
-//! The values of these enums are created with the VENDOR_TO_FAMILY() macro. Vendor IDs come from
+//! The values of these enums are created with the CREATE_FAMILY_ID() macro. Vendor IDs come from
 //! the #_vendor_ids enumeration. The family index for each ID is simply an integer that is unique
 //! within the family.
 //!
@@ -89,24 +88,24 @@ enum _vendor_ids {
 //! Then pick a unique family index by adding 1 to the highest existing family index within that
 //! vendor. For a family with a new vendor, the family index should be 1.
 typedef enum _family_id {
-    kStub_HWReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 1),
-    kStub_SWVectReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 2),
-    kStub_SWSysReset_FamilyID = VENDOR_TO_FAMILY(kStub_VendorID, 3),
-    kNXP_KinetisK_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 1),
-    kNXP_KinetisL_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 2),
-    kNXP_Mimxrt_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 3),
-    kNXP_RapidIot_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 4),
-    kNXP_KinetisK32W_FamilyID = VENDOR_TO_FAMILY(kNXP_VendorID, 5),
-    kNordic_Nrf51_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 1),
-    kNordic_Nrf52_FamilyID = VENDOR_TO_FAMILY(kNordic_VendorID, 2),
-    kRealtek_Rtl8195am_FamilyID = VENDOR_TO_FAMILY(kRealtek_VendorID, 1),
-    kTI_Cc3220sf_FamilyID = VENDOR_TO_FAMILY(kTI_VendorID, 1),
-    kToshiba_Tz_FamilyID = VENDOR_TO_FAMILY(kToshiba_VendorID, 1),
-    kWiznet_W7500_FamilyID = VENDOR_TO_FAMILY(kWiznet_VendorID, 1),
-    kRenesas_FamilyID = VENDOR_TO_FAMILY(kRenesas_VendorID, 1),
-    kAmbiq_ama3b1kk_FamilyID = VENDOR_TO_FAMILY(kAmbiq_VendorID, 1),
-    kMaxim_MAX3262X_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 1),
-    kMaxim_MAX3266X_FamilyID = VENDOR_TO_FAMILY(kMaxim_VendorID, 2),
+    kStub_HWReset_FamilyID = CREATE_FAMILY_ID(kStub_VendorID, 1),
+    kStub_SWVectReset_FamilyID = CREATE_FAMILY_ID(kStub_VendorID, 2),
+    kStub_SWSysReset_FamilyID = CREATE_FAMILY_ID(kStub_VendorID, 3),
+    kNXP_KinetisK_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 1),
+    kNXP_KinetisL_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 2),
+    kNXP_Mimxrt_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 3),
+    kNXP_RapidIot_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 4),
+    kNXP_KinetisK32W_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 5),
+    kNXP_LPC55xx_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 6),
+    kNordic_Nrf51_FamilyID = CREATE_FAMILY_ID(kNordic_VendorID, 1),
+    kNordic_Nrf52_FamilyID = CREATE_FAMILY_ID(kNordic_VendorID, 2),
+    kRealtek_Rtl8195am_FamilyID = CREATE_FAMILY_ID(kRealtek_VendorID, 1),
+    kTI_Cc3220sf_FamilyID = CREATE_FAMILY_ID(kTI_VendorID, 1),
+    kToshiba_Tz_FamilyID = CREATE_FAMILY_ID(kToshiba_VendorID, 1),
+    kRenesas_FamilyID = CREATE_FAMILY_ID(kRenesas_VendorID, 1),
+    kAmbiq_ama3b1kk_FamilyID = CREATE_FAMILY_ID(kAmbiq_VendorID, 1),
+    kMaxim_MAX3262X_FamilyID = CREATE_FAMILY_ID(kMaxim_VendorID, 1),
+    kMaxim_MAX3266X_FamilyID = CREATE_FAMILY_ID(kMaxim_VendorID, 2),
 } family_id_t;
 
 //! @brief Defines all characteristics of a device family.

@@ -35,9 +35,6 @@
 #define DAPLINK_ROM_BL_START            0x00000000
 #define DAPLINK_ROM_BL_SIZE             0x00010000 // 64 kB bootloader
 
-#define DAPLINK_ROM_CONFIG_ADMIN_START  0x00010000
-#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00000000
-
 #define DAPLINK_ROM_IF_START            0x00010000
 #define DAPLINK_ROM_IF_SIZE             0x0002f000 // 192 kB interface
 

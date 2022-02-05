@@ -26,7 +26,7 @@
 #include "cortex_m.h"
 
 //remove dependency from vfs_manager
-__attribute__((weak)) void vfs_mngr_fs_remount(void) {}
+__WEAK void vfs_mngr_fs_remount(void) {}
 
 uint32_t util_write_hex8(char *str, uint8_t value)
 {
@@ -110,19 +110,31 @@ uint32_t util_write_string(char *str, const char *data)
     return pos;
 }
 
-uint32_t util_div_round_up(uint32_t dividen, uint32_t divisor)
-{
-    return (dividen + divisor - 1) / divisor;
+uint32_t util_write_string_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *input) {
+    return util_write_in_region(buf, size, start, pos, input, strlen(input));
 }
 
-uint32_t util_div_round_down(uint32_t dividen, uint32_t divisor)
-{
-    return dividen / divisor;
-}
+uint32_t util_write_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint32_t pos, const char *input, uint32_t length) {
+    if (buf != NULL) {
+        // Check if there is something to copy
+        if (((pos + length) >= start) && (pos <= (start + size))) {
+            uint32_t i_off = 0;
+            uint32_t o_off = 0;
+            uint32_t l = length;
+            if (pos < start) {
+                i_off = start - pos;
+                l -= i_off;
+            } else {
+                o_off = pos - start;
+            }
+            if ((pos + length) > (start + size)) {
+                l -= (pos + length) - (start + size);
+            }
+            memcpy(buf + o_off, input + i_off, l);
+        }
+    }
 
-uint32_t util_div_round(uint32_t dividen, uint32_t divisor)
-{
-    return (dividen + divisor / 2) / divisor;
+    return length;
 }
 
 void _util_assert(bool expression, const char *filename, uint16_t line)
