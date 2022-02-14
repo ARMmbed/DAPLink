@@ -22,6 +22,9 @@ common:
 tool_specific:
     uvision:
         misc:
+            asm_flags:
+                - -I../../../source/daplink
+                - -I../../../source/hic_hal/nuvoton/m48ssidae
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\nuvoton\m48ssidae"
         sources:
@@ -31,12 +34,18 @@ tool_specific:
         misc:
             asm_flags:
                 - --no_unaligned_access
+                - -I../../../source/daplink
+                - -I../../../source/hic_hal/nuvoton/m48ssidae
             c_flags:
                 - --no_unaligned_access
         sources:
             hic_hal:
                 - source/hic_hal/nuvoton/m48ssidae/armcc
     armclang:
+        misc:
+            asm_flags:
+                - -I../../../source/daplink
+                - -I../../../source/hic_hal/nuvoton/m48ssidae
         sources:
             hic_hal:
                 - source/hic_hal/nuvoton/m48ssidae/armcc
