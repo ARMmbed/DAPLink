@@ -25,7 +25,7 @@
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "5501",
-    .family_id = kStub_HWReset_FamilyID,
+    .family_id = kRenesas_FamilyID,
     .flags = kEnablePageErase,
     .daplink_drive_name =       "MBED       ",
     .target_cfg = &target_device,
