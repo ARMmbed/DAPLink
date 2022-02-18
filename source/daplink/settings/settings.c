@@ -66,7 +66,7 @@ typedef struct __attribute__((__packed__)) cfg_ram {
 COMPILER_ASSERT((offsetof(cfg_ram_t, hexdump) % sizeof(uint32_t)) == 0);
 
 // Configuration RAM
-#if defined(__ARMCC)
+#if defined(__CC_ARM)
 static cfg_ram_t config_ram __attribute__((section("cfgram"), zero_init));
 #else
 static cfg_ram_t config_ram __attribute__((section("cfgram")));

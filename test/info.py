@@ -205,6 +205,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1309,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m252kg_if',              'm48ssidae_bl',     None                                    ),
     (   0x1310,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m263a_if',           'm48ssidae_bl',     None                                    ),
     (   0x1312,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_m2354_if',               'm48ssidae_bl',     None                                    ),
+    (   0x1313,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m467_if',            'm48ssidae_bl',     None                                    ),
     (   0x2600,     VENDOR_TO_FAMILY('Nordic', 2),      'k20dx_ep_agora_if',                        None,               None                                    ),
     (   0x2601,     VENDOR_TO_FAMILY('NXP', 0),         'k20dx_ep_kairos_if',                       None,               None                                    ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
@@ -310,6 +311,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x1309,  # NuMaker-M252KG
     0x1310,  # NuMaker-IoT-M263A
     0x1312,  # NuMaker-M2354
+    0x1313,  # NuMaker-IoT-M467
     0x3103,  # dipdap_sdt51822b
     0x3104,  # dipdap_sdt52832b
     0x3105,  # dipdap_sdt64b

@@ -31,13 +31,15 @@
 ;//-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
 ;*/
 
+#include "daplink_addr.h"
+#include "daplink_defaults.h"
 
 ; <h> Stack Configuration
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
     IF :LNOT: :DEF: Stack_Size
-Stack_Size      EQU     0x00006000
+Stack_Size      EQU     DAPLINK_STACK_SIZE
     ENDIF
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
@@ -50,7 +52,7 @@ __initial_sp
 ; </h>
 
     IF :LNOT: :DEF: Heap_Size
-Heap_Size       EQU     0x00000100
+Heap_Size       EQU     DAPLINK_HEAP_SIZE
     ENDIF
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
