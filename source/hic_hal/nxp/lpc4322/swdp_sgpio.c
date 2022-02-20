@@ -1129,18 +1129,18 @@ void SWJ_Sequence(uint32_t count, const uint8_t *request)
 //   return: none
 void SWD_Sequence(uint32_t info, const uint8_t *swdo, uint8_t *swdi)
 {
-    uint32_t bytes_nb;
+    uint32_t bits_sz;
 
     shift_clk_preset_init();
 
-    bytes_nb = info & SWD_SEQUENCE_CLK;
-    if (bytes_nb == 0U)
-        bytes_nb = 64U;
+    bits_sz = info & SWD_SEQUENCE_CLK;
+    if (bits_sz == 0U)
+        bits_sz = 64U;
 
     if (info & SWD_SEQUENCE_DIN)
-        sequence_read(bytes_nb*8, swdi);
+        sequence_read(bits_sz, swdi);
     else
-        sequence_send(bytes_nb*8, swdo);
+        sequence_send(bits_sz, swdo);
 }
 
 
