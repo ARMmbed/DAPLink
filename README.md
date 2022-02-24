@@ -2,6 +2,7 @@
 [![DAPLink](/docs/images/daplink-website-logo-link.png)](https://daplink.io/)
 
 [![Linux Build (develop)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml/badge.svg?branch=develop)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml)
+[![Join us on Slack](https://img.shields.io/static/v1?label=Slack&color=4A154B&logo=slack&style=social&message=Join%20us%20on%20Slack)](https://join.slack.com/t/pyocd/shared_invite/zt-zqjv6zr5-ZfGAXl_mFCGGmFlB_8riHA)
 
 ----
 
@@ -36,8 +37,9 @@ There are many board builds (board = HIC + target combination) created from this
 
 We welcome contributions to DAPLink in any area. Look for an interesting feature or defect
 [under issues](https://github.com/ARMmbed/DAPLink/issues). Start a new thread [in the
-discussions](https://github.com/ARMmbed/DAPLink/discussions) to engage with the developers
-and maintainers.
+discussions](https://github.com/ARMmbed/DAPLink/discussions) or
+[in Slack](https://join.slack.com/t/pyocd/shared_invite/zt-zqjv6zr5-ZfGAXl_mFCGGmFlB_8riHA)
+to engage with the developers and maintainers.
 
 Please see the [contribution guidelines](CONTRIBUTING.md) for detailed requirements for
 contributions.
@@ -52,4 +54,4 @@ Information for setting up a development environment, running the tests or creat
 DAPLink is licensed with the permissive Apache 2.0 license. See the [LICENSE](LICENSE) file for the
 full text of the license.
 
-Copyright © 2006-2021 Arm Ltd
+Copyright © 2006-2022 Arm Ltd
