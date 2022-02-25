@@ -82,7 +82,9 @@ static const vfs_filename_t assert_file = "ASSERT  TXT";
 
 //! @brief Table of magic files and their names.
 static const magic_file_info_t s_magic_file_info[] = {
+#ifdef DRAG_N_DROP_SUPPORT
         { daplink_mode_file_name, kDAPLinkModeActionFile },
+#endif
         { "ASSERT  ACT", kTestAssertActionFile      },
         { "REFRESH ACT", kRefreshActionFile         },
         { "ERASE   ACT", kEraseActionFile           },
