@@ -120,7 +120,9 @@ static const program_target_t flash = {
     // address of prog_blob
     {{name}}_flash_prog_blob,
     // ram_to_flash_bytes_to_be_written
-    {{'0x%08x' % algo.page_size}}
+    {{'0x%08x' % algo.page_size}},
+    // algo_flags (combination of kAlgoVerifyReturnsAddress, kAlgoSingleInitType and kAlgoSkipChipErase)
+    0x00000000
 };
 
 """
