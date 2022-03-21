@@ -36,6 +36,8 @@
 #include "file_stream.h"
 #include "error.h"
 
+#include "flash_intf.h"     // for flash_intf_target
+
 // Set to 1 to enable debugging
 #define DEBUG_VFS_MANAGER     0
 
@@ -453,6 +455,14 @@ static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_
 
         if (STREAM_TYPE_NONE != stream) {
             transfer_stream_open(stream, sector);
+
+            // The flash starting : erase flash before BUT NOT IN MAINTENANCE MODE !.
+            if( file_transfer_state.stream_started && flash_intf_target ){
+                vfs_mngr_printf("Erase flash\r\n");
+                flash_intf_target->init();
+                flash_intf_target->erase_chip();
+                flash_intf_target->uninit();
+            }
         }
     }
 
