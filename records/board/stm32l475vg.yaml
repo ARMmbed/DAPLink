@@ -6,3 +6,4 @@ common:
             - source/board/stm32l475vg.c
         family:
             - source/family/st/stm32l475vg/target.c
+            - source/family/st/stm32l475vg/target_reset.c
