@@ -711,20 +711,19 @@ static void sequence_read(uint32_t bits_sz, uint8_t *data)
 
     // Disable TXEN.
     SLICE_POS(SLICE_SWDIO_TXEN) = POS_POS(0) | POS_PRESET(0);
-    SLICE_REG(SLICE_SWDIO_TMS_OE) = 0;
+    SLICE_REG(SLICE_SWDIO_TXEN) = 0;
     SLICE_SHD(SLICE_SWDIO_TXEN) = 0;
 
     uint32_t bits_per_chunk = bits_sz<=64 ? bits_sz : 64;
-    SLICE_POS(SLICE_SWDIO_TMS_DIN1) = POS_POS(bits_per_chunk) | POS_PRESET(bits_per_chunk);
 
     if (bits_sz <= BYTES_PER_SLICE*8)
     {
-        slices_used = SLICE_SWDIO_TMS_DIN0;
+        slices_used = SLICE_SWDIO_TMS_DIN0_MASK;
         SLICE_POS(SLICE_SWDIO_TMS_DIN0) = POS_POS(bits_per_chunk) | POS_PRESET(bits_per_chunk);
     }
     else
     {
-        slices_used = SLICE_SWDIO_TMS_DIN0 | SLICE_SWDIO_TMS_DIN1;
+        slices_used = SLICE_SWDIO_TMS_DIN0_MASK | SLICE_SWDIO_TMS_DIN1_MASK;
         SLICE_POS(SLICE_SWDIO_TMS_DIN0) = POS_POS(bits_per_chunk) | POS_PRESET(bits_per_chunk);
         SLICE_POS(SLICE_SWDIO_TMS_DIN1) = POS_POS(bits_per_chunk) | POS_PRESET(bits_per_chunk);
     }
@@ -734,7 +733,6 @@ static void sequence_read(uint32_t bits_sz, uint8_t *data)
         uint32_t bits_remaining = bits_sz - bits_it;
         uint32_t bytes_remaining = (bits_remaining + 7) / 8;
         uint32_t slice_it = 0;
-        uint32_t slices_used = 0;
         uint32_t slices_required = bytes_remaining/BYTES_PER_SLICE;
 
         if (!slices_started)
