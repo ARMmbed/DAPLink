@@ -1,0 +1,49 @@
+common:
+    target:
+        - Cortex-M3
+    core:
+        - Cortex-M3
+    macros:
+        - INTERFACE_MM32F3270
+        - USE_HAL_DRIVER
+        - MM32F3270
+        - DAPLINK_HIC_ID=0x97969908  # DAPLINK_HIC_ID_mm32f3270
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=96000000
+    includes:
+        - source/hic_hal/mm32/mm32f3270
+        - source/hic_hal/mm32/mm32f3270/cmsis
+        - source/hic_hal/mm32/mm32f3270/hal
+        - source/hic_hal/mm32/mm32f3270/hal/Inc
+    sources:
+        hic_hal:
+            - source/hic_hal/mm32/mm32f3270
+            - source/hic_hal/mm32/mm32f3270/cmsis
+            - source/hic_hal/mm32/mm32f3270/hal/Src
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\mm32\mm32f3270"
+        sources:
+            hic_hal:
+                - source/hic_hal/mm32/mm32f3270/armcc
+    armcc:
+        misc:
+            asm_flags:
+                - --no_unaligned_access
+            c_flags:
+                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/mm32/mm32f3270/armcc
+    armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/mm32/mm32f3270/armcc
+    gcc_arm:
+        sources:
+            hic_hal:
+                - source/hic_hal/mm32/mm32f3270/gcc

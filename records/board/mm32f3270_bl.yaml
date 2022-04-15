@@ -1,0 +1,6 @@
+common:
+    sources:
+        board:
+            - source/board/mm32f3270.c
+        family:
+            - source/family/mindmotion/mm32f3270/target.c
