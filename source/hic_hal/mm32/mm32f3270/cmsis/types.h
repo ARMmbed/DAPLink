@@ -66,7 +66,7 @@ typedef volatile unsigned char  vu8;
 typedef volatile unsigned int  const  vuc32;        ///< Read Only
 typedef volatile unsigned short const vuc16;        ///< Read Only
 typedef volatile unsigned char  const vuc8;         ///< Read Only
-typedef bool    BOOL;
+//typedef bool    BOOL;
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
@@ -87,8 +87,8 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 #define S32_MAX    ((s32)2147483647)
 #define S32_MIN    ((s32)-2147483648uL)
 
-#define MAX(a,b)((a)>(b)?(a):(b))
-#define MIN(a,b)((a)<(b)?(a):(b))
+//#define MAX(a,b)((a)>(b)?(a):(b))
+//#define MIN(a,b)((a)<(b)?(a):(b))
 
 #define SET_BIT(reg, bit)     ((reg) |= (bit))
 #define CLEAR_BIT(reg, bit)   ((reg) &= ~(bit))

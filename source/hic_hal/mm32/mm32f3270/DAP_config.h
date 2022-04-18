@@ -22,6 +22,7 @@
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
 
+#include "mm32_device.h"
 #include "IO_Config.h"
 
 //**************************************************************************************************
@@ -77,7 +78,7 @@ This information includes:
 /// debugger and depends on the USB peripheral. Typical vales are 64 for Full-speed USB HID or WinUSB,
 /// 1024 for High-speed USB HID and 512 for High-speed USB WinUSB.
 #ifndef HID_ENDPOINT            //HID end points currently set limits to 64
-#define DAP_PACKET_SIZE         512              ///< Specifies Packet Size in bytes.
+#define DAP_PACKET_SIZE         64 //512              ///< Specifies Packet Size in bytes.
 #else
 #define DAP_PACKET_SIZE         64              ///< Specifies Packet Size in bytes.
 #endif
@@ -523,10 +524,11 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
 __STATIC_INLINE void DAP_SETUP(void)
 {
     /* Enable port clock */
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOD_CLK_ENABLE();
+    RCC->AHBENR |= RCC_AHBENR_GPIOA;
+    RCC->AHBENR |= RCC_AHBENR_GPIOB;
+    RCC->AHBENR |= RCC_AHBENR_GPIOC;
+    RCC->AHBENR |= RCC_AHBENR_GPIOD;
+
     /* Configure I/O pin SWCLK */
     pin_out_init(SWCLK_TCK_PIN_PORT, SWCLK_TCK_PIN_Bit);
     SWCLK_TCK_PIN_PORT->BSRR = SWCLK_TCK_PIN;
