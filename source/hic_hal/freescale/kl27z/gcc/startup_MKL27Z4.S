@@ -72,7 +72,7 @@ __isr_vector:
     .long   LPTMR0_IRQHandler                               /* LPTMR0 interrupt*/
     .long   Reserved45_IRQHandler                           /* Reserved interrupt*/
     .long   PORTA_IRQHandler                                /* PORTA Pin detect*/
-    .long   PORTC_PORTD_IRQHandler                          /* Single interrupt vector for PORTC; PORTD Pin detect*/
+    .long   PORTCD_IRQHandler                               /* Single interrupt vector for PORTC; PORTD Pin detect*/
 
     .size    __isr_vector, . - __isr_vector
 
@@ -440,6 +440,6 @@ I2S0_IRQHandler:
     def_irq_handler    LPTMR0_IRQHandler
     def_irq_handler    Reserved45_IRQHandler
     def_irq_handler    PORTA_IRQHandler
-    def_irq_handler    PORTC_PORTD_IRQHandler
+    def_irq_handler    PORTCD_IRQHandler
 
     .end
