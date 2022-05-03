@@ -276,7 +276,11 @@ FPROT0          EQU     nFPROT0:EOR:0xFF
 ;       <2=> Boot from ROM
 ;       <3=> Boot from ROM
 ;         <i> Boot source selection
+#if defined(MICROBIT_LOCK_BOOTLOADER)
 FOPT          EQU     0x39
+#else
+FOPT          EQU     0x3B
+#endif
 ;   </h>
 ;   <h> Flash security byte (FSEC)
 ;     <i> WARNING: If SEC field is configured as "MCU security status is secure" and MEEN field is configured as "Mass erase is disabled",

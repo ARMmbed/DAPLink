@@ -83,15 +83,53 @@ __isr_vector:
 /* Flash Configuration */
     .section .FlashConfig, "a"
 #if defined(MICROBIT_LOCK_BOOTLOADER)
+    /* Backdoor Comparison Key: "MICROBIT" */
     .long 0x5243494D
     .long 0x5449424F
+    /* Program flash protection bytes (FPROT): Protect the first 32 kB of flash */
     .long 0xFFFFFFF0
-    .long 0xFFFF39FE
+    /* Flash security byte (FSEC)
+     * KEYEN  [6:7] -> 0b10 Backdoor key access enabled
+     * MEEN   [4:5] -> 0b11 Mass erase is enabled
+     * FSLACC [2:3] -> 0b11 NXP factory access granted
+     * SEC    [0:1] -> 0b10 MCU security status is unsecure
+     */
+    .byte 0xBE
+    /* Flash nonvolatile option byte (FOPT):
+     * BOOTSRC_SEL [7:6] -> 0b00 Boot from flash
+     * FAST_INIT     [5] -> 0b1 Fast Initialization
+     * RESET_PIN_CFG [3] -> 0b1 RESET_b pin is dedicated
+     * NMI_DIS       [2] -> 0b0 NMI interrupts are always blocked
+     * BOOTPIN_OPT   [1] -> 0b0 Force Boot from ROM if BOOTCFG0 asserted
+     * LPBOOT      [4:0] -> 0b11 Core and system clock divider (OUTDIV1) is 0x0 (divide by 1)
+     */
+    .byte 0x39
+    /* 2 reserved bytes */
+    .byte 0xFF, 0xFF
 #else
+    /* Backdoor Comparison Key: Unset */
     .long 0xFFFFFFFF
     .long 0xFFFFFFFF
+    /* Program flash protection bytes (FPROT): None */
     .long 0xFFFFFFFF
-    .long 0xFFFF3FFE
+    /* Flash security byte (FSEC)
+     * KEYEN  [6:7] -> 0b11 Backdoor key access disabled
+     * MEEN   [4:5] -> 0b11 Mass erase is enabled
+     * FSLACC [2:3] -> 0b11 NXP factory access granted
+     * SEC    [0:1] -> 0b10 MCU security status is unsecure
+     */
+    .byte 0xFE
+    /* Flash nonvolatile option byte (FOPT):
+     * BOOTSRC_SEL [7:6] -> 0b00 Boot from flash
+     * FAST_INIT     [5] -> 0b1 Fast Initialization
+     * RESET_PIN_CFG [3] -> 0b1 RESET_b pin is dedicated
+     * NMI_DIS       [2] -> 0b0 NMI interrupts are always blocked
+     * BOOTPIN_OPT   [1] -> 0b1 Boot source configured by FOPT[7:6] (BOOTSRC_SEL) bits
+     * LPBOOT      [4:0] -> 0b11 Core and system clock divider (OUTDIV1) is 0x0 (divide by 1)
+     */
+    .byte 0x3B
+    /* 2 reserved bytes */
+    .byte 0xFF, 0xFF
 #endif
 
     .text
