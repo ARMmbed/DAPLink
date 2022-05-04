@@ -34,8 +34,12 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;
 MEMORY
 {
   m_interrupts          (RX)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x400
+#if defined(DAPLINK_BL)
   m_flash_config        (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x400, LENGTH = 0x10
   m_text                (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x410, LENGTH = DAPLINK_ROM_APP_SIZE - 0x410
+#else
+  m_text                (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x400, LENGTH = DAPLINK_ROM_APP_SIZE - 0x400
+#endif
   m_cfgrom              (RW)  : ORIGIN = DAPLINK_ROM_CONFIG_USER_START, LENGTH = DAPLINK_ROM_CONFIG_USER_SIZE
   m_data                (RW)  : ORIGIN = DAPLINK_RAM_APP_START, LENGTH = DAPLINK_RAM_APP_SIZE
   m_cfgram              (RW)  : ORIGIN = DAPLINK_RAM_SHARED_START, LENGTH = DAPLINK_RAM_SHARED_SIZE
@@ -54,12 +58,14 @@ SECTIONS
     . += LENGTH(m_interrupts) - (. - ORIGIN(m_interrupts)); /* pad out to end of m_interrupts */
   } > m_interrupts
 
+#if defined(DAPLINK_BL)
   .flash_config :
   {
     . = ALIGN(4);
     KEEP(*(.FlashConfig))    /* Flash Configuration Field (FCF) */
     . = ALIGN(4);
   } > m_flash_config
+#endif
 
   /* The program code and other data goes into internal flash */
   .text :

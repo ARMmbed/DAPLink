@@ -308,16 +308,14 @@ FSEC          EQU     0xFE
 ;   </h>
 ; </h>
 
-            #if defined(DAPLINK_IF)
-                AREA    |.ARM.__at_0x8400|, CODE, READONLY
-            #else
+            #if defined(DAPLINK_BL)
                 AREA    |.ARM.__at_0x400 |, CODE, READONLY
-            #endif
 
                 DCB     BackDoorK0, BackDoorK1, BackDoorK2, BackDoorK3
                 DCB     BackDoorK4, BackDoorK5, BackDoorK6, BackDoorK7
                 DCB     FPROT3    , FPROT2    , FPROT1    , FPROT0
                 DCB     FSEC      , FOPT      , 0xFF      , 0xFF
+            #endif
 
                 AREA    |.text|, CODE, READONLY
 

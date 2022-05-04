@@ -78,9 +78,8 @@ __isr_vector:
 
 #if defined(DAPLINK_BL)
     /* TODO: Bootloader Configuration Area (BCA) used by Kinetis ROM Bootloader */
-#endif
 
-/* Flash Configuration */
+    /* Flash Configuration */
     .section .FlashConfig, "a"
 #if defined(MICROBIT_LOCK_BOOTLOADER)
     /* Backdoor Comparison Key: "MICROBIT" */
@@ -130,7 +129,8 @@ __isr_vector:
     .byte 0x3B
     /* 2 reserved bytes */
     .byte 0xFF, 0xFF
-#endif
+#endif  /* MICROBIT_LOCK_BOOTLOADER */
+#endif  /* DAPLINK_BL */
 
     .text
     .thumb
