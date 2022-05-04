@@ -77,7 +77,30 @@ __isr_vector:
     .size    __isr_vector, . - __isr_vector
 
 #if defined(DAPLINK_BL)
-    /* TODO: Bootloader Configuration Area (BCA) used by Kinetis ROM Bootloader */
+    /* Bootloader Configuration Area (BCA) used by Kinetis ROM Bootloader */
+    .section .BootloaderConfig, "a"
+    .long 0x6766636B    /* 0x00 Magic number to verify bootloader configuration is valid. Must be set to 'kcfg'. */
+    .long 0xFFFFFFFF    /* 0x04 Reserved */
+    .long 0xFFFFFFFF    /* 0x08 Reserved */
+    .long 0xFFFFFFFF    /* 0x0C Reserved */
+    .byte 0x10          /* 0x10 Bitfield of peripherals to enable. bit 0 LPUART, bit 1 I2C, bit 2 SPI, bit 4 USB. 0x10 = USB only */
+    .byte 0xFF          /* 0x11 i2cSlaveAddress */
+    .byte 0xFF, 0xFF    /* 0x12 peripheralDetectionTimeout */
+    .byte 0xFF, 0xFF    /* 0x14 usbVid */
+    .byte 0xFF, 0xFF    /* 0x16 usbPid */
+    .long 0xFFFFFFFF    /* 0x18 usbStringsPointer */
+    .byte 0xFF          /* 0x1C clockFlags */
+    .byte 0xFF          /* 0x1D clockDivider */
+    .byte 0xFF          /* 0x1E bootFlags */
+    .byte 0xFF          /* 0x1F pad byte */
+    .long 0xFFFFFFFF    /* 0x20 Reserved */
+    .long 0xFFFFFFFF    /* 0x24 Reserved */
+    .long 0xFFFFFFFF    /* 0x28 Reserved */
+    .long 0xFFFFFFFF    /* 0x2C Reserved */
+    .long 0xFFFFFFFF    /* 0x30 Reserved */
+    .long 0xFFFFFFFF    /* 0x34 Reserved */
+    .long 0xFFFFFFFF    /* 0x38 Reserved */
+    .long 0xFFFFFFFF    /* 0x3C Reserved */
 
     /* Flash Configuration */
     .section .FlashConfig, "a"
