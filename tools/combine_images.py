@@ -21,22 +21,25 @@
 import argparse
 import itertools
 import os.path
+import sys
 from intelhex import IntelHex
+
+int_types = (int, long) if sys.version_info[0] == 2 else (int,)
 
 
 def ranges(i):
-    for _, b in itertools.groupby(enumerate(i), lambda (x, y): y - x):
+    for _, b in itertools.groupby(enumerate(i), lambda xy: xy[1] - xy[0]):
         b = list(b)
         yield b[0][1], b[-1][1]
 
 
 def print_hex_info(filename, intel_hex):
-    print "File: %s" % filename
+    print("File: %s" % filename)
     addresses = intel_hex.addresses()
     addresses.sort()
     data_list = list(ranges(addresses))
     for start, end in data_list:
-        print "    0x%x, 0x%x" % (start, end)
+        print("    0x%x, 0x%x" % (start, end))
 
 
 def merge_hex(hex1, hex2):
@@ -50,13 +53,12 @@ def merge_hex(hex1, hex2):
     if "start_addr" in hex2_dict:
         del hex2_dict["start_addr"]
 
-    keys = hex2_dict.keys()
-    keys.sort()
+    keys = sorted(hex2_dict.keys())
 
     # Verify nothing unexpected is in the dict
     for key in keys:
-        if not type(key) in (int, long):
-            print 'Unknown key "%s" of type %s' % (key, type(key))
+        if not type(key) in int_types:
+            print('Unknown key "%s" of type %s' % (key, type(key)))
 
     for key in keys:
         if key in hex1_dict:
@@ -78,7 +80,7 @@ def main():
     for file_name in args.hex:
         file_name = os.path.expanduser(file_name)
         new_hex_data = IntelHex()
-        print "opening file %s" % file_name
+        print("opening file %s" % file_name)
         new_hex_data.fromfile(file_name, format='hex')
         print_hex_info(file_name, new_hex_data)
         base_hex = merge_hex(base_hex, new_hex_data)
@@ -91,12 +93,12 @@ def main():
         print_hex_info(file_name, new_hex_data)
         base_hex = merge_hex(base_hex, new_hex_data)
     # Write out data
-    print_hex_info(os.path.expanduser(args.output_file), base_hex)
-    with open(os.path.expanduser(args.output_file), 'wb') as output_file:
-        base_hex.tofile(output_file, 'hex')
+    output_hex_filename = os.path.expanduser(args.output_file)
+    print_hex_info(output_hex_filename, base_hex)
+    base_hex.tofile(output_hex_filename, 'hex')
     if args.output_bin_file is not None:
-        with open(os.path.expanduser(args.output_bin_file), 'wb') as output_file:
-            base_hex.tofile(output_file, 'bin')
+        base_hex.tofile(os.path.expanduser(args.output_bin_file), 'bin')
+
 
 if __name__ == '__main__':
     main()
