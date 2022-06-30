@@ -39,9 +39,10 @@ target_cfg_t target_device = {
 
 // RTL8195AM's main cpu can only talk 38400 with DAP UART
 #include "uart.h"
+#include "rl_usb.h"
 static UART_Configuration UART_Config;
 
-int32_t USBD_CDC_ACM_SetLineCoding(void)
+int32_t USBD_CDC_ACM_SetLineCoding(usbd_cdc_num_t cdc_num)
 {
     UART_Config.Baudrate    = 38400;
     UART_Config.DataBits    = UART_DATA_BITS_8;

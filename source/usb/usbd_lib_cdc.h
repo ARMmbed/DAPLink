@@ -25,15 +25,16 @@
 
 /*--------------------------- USB Requests -----------------------------------*/
 
-extern int32_t USBD_CDC_ACM_SendEncapsulatedCommand(void);
-extern int32_t USBD_CDC_ACM_GetEncapsulatedResponse(void);
-extern int32_t USBD_CDC_ACM_SetCommFeature(uint16_t feat);
-extern int32_t USBD_CDC_ACM_GetCommFeature(uint16_t feat);
-extern int32_t USBD_CDC_ACM_ClearCommFeature(uint16_t feat);
-extern int32_t USBD_CDC_ACM_SetLineCoding(void);
-extern int32_t USBD_CDC_ACM_GetLineCoding(void);
-extern int32_t USBD_CDC_ACM_SetControlLineState(uint16_t ctrl_bmp);
-extern int32_t USBD_CDC_ACM_SendBreak(uint16_t dur);
+#include <rl_usb.h>
 
+extern int32_t USBD_CDC_ACM_SendEncapsulatedCommand(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_GetEncapsulatedResponse(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_SetCommFeature(usbd_cdc_num_t cdc_num, uint16_t feat);
+extern int32_t USBD_CDC_ACM_GetCommFeature(usbd_cdc_num_t cdc_num, uint16_t feat);
+extern int32_t USBD_CDC_ACM_ClearCommFeature(usbd_cdc_num_t cdc_num, uint16_t feat);
+extern int32_t USBD_CDC_ACM_SetLineCoding(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_GetLineCoding(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_SetControlLineState(usbd_cdc_num_t cdc_num, uint16_t ctrl_bmp);
+extern int32_t USBD_CDC_ACM_SendBreak(usbd_cdc_num_t cdc_num, uint16_t dur);
 
 #endif  /* __USBD_LIB_CDC_H__ */

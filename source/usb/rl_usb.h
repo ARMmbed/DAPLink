@@ -54,34 +54,53 @@ extern void  usbd_msc_start_stop(BOOL start);
 /* USB Device user functions imported to USB Audio Class module               */
 extern void  usbd_adc_init(void);
 
+#ifdef CDC_ENDPOINT
+#ifndef USB_CDC_ACM_EP_COUNT
+#define USB_CDC_ACM_EP_COUNT 1
+#endif
+#endif
+
+/* The USB CDC driver can support multiple CDC endpoints. EP 1 is reserved for
+ * standard USB to UART communication with the DAPLink target. EP 2 and EP 3
+ * functionality is HIC specific and user defined. */
+typedef enum {
+    USB_CDC_ACM_NUM_1_USB2UART = 0,
+#if (USB_CDC_ACM_EP_COUNT > 1)
+    USB_CDC_ACM_NUM_2_USER,
+#if (USB_CDC_ACM_EP_COUNT > 2)
+    USB_CDC_ACM_NUM_3_USER,
+#endif
+#endif
+} usbd_cdc_num_t;
+
 /* USB Device CDC ACM class functions called automatically by USBD Core module*/
-extern int32_t  USBD_CDC_ACM_Initialize(void);
-extern int32_t  USBD_CDC_ACM_Uninitialize(void);
-extern int32_t  USBD_CDC_ACM_Reset(void);
+extern int32_t USBD_CDC_ACM_Initialize(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_Uninitialize(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_Reset(void);
 /* USB Device CDC ACM class user functions                                    */
-extern int32_t  USBD_CDC_ACM_PortInitialize(void);
-extern int32_t  USBD_CDC_ACM_PortUninitialize(void);
-extern int32_t  USBD_CDC_ACM_PortReset(void);
-extern int32_t  USBD_CDC_ACM_PortSetLineCoding(CDC_LINE_CODING *line_coding);
-extern int32_t  USBD_CDC_ACM_PortGetLineCoding(CDC_LINE_CODING *line_coding);
-extern int32_t  USBD_CDC_ACM_PortSetControlLineState(uint16_t ctrl_bmp);
-extern int32_t  USBD_CDC_ACM_DataSend(const uint8_t *buf, int32_t len);
-extern int32_t  USBD_CDC_ACM_DataFree(void);
-extern int32_t  USBD_CDC_ACM_PutChar(const uint8_t  ch);
-extern int32_t  USBD_CDC_ACM_DataRead(uint8_t *buf, int32_t len);
-extern int32_t  USBD_CDC_ACM_GetChar(void);
-extern int32_t  USBD_CDC_ACM_DataAvailable(void);
-extern int32_t  USBD_CDC_ACM_Notify(uint16_t stat);
+extern int32_t USBD_CDC_ACM_PortInitialize(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_PortUninitialize(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_PortReset(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_PortSetLineCoding(usbd_cdc_num_t cdc_num, CDC_LINE_CODING *line_coding);
+extern int32_t USBD_CDC_ACM_PortGetLineCoding(usbd_cdc_num_t cdc_num, CDC_LINE_CODING *line_coding);
+extern int32_t USBD_CDC_ACM_PortSetControlLineState(usbd_cdc_num_t cdc_num, uint16_t ctrl_bmp);
+extern int32_t USBD_CDC_ACM_DataSend(usbd_cdc_num_t cdc_num, const uint8_t *buf, int32_t len);
+extern int32_t USBD_CDC_ACM_DataFree(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_PutChar(usbd_cdc_num_t cdc_num, const uint8_t  ch);
+extern int32_t USBD_CDC_ACM_DataRead(usbd_cdc_num_t cdc_num, uint8_t *buf, int32_t len);
+extern int32_t USBD_CDC_ACM_GetChar(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_DataAvailable(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_Notify(usbd_cdc_num_t cdc_num, uint16_t stat);
 /* USB Device CDC ACM class overridable functions                             */
-extern int32_t  USBD_CDC_ACM_SendEncapsulatedCommand(void);
-extern int32_t  USBD_CDC_ACM_GetEncapsulatedResponse(void);
-extern int32_t  USBD_CDC_ACM_SetCommFeature(uint16_t feat);
-extern int32_t  USBD_CDC_ACM_GetCommFeature(uint16_t feat);
-extern int32_t  USBD_CDC_ACM_ClearCommFeature(uint16_t feat);
-extern int32_t  USBD_CDC_ACM_SetLineCoding(void);
-extern int32_t  USBD_CDC_ACM_GetLineCoding(void);
-extern int32_t  USBD_CDC_ACM_SetControlLineState(uint16_t ctrl_bmp);
-extern int32_t  USBD_CDC_ACM_SendBreak(uint16_t dur);
+extern int32_t USBD_CDC_ACM_SendEncapsulatedCommand(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_GetEncapsulatedResponse(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_SetCommFeature(usbd_cdc_num_t cdc_num, uint16_t feat);
+extern int32_t USBD_CDC_ACM_GetCommFeature(usbd_cdc_num_t cdc_num, uint16_t feat);
+extern int32_t USBD_CDC_ACM_ClearCommFeature(usbd_cdc_num_t cdc_num, uint16_t feat);
+extern int32_t USBD_CDC_ACM_SetLineCoding(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_GetLineCoding(usbd_cdc_num_t cdc_num);
+extern int32_t USBD_CDC_ACM_SetControlLineState(usbd_cdc_num_t cdc_num, uint16_t ctrl_bmp);
+extern int32_t USBD_CDC_ACM_SendBreak(usbd_cdc_num_t cdc_num, uint16_t dur);
 
 /* USB Device user functions imported to USB Custom Class module              */
 extern void  usbd_cls_init(void);
