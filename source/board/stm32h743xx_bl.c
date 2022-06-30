@@ -1,5 +1,5 @@
 /**
- * @file    stm32h743xx.c
+ * @file    stm32h743xx_bl.c
  * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on STM32H743ii
  *
  * DAPLink Interface Firmware

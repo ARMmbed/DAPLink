@@ -234,6 +234,7 @@ projects:
         - records/family/all_family.yaml
         - records/usb/usb-bulk.yaml
 
+
     # Other projects
     k20dx_ep_agora_if:
         - *module_if
@@ -631,6 +632,15 @@ projects:
         - *module_if
         - *module_hic_stm32f103xb
         - records/board/ublox_evk_odin_w2.yaml
+    stm32h743xx_udb_bl:
+        - *stm32h743xx_bl
+        - records/board/stm32h743xx_udb_bl.yaml
+    stm32h743xx_udb_if:
+        - *module_if
+        - *module_hic_stm32h743xx
+        - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
+        - records/board/stm32h743xx_udb_if.yaml # extends DAPLink with additional features for the UDB project
 
 
     # Test projects

@@ -41,3 +41,10 @@ Bootloader size is 128 KB
 | HID LED     |  O  | PG2     |  98 |
 | CDC LED     |  O  | PG3     |  99 |
 | MSC LED     |  O  | PG4     | 100 |
+
+## UDB (Universal Debug Board) Additions
+UDB is a special flavor of the stm32h743xx HIC, which enriches the DAPLink experience with additional features such as:
+- A new USB CDC endpoint to flash and get logs from a second target.
+- Another new USB CDC endpoint to interact with the HIC. Users can send easy shell commands to toggle pins, or to get any info from the HIC.
+- Additional DAPLink debugging functionality: persistent fault info, breakpoints on asserts when debugger is connected to debug UDB, watchdog, backtraces
+- Target power measurement

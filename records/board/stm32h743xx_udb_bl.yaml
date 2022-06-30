@@ -1,0 +1,10 @@
+common:
+    includes:
+        - source/board/udb/include/udb_version.h
+    sources:
+        hic_hal:
+            - source/board/udb/source/udb_version.c
+tool_specific:
+    gcc_arm:
+        linker_file:
+            - source/board/udb/include/udb.ld

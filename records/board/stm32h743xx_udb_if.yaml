@@ -1,0 +1,29 @@
+common:
+    macros:
+        # Add DAPLink macros below
+        - MAIN_TASK_STACK=2048
+        # - DAPLINK_BOOTLOADER_UPDATE
+        - ASSERT_BUF_SIZE=65
+        - USB_CDC_ACM_EP_COUNT=3
+        - OVERRIDE_USB2UART
+        # Add UDB config macros below
+        - UDB
+        - SUPPORT_CMD_HISTORY
+        - NLUIF_PRINT_RESULT
+        # Add build feature macros below
+        - BUILD_FEATURE_UDB_ASSERT
+    includes:
+        # - projectfiles/make_gcc_arm/stm32h743xx_udb_bl/build/bootloader_image.c
+        - source/board/udb/console/include
+        - source/board/udb/include
+        - source/board/udb/lib/nlbacktrace/include
+        - source/board/udb/lib/nlutilities/include
+    sources:
+        board:
+            - source/board/stm32h743xx.c
+        hic_hal:
+            - source/board/udb/console/source
+            - source/board/udb/lib/nlbacktrace/source
+            - source/board/udb/lib/nlutilities/source
+            - source/board/udb/source
+            - source/board/udb/usb
