@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/stm32h743xx_bl.c

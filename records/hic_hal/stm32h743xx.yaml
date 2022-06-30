@@ -1,0 +1,63 @@
+common:
+    target:
+        - Cortex-M7
+    core:
+        - Cortex-M7
+    macros:
+        - INTERFACE_STM32H743
+        - USE_HAL_DRIVER
+        - STM32H743xx
+        - DAPLINK_HIC_ID=0x97969940  # DAPLINK_HIC_ID_STM32H743II
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=240000000
+        - OS_ROBIN_ENABLE=1
+        - SECTOR_BUFFER_SIZE=32
+    includes:
+        - source/hic_hal/stm32/hal/STM32H7xx_HAL_Driver
+        - source/hic_hal/stm32/hal/STM32H7xx_HAL_Driver/Inc
+        - source/hic_hal/stm32/stm32h743xx
+        - source/hic_hal/stm32/stm32h743xx/cmsis
+
+    sources:
+        hic_hal:
+            - source/hic_hal/stm32/hal/STM32H7xx_HAL_Driver/Src
+            - source/hic_hal/stm32/stm32h743xx
+            - source/hic_hal/stm32/stm32h743xx/cmsis
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32h743xx"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32h743xx/armcc
+    make_armcc:
+        misc:
+            ld_flags:
+                - --predefine="-Isource/hic_hal/stm32/stm32h743xx"
+            c_flags:
+                - --no_unaligned_access
+            cxx_flags:
+                - --no_unaligned_access
+            asm_flags:
+                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32h743xx/armcc
+    make_gcc_arm:
+        misc:
+            ld_flags:
+                # for some reason GCC links in the non-thumb version,
+                # so need to manually tell it to use the right one
+                - -L /usr/lib/arm-none-eabi/newlib/thumb/
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32h743xx/gccarm
