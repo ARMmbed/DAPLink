@@ -368,7 +368,7 @@ static bool sector_erase_allowed(uint32_t addr)
 
 static error_t intercept_page_write(uint32_t addr, const uint8_t *buf, uint32_t size)
 {
-    error_t status;
+    error_t status = ERROR_IAP_NO_INTERCEPT;
     uint32_t crc_size;
     uint32_t updt_start = DAPLINK_ROM_UPDATE_START;
     uint32_t updt_end = DAPLINK_ROM_UPDATE_START + DAPLINK_ROM_UPDATE_SIZE;
@@ -395,7 +395,7 @@ static error_t intercept_page_write(uint32_t addr, const uint8_t *buf, uint32_t 
         uint32_t buf_offset = addr - updt_start;
         memcpy(sector_buf + buf_offset, buf, size);
         // Intercept was successful
-        return ERROR_SUCCESS;
+        status = ERROR_SUCCESS;
     }
 
     // Finalize update if this is the last sector
@@ -427,10 +427,8 @@ static error_t intercept_page_write(uint32_t addr, const uint8_t *buf, uint32_t 
         // The bootloader has been updated so recompute the crc
         info_crc_compute();
         update_complete = true;
-        return status;
     }
-
-    return ERROR_IAP_NO_INTERCEPT;
+    return status;
 }
 
 static error_t intercept_sector_erase(uint32_t addr)

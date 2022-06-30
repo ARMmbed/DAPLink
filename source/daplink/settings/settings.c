@@ -31,7 +31,9 @@
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
+#if !defined(SECTOR_BUFFER_SIZE)
 #define SECTOR_BUFFER_SIZE  16
+#endif
 
 // For generating hexdumps on faults
 #define ALLOWED_HEXDUMP     16

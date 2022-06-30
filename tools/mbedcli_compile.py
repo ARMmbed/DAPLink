@@ -45,7 +45,7 @@ def main():
     project_list = []
     with open(PROJECTS_YAML, 'r') as top_yaml:
         try:
-            topdict = yaml.load(top_yaml)
+            topdict = yaml.safe_load(top_yaml)
             for dict_key in topdict:
                 if dict_key == 'projects':
                     for project in topdict[dict_key]:
@@ -110,7 +110,7 @@ def main():
         release_version = 0
         with open(os.path.join("records","tools", VERSION_YAML), 'r') as ver_yaml:
             try:
-                verdict = yaml.load(ver_yaml)
+                verdict = yaml.safe_load(ver_yaml)
                 release_version = int(verdict['common']['macros'][0].split('=')[1])
             except yaml.YAMLError as ex:
                 print("Found yaml parse error", ex)

@@ -137,7 +137,7 @@ uint32_t util_write_in_region(uint8_t *buf, uint32_t size, uint32_t start, uint3
     return length;
 }
 
-void _util_assert(bool expression, const char *filename, uint16_t line)
+__WEAK void _util_assert(bool expression, const char *filename, uint16_t line)
 {
     bool assert_set;
     cortex_int_state_t int_state;

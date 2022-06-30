@@ -358,7 +358,11 @@ static void sync_init(void)
 
 static void sync_assert_usb_thread(void)
 {
+#ifndef UDB
+    // TODO (https://github.com/ARMmbed/DAPLink/issues/963) Due to issues with the MSC,
+    // the UDB HIC disables MSC, and also needs to remove this assert.
     util_assert(osThreadGetId() == sync_thread);
+#endif
 }
 
 static void sync_lock(void)

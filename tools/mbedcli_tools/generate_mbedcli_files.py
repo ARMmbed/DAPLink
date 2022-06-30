@@ -48,7 +48,7 @@ def parse_yaml_files(list_of_list, data_dict):
             elif type(entry) is str and entry.endswith('.yaml'):
                 try:
                     with open(entry, 'r') as yaml_file:
-                        yaml_entries = yaml.load(yaml_file)
+                        yaml_entries = yaml.safe_load(yaml_file)
                         parse_yaml_dicts(yaml_entries, data_dict)
 
                 except yaml.YAMLError as ex:
@@ -62,7 +62,7 @@ def generate_mbedcli_files(projects_yaml, target_project):
     with open(projects_yaml, 'r') as top_yaml:
         try:
             build_data = {}
-            topdict = yaml.load(top_yaml)
+            topdict = yaml.safe_load(top_yaml)
             for dict_key in topdict:
                 if dict_key == 'projects':
                     for project in topdict[dict_key]:

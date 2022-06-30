@@ -29,7 +29,10 @@
 
 // 'kvld' in hex - key valid
 #define CFG_KEY             0x6b766c64
+
+#if !defined(SECTOR_BUFFER_SIZE)
 #define SECTOR_BUFFER_SIZE  16
+#endif
 
 // WARNING - THIS STRUCTURE RESIDES IN NON-VOLATILE STORAGE!
 // Be careful with changes:
