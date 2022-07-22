@@ -24,6 +24,7 @@
 #include "target_config.h"
 #include "target_family.h"
 #include "target_board.h"
+#include "drag-n-drop/uf2.h"
 
 static inline uint32_t test_range(const uint32_t test, const uint32_t min, const uint32_t max)
 {
@@ -93,4 +94,25 @@ uint8_t validate_hexfile(const uint8_t *buf)
         // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
         return ((buf[0] == ':') && ((buf[8] == '0') || (buf[8] == '2') || (buf[8] == '3') || (buf[8] == '4') || (buf[8] == '5'))) ? 1 : 0;
     }
+}
+
+uint8_t validate_uf2block(const uint8_t *buf, uint32_t size)
+{
+    if (size != sizeof(UF2_Block)) {
+        return 0;
+    }
+
+    const UF2_Block *block = (const UF2_Block *)buf;
+
+    if (block->magicStart0 != UF2_MAGIC_START0 ||
+        block->magicStart1 != UF2_MAGIC_START1 ||
+        block->magicEnd != UF2_MAGIC_END) {
+        return 0;
+    }
+
+    if (block->payloadSize > sizeof(block->data)) {
+        return 0;
+    }
+
+    return 1;
 }

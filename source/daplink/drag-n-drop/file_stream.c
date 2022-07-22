@@ -24,6 +24,7 @@
 #include "file_stream.h"
 #include "util.h"
 #include "intelhex.h"
+#include "uf2.h"
 #include "flash_decoder.h"
 #include "error.h"
 #include "cmsis_os2.h"
@@ -75,9 +76,15 @@ static error_t open_hex(void *state);
 static error_t write_hex(void *state, const uint8_t *data, uint32_t size);
 static error_t close_hex(void *state);
 
+static bool detect_uf2(const uint8_t *data, uint32_t size);
+static error_t open_uf2(void *state);
+static error_t write_uf2(void *state, const uint8_t *data, uint32_t size);
+static error_t close_uf2(void *state);
+
 stream_t stream[] = {
     {detect_bin, open_bin, write_bin, close_bin},   // STREAM_TYPE_BIN
     {detect_hex, open_hex, write_hex, close_hex},   // STREAM_TYPE_HEX
+    {detect_uf2, open_uf2, write_uf2, close_uf2},  // STREAM_TYPE_UF2
 };
 COMPILER_ASSERT(ARRAY_SIZE(stream) == STREAM_TYPE_COUNT);
 // STREAM_TYPE_NONE must not be included in count
@@ -119,6 +126,8 @@ stream_type_t stream_type_from_name(const vfs_filename_t filename)
         return STREAM_TYPE_BIN;
     } else if (0 == strncmp("HEX", &filename[8], 3)) {
         return STREAM_TYPE_HEX;
+    } else if (0 == strncmp("UF2", &filename[8], 3)) {
+        return STREAM_TYPE_UF2;
     } else {
         return STREAM_TYPE_NONE;
     }
@@ -359,6 +368,53 @@ static error_t write_hex(void *state, const uint8_t *data, uint32_t size)
 }
 
 static error_t close_hex(void *state)
+{
+    error_t status;
+    status = flash_decoder_close();
+    return status;
+}
+
+/* UF2 file processing */
+
+static bool detect_uf2(const uint8_t *data, uint32_t size)
+{
+    return 1 == validate_uf2block(data, size);
+}
+
+static error_t open_uf2(void *state)
+{
+    error_t status;
+    status = flash_decoder_open();
+    return status;
+}
+
+static error_t write_uf2(void *state, const uint8_t *data, uint32_t size)
+{
+    error_t status;
+    uint32_t start_addr;
+    const flash_intf_t *flash_intf;
+    const UF2_Block *block;
+
+    if (1 != validate_uf2block(data, size)) {
+        return ERROR_FD_UNSUPPORTED_UPDATE;
+    }
+
+    block = (const UF2_Block *)data;
+    if (block->flags & UF2_FLAG_NOFLASH) {
+        return ERROR_SUCCESS;
+    }
+
+    status = flash_decoder_get_flash(FLASH_DECODER_TYPE_TARGET, 0, false, &start_addr, &flash_intf);
+    if (ERROR_SUCCESS != status) {
+        return status;
+    }
+
+    status = flash_decoder_write(start_addr + block->targetAddr, block->data, block->payloadSize);
+
+    return status;
+}
+
+static error_t close_uf2(void *state)
 {
     error_t status;
     status = flash_decoder_close();

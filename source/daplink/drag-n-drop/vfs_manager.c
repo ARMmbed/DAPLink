@@ -435,7 +435,7 @@ static void file_change_handler(const vfs_filename_t filename, vfs_file_change_t
 }
 
 // Handler for file data arriving over USB.  This function is responsible
-// for detecting the start of a BIN/HEX file and performing programming
+// for detecting the start of a BIN/HEX/UF2 file and performing programming
 static void file_data_handler(uint32_t sector, const uint8_t *buf, uint32_t num_of_sectors)
 {
     stream_type_t stream;
