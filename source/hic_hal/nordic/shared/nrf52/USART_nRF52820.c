@@ -411,7 +411,22 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
         default:
           return ARM_USART_ERROR_DATA_BITS;
       }
-
+#if    defined (NRF52840_XXAA) || defined (DEVELOP_IN_NRF52840)
+      /* Configure parity */
+      switch (control & ARM_USART_PARITY_Msk) {
+        case ARM_USART_PARITY_NONE:
+          NRF_UARTE0->CONFIG &= ~UARTE_CONFIG_PARITY_Msk;
+          break;
+        case ARM_USART_PARITY_EVEN:
+          NRF_UARTE0->CONFIG &= ~UARTE_CONFIG_PARITY_Msk;
+          break;
+        case ARM_USART_PARITY_ODD:
+          NRF_UARTE0->CONFIG &= ~UARTE_CONFIG_PARITY_Msk;
+          break;
+        default:
+          return ARM_USART_ERROR_PARITY;
+      }
+#else
       /* Configure parity */
       switch (control & ARM_USART_PARITY_Msk) {
         case ARM_USART_PARITY_NONE:
@@ -428,6 +443,7 @@ static int32_t USART_Control (uint32_t control, uint32_t arg) {
         default:
           return ARM_USART_ERROR_PARITY;
       }
+#endif
 
       /* Configure stop bits */
       switch (control & ARM_USART_STOP_BITS_Msk) {
