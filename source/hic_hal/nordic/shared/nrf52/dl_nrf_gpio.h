@@ -68,6 +68,13 @@
   (((pin) >> 5) == 0) ? ((NRF52833_P0_PINS & (1 << ((pin) & 0x1F))) ? 1 : 0) : \
   ((((pin) >> 5) == 1) ? ((NRF52833_P1_PINS & (1 << ((pin) & 0x1F))) ? 1 : 0) : 0)
 
+#define NRF52840_P0_PINS 0xFFFFFFFFUL
+#define NRF52840_P1_PINS 0x0000FFFFUL
+
+#define GPIO_CHECK_PRESENT_NRF52840(pin) \
+  (((pin) >> 5) == 0) ? ((NRF52840_P0_PINS & (1 << ((pin) & 0x1F))) ? 1 : 0) : \
+  ((((pin) >> 5) == 1) ? ((NRF52840_P1_PINS & (1 << ((pin) & 0x1F))) ? 1 : 0) : 0)
+
 /** @brief Pin configuration function */
 __STATIC_INLINE \
 void gpio_cfg(NRF_GPIO_Type *reg, uint32_t idx,

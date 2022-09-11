@@ -1,0 +1,49 @@
+common:
+    target:
+        - Cortex-M4
+    core:
+        - Cortex-M4
+    macros:
+        - INTERFACE_NRF52840
+        - NRF52840_XXAA
+        - DAPLINK_HIC_ID=0x6E052840  # DAPLINK_HIC_ID_NRF52840
+        - OS_CLOCK=64000000
+        - __DAPLINK
+    includes:
+        - source/hic_hal/nordic/nrf52840
+        - source/hic_hal/nordic/nrfx
+        - source/hic_hal/nordic/nrfx/drivers
+        - source/hic_hal/nordic/nrfx/hal
+        - source/hic_hal/nordic/nrfx/mdk
+        - source/hic_hal/nordic/shared/nrf52
+    sources:
+        hic_hal:
+            - source/hic_hal/nordic/nrf52840
+            - source/hic_hal/nordic/nrf52820/cmsis
+            - source/hic_hal/nordic/nrfx/drivers
+            - source/hic_hal/nordic/shared
+            - source/hic_hal/nordic/shared/nrf52
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\nordic\nrf52840"
+        sources:
+            hic_hal:
+                - source/hic_hal/nordic/nrf52840/arm
+    armcc:
+        sources:
+            hic_hal:
+                - source/hic_hal/nordic/nrf52840/arm
+    armclang:
+        misc:
+            common_flags:
+                - -mfpu=none
+        sources:
+            hic_hal:
+                - source/hic_hal/nordic/nrf52840/arm
+    gcc_arm:
+        sources:
+            hic_hal:
+                - source/hic_hal/nordic/nrf52840/gcc
