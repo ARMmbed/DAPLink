@@ -44,17 +44,17 @@ int32_t uart_initialize(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInit;
-    
+
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
     PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
-      
+
     /* Peripheral clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
-  
-    /**USART1 GPIO Configuration    
+
+    /**USART1 GPIO Configuration
     PA9     ------> USART1_TX
-    PA10     ------> USART1_RX 
+    PA10     ------> USART1_RX
     */
     GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -69,9 +69,13 @@ int32_t uart_initialize(void)
 int32_t uart_uninitialize(void)
 {
     __HAL_RCC_USART1_CLK_DISABLE();
-    
+
     HAL_GPIO_DeInit(GPIOA, USART_RX_PIN | USART_TX_PIN);
     return 1;
+}
+
+void uart_set_control_line_state(uint16_t ctrl_bmp)
+{
 }
 
 /* UART_Reset:  Reset the Serial module variables */
@@ -86,43 +90,43 @@ int32_t uart_set_configuration(UART_Configuration *config)
     NVIC_DisableIRQ (USART_IRQn);
 
     hal_config.Instance = USART1;
-    
+
     /* Data bits */
 	if (config->DataBits != UART_DATA_BITS_8)
 		return(0);
 
     hal_config.Init.WordLength = UART_WORDLENGTH_8B;
-    
+
 	/* Parity */
 	switch (config->Parity)
 	{
-		case UART_PARITY_NONE:	
-            hal_config.Init.Parity = HAL_UART_PARITY_NONE;		
+		case UART_PARITY_NONE:
+            hal_config.Init.Parity = HAL_UART_PARITY_NONE;
             break;
-		case UART_PARITY_EVEN:	
-            hal_config.Init.Parity = HAL_UART_PARITY_EVEN;	
+		case UART_PARITY_EVEN:
+            hal_config.Init.Parity = HAL_UART_PARITY_EVEN;
             hal_config.Init.WordLength = UART_WORDLENGTH_9B;
             break;
-		case UART_PARITY_ODD:	
-            hal_config.Init.Parity = HAL_UART_PARITY_ODD;	
+		case UART_PARITY_ODD:
+            hal_config.Init.Parity = HAL_UART_PARITY_ODD;
             break;
-		default: 
+		default:
             return (0);
 	}
 
 	/* Stop bits */
 	switch (config->StopBits)
 	{
-		case UART_STOP_BITS_1:	
-            hal_config.Init.StopBits = UART_STOPBITS_1;		
+		case UART_STOP_BITS_1:
+            hal_config.Init.StopBits = UART_STOPBITS_1;
             break;
-		case UART_STOP_BITS_2:	
+		case UART_STOP_BITS_2:
             hal_config.Init.StopBits = UART_STOPBITS_2;
             break;
 		case UART_STOP_BITS_1_5:
-            hal_config.Init.StopBits = UART_STOPBITS_1_5;	
+            hal_config.Init.StopBits = UART_STOPBITS_1_5;
             break;
-		default: 
+		default:
             return (0);
 	}
     hal_config.Init.BaudRate		= config->Baudrate;
@@ -131,12 +135,12 @@ int32_t uart_set_configuration(UART_Configuration *config)
 	hal_config.Init.OverSampling = UART_OVERSAMPLING_16;
     hal_config.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
     hal_config.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-    
+
 	HAL_UART_Init(&hal_config);
     __HAL_UART_ENABLE_IT (&hal_config, UART_IT_RXNE);
-    
+
     NVIC_EnableIRQ (USART_IRQn);
-    
+
     return 1;
 }
 
@@ -266,6 +270,10 @@ int32_t uart_reset(void)
 int32_t uart_set_configuration(UART_Configuration *config)
 {
     return 0;
+}
+
+void uart_set_control_line_state(uint16_t ctrl_bmp)
+{
 }
 
 int32_t uart_write_free(void)
