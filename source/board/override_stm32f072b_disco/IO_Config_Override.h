@@ -26,8 +26,9 @@
 #include "compiler.h"
 #include "daplink.h"
 
-// This GPIO configuration is only valid for the STM32F072CB HIC
-COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F072CB);
+// This GPIO configuration is only valid for the STM32F072XX HIC
+COMPILER_ASSERT((DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F072XB) ||
+		(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F072X8));
 
 #define __HAL_RCC_USB_GPIO_CLK_ENABLE __HAL_RCC_GPIOA_CLK_ENABLE
 

@@ -23,7 +23,11 @@
 #define DAPLINK_ADDR_H
 
 #define DAPLINK_ROM_START               0x08000000
+#if defined(INTERFACE_STM32F072XB)
 #define DAPLINK_ROM_SIZE                0x00020000  // 128 Kb
+#elif defined(INTERFACE_STM32F072X8)
+#define DAPLINK_ROM_SIZE                0x00010000  //  64 Kb
+#endif
 
 #define DAPLINK_RAM_START               0x20000000
 #define DAPLINK_RAM_SIZE                0x00004000  //  16 Kb

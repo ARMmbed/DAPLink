@@ -4,41 +4,41 @@ common:
     core:
         - Cortex-M0
     macros:
-        - INTERFACE_STM32F072CB
+        - INTERFACE_STM32F072XB
         - USE_HAL_DRIVER
         - STM32F072xB
-        - DAPLINK_HIC_ID=0x9796990E # DAPLINK_HIC_ID_STM32F072xB
+        - DAPLINK_HIC_ID=0x530F072B  # DAPLINK_HIC_ID_STM32F072XB
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
         - OS_CLOCK=48000000
     includes:
-        - source/hic_hal/stm32/stm32f072cb
-        - source/hic_hal/stm32/stm32f072cb/cmsis
+        - source/hic_hal/stm32/stm32f072xx
+        - source/hic_hal/stm32/stm32f072xx/cmsis
         - source/hic_hal/stm32/hal/STM32F0xx_HAL_Driver/Inc
 
     sources:
         hic_hal:
-            - source/hic_hal/stm32/stm32f072cb
-            - source/hic_hal/stm32/stm32f072cb/cmsis
+            - source/hic_hal/stm32/stm32f072xx
+            - source/hic_hal/stm32/stm32f072xx/cmsis
             - source/hic_hal/stm32/hal/STM32F0xx_HAL_Driver/Src
 
 tool_specific:
     uvision:
         misc:
             ld_flags:
-                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f072cb"
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f072xx"
         sources:
             hic_hal:
-                - source/hic_hal/stm32/stm32f072cb/armcc
+                - source/hic_hal/stm32/stm32f072xx/armcc
     armcc:
         sources:
             hic_hal:
-                - source/hic_hal/stm32/stm32f072cb/armcc
+                - source/hic_hal/stm32/stm32f072xx/armcc
     armclang:
         sources:
             hic_hal:
-                - source/hic_hal/stm32/stm32f072cb/armcc
+                - source/hic_hal/stm32/stm32f072xx/armcc
     gcc_arm:
         sources:
             hic_hal:
-                - source/hic_hal/stm32/stm32f072cb/gcc
+                - source/hic_hal/stm32/stm32f072xx/gcc
