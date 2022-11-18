@@ -97,6 +97,7 @@ PROJECT_RELEASE_INFO = [
     ('max32625_max32666fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max78000fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32670evkit_if',                   False,      0x0000,     "bin"       ),
+    ('max32625_max32650fthr_if',                    False,      0x0000,     "bin"       ),
     ('kl26z_if',                                    False,      0x0000,     "bin"       ),
     ('k20dx_if',                                    False,      0x0000,     "bin"       ),
     ('k26f_if',                                     False,      0x0000,     "bin"       ),
@@ -175,6 +176,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
     (   0x0423,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max78000fthr_if',                 'max32625_bl',      'MAX78000'                              ),
     (   0x0424,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32670evkit_if',                'max32625_bl',      'MAX32670'                              ),
+    (   0x0425,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32650fthr_if',                 'max32625_bl',      'MAX32650'                              ),
     (   0x0700,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f072rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F072RB'                      ),
@@ -308,6 +310,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0422,  # MAX32666FTHR
     0x0423,  # MAX78000FTHR
     0x0424,  # MAX32670EVKIT
+    0x0425,  # MAX32650FTHR
     0x0460,  # WISE-1570
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
