@@ -60,7 +60,7 @@ static uint8_t target_set_state_max326xx(target_state_t state, uint32_t reg_flc_
             swd_init();
 
             PIN_nRESET_OUT(0);
-            for (i = 0; i < 1000; i++);
+            for (i = 0; i < 3000; i++);
             PIN_nRESET_OUT(1);
             for (i = 0; i < lockout_delay; i++);
 
