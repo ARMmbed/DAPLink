@@ -30,4 +30,6 @@ const board_info_t g_board_info = {
     .target_cfg = &target_device,
     .daplink_url_name = "MAX32650HTM",
     .daplink_target_url = "http://www.maximintegrated.com/max32650FTHR",
+    .board_vendor = "Maxim Integrated",
+    .board_name = "MAX32650FTHR",
 };
