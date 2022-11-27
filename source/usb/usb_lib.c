@@ -3323,7 +3323,7 @@ const struct {
 }
 
 __WEAK \
-struct {
+const struct {
     WEBUSB_URL_DEF(WEBUSB_LANDING_URL);
     WEBUSB_URL_DEF(WEBUSB_ORIGIN_URL);
 } USBD_WebUSBURLDescriptor

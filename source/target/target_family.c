@@ -73,7 +73,7 @@ __WEAK const target_family_descriptor_t g_maxim_max3266x_family = {0};
 //! descriptors has a weak reference defined above, the entry in this list for a family whose
 //! descriptor is not included in the link will resolve to NULL and init_family() can skip it.
 __WEAK
-const target_family_descriptor_t *g_families[] = {
+const target_family_descriptor_t * const g_families[] = {
     &g_hw_reset_family,
     &g_sw_vectreset_family,
     &g_sw_sysresetreq_family,
