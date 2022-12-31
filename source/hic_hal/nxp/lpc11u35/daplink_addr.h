@@ -66,23 +66,15 @@
 
 /* Current build */
 
-#if defined(DAPLINK_BL)
-
-#define DAPLINK_ROM_APP_START            DAPLINK_ROM_BL_START
-#define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_BL_SIZE
-#define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_IF_START
-#define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_IF_SIZE
-
-#elif defined(DAPLINK_IF)
+#if defined(DAPLINK_IF)
 
 #define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
 #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
-#define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
-#define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_BL_SIZE
+#define DAPLINK_ROM_UPDATE_SIZE          0
 
 #else
 
-#error "Build must be either bootloader or interface"
+#error "Build must be interface"
 
 #endif
 
