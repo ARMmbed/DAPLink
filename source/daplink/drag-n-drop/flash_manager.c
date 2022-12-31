@@ -44,10 +44,14 @@ typedef enum {
     STATE_ERROR
 } state_t;
 
+#ifndef FLASH_MANAGER_BUFFER_SIZE
+#define FLASH_MANAGER_BUFFER_SIZE 1024
+#endif
+
 // Target programming expects buffer
 // passed in to be 4 byte aligned
 __attribute__((aligned(4)))
-static uint8_t buf[1024];
+static uint8_t buf[FLASH_MANAGER_BUFFER_SIZE];
 static bool buf_empty;
 static bool current_sector_valid;
 static bool page_erase_enabled = false;
