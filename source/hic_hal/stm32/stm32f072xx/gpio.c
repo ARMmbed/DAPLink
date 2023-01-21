@@ -28,45 +28,44 @@
 void gpio_init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
-    
-    __HAL_RCC_USB_GPIO_CLK_ENABLE();
-    __HAL_RCC_LED_GPIO_CLK_ENABLE();
-    __HAL_RCC_BTN_BTL_CLK_ENABLE();
-    
+
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
 
     // LED
-    HAL_GPIO_WritePin(HID_LED_PORT, HID_LED_PIN, GPIO_PIN_SET);
     GPIO_InitStructure.Pin = HID_LED_PIN;
     HAL_GPIO_Init(HID_LED_PORT, &GPIO_InitStructure);
+    HAL_GPIO_WritePin(HID_LED_PORT, HID_LED_PIN, GPIO_PIN_SET);
 
-    //HAL_GPIO_WritePin(CDC_LED_PORT, CDC_LED_PIN, GPIO_PIN_SET);
-    //GPIO_InitStructure.Pin = CDC_LED_PIN;
-    //HAL_GPIO_Init(CDC_LED_PORT, &GPIO_InitStructure);
+    GPIO_InitStructure.Pin = CDC_LED_PIN;
+    HAL_GPIO_Init(CDC_LED_PORT, &GPIO_InitStructure);
+    HAL_GPIO_WritePin(CDC_LED_PORT, CDC_LED_PIN, GPIO_PIN_SET);
 
-    //HAL_GPIO_WritePin(MSC_LED_PORT, MSC_LED_PIN, GPIO_PIN_SET);
-    //GPIO_InitStructure.Pin = MSC_LED_PIN;
-    //HAL_GPIO_Init(MSC_LED_PORT, &GPIO_InitStructure);
+    GPIO_InitStructure.Pin = MSC_LED_PIN;
+    HAL_GPIO_Init(MSC_LED_PORT, &GPIO_InitStructure);
+    HAL_GPIO_WritePin(MSC_LED_PORT, MSC_LED_PIN, GPIO_PIN_SET);
 
     // USB
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
 
     GPIO_InitStructure.Pin = GPIO_PIN_11;
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
     HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
 
     GPIO_InitStructure.Pin = GPIO_PIN_12;
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
     HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
 
     // Button BTL
     GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-
-    HAL_GPIO_WritePin(BTN_BTL_PORT, BTN_BTL_PIN, GPIO_PIN_SET);
     GPIO_InitStructure.Pin = BTN_BTL_PIN;
     GPIO_InitStructure.Pull = GPIO_PULLUP;
-    HAL_GPIO_Init(BTN_BTL_PORT, &GPIO_InitStructure);    
+    HAL_GPIO_Init(BTN_BTL_PORT, &GPIO_InitStructure);
+    // HAL_GPIO_WritePin(BTN_BTL_PORT, BTN_BTL_PIN, GPIO_PIN_SET);
 }
 
 void gpio_set_board_power(bool powerEnabled)
@@ -95,14 +94,5 @@ uint8_t gpio_get_reset_btn_no_fwrd(void)
 
 uint8_t gpio_get_reset_btn_fwrd(void)
 {
-    uint8_t ret = 0;
-    GPIO_PinState pinStat;
-    
-    
-    pinStat = HAL_GPIO_ReadPin(BTN_BTL_PORT, BTN_BTL_PIN);
-    if (pinStat == GPIO_PIN_RESET) {
-        ret = 1;
-    }
-
-    return ret;
+    return (HAL_GPIO_ReadPin(BTN_BTL_PORT, BTN_BTL_PIN) == GPIO_PIN_RESET) ? 1 : 0;
 }

@@ -34,8 +34,6 @@
 #include "compiler.h"
 #include "daplink.h"
 
-#define __HAL_RCC_USB_GPIO_CLK_ENABLE __HAL_RCC_GPIOA_CLK_ENABLE
-
 //==============================================================================
 // Debug Port I/O Pins
 //==============================================================================
@@ -48,8 +46,6 @@
 
 #define MSC_LED_PORT        GPIOA
 #define MSC_LED_PIN         GPIO_PIN_0
-
-#define __HAL_RCC_LED_GPIO_CLK_ENABLE __HAL_RCC_GPIOA_CLK_ENABLE
 
 #define LED_CONNECTED_PORT  GPIOA
 #define LED_CONNECTED_PIN   GPIO_PIN_0
@@ -93,20 +89,9 @@
 #define SWSWO_PORT          GPIOA
 #define SWSWO_PIN           GPIO_PIN_3
 
-#define __HAL_RCC_DAP_GPIO_CLK_ENABLE() \
-    do                                  \
-    {                                   \
-        __HAL_RCC_GPIOA_CLK_ENABLE();   \
-        __HAL_RCC_GPIOC_CLK_ENABLE();   \
-    } while (0)
-
-#endif
-
 //==============================================================================
 // GOBtl Button GPIO Pin
 //==============================================================================
-#define __HAL_RCC_BTN_BTL_CLK_ENABLE    __HAL_RCC_GPIOB_CLK_ENABLE
-#define __HAL_RCC_BTN_BTL_CLK_DISABLE   __HAL_RCC_GPIOB_CLK_DISABLE
 #define BTN_BTL_PORT        GPIOB
 #define BTN_BTL_PIN         GPIO_PIN_6
 
@@ -122,3 +107,4 @@
 #define USART_RX_PIN		GPIO_PIN_10
 #define USART_IRQn			USART1_IRQn
 
+#endif
