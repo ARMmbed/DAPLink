@@ -203,15 +203,13 @@ projects:
         - *module_if
         - *module_hic_sam3u2c
         - records/family/all_family.yaml
-    stm32f072xb_if:
-        - *module_if
-        - *module_hic_stm32f072xb
-        - records/family/all_family.yaml
-        - records/usb/usb-bulk.yaml
     stm32f072x8_if:
         - *module_if
         - *module_hic_stm32f072x8
-        - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
+    stm32f072xb_if:
+        - *module_if
+        - *module_hic_stm32f072xb
         - records/usb/usb-bulk.yaml
     stm32f103xb_bl:
         - *module_bl

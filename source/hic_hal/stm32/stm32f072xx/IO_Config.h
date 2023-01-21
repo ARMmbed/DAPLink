@@ -69,25 +69,21 @@
             LED_RUNNING_PORT->BSRR = LED_RUNNING_PIN; \
     } while (0)
 
-/* SWD_DAT pin: PA4 */
-#define SWDIO_TMS_PORT      GPIOA
-#define SWDIO_TMS_PIN       GPIO_PIN_4
-
-/* SWD_CLK pin: PA2 */
-#define SWCLK_TCK_PORT      GPIOA
-#define SWCLK_TCK_PIN       GPIO_PIN_2
-
-/* SWD_NRST pin: PA1 */
+/* nRESET: PA1 (Pin 11) */
 #define nRESET_PORT         GPIOA
 #define nRESET_PIN          GPIO_PIN_1
 
-/* SWD_SWO pin: PA3 */
+/* SWCLK: PA2 (Pin 12) */
+#define SWCLK_TCK_PORT      GPIOA
+#define SWCLK_TCK_PIN       GPIO_PIN_2
+
+/* SWO: PA3 (Pin 13) */
 #define SWSWO_PORT          GPIOA
 #define SWSWO_PIN           GPIO_PIN_3
 
-/* SWD_SWO pin: PA3 */
-#define SWSWO_PORT          GPIOA
-#define SWSWO_PIN           GPIO_PIN_3
+/* SWDIO: PA4 (Pin 14) */
+#define SWDIO_TMS_PORT      GPIOA
+#define SWDIO_TMS_PIN       GPIO_PIN_4
 
 //==============================================================================
 // GOBtl Button GPIO Pin
