@@ -24,7 +24,7 @@
 #include "target_board.h"
 
 #if !defined(CMSIS_DAP_PRODUCT_NAME)
-#define CMSIS_DAP_PRODUCT_NAME "DAPLink"
+#define CMSIS_DAP_PRODUCT_NAME "DAPLink CMSIS-DAP"
 #endif
 
 //! Maximum output buffer length of all these functions.
