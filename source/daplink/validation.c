@@ -47,7 +47,7 @@ uint8_t validate_bin_nvic_base(const uint8_t *buf)
         // test the initial SP value
         memcpy(&nvic_val, buf + 0, sizeof(nvic_val));
 
-        region_info_t * region = g_board_info.target_cfg->ram_regions;
+        const region_info_t * region = g_board_info.target_cfg->ram_regions;
         for (; region->start != 0 || region->end != 0; ++region) {
             if (1 == test_range(nvic_val, region->start, region->end)) {
                 in_range = 1;
@@ -65,7 +65,7 @@ uint8_t validate_bin_nvic_base(const uint8_t *buf)
         for (; i <= 12; i += 4) {
             in_range = 0;
             memcpy(&nvic_val, buf + i, sizeof(nvic_val));
-            region_info_t * region = g_board_info.target_cfg->flash_regions;
+            const region_info_t * region = g_board_info.target_cfg->flash_regions;
             for (; region->start != 0 || region->end != 0; ++region) {
                 if (1 == test_range(nvic_val, region->start, region->end)) {
                     in_range = 1;
@@ -93,4 +93,28 @@ uint8_t validate_hexfile(const uint8_t *buf)
         // add hex identifier b[0] == ':' && b[8] == {'0', '2', '3', '4', '5'}
         return ((buf[0] == ':') && ((buf[8] == '0') || (buf[8] == '2') || (buf[8] == '3') || (buf[8] == '4') || (buf[8] == '5'))) ? 1 : 0;
     }
+}
+
+uint8_t validate_uf2file(const uint8_t *buf)
+{
+#if 0
+    if (g_target_family && g_target_family->validate_uf2file) {
+        return g_target_family->validate_uf2file(buf);
+    }
+#endif
+    // look here for known uf2 record
+    // First magic number, UF2 signature
+    if ((buf[0] != 0x55) || (buf[1] != 0x46) || (buf[2] != 0x32) || (buf[3] != 0x0A)) {
+        return 0;
+    }
+    // Second magic number, 0x9E5D5157
+    if ((buf[4] != 0x57) || (buf[5] != 0x51) || (buf[6] != 0x5D) || (buf[7] != 0x9E)) {
+        return 0;
+    }
+    // Final magic number, 0x0AB16F30
+    if ((buf[508] != 0x30) || (buf[509] != 0x6F) || (buf[510] != 0xB1) || (buf[511] != 0x0A)) {
+        return 0;
+    }
+    // TODO validate check sum , assuming 512-byte granularity .
+    return 1;
 }

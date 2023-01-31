@@ -60,7 +60,7 @@ typedef struct board_info {
     char board_id[5];                   /*!< 4-char board ID plus null terminator */
     uint8_t _padding[3];
     uint32_t flags;                     /*!< Flags from #_board_info_flags */
-    target_cfg_t *target_cfg;           /*!< Specific chip configuration for the target and enables MSD when non-NULL */
+    const target_cfg_t *target_cfg;           /*!< Specific chip configuration for the target and enables MSD when non-NULL */
 
     //! @name MSD customization
     //@{

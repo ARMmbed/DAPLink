@@ -60,9 +60,14 @@ typedef struct {
     uint8_t bin_buffer[256];
 } hex_state_t;
 
+typedef struct {
+    // bool parsing_complete;
+} uf2_state_t;
+
 typedef union {
     bin_state_t bin;
     hex_state_t hex;
+    uf2_state_t uf2;
 } shared_state_t;
 
 static bool detect_bin(const uint8_t *data, uint32_t size);
@@ -75,9 +80,15 @@ static error_t open_hex(void *state);
 static error_t write_hex(void *state, const uint8_t *data, uint32_t size);
 static error_t close_hex(void *state);
 
+static bool detect_uf2(const uint8_t *data, uint32_t size);
+static error_t open_uf2(void *state);
+static error_t write_uf2(void *state, const uint8_t *data, uint32_t size);
+static error_t close_uf2(void *state);
+
 stream_t stream[] = {
     {detect_bin, open_bin, write_bin, close_bin},   // STREAM_TYPE_BIN
     {detect_hex, open_hex, write_hex, close_hex},   // STREAM_TYPE_HEX
+    {detect_uf2, open_uf2, write_uf2, close_uf2},   // STREAM_TYPE_UF2
 };
 COMPILER_ASSERT(ARRAY_SIZE(stream) == STREAM_TYPE_COUNT);
 // STREAM_TYPE_NONE must not be included in count
@@ -119,6 +130,8 @@ stream_type_t stream_type_from_name(const vfs_filename_t filename)
         return STREAM_TYPE_BIN;
     } else if (0 == strncmp("HEX", &filename[8], 3)) {
         return STREAM_TYPE_HEX;
+    } else if (0 == strncmp("UF2", &filename[8], 3)) {
+        return STREAM_TYPE_UF2;
     } else {
         return STREAM_TYPE_NONE;
     }
@@ -359,6 +372,71 @@ static error_t write_hex(void *state, const uint8_t *data, uint32_t size)
 }
 
 static error_t close_hex(void *state)
+{
+    error_t status;
+    status = flash_decoder_close();
+    return status;
+}
+
+/* UF2 file processing */
+
+static bool detect_uf2(const uint8_t *data, uint32_t size)
+{
+    return 0 != validate_uf2file(data);
+}
+
+static error_t open_uf2(void *state)
+{
+    error_t status;
+    // uf2_state_t *uf2_state = (uf2_state_t *)state;
+    // memset(uf2_state, 0, sizeof(*uf2_state));
+    // uf2_state->parsing_complete = false;
+    status = flash_decoder_open();
+    return status;
+}
+
+static error_t write_uf2(void *state, const uint8_t *data, uint32_t size)
+{
+    error_t status = ERROR_SUCCESS;
+    // uf2_state_t *uf2_state = (uf2_state_t *)state;
+    uint32_t bin_start_address = 0; // Decoded from the uf2 file, the binary buffer data starts at this address
+    uint32_t bin_buf_written = 0;   // The amount of data in the binary buffer starting at address above
+
+    // TODO deal with endianness
+
+    while (1) {
+        util_assert(size >= 512);
+        if (validate_uf2file(data) == 0) {
+            status = ERROR_HEX_PARSER; // UF2 validation error
+            break;
+        }
+
+        bin_start_address = *(uint32_t *)(data + 12);
+        bin_buf_written = *(uint32_t *)(data + 16);
+
+        status = flash_decoder_write(bin_start_address, data + 32, bin_buf_written);
+        if (status != ERROR_SUCCESS) {
+            break;
+        }
+        
+        if (*(uint32_t *)(data + 20) + 1 == *(uint32_t *)(data + 24)) {
+            // uf2_state->parsing_complete = true;
+            status = ERROR_SUCCESS_DONE;
+            break;
+        }
+
+        size -= 512;
+        data += 512;
+
+        if (size == 0) {
+            break; // status == ERROR_SUCCESS
+        }
+    }
+
+    return status;
+}
+
+static error_t close_uf2(void *state)
 {
     error_t status;
     status = flash_decoder_close();

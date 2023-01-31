@@ -74,14 +74,14 @@ static flash_func_t last_flash_func = FLASH_FUNC_NOP;
 static program_target_t * current_flash_algo = NULL;
 
 //saved default region for default flash algo
-static region_info_t * default_region = NULL;
+static const region_info_t * default_region = NULL;
 
 //saved flash start from flash algo
 static uint32_t flash_start = 0;
 
 static program_target_t * get_flash_algo(uint32_t addr)
 {
-    region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
+    const region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
 
     for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
         if (addr >= flash_region->start && addr <= flash_region->end) {
@@ -164,7 +164,7 @@ static error_t target_flash_init()
         }
 
         //get default region
-        region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
+        const region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
         for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
             if (flash_region->flags & kRegionIsDefault) {
                 default_region = flash_region;
@@ -336,7 +336,7 @@ static error_t target_flash_erase_chip(void)
 {
     if (g_board_info.target_cfg){
         error_t status = ERROR_SUCCESS;
-        region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
+        const region_info_t * flash_region = g_board_info.target_cfg->flash_regions;
 
         for (; flash_region->start != 0 || flash_region->end != 0; ++flash_region) {
             program_target_t *new_flash_algo = get_flash_algo(flash_region->start);
