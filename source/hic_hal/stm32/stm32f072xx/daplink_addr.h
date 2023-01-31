@@ -24,59 +24,51 @@
 
 #define DAPLINK_ROM_START               0x08000000
 #if defined(INTERFACE_STM32F072XB)
-#define DAPLINK_ROM_SIZE                0x00020000  // 128 Kb
+#define DAPLINK_ROM_SIZE                0x00020000  // 128 KB
 #elif defined(INTERFACE_STM32F072X8)
-#define DAPLINK_ROM_SIZE                0x00010000  //  64 Kb
+#define DAPLINK_ROM_SIZE                0x00010000  //  64 KB
 #endif
 
 #define DAPLINK_RAM_START               0x20000000
-#define DAPLINK_RAM_SIZE                0x00004000  //  16 Kb
+#define DAPLINK_RAM_SIZE                0x00004000  //  16 KB
 
 /* ROM sizes */
-/* stm32f072 can use STDFU */
+/* stm32f072xx does not support DAPLink bootloader: use STDFU or SWD */
 #define DAPLINK_ROM_BL_SIZE             0x00000000
-#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00000000
-#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000800
 
-#define DAPLINK_ROM_IF_SIZE             (DAPLINK_ROM_SIZE - \
-                                         DAPLINK_ROM_BL_SIZE - \
-                                         DAPLINK_ROM_CONFIG_ADMIN_SIZE - \
-                                         DAPLINK_ROM_CONFIG_USER_SIZE)
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000800
+#define DAPLINK_ROM_IF_SIZE             (DAPLINK_ROM_SIZE - DAPLINK_ROM_CONFIG_USER_SIZE)
 
 #define DAPLINK_ROM_BL_START            DAPLINK_ROM_START
-#define DAPLINK_ROM_CONFIG_ADMIN_START  (DAPLINK_ROM_BL_START + DAPLINK_ROM_BL_SIZE)
-#define DAPLINK_ROM_IF_START            (DAPLINK_ROM_CONFIG_ADMIN_START + DAPLINK_ROM_CONFIG_ADMIN_SIZE)
+#define DAPLINK_ROM_IF_START            DAPLINK_ROM_START
 #define DAPLINK_ROM_CONFIG_USER_START   (DAPLINK_ROM_IF_START + DAPLINK_ROM_IF_SIZE)
 
 /* RAM sizes */
+#define DAPLINK_RAM_SHARED_SIZE         0x00000100
+#define DAPLINK_RAM_APP_SIZE            (DAPLINK_RAM_SIZE - DAPLINK_RAM_SHARED_SIZE)
+
 #define DAPLINK_RAM_APP_START           DAPLINK_RAM_START
 #define DAPLINK_RAM_SHARED_START        (DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE)
 
-#define DAPLINK_RAM_APP_SIZE            (DAPLINK_RAM_SIZE - DAPLINK_RAM_SHARED_SIZE)
-#define DAPLINK_RAM_SHARED_SIZE         0x00000100
-
 /* Flash Programming Info */
 #define DAPLINK_SECTOR_SIZE             0x800
-#define DAPLINK_MIN_WRITE_SIZE          2
+#define DAPLINK_MIN_WRITE_SIZE          4
 
 /* Current build */
-#if defined(DAPLINK_BL)
+#if defined(DAPLINK_IF)
 
-#define DAPLINK_ROM_APP_START            DAPLINK_ROM_BL_START
-#define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_BL_SIZE
-#define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_IF_START
-#define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_IF_SIZE
+#define DAPLINK_ROM_APP_START           DAPLINK_ROM_IF_START
+#define DAPLINK_ROM_APP_SIZE            DAPLINK_ROM_IF_SIZE
+#define DAPLINK_ROM_UPDATE_START        0
+#define DAPLINK_ROM_UPDATE_SIZE         0
 
-#elif defined(DAPLINK_IF)
+#elif defined(DAPLINK_BL)
 
-#define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
-#define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
-#define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
-#define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_BL_SIZE
+#error "stm32f072xx does not support DAPLink bootloader"
 
 #else
 
-#error "Build must be either bootloader or interface"
+#error "Build must be interface"
 
 #endif
 
