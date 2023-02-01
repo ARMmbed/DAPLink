@@ -18,6 +18,8 @@ tool_specific:
         misc:
             ld_flags:
                 - --predefine="-I..\..\..\source\hic_hal\maxim\max32625"
+            asm_flags:
+                - -I../../../source/daplink
         sources:
             hic_hal:
                 - source/hic_hal/maxim/max32625/armcc
