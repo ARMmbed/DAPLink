@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2013 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2013 Arm Limited (or its affiliates). All
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -27,7 +27,7 @@
 #define __GPIO_STM32F10X_H
 
 #include <stdbool.h>
-#include "stm32f10x.h"
+#include "stm32f1xx.h"
 
 
 #if defined (__CC_ARM)
@@ -44,7 +44,7 @@ typedef struct _GPIO_PIN_ID {
 
 /// Port Mode
 typedef enum {
-  GPIO_MODE_INPUT     = 0x00,              /// GPIO is input
+  GPIO_MODE_IN        = 0x00,              /// GPIO is input
   GPIO_MODE_OUT10MHZ  = 0x01,              /// Max output Speed 10MHz
   GPIO_MODE_OUT2MHZ   = 0x02,              /// Max output Speed  2MHz
   GPIO_MODE_OUT50MHZ  = 0x03               /// Max output Speed 50MHz
@@ -126,7 +126,7 @@ typedef enum {
   AFIO_PTP_PPS_NO_REMAP      = AFIO_FUNC_DEF (30, 1, 0, 0),
   AFIO_PTP_PPS_REMAP         = AFIO_FUNC_DEF (30, 1, 1, 0),
 #endif
-  
+
   /* AF remap and debug I/O config register 2 */
   AFIO_TIM15_NO_REMAP        = AFIO_FUNC_DEF (0,  1, 0, 1),
   AFIO_TIM15_REMAP           = AFIO_FUNC_DEF (0,  1, 1, 1),
@@ -138,7 +138,7 @@ typedef enum {
   AFIO_CEC_REMAP             = AFIO_FUNC_DEF (3,  1, 1, 1),
   AFIO_TIM1_DMA_NO_REMAP     = AFIO_FUNC_DEF (4,  1, 0, 1),
   AFIO_TIM1_DMA_REMAP        = AFIO_FUNC_DEF (4,  1, 1, 1),
-  
+
   AFIO_TIM9_NO_REMAP         = AFIO_FUNC_DEF (5,  1, 0, 1),
   AFIO_TIM9_REMAP            = AFIO_FUNC_DEF (5,  1, 1, 1),
   AFIO_TIM10_NO_REMAP        = AFIO_FUNC_DEF (6,  1, 0, 1),

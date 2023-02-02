@@ -28,7 +28,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "stm32f10x.h"
+#include "stm32f1xx.h"
 
 
 #if defined (__CC_ARM)
@@ -61,7 +61,9 @@
 #define DMA_TRANSFER_COMPLETE_INTERRUPT DMA_CCR1_TCIE
 #define DMA_PERIPHERAL_TO_MEMORY        0
 #define DMA_READ_MEMORY                 DMA_CCR1_DIR
+#ifndef DMA_MEMORY_TO_MEMORY
 #define DMA_MEMORY_TO_MEMORY            DMA_CCR1_MEM2MEM
+#endif
 #define DMA_CIRCULAR_MODE               DMA_CCR1_CIRC
 #define DMA_PERIPHERAL_INCREMENT        DMA_CCR1_PINC
 #define DMA_MEMORY_INCREMENT            DMA_CCR1_MINC
@@ -73,7 +75,11 @@
 #define DMA_MEMORY_DATA_32BIT           DMA_CCR1_MSIZE_1
 #define DMA_PRIORITY_POS                12
 #define DMA_PRIORITY_MASK               DMA_CCR1_PL
+#ifdef DMA_CCR_EN
+#define DMA_CHANNEL_EN                  DMA_CCR_EN
+#else
 #define DMA_CHANNEL_EN                  DMA_CCR1_EN
+#endif
 
 
 // DMA Information definitions
