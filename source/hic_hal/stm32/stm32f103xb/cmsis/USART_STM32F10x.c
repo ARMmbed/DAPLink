@@ -818,11 +818,11 @@ static int32_t USART_Initialize (      ARM_USART_SignalEvent_t  cb_event,
 static int32_t USART_Uninitialize (const USART_RESOURCES *usart) {
 
   // Unconfigure USART pins
-  if (usart->io.tx)  GPIO_PinConfigure(usart->io.tx->port,  usart->io.tx->pin,  GPIO_IN_ANALOG, GPIO_MODE_INPUT);
-  if (usart->io.rx)  GPIO_PinConfigure(usart->io.rx->port,  usart->io.rx->pin,  GPIO_IN_ANALOG, GPIO_MODE_INPUT);
-  if (usart->io.ck)  GPIO_PinConfigure(usart->io.ck->port,  usart->io.ck->pin,  GPIO_IN_ANALOG, GPIO_MODE_INPUT);
-  if (usart->io.rts) GPIO_PinConfigure(usart->io.rts->port, usart->io.rts->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
-  if (usart->io.cts) GPIO_PinConfigure(usart->io.cts->port, usart->io.cts->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+  if (usart->io.tx)  GPIO_PinConfigure(usart->io.tx->port,  usart->io.tx->pin,  GPIO_IN_ANALOG, GPIO_MODE_IN);
+  if (usart->io.rx)  GPIO_PinConfigure(usart->io.rx->port,  usart->io.rx->pin,  GPIO_IN_ANALOG, GPIO_MODE_IN);
+  if (usart->io.ck)  GPIO_PinConfigure(usart->io.ck->port,  usart->io.ck->pin,  GPIO_IN_ANALOG, GPIO_MODE_IN);
+  if (usart->io.rts) GPIO_PinConfigure(usart->io.rts->port, usart->io.rts->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
+  if (usart->io.cts) GPIO_PinConfigure(usart->io.cts->port, usart->io.cts->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
 
   // Unconfigure pin remap
   GPIO_AFConfigure(usart->io.afio_def);
@@ -1386,7 +1386,7 @@ static int32_t USART_Control (      uint32_t          control,
         if (usart->info->mode != ARM_USART_MODE_SMART_CARD) {
           // GPIO pin function selected
           if (usart->io.tx) {
-            GPIO_PinConfigure(usart->io.tx->port, usart->io.tx->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+            GPIO_PinConfigure(usart->io.tx->port, usart->io.tx->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
           }
         }
       }
@@ -1400,7 +1400,7 @@ static int32_t USART_Control (      uint32_t          control,
         if ((usart->info->mode != ARM_USART_MODE_SMART_CARD)   &&
             (usart->info->mode != ARM_USART_MODE_SINGLE_WIRE )) {
           // USART RX pin function selected
-          GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_FLOATING, GPIO_MODE_INPUT);
+          GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_FLOATING, GPIO_MODE_IN);
         }
         usart->info->flags |= USART_FLAG_RX_ENABLED;
 
@@ -1430,7 +1430,7 @@ static int32_t USART_Control (      uint32_t          control,
             (usart->info->mode != ARM_USART_MODE_SINGLE_WIRE )) {
           // GPIO pin function selected
           if (usart->io.rx) {
-            GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+            GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
           }
         }
       }
@@ -1696,7 +1696,7 @@ static int32_t USART_Control (      uint32_t          control,
       } else {
         // GPIO pin function selected
         if (usart->io.tx) {
-          GPIO_PinConfigure(usart->io.tx->port, usart->io.tx->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+          GPIO_PinConfigure(usart->io.tx->port, usart->io.tx->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
         }
       }
   }
@@ -1707,7 +1707,7 @@ static int32_t USART_Control (      uint32_t          control,
     case ARM_USART_MODE_SMART_CARD:
       // GPIO pin function selected
       if (usart->io.rx) {
-        GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+        GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
       }
       break;
     default:
@@ -1715,12 +1715,12 @@ static int32_t USART_Control (      uint32_t          control,
       if (usart->info->flags & USART_FLAG_RX_ENABLED) {
         // USART RX pin function selected
         if (usart->io.rx) {
-          GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_FLOATING, GPIO_MODE_INPUT);
+          GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_FLOATING, GPIO_MODE_IN);
         }
       } else {
        // GPIO pin function selected
         if (usart->io.rx) {
-          GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+          GPIO_PinConfigure(usart->io.rx->port, usart->io.rx->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
         }
       }
       break;
@@ -1737,7 +1737,7 @@ static int32_t USART_Control (      uint32_t          control,
       default:
         // Asynchronous, Single-wire and IrDA mode
         // GPIO pin function selected
-        GPIO_PinConfigure(usart->io.ck->port, usart->io.ck->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+        GPIO_PinConfigure(usart->io.ck->port, usart->io.ck->pin, GPIO_IN_ANALOG, GPIO_MODE_IN);
     }
   }
 
@@ -1749,7 +1749,7 @@ static int32_t USART_Control (      uint32_t          control,
       GPIO_PinConfigure(usart->io.rts->port, usart->io.rts->pin, GPIO_AF_PUSHPULL, GPIO_MODE_OUT50MHZ);
     } else {
       // GPIO output
-      GPIO_PinConfigure(usart->io.rts->port, usart->io.rts->pin, GPIO_OUT_PUSH_PULL, GPIO_MODE_INPUT);
+      GPIO_PinConfigure(usart->io.rts->port, usart->io.rts->pin, GPIO_OUT_PUSH_PULL, GPIO_MODE_IN);
     }
   }
 
@@ -1758,10 +1758,10 @@ static int32_t USART_Control (      uint32_t          control,
     if ((flow_control == ARM_USART_FLOW_CONTROL_CTS) ||
         (flow_control == ARM_USART_FLOW_CONTROL_RTS_CTS)) {
       // USART CTS Alternate function
-      GPIO_PinConfigure(usart->io.cts->port, usart->io.cts->pin, GPIO_IN_FLOATING, GPIO_MODE_INPUT);
+      GPIO_PinConfigure(usart->io.cts->port, usart->io.cts->pin, GPIO_IN_FLOATING, GPIO_MODE_IN);
     } else {
       // GPIO input
-      GPIO_PinConfigure(usart->io.cts->port, usart->io.cts->pin, GPIO_IN_FLOATING, GPIO_MODE_INPUT);
+      GPIO_PinConfigure(usart->io.cts->port, usart->io.cts->pin, GPIO_IN_FLOATING, GPIO_MODE_IN);
     }
   }
 

@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2016 Arm Limited (or its affiliates). All 
+ * Copyright (c) 2016 Arm Limited (or its affiliates). All
  * rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -61,16 +61,24 @@ void GPIO_PortClock (GPIO_TypeDef *GPIOx, bool enable) {
     else if (GPIOx == GPIOC) RCC->APB2ENR |=  (1U << 4);
     else if (GPIOx == GPIOD) RCC->APB2ENR |=  (1U << 5);
     else if (GPIOx == GPIOE) RCC->APB2ENR |=  (1U << 6);
+#ifdef GPIOF
     else if (GPIOx == GPIOF) RCC->APB2ENR |=  (1U << 7);
+#endif
+#ifdef GPIOG
     else if (GPIOx == GPIOG) RCC->APB2ENR |=  (1U << 8);
+#endif
   } else {
     if      (GPIOx == GPIOA) RCC->APB2ENR &= ~(1U << 2);
     else if (GPIOx == GPIOB) RCC->APB2ENR &= ~(1U << 3);
     else if (GPIOx == GPIOC) RCC->APB2ENR &= ~(1U << 4);
     else if (GPIOx == GPIOD) RCC->APB2ENR &= ~(1U << 5);
     else if (GPIOx == GPIOE) RCC->APB2ENR &= ~(1U << 6);
+#ifdef GPIOF
     else if (GPIOx == GPIOF) RCC->APB2ENR &= ~(1U << 7);
+#endif
+#ifdef GPIOG
     else if (GPIOx == GPIOG) RCC->APB2ENR &= ~(1U << 8);
+#endif
   }
 }
 
@@ -88,10 +96,14 @@ bool GPIO_GetPortClockState (GPIO_TypeDef *GPIOx) {
   else if (GPIOx == GPIOC) { return ((RCC->APB2ENR &  (1U << 4)) != 0U); }
   else if (GPIOx == GPIOD) { return ((RCC->APB2ENR &  (1U << 5)) != 0U); }
   else if (GPIOx == GPIOE) { return ((RCC->APB2ENR &  (1U << 6)) != 0U); }
+#ifdef GPIOF
   else if (GPIOx == GPIOF) { return ((RCC->APB2ENR &  (1U << 7)) != 0U); }
+#endif
+#ifdef GPIOG
   else if (GPIOx == GPIOG) { return ((RCC->APB2ENR &  (1U << 8)) != 0U); }
+#endif
 
-  return false; 
+  return false;
 }
 
 
@@ -116,9 +128,9 @@ bool GPIO_PinConfigure(GPIO_TypeDef *GPIOx, uint32_t num, GPIO_CONF conf,
   if (GPIO_GetPortClockState(GPIOx) == false) {
     /* Enable GPIOx peripheral clock */
     GPIO_PortClock (GPIOx, true);
-  } 
+  }
 
-  if (mode == GPIO_MODE_INPUT) {
+  if (mode == GPIO_MODE_IN) {
     if      (conf == GPIO_IN_PULL_DOWN) {
       /* Enable pull down on selected input */
       GPIOx->ODR &= ~(1 << num);
