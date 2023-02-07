@@ -23,7 +23,6 @@ tool_specific:
                 - -ffunction-sections
                 - -fno-builtin
                 - -fshort-enums
-                - -fshort-wchar
                 - -funsigned-char
                 - -masm=auto
                 - -nostdlib

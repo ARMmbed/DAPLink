@@ -18,7 +18,6 @@ tool_specific:
                 - -ffunction-sections
                 - -fdata-sections
                 - -std=gnu11
-                - -fshort-wchar
                 - -fno-common
                 - -ffreestanding
                 - -fverbose-asm
