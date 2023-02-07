@@ -18,7 +18,7 @@ tool_specific:
                 - --target=arm-arm-none-eabi
                 - -Oz
                 - -g
-                - --std=c99
+                - --std=c11
                 - -fdata-sections
                 - -ffunction-sections
                 - -fno-builtin
