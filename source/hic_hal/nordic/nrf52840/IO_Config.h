@@ -57,13 +57,13 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52840);
 #undef LED_CONNECTED
 
 // HID LED
-#define LED_HID           NRF_GPIO_PIN_MAP(0, 14)
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 15)
 
 // MSC LED
-#define LED_MSC           NRF_GPIO_PIN_MAP(0, 14)
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 15)
 
 // CDC LED
-#define LED_CDC           NRF_GPIO_PIN_MAP(0, 14)
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 15)
 
 // POWER LED
 #define LED_PWR           NRF_GPIO_PIN_MAP(0, 17)
