@@ -14,15 +14,16 @@ common:
         - source/hic_hal/nordic/nrf52820/cmsis
         - source/hic_hal/nordic/nrfx
         - source/hic_hal/nordic/nrfx/drivers
-        - source/hic_hal/nordic/nrfx/drivers/include
         - source/hic_hal/nordic/nrfx/hal
         - source/hic_hal/nordic/nrfx/mdk
+        - source/hic_hal/nordic/shared/nrf52
     sources:
         hic_hal:
             - source/hic_hal/nordic/nrf52820
             - source/hic_hal/nordic/nrf52820/cmsis
             - source/hic_hal/nordic/nrfx/drivers
             - source/hic_hal/nordic/shared
+            - source/hic_hal/nordic/shared/nrf52
 
 tool_specific:
     uvision:
