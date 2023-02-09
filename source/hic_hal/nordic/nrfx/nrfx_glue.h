@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 - 2021, Nordic Semiconductor ASA
+ * Copyright (c) 2017 - 2022, Nordic Semiconductor ASA
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -33,12 +33,6 @@
 
 #ifndef NRFX_GLUE_H__
 #define NRFX_GLUE_H__
-
-// THIS IS A TEMPLATE FILE.
-// It should be copied to a suitable location within the host environment into
-// which nrfx is integrated, and the following macros should be provided with
-// appropriate implementations.
-// And this comment should be removed from the customized file.
 
 #ifdef __cplusplus
 extern "C" {
@@ -81,14 +75,14 @@ extern "C" {
  * @param irq_number IRQ number.
  * @param priority   Priority to be set.
  */
-#define NRFX_IRQ_PRIORITY_SET(irq_number, priority) NVIC_SetPriority(irq_number, priority)
+#define NRFX_IRQ_PRIORITY_SET(irq_number, priority)	NVIC_SetPriority(irq_number, priority)
 
 /**
  * @brief Macro for enabling a specific IRQ.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_ENABLE(irq_number)                 NVIC_EnableIRQ(irq_number)
+#define NRFX_IRQ_ENABLE(irq_number)			NVIC_EnableIRQ(irq_number)
 
 /**
  * @brief Macro for checking if a specific IRQ is enabled.
@@ -98,28 +92,28 @@ extern "C" {
  * @retval true  If the IRQ is enabled.
  * @retval false Otherwise.
  */
-#define NRFX_IRQ_IS_ENABLED(irq_number)             NVIC_GetEnableIRQ(irq_number)
+#define NRFX_IRQ_IS_ENABLED(irq_number)			NVIC_GetEnableIRQ(irq_number)
 
 /**
  * @brief Macro for disabling a specific IRQ.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_DISABLE(irq_number)                NVIC_DisableIRQ(irq_number)
+#define NRFX_IRQ_DISABLE(irq_number)			NVIC_DisableIRQ(irq_number)
 
 /**
  * @brief Macro for setting a specific IRQ as pending.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_PENDING_SET(irq_number)            NVIC_SetPendingIRQ(irq_number)
+#define NRFX_IRQ_PENDING_SET(irq_number)		NVIC_SetPendingIRQ(irq_number)
 
 /**
  * @brief Macro for clearing the pending status of a specific IRQ.
  *
  * @param irq_number IRQ number.
  */
-#define NRFX_IRQ_PENDING_CLEAR(irq_number)          NVIC_ClearPendingIRQ(irq_number)
+#define NRFX_IRQ_PENDING_CLEAR(irq_number)		NVIC_ClearPendingIRQ(irq_number)
 
 /**
  * @brief Macro for checking the pending status of a specific IRQ.
@@ -127,7 +121,7 @@ extern "C" {
  * @retval true  If the IRQ is pending.
  * @retval false Otherwise.
  */
-#define NRFX_IRQ_IS_PENDING(irq_number)             NVIC_GetPendingIRQ(irq_number)
+#define NRFX_IRQ_IS_PENDING(irq_number)			NVIC_GetPendingIRQ(irq_number)
 
 /** @brief Macro for entering into a critical section. */
 #define NRFX_CRITICAL_SECTION_ENTER()
@@ -155,7 +149,7 @@ extern "C" {
 //------------------------------------------------------------------------------
 
 /** @brief Atomic 32-bit unsigned type. */
-#define nrfx_atomic_t
+#define nrfx_atomic_t uint32_t
 
 /**
  * @brief Macro for storing a value to an atomic object and returning its previous value.
@@ -186,7 +180,7 @@ extern "C" {
  *
  * @return Previous value of the atomic object.
  */
-#define NRFX_ATOMIC_FETCH_AND(p_data, value)
+#define NRFX_ATOMIC_FETCH_AND(p_data, value) __atomic_fetch_and(p_data, value, __ATOMIC_SEQ_CST)
 
 /**
  * @brief Macro for running a bitwise XOR operation on an atomic object
@@ -220,6 +214,40 @@ extern "C" {
  * @return Previous value of the atomic object.
  */
 #define NRFX_ATOMIC_FETCH_SUB(p_data, value)
+
+/**
+ * @brief Macro for running compare and swap on an atomic object.
+ *
+ * Value is updated to the new value only if it previously equaled old value.
+ *
+ * @param[in,out] p_data    Atomic memory pointer.
+ * @param[in]     old_value Expected old value.
+ * @param[in]     new_value New value.
+ *
+ * @retval true  If value was updated.
+ * @retval false If value was not updated because location was not equal to @p old_value.
+ */
+#define NRFX_ATOMIC_CAS(p_data, old_value, new_value)
+
+/**
+ * @brief Macro for counting leading zeros.
+ *
+ * @param[in] value A word value.
+ *
+ * @return Number of leading 0-bits in @p value, starting at the most significant bit position.
+ *         If x is 0, the result is undefined.
+ */
+#define NRFX_CLZ(value) __builtin_clz(value)
+
+/**
+ * @brief Macro for counting trailing zeros.
+ *
+ * @param[in] value A word value.
+ *
+ * @return Number of trailing 0-bits in @p value, starting at the least significant bit position.
+ *         If x is 0, the result is undefined.
+ */
+#define NRFX_CTZ(value) __builtin_ctz(value)
 
 //------------------------------------------------------------------------------
 

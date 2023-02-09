@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
+Copyright (c) 2010 - 2022, Nordic Semiconductor ASA All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
 
@@ -57,7 +57,7 @@ POSSIBILITY OF SUCH DAMAGE.
     #ifndef __WEAK
         #define __WEAK              __weak
     #endif
-
+    
     #ifndef __ALIGN
         #define __ALIGN(n)          __align(n)
     #endif
@@ -71,6 +71,10 @@ POSSIBILITY OF SUCH DAMAGE.
     #endif
 
     #define GET_SP()                __current_sp()
+
+    #ifndef __DEPRECATED            
+        #define __DEPRECATED(msg)   __attribute__((deprecated(msg)))
+    #endif
 
     #ifndef NRF_STATIC_ASSERT
         #define NRF_STATIC_ASSERT(cond, msg) \
@@ -105,6 +109,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     #define GET_SP()                __current_sp()
 
+    #ifndef __DEPRECATED            
+        #define __DEPRECATED(msg)   __attribute__((deprecated(msg)))
+    #endif
+
     #ifndef NRF_STATIC_ASSERT
         #ifdef __cplusplus
             #ifndef _Static_assert
@@ -130,7 +138,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
     #if (__VER__ >= 8000000)
         #ifndef __ALIGN
-            #define __ALIGN(n) __attribute__((aligned(x)))
+            #define __ALIGN(n) __attribute__((aligned(n)))
         #endif
 
         #ifndef   __PACKED
@@ -152,6 +160,10 @@ POSSIBILITY OF SUCH DAMAGE.
     #endif
     
     #define GET_SP()                __get_SP()
+
+    #ifndef __DEPRECATED            
+        #define __DEPRECATED(msg)   __attribute__((deprecated(msg)))
+    #endif
 
     #ifndef NRF_STATIC_ASSERT
         #define NRF_STATIC_ASSERT(cond, msg) static_assert(cond, msg)
@@ -184,6 +196,10 @@ POSSIBILITY OF SUCH DAMAGE.
     #endif
 
     #define GET_SP()                gcc_current_sp()
+
+    #ifndef __DEPRECATED            
+        #define __DEPRECATED(msg)   __attribute__((deprecated(msg)))
+    #endif
 
     static inline unsigned int gcc_current_sp(void)
     {
@@ -229,6 +245,10 @@ POSSIBILITY OF SUCH DAMAGE.
     #endif
 
     #define GET_SP()                __get_MSP()
+
+    #ifndef __DEPRECATED            
+        #define __DEPRECATED(msg)
+    #endif
 
     #ifndef NRF_STATIC_ASSERT
         #define NRF_STATIC_ASSERT(cond, msg) static_assert(cond, msg)

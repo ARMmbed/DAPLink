@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
+Copyright (c) 2010 - 2022, Nordic Semiconductor ASA All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
 
@@ -32,16 +32,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef NRF52833_TO_NRF52820_H
-#define NRF52833_TO_NRF52820_H
+#ifndef NRF_ERRATAS_H
+#define NRF_ERRATAS_H
+
+#include "nrf.h"
+
+/* Check MDK version to make sure we have the required macros */
+NRF_MDK_VERSION_ASSERT_AT_LEAST(8,34,0);
 
 /*lint ++flb "Enter library region */
 
-/* This file is given to prevent your SW from not compiling with the name changes between nRF52833 and nRF52820 devices.
- * It redefines the old nRF52833 names into the new ones as long as the functionality is still supported. If the
- * functionality is gone, there old names are not defined, so compilation will fail. */
- 
-/* Differences between latest nRF52833 headers and nRF52820 headers. */
+#include "nrf51_erratas.h"
+#include "nrf52_erratas.h"
+#include "nrf53_erratas.h"
+#include "nrf91_erratas.h"
 
-#endif /* NRF52833_TO_NRF52820_H */
+/*lint --flb "Leave library region" */
 
+#endif // NRF_ERRATAS_H
