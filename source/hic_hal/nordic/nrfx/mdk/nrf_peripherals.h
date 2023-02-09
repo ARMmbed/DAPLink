@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
+Copyright (c) 2010 - 2022, Nordic Semiconductor ASA All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
 
@@ -32,21 +32,41 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef NRF_ERRATAS_H
-#define NRF_ERRATAS_H
-
-#include "nrf.h"
-
-/* Check MDK version to make sure we have the required macros */
-NRF_MDK_VERSION_ASSERT_AT_LEAST(8,34,0);
+#ifndef NRF_PERIPHERALS_H__
+#define NRF_PERIPHERALS_H__
 
 /*lint ++flb "Enter library region */
 
-#include "nrf51_erratas.h"
-#include "nrf52_erratas.h"
-#include "nrf53_erratas.h"
-#include "nrf91_erratas.h"
+#if defined(NRF51)
+    #include "nrf51_peripherals.h"
+
+#elif defined (NRF52805_XXAA)
+    #include "nrf52805_peripherals.h"
+#elif defined(NRF52810_XXAA)
+    #include "nrf52810_peripherals.h"
+#elif defined(NRF52811_XXAA)
+    #include "nrf52811_peripherals.h"
+#elif defined(NRF52820_XXAA)
+    #include "nrf52820_peripherals.h"
+#elif defined(NRF52832_XXAA) || defined(NRF52832_XXAB)
+    #include "nrf52832_peripherals.h"
+#elif defined (NRF52833_XXAA)
+    #include "nrf52833_peripherals.h"
+#elif defined(NRF52840_XXAA)
+    #include "nrf52840_peripherals.h"
+
+#elif defined (NRF5340_XXAA_APPLICATION)
+    #include "nrf5340_application_peripherals.h"
+#elif defined (NRF5340_XXAA_NETWORK)
+    #include "nrf5340_network_peripherals.h"
+
+#elif defined(NRF9160_XXAA)
+    #include "nrf9160_peripherals.h"
+
+#else
+    #error "Device must be defined. See nrf.h."
+#endif
 
 /*lint --flb "Leave library region" */
 
-#endif // NRF_ERRATAS_H
+#endif // NRF_PERIPHERALS_H__

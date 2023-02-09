@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 - 2021, Nordic Semiconductor ASA
+ * Copyright (c) 2022, Nordic Semiconductor ASA
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -31,33 +31,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef NRFX_CONFIG_H__
-#define NRFX_CONFIG_H__
+#ifndef NRFX_CONFIG_COMMON_H__
+#define NRFX_CONFIG_COMMON_H__
 
-#if defined(NRF51)
-    #include <nrfx_config_nrf51.h>
-#elif defined(NRF52805_XXAA)
-    #include <nrfx_config_nrf52805.h>
-#elif defined(NRF52810_XXAA)
-    #include <nrfx_config_nrf52810.h>
-#elif defined(NRF52811_XXAA)
-    #include <nrfx_config_nrf52811.h>
-#elif defined(NRF52820_XXAA)
-    #include <nrfx_config_nrf52820.h>
-#elif defined(NRF52832_XXAA) || defined (NRF52832_XXAB)
-    #include <nrfx_config_nrf52832.h>
-#elif defined(NRF52833_XXAA)
-    #include <nrfx_config_nrf52833.h>
-#elif defined(NRF52840_XXAA)
-    #include <nrfx_config_nrf52840.h>
-#elif defined(NRF5340_XXAA_APPLICATION)
-    #include <nrfx_config_nrf5340_application.h>
-#elif defined(NRF5340_XXAA_NETWORK)
-    #include <nrfx_config_nrf5340_network.h>
-#elif defined(NRF9160_XXAA)
-    #include <nrfx_config_nrf9160.h>
-#else
-    #error "Unknown device."
+#ifndef NRFX_CONFIG_H__
+#error "This file should not be included directly. Include nrfx_config.h instead."
 #endif
 
-#endif // NRFX_CONFIG_H__
+
+// <i> NRFX API version 2.9 flag. When the flag is set NRFX API is compatible with the previous NRFX release.
+#define NRFX_CONFIG_API_VER_2_9 1
+
+// <i> NRFX API version 2.10 flag.
+/* When this flag is set the following changes to the nrfx API will be introduced:
+ *
+ * 1. IPC driver:
+ *  - Change input parameters for @ref nrfx_ipc_handler_t
+ *  - Rename function **nrfx_ipc_mem_get** to **nrfx_ipc_gpmem_get**.
+ */
+#define NRFX_CONFIG_API_VER_2_10 0
+
+#endif /* NRFX_CONFIG_COMMON_H__ */

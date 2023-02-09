@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
+Copyright (c) 2010 - 2022, Nordic Semiconductor ASA All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
 
@@ -32,53 +32,51 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef NRF52_TO_NRF52810_H
-#define NRF52_TO_NRF52810_H
+#ifndef NRF52_TO_NRF52833_H
+#define NRF52_TO_NRF52833_H
 
 /*lint ++flb "Enter library region */
 
-/* This file is given to prevent your SW from not compiling with the name changes between nRF51 or nRF52832 and nRF52810 devices.
+/* This file is given to prevent your SW from not compiling with the name changes between nRF51 or nRF52832 and nRF52840 devices.
  * It redefines the old nRF51 or nRF52832 names into the new ones as long as the functionality is still supported. If the
  * functionality is gone, there old names are not defined, so compilation will fail. Note that also includes macros
  * from the nrf52_namechange.h file. */
  
-/* Differences between latest nRF52 headers and nRF52810 headers. */
+/* Differences between latest nRF52 headers and nRF52840 headers. */
 
-/* Interrupt service routines handlers. Note that handlers SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler and 
-   SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQHandler are not redefined since functionality is not equivalent. */
-#ifndef COMP_LPCOMP_IRQHandler
-    #define COMP_LPCOMP_IRQHandler      COMP_IRQHandler
+/* UART */
+/* The registers PSELRTS, PSELTXD, PSELCTS, PSELRXD were restructured into a struct. */
+#ifndef PSELRTS
+    #define PSELRTS       PSEL.RTS
 #endif
-#ifndef SWI2_EGU2_IRQHandler
-    #define SWI2_EGU2_IRQHandler        SWI2_IRQHandler
+#ifndef PSELTXD    
+    #define PSELTXD       PSEL.TXD
 #endif
-#ifndef SWI3_EGU3_IRQHandler
-    #define SWI3_EGU3_IRQHandler        SWI3_IRQHandler
+#ifndef PSELCTS
+    #define PSELCTS       PSEL.CTS
 #endif
-#ifndef SWI4_EGU4_IRQHandler
-    #define SWI4_EGU4_IRQHandler        SWI4_IRQHandler
-#endif
-#ifndef SWI5_EGU5_IRQHandler
-    #define SWI5_EGU5_IRQHandler        SWI5_IRQHandler
+#ifndef PSELRXD
+    #define PSELRXD       PSEL.RXD
 #endif
 
-/* Interrupt service routines index. Note that indexes SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn and 
-   SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQn are not redefined since functionality is not equivalent. */
-#ifndef COMP_LPCOMP_IRQn
-    #define COMP_LPCOMP_IRQn            COMP_IRQn
+/* TWI */
+/* The registers PSELSCL, PSELSDA were restructured into a struct. */
+#ifndef PSELSCL
+    #define PSELSCL       PSEL.SCL
 #endif
-#ifndef SWI2_EGU2_IRQn
-    #define SWI2_EGU2_IRQn              SWI2_IRQn
+#ifndef PSELSDA
+    #define PSELSDA       PSEL.SDA
 #endif
-#ifndef SWI3_EGU3_IRQn
-    #define SWI3_EGU3_IRQn              SWI3_IRQn
+
+/* LPCOMP */
+/* The hysteresis control enumerated values has changed name for nRF52833 devices. */
+#ifndef LPCOMP_HYST_HYST_NoHyst
+    #define LPCOMP_HYST_HYST_NoHyst     LPCOMP_HYST_HYST_Disabled
 #endif
-#ifndef SWI4_EGU4_IRQn
-    #define SWI4_EGU4_IRQn              SWI4_IRQn
+#ifndef LPCOMP_HYST_HYST_Hyst50mV
+    #define LPCOMP_HYST_HYST_Hyst50mV   LPCOMP_HYST_HYST_Enabled
 #endif
-#ifndef SWI5_EGU5_IRQn
-    #define SWI5_EGU5_IRQn              SWI5_IRQn
-#endif
+
 
 /* From nrf52_name_change.h. Several macros changed in different versions of nRF52 headers. By defining the following, any code written for any version of nRF52 headers will still compile. */
 
@@ -137,7 +135,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef I2S_CONFIG_CHANNELS_CHANNELS_LEFT
     #define I2S_CONFIG_CHANNELS_CHANNELS_LEFT   I2S_CONFIG_CHANNELS_CHANNELS_Left
-#endif 
+#endif
 #ifndef I2S_CONFIG_CHANNELS_CHANNELS_RIGHT
     #define I2S_CONFIG_CHANNELS_CHANNELS_RIGHT  I2S_CONFIG_CHANNELS_CHANNELS_Right
 #endif
@@ -148,8 +146,7 @@ POSSIBILITY OF SUCH DAMAGE.
     #define LPCOMP_RESULT_RESULT_Bellow         LPCOMP_RESULT_RESULT_Below
 #endif
 
-
 /*lint --flb "Leave library region" */
 
-#endif /* NRF52_TO_NRF52810_H */
+#endif /* NRF52_TO_NRF52833_H */
 

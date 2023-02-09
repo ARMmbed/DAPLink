@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
+Copyright (c) 2010 - 2022, Nordic Semiconductor ASA All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
 
@@ -32,41 +32,16 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef NRF_PERIPHERALS_H__
-#define NRF_PERIPHERALS_H__
+#ifndef NRF52833_TO_NRF52820_H
+#define NRF52833_TO_NRF52820_H
 
 /*lint ++flb "Enter library region */
 
-#if defined(NRF51)
-    #include "nrf51_peripherals.h"
+/* This file is given to prevent your SW from not compiling with the name changes between nRF52833 and nRF52820 devices.
+ * It redefines the old nRF52833 names into the new ones as long as the functionality is still supported. If the
+ * functionality is gone, there old names are not defined, so compilation will fail. */
+ 
+/* Differences between latest nRF52833 headers and nRF52820 headers. */
 
-#elif defined (NRF52805_XXAA)
-    #include "nrf52805_peripherals.h"
-#elif defined(NRF52810_XXAA)
-    #include "nrf52810_peripherals.h"
-#elif defined(NRF52811_XXAA)
-    #include "nrf52811_peripherals.h"
-#elif defined(NRF52820_XXAA)
-    #include "nrf52820_peripherals.h"
-#elif defined(NRF52832_XXAA) || defined(NRF52832_XXAB)
-    #include "nrf52832_peripherals.h"
-#elif defined (NRF52833_XXAA)
-    #include "nrf52833_peripherals.h"
-#elif defined(NRF52840_XXAA)
-    #include "nrf52840_peripherals.h"
+#endif /* NRF52833_TO_NRF52820_H */
 
-#elif defined (NRF5340_XXAA_APPLICATION)
-    #include "nrf5340_application_peripherals.h"
-#elif defined (NRF5340_XXAA_NETWORK)
-    #include "nrf5340_network_peripherals.h"
-
-#elif defined(NRF9160_XXAA)
-    #include "nrf9160_peripherals.h"
-
-#else
-    #error "Device must be defined. See nrf.h."
-#endif
-
-/*lint --flb "Leave library region" */
-
-#endif // NRF_PERIPHERALS_H__

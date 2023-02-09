@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2009-2021 ARM Limited. All rights reserved.
+Copyright (c) 2009-2022 ARM Limited. All rights reserved.
 
     SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
 #define SYSTEM_NRF52_APPROTECT_H
 
 #include "nrf.h"
-#include "nrf_erratas.h"
+#include "nrf52_erratas.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,15 +40,15 @@ extern "C" {
          ENABLE_SECURE_APPROTECT and ENABLE_SECURE_APPROTECT_USER_HANDLING. */
 static inline void nrf52_handle_approtect(void)
 {
-    #if NRF52_ERRATA_249_PRESENT
+    #if NRF52_CONFIGURATION_249_PRESENT
         #if defined (ENABLE_APPROTECT)
-            if (nrf52_errata_249())
+            if (nrf52_configuration_249())
             {
                 /* Prevent processor from unlocking APPROTECT soft branch after this point. */
                 NRF_APPROTECT->FORCEPROTECT = APPROTECT_FORCEPROTECT_FORCEPROTECT_Force;
             }
         #else
-            if (nrf52_errata_249())
+            if (nrf52_configuration_249())
             {
                 /* Load APPROTECT soft branch from UICR.
                    If UICR->APPROTECT is disabled, POWER->APPROTECT will be disabled. */
