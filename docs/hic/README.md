@@ -1,4 +1,4 @@
-# HICs
+# Hardware Interface Circuits (HICs)
 
 | HIC                           | Core |  Freq.  |  RAM   |  ROM   | USB |
 |-------------------------------|:----:|--------:|-------:|-------:|:---:|
