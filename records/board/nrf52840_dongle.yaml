@@ -1,11 +1,4 @@
 common:
-    sources:
-        board:
-            - source/board/nrf52840_dongle.c
-        family:
-            - source/family/nordic/nrf52/target.c
     macros:
         - USB_PROD_STR="nRF52840 Dongle CMSIS-DAP"
-        - IO_CONFIG_OVERRIDE
-    includes:
-        - source/board/override_nrf52840_dongle
+        - NRF52840_DONGLE

@@ -39,41 +39,63 @@
 // This GPIO configuration is only valid for the nrf52840 HIC
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52840);
 
+#if defined(NRF52840_DONGLE)
+
+#define GPIO_LED_ACTIVE_STATE 0
+#define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 9)  // SWDCLK (Output)
+#define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 10) // SWDIO (Input/Output)
+#undef LED_RUNNING                                // Target Running LED (Output)
+#undef LED_CONNECTED                              // Connected LED (Output)
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 6)  // HID LED
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 8)  // MSC LED
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 12) // CDC LED
+#undef LED_PWR                                    // POWER LED
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(1, 6)  // Reset button (SW_RESET)
+#define UART_TX_PIN       NRF_GPIO_PIN_MAP(1, 10) // UART
+#define UART_RX_PIN       NRF_GPIO_PIN_MAP(1, 13) // UART
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(1, 25) // I2C
+#define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 2)  // I2C
+
+#elif defined(SEEEDSTUDIO_XIAO_BLE)
+
+#define GPIO_LED_ACTIVE_STATE 0
+#define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(1, 13) // SWDCLK (Output)
+#define PIN_SWDIO         NRF_GPIO_PIN_MAP(1, 14) // SWDIO (Input/Output)
+#undef LED_RUNNING                                // Target Running LED (Output)
+#undef LED_CONNECTED                              // Connected LED (Output)
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 26) // HID LED
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 30) // MSC LED
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 6)  // CDC LED
+#undef LED_PWR                                    // POWER LED
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(0, 3)  // Reset button (SW_RESET)
+#define UART_TX_PIN       NRF_GPIO_PIN_MAP(1, 11) // UART TX (From IMCU to target)
+#define UART_RX_PIN       NRF_GPIO_PIN_MAP(1, 12) // UART RX (From target to IMCU)
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 5)  // I2C SCL
+#define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 4)  // I2C SDA
+
+#else
+
+// Default PIN assignment (not finalized based on nRF52833)
 #define GPIO_LED_ACTIVE_STATE 1
-
-// SWDCLK (Output)
-#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 1)
-
-// SWDIO (Input/Output)
-#define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 0)
-
-// nRESET Pin
-#undef PIN_nRESET
-
-// Target Running LED (Output)
-#undef LED_RUNNING
-
-// Connected LED (Output)
-#undef LED_CONNECTED
-
-// HID LED
-#define LED_HID           NRF_GPIO_PIN_MAP(0, 15)
-
-// MSC LED
-#define LED_MSC           NRF_GPIO_PIN_MAP(0, 15)
-
-// CDC LED
-#define LED_CDC           NRF_GPIO_PIN_MAP(0, 15)
-
-// POWER LED
-#define LED_PWR           NRF_GPIO_PIN_MAP(0, 17)
-
-// Reset button (SW_RESET)
-#define RESET_BUTTON      NRF_GPIO_PIN_MAP(1, 9)
 #define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
 
-// UART
-#define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 2)  // From IMCU to target
-#define UART_RX_PIN       NRF_GPIO_PIN_MAP(0, 3)  // From target to IMCU
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 1)  // SWDCLK (Output)
+#define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 0)  // SWDIO (Input/Output)
+#undef PIN_nRESET                                 // nRESET Pin
+#undef LED_RUNNING                                // Target Running LED (Output)
+#undef LED_CONNECTED                              // Connected LED (Output)
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 15) // HID LED
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 15) // MSC LED
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 15) // CDC LED
+#define LED_PWR           NRF_GPIO_PIN_MAP(0, 17) // POWER LED
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(1, 9)  // Reset button (SW_RESET)
+#define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 2)  // UART From IMCU to target
+#define UART_RX_PIN       NRF_GPIO_PIN_MAP(0, 3)  // UART From target to IMCU
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 29) // I2C SCL
+#define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 28) // I2C SDA
+
+#endif
 
 #endif
