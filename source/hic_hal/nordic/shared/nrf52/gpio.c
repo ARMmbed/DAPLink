@@ -44,7 +44,9 @@ void gpio_init(void)
     gpio_cfg_output(GPIO_REG(LED_HID), GPIO_IDX(LED_HID));
     gpio_cfg_output(GPIO_REG(LED_MSC), GPIO_IDX(LED_MSC));
     gpio_cfg_output(GPIO_REG(LED_CDC), GPIO_IDX(LED_CDC));
-
+#ifdef PIN_nRESET
+    gpio_cfg_output(GPIO_REG(PIN_nRESET), GPIO_IDX(PIN_nRESET));
+#endif
     gpio_cfg_input(GPIO_REG(RESET_BUTTON), GPIO_IDX(RESET_BUTTON), RESET_BUTTON_PULL);
 }
 
