@@ -193,9 +193,6 @@ __STATIC_INLINE void PORT_JTAG_SETUP (void) {
   ;
 }
 
-#ifdef PIN_nRESET
-#error "Reset PIN not supported"
-#endif
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
@@ -378,7 +375,13 @@ __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN  (void) {
            - 1: release device hardware reset.
 */
 __STATIC_FORCEINLINE void     PIN_nRESET_OUT (uint32_t bit) {
-  ;
+#ifdef PIN_nRESET
+  if (bit & 0x1) {
+    gpio_set(GPIO_REG(PIN_nRESET), GPIO_IDX(PIN_nRESET));
+  } else {
+    gpio_clear(GPIO_REG(PIN_nRESET), GPIO_IDX(PIN_nRESET));
+  }
+#endif
 }
 
 ///@}
