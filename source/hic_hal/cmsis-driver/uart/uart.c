@@ -1,6 +1,6 @@
 /**
  * @file    uart.c
- * @brief
+ * @brief   UART Function for HIC using CMSIS-Driver
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2020 Arm Limited, All Rights Reserved
@@ -38,6 +38,9 @@ circ_buf_t write_buffer;
 uint8_t write_buffer_data[BUFFER_SIZE];
 circ_buf_t read_buffer;
 uint8_t read_buffer_data[BUFFER_SIZE];
+uint16_t cur_line_state;
+uint32_t cur_control;
+uint32_t cur_baud;
 
 struct {
     // Number of bytes pending to be transferred. This is 0 if there is no
@@ -61,6 +64,9 @@ int32_t uart_initialize(void)
     cb_buf.tx_size = 0;
     CMSIS_UART_INSTANCE.Initialize(uart_handler);
     CMSIS_UART_INSTANCE.PowerControl(ARM_POWER_FULL);
+    cur_line_state = 0;
+    cur_control = 0;
+    cur_baud = 0;
 
     return 1;
 }
@@ -156,6 +162,12 @@ int32_t uart_set_configuration(UART_Configuration *config)
             break;
     }
 
+    if ((control == cur_control) && (config->Baudrate == cur_baud)) {
+        return 1;
+    }
+    cur_control = control;
+    cur_baud = config->Baudrate;
+
     NVIC_DisableIRQ(CMSIS_UART_IRQ);
     clear_buffers();
     if (cb_buf.tx_size != 0) {
@@ -188,6 +200,10 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 void uart_set_control_line_state(uint16_t ctrl_bmp)
 {
+    if (ctrl_bmp != cur_line_state) {
+        uart_reset();
+        cur_line_state = ctrl_bmp;
+    }
 }
 
 int32_t uart_write_free(void)
