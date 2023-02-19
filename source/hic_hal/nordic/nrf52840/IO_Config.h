@@ -77,6 +77,25 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52840);
 #define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 5)  // I2C SCL
 #define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 4)  // I2C SDA
 
+#elif defined(SSCI_ISP1807)
+
+#define GPIO_LED_ACTIVE_STATE 0
+#define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 26) // SWD CLK
+#define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 14) // SWD IO
+#define PIN_nRESET        NRF_GPIO_PIN_MAP(0, 25) // nRESET
+#undef LED_RUNNING                                // Target Running LED
+#undef LED_CONNECTED                              // Connected LED
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 6)  // USB HID LED
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 6)  // USB MSC LED
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 6)  // USB CDC LED
+#undef LED_PWR                                    // Power LED
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(1, 6)  // SW_RESET
+#define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 13) // UART TX
+#define UART_RX_PIN       NRF_GPIO_PIN_MAP(0, 17) // UART RX
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 15) // I2C SCL
+#define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 8)  // I2C SDA
+
 #else
 
 // Default PIN assignment (not finalized based on nRF52833)
