@@ -58,7 +58,7 @@ volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
 power_source_t power_source;
-microbit_if_power_mode_t interface_power_mode = MB_POWER_DOWN;
+microbit_if_power_mode_t interface_power_mode = MB_POWER_RUNNING;
 bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
@@ -182,7 +182,8 @@ void handle_reset_button()
             }
             else if (gpio_reset_count >= RESET_SHORT_PRESS) {
                 // Indicate the button has been released when shutdown is requested
-                main_shutdown_state = MAIN_USER_EVENT;
+                i2c_cmds_user_event(gResetButtonLongPress_c);
+                main_shutdown_state = MAIN_SHUTDOWN_WAITING;
             }
         } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
             // Reset button is still pressed
@@ -223,11 +224,12 @@ void board_30ms_hook()
     }
 
     if (wake_from_usb) {
-        main_shutdown_state = MAIN_USER_EVENT;
-
+        wake_from_usb = 0;
         if (usb_state == USB_DISCONNECTED) {
             usb_state = USB_CONNECTING;
         }
+        power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
+        i2c_cmds_user_event(gWakeFromWakeOnEdge_c);
     }
 
     i2c_30ms_tick();
@@ -257,34 +259,6 @@ void board_30ms_hook()
           // Fast fade to off
           if (final_fade_led_dc > 0) {
               final_fade_led_dc--;
-          }
-          break;
-      case MAIN_USER_EVENT:
-          {
-          // Release COMBINED_SENSOR_INT in case it was previously asserted
-          gpio_disable_combined_int();
-
-          // Prepare I2C response
-          i2cCommand_t i2cResponse = {0};
-          i2cResponse.cmdId = gReadResponse_c;
-          i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
-          i2cResponse.cmdData.readRspCmd.dataSize = 1;
-
-          if (wake_from_usb) {
-              i2cResponse.cmdData.readRspCmd.data[0] = gWakeFromWakeOnEdge_c;
-              wake_from_usb = 0;
-              power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
-          } else {
-              i2cResponse.cmdData.readRspCmd.data[0] = gResetButtonLongPress_c;
-          }
-
-          i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
-
-          // Response ready, assert COMBINED_SENSOR_INT
-          gpio_assert_combined_int();
-
-          // Return LED to ON after release of long press
-          main_shutdown_state = MAIN_SHUTDOWN_WAITING;
           }
           break;
       case MAIN_SHUTDOWN_REQUESTED:
@@ -369,6 +343,7 @@ void board_handle_powerdown()
     switch(interface_power_mode){
         case MB_POWER_SLEEP:
             power_sleep();
+            interface_power_mode = MB_POWER_RUNNING;
             break;
         case MB_POWER_DOWN:
             power_down();
