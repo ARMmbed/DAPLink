@@ -33,8 +33,7 @@
 #define AUTOMATIC_SLEEP_DEFAULT         true
 
 // define the reset button presses
-#define RESET_SHORT_PRESS       10   // x 30ms debounce time = 300ms
-#define RESET_MID_PRESS         80   // x 30ms debounce time = 2400ms
+#define RESET_SHORT_PRESS       80   // x 30ms debounce time = 2400ms
 #define RESET_LONG_PRESS        120  // x 30ms debounce time = 3600ms
 #define RESET_MAX_LENGTH_PRESS  RESET_LONG_PRESS
 
