@@ -71,7 +71,6 @@ typedef enum userEventType_tag {
 
 /*! property Id type enumeration */
 typedef enum errorCode_tag {
-    gErrorSuccess               = 0x30,
     gErrorIncompleteCommand_c   = 0x31,
     gErrorUnknownCommand_c      = 0x32,
     gErrorCommandDisallowed_c   = 0x33,
