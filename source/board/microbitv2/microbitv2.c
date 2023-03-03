@@ -176,24 +176,17 @@ void handle_reset_button()
             reset_pressed = 0;
             power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 
-            if (gpio_reset_count <= RESET_SHORT_PRESS) {
-                main_shutdown_state = MAIN_LED_BLINK_ONCE;
-            }
-            else if (gpio_reset_count < RESET_MID_PRESS) {
+            if (gpio_reset_count < RESET_SHORT_PRESS) {
                 // Indicate button has been released to stop to cancel the shutdown
                 main_shutdown_state = MAIN_LED_BLINK_ONCE;
             }
-            else if (gpio_reset_count >= RESET_MID_PRESS) {
+            else if (gpio_reset_count >= RESET_SHORT_PRESS) {
                 // Indicate the button has been released when shutdown is requested
                 main_shutdown_state = MAIN_USER_EVENT;
             }
         } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
             // Reset button is still pressed
-            if (gpio_reset_count <= RESET_SHORT_PRESS) {
-                // Enter the shutdown pending state to begin LED dimming
-                main_shutdown_state = MAIN_SHUTDOWN_PENDING;
-            }
-            else if (gpio_reset_count < RESET_MID_PRESS) {
+            if (gpio_reset_count < RESET_SHORT_PRESS) {
                 // Enter the shutdown pending state to begin LED dimming
                 main_shutdown_state = MAIN_SHUTDOWN_PENDING;
             }
@@ -253,7 +246,7 @@ void board_30ms_hook()
           break;
       case MAIN_SHUTDOWN_PENDING:
           // Fade the PWM until the board is about to be shut down
-          shutdown_led_dc = PWR_LED_INIT_FADE_BRIGHTNESS - gpio_reset_count * (PWR_LED_INIT_FADE_BRIGHTNESS - PWR_LED_FADEOUT_MIN_BRIGHTNESS)/(RESET_MID_PRESS);
+          shutdown_led_dc = PWR_LED_INIT_FADE_BRIGHTNESS - gpio_reset_count * (PWR_LED_INIT_FADE_BRIGHTNESS - PWR_LED_FADEOUT_MIN_BRIGHTNESS)/(RESET_SHORT_PRESS);
           break;
       case MAIN_SHUTDOWN_REACHED:
           // Hold LED in min brightness
