@@ -74,7 +74,6 @@ static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32
 static uint8_t shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t final_fade_led_dc = 0;
 static uint8_t power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
-static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
 // reset button state count
 static uint16_t gpio_reset_count = 0;
 // button state
@@ -250,16 +249,11 @@ void board_30ms_hook()
     switch (main_shutdown_state) {
       case MAIN_LED_FULL_BRIGHTNESS:
           // Jump power LED to initial fade brightness
-          shutdown_led_dc = initial_fade_brightness;
-          break;
-      case MAIN_SHUTDOWN_CANCEL:
-          main_shutdown_state = MAIN_SHUTDOWN_WAITING;
-          // Set the PWM value back to max duty cycle
-          shutdown_led_dc = power_led_max_duty_cycle;
+          shutdown_led_dc = PWR_LED_INIT_FADE_BRIGHTNESS;
           break;
       case MAIN_SHUTDOWN_PENDING:
           // Fade the PWM until the board is about to be shut down
-          shutdown_led_dc = initial_fade_brightness - gpio_reset_count * (initial_fade_brightness - PWR_LED_FADEOUT_MIN_BRIGHTNESS)/(RESET_MID_PRESS);
+          shutdown_led_dc = PWR_LED_INIT_FADE_BRIGHTNESS - gpio_reset_count * (PWR_LED_INIT_FADE_BRIGHTNESS - PWR_LED_FADEOUT_MIN_BRIGHTNESS)/(RESET_MID_PRESS);
           break;
       case MAIN_SHUTDOWN_REACHED:
           // Hold LED in min brightness
@@ -324,9 +318,6 @@ void board_30ms_hook()
       case MAIN_SHUTDOWN_WAITING:
           // Set the PWM value back to max duty cycle
           shutdown_led_dc = power_led_max_duty_cycle;
-          break;
-      case MAIN_SHUTDOWN_WAITING_OFF:
-          shutdown_led_dc = 0;
           break;
       case MAIN_LED_BLINKING:
            // Blink the LED to indicate standby mode

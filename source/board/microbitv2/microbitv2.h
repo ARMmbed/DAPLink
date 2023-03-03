@@ -40,7 +40,6 @@
 
 typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_WAITING = 0,
-    MAIN_SHUTDOWN_WAITING_OFF,
     MAIN_SHUTDOWN_PENDING,
     MAIN_SHUTDOWN_REACHED,
     MAIN_SHUTDOWN_REACHED_FADE,
@@ -49,7 +48,6 @@ typedef enum main_shutdown_state {
     MAIN_LED_BLINK_ONCE,
     MAIN_LED_BLINKING,
     MAIN_LED_FULL_BRIGHTNESS,
-    MAIN_SHUTDOWN_CANCEL
 } main_shutdown_state_t;
 
 #endif /* MICROBITV2_H_ */
