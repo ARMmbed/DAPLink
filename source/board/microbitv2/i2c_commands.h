@@ -167,6 +167,7 @@ typedef __PACKED_STRUCT i2cFlashCmd_tag {
 } i2cFlashCmd_t;
 
 void i2c_cmds_init(void);
+void i2c_cmds_user_event(userEventType_t user_event);
 
 #ifdef __cplusplus
 }

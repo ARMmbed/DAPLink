@@ -382,3 +382,20 @@ void i2c_cmds_init() {
     i2c_registerWriteCallback(i2c_write_flash_callback, I2C_SLAVE_FLASH);
     i2c_registerReadCallback(i2c_read_flash_callback, I2C_SLAVE_FLASH);
 }
+
+void i2c_cmds_user_event(userEventType_t user_event) {
+    // Release COMBINED_SENSOR_INT in case it was previously asserted
+    gpio_disable_combined_int();
+
+    // Prepare I2C response
+    i2cCommand_t i2cResponse = {0};
+    i2cResponse.cmdId = gReadResponse_c;
+    i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
+    i2cResponse.cmdData.readRspCmd.dataSize = 1;
+    i2cResponse.cmdData.readRspCmd.data[0] = user_event;
+
+    i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
+
+    // Response ready, assert COMBINED_SENSOR_INT
+    gpio_assert_combined_int();
+}
