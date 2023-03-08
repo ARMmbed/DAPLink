@@ -47,10 +47,15 @@ void timer_wait_init(void)
     TPM_GetDefaultConfig(&tpmInfo);
     /* TPM clock divide by TPM_PRESCALER */
     tpmInfo.prescale = kTPM_Prescale_Divide_4;
+    /* TPM counter starts immediately once it is enabled */
+    tpmInfo.enableStartOnTrigger = false;
     /* Initialize TPM module */
     TPM_Init(TPM0, &tpmInfo);
 
+    /* Enable interrupt and set it to second lowest priority level */
+    const uint32_t lowest_priority_level = (1UL << __NVIC_PRIO_BITS) - 1UL;
     TPM_EnableInterrupts(TPM0, kTPM_TimeOverflowInterruptEnable);
+    NVIC_SetPriority(TPM0_IRQn, lowest_priority_level - 1);
     EnableIRQ(TPM0_IRQn);
 
     tpm_source_clock = (CLOCK_GetFreq(kCLOCK_McgIrc48MClk) / 4);
