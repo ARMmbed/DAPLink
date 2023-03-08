@@ -32,7 +32,6 @@
 
 
 extern uint16_t board_id_hex;
-extern power_source_t power_source;
 extern main_usb_connect_t usb_state;
 extern microbit_if_power_mode_t interface_power_mode;
 extern bool power_led_sleep_state_on;
@@ -77,10 +76,11 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &daplink_version, sizeof(daplink_version));
                 }
                 break;
-                case gPowerState_c:
-                    power_source = pwr_mon_get_power_source();
+                case gPowerState_c: {
+                    power_source_t power_source = pwr_mon_get_power_source();
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(power_source);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &power_source, sizeof(power_source));
+                }
                 break;
                 case gPowerConsumption_c: {
                     uint32_t vin_voltage_uv = pwr_mon_get_vin_mv() * 1000;

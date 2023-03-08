@@ -67,7 +67,6 @@ extern volatile uint8_t wake_from_reset;
 extern volatile uint8_t wake_from_usb;
 extern volatile bool usb_pc_connected;
 extern main_usb_connect_t usb_state;
-extern power_source_t power_source;
 
 /*******************************************************************************
  * Code
@@ -99,8 +98,6 @@ void PORTCD_IRQHandler(void)
     if ((1U << PIN_WAKE_ON_EDGE_BIT) & PORT_GetPinsInterruptFlags(PIN_WAKE_ON_EDGE_PORT))
     {
         PORT_ClearPinsInterruptFlags(PIN_WAKE_ON_EDGE_PORT, (1U << PIN_WAKE_ON_EDGE_BIT));
-        
-        power_source = pwr_mon_get_power_source();
 
         bool usb_on = (((PIN_WAKE_ON_EDGE_GPIO->PDIR) >> PIN_WAKE_ON_EDGE_BIT) & 0x01U) ? false : true;
 
@@ -138,6 +135,7 @@ void power_init(void)
     /* Enable either edge interrupt on WAKE_ON_EDGE pin to detect USB attach/detach */
     PORT_SetPinInterruptConfig(PIN_WAKE_ON_EDGE_PORT, PIN_WAKE_ON_EDGE_BIT, PIN_WAKE_ON_EDGE_PORT_WAKEUP_TYPE);
 
+    /* Enable IRQ and set priority to the lowest level */
     NVIC_SetPriority(LLWU_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
     NVIC_EnableIRQ(LLWU_IRQn);
     NVIC_SetPriority(PORTC_PORTD_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);

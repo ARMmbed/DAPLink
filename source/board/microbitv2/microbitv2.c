@@ -57,7 +57,6 @@ extern target_cfg_t target_device_nrf52833;
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
-power_source_t power_source;
 microbit_if_power_mode_t interface_power_mode = MB_POWER_RUNNING;
 bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
@@ -125,15 +124,13 @@ static void prerun_board_config(void)
     power_init();
     pwr_mon_init();
 
-    power_source = pwr_mon_get_power_source();
-
     pwm_init();
     pwm_init_pins();
 
+    power_source_t power_source = pwr_mon_get_power_source();
     if (power_source == PWR_BATT_ONLY){
         // Turn on the red LED with low duty cycle to conserve power.
         power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
-
     } else {
         // Turn on the red LED with max duty cycle when powered by USB or EC
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
@@ -262,17 +259,10 @@ void board_30ms_hook()
           }
           break;
       case MAIN_SHUTDOWN_REQUESTED:
-          if (power_source == PWR_BATT_ONLY || (usb_state == USB_DISCONNECTED && !usb_pc_connected)) {
+          if (usb_state == USB_DISCONNECTED && !usb_pc_connected) {
               main_powerdown_event();
 
-              // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
-              // When the duty cycle is 0% or 100%, the FlexIO driver will configure the pin as GPIO
-              if (power_led_sleep_state_on == true && interface_power_mode == MB_POWER_DOWN) {
-                  shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
-              } else if (power_led_sleep_state_on == true && interface_power_mode == MB_POWER_SLEEP) {
-                  shutdown_led_dc = PWR_LED_ON_BATT_BRIGHTNESS;
-              }
-              else {
+              if (!power_led_sleep_state_on) {
                   shutdown_led_dc = 0;
               }
 

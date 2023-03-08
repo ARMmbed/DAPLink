@@ -51,7 +51,6 @@ extern volatile uint8_t wake_from_reset;
 extern volatile uint8_t wake_from_usb;
 extern volatile bool usb_pc_connected;
 extern main_usb_connect_t usb_state;
-extern power_source_t power_source;
 
 
 uint8_t  power_gpiote_enabled;
@@ -242,8 +241,6 @@ void GPIOTE_IRQHandler(void)
 
             power_gpio_set_sense(reg, idx, absent ? NRF_GPIO_PIN_SENSE_LOW : NRF_GPIO_PIN_SENSE_HIGH);
 
-            power_source = pwr_mon_get_power_source();
-
             // Read VBUS_ABSENT (WAKE_ON_EDGE) pin for detecting if board is USB powered
             if (absent) {
                 /* Reset USB on cable detach (VBUS falling edge) */
@@ -266,13 +263,11 @@ void POWER_CLOCK_IRQHandler(void)
 {
     if (NRF_POWER->EVENTS_USBDETECTED) {
         NRF_POWER->EVENTS_USBDETECTED = 0;
-        power_source = pwr_mon_get_power_source();
         wake_from_usb = 1;
     }
 
     if (NRF_POWER->EVENTS_USBREMOVED) {
         NRF_POWER->EVENTS_USBREMOVED = 0;
-        power_source = pwr_mon_get_power_source();
         /* Reset USB on cable detach (VBUS falling edge) */
         USBD_Reset();
         usbd_reset_core();
