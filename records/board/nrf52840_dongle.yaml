@@ -1,4 +1,0 @@
-common:
-    macros:
-        - USB_PROD_STR="nRF52840 Dongle CMSIS-DAP"
-        - NRF52840_DONGLE

@@ -1,6 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/nrf52840_dongle.c
-        family:
-            - source/family/nordic/nrf52/target.c

@@ -1,4 +1,0 @@
-common:
-    macros:
-        - USB_PROD_STR="XIAO BLE CMSIS-DAP"
-        - SEEEDSTUDIO_XIAO_BLE
