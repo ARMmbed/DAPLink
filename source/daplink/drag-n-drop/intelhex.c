@@ -24,6 +24,15 @@
 #include "intelhex.h"
 #include "cmsis_compiler.h"
 
+#if defined(__CC_ARM)
+#pragma push
+#pragma O3
+#pragma Otime
+#elif defined(__GNUC__) && !defined(__ARMCC_VERSION)
+#pragma GCC push_options
+#pragma GCC optimize("O3")
+#endif
+
 typedef enum hex_record_t hex_record_t;
 enum hex_record_t {
     DATA_RECORD = 0,
@@ -261,3 +270,9 @@ hex_parser_exit:
     *hex_parse_cnt = (uint32_t)(hex_blob_size - (end - hex_blob));
     return status;
 }
+
+#if defined(__CC_ARM)
+#pragma pop
+#elif defined(__GNUC__) && !defined(__ARMCC_VERSION)
+#pragma GCC pop_options
+#endif
