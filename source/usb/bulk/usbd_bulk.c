@@ -78,7 +78,6 @@ void USBD_BULK_EP_BULKOUT_Event(U32 event)
     if ((DataInReceLen >= USBD_Bulk_BulkBufSize) ||
             (bytes_rece    <  usbd_bulk_maxpacketsize[USBD_HighSpeed])) {
         if (DAP_queue_execute_buf(&DAP_Cmd_queue, USBD_Bulk_BulkOutBuf, DataInReceLen, &rbuf)) {
-            main_blink_hid_led(MAIN_LED_FLASH);
             //Trigger the BULKIn for the reply
             if (USB_ResponseIdle) {
                 USBD_BULK_EP_BULKIN_Event(0);
