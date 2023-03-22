@@ -52,15 +52,6 @@ static void prerun_board_config(void)
     set_board_id(board_version);
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null
-uint8_t usbd_hid_no_activity(uint8_t *buf)
-{
-    if (buf[0] == ID_DAP_Vendor3 && buf[1] == 0)
-        return 1;
-    else
-        return 0;
-}
-
 const board_info_t g_board_info = {
     .info_version = 0x1,
     .family_id = kAmbiq_ama3b1kk_FamilyID,
