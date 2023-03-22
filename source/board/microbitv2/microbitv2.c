@@ -457,15 +457,6 @@ uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
     return result == 0;
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null
-uint8_t usbd_hid_no_activity(uint8_t *buf)
-{
-    if(buf[0] == ID_DAP_Vendor3 &&  buf[1] == 0)
-        return 1;
-    else
-        return 0;
-}
-
 // This function is called before the rest of target_set_state code, so it will
 // reset the micro:bit specific features state before the target state is executed
 static uint8_t target_set_state_microbit(target_state_t state)

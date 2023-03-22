@@ -28,8 +28,6 @@
 #include "DAP.h"
 #include "util.h"
 #include "DAP_queue.h"
-#include "daplink.h"
-#include DAPLINK_MAIN_HEADER
 
 
 #if (USBD_HID_OUTREPORT_MAX_SZ > DAP_PACKET_SIZE)
@@ -97,18 +95,10 @@ int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
     return (0);
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null
-__attribute__((weak))
-uint8_t usbd_hid_no_activity(U8 *buf)
-{
-    return 0;
-}
-
 // USB HID Callback: when data is received from the host
 void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
 {
     uint8_t * rbuf;
-    main_led_state_t led_next_state = MAIN_LED_FLASH;
     switch (rtype) {
         case HID_REPORT_OUTPUT:
             if (len == 0) {
@@ -122,10 +112,6 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
 
             // execute and store to DAP_queue
             if (DAP_queue_execute_buf(&DAP_Cmd_queue, buf, len, &rbuf)) {
-                if(usbd_hid_no_activity(rbuf) == 1){
-                    //revert HID LED to default if the response is null
-                    led_next_state = MAIN_LED_DEF;
-                }
                 if (USB_ResponseIdle) {
                     hid_send_packet();
                     USB_ResponseIdle = 0;
@@ -133,9 +119,6 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
             } else {
                 util_assert(0);
             }
-
-            main_blink_hid_led(led_next_state);
-
             break;
 
         case HID_REPORT_FEATURE:
