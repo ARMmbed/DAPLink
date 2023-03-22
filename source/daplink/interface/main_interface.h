@@ -57,6 +57,7 @@ void main_force_msc_disconnect_event(void);
 void main_blink_hid_led(main_led_state_t state);
 void main_blink_msc_led(main_led_state_t state);
 void main_blink_cdc_led(main_led_state_t state);
+uint8_t main_dap_no_activity(const uint8_t *buf);
 
 #ifdef __cplusplus
 }

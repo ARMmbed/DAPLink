@@ -97,13 +97,6 @@ int usbd_hid_get_report(U8 rtype, U8 rid, U8 *buf, U8 req)
     return (0);
 }
 
-// USB HID override function return 1 if the activity is trivial or response is null
-__attribute__((weak))
-uint8_t usbd_hid_no_activity(U8 *buf)
-{
-    return 0;
-}
-
 // USB HID Callback: when data is received from the host
 void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
 {
@@ -122,7 +115,7 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
 
             // execute and store to DAP_queue
             if (DAP_queue_execute_buf(&DAP_Cmd_queue, buf, len, &rbuf)) {
-                if(usbd_hid_no_activity(rbuf) == 1){
+                if(main_dap_no_activity(rbuf) == 1){
                     //revert HID LED to default if the response is null
                     led_next_state = MAIN_LED_DEF;
                 }

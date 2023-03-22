@@ -23,6 +23,7 @@
 #include "DAP.h"
 #include "target_family.h"
 #include "target_board.h"
+#include "main_interface.h"
 
 const char * const board_id_mb_1_3 = "9900";
 const char * const board_id_mb_1_5 = "9901";
@@ -70,9 +71,9 @@ static void prerun_board_config(void) {
 }
 
 // USB HID override function return 1 if the activity is trivial or response is null
-uint8_t usbd_hid_no_activity(uint8_t *buf)
+uint8_t main_dap_no_activity(const uint8_t *buf)
 {
-    if(buf[0] == ID_DAP_Vendor3 &&  buf[1] == 0)
+    if(buf[0] == ID_DAP_Vendor3)
         return 1;
     else
         return 0;

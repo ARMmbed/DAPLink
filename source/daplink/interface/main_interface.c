@@ -181,6 +181,13 @@ __WEAK void board_custom_event()
 
 }
 
+// Override function to check for DAP activity and return 1 if the activity is
+// trivial, null, and/or should be ignored when blinking the HID LED.
+__WEAK uint8_t main_dap_no_activity(const uint8_t *buf)
+{
+    return 0;
+}
+
 // Timer task, set flags every 30mS and 90mS
 void timer_task_30mS(void * arg)
 {
