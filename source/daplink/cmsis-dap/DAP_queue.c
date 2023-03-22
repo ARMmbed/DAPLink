@@ -21,6 +21,8 @@
 
 #include <string.h>
 #include "DAP_queue.h"
+#include "main_interface.h"
+
 void DAP_queue_init(DAP_queue * queue)
 {
     queue->recv_idx = 0;
@@ -49,6 +51,18 @@ BOOL DAP_queue_get_send_buf(DAP_queue * queue, uint8_t ** buf, int * len)
 }
 
 /*
+ *  Function override to optionally be able to return 1 if the DAP
+ *  activity is trivial or response is null, and it should be ignored when
+ *  blinking the HID LED.
+ *    Parameters:      buf: buffer with DAP request
+ *    Return Value:    1 if DAP data should be ignored, 0 otherwise
+ */
+__WEAK uint8_t DAP_no_activity(const uint8_t *buf)
+{
+    return 0;
+}
+
+/*
  *  Execute a request and store result to the DAP_queue
  *    Parameters:      queue - DAP queue, reqbuf = buffer with DAP request, len = of the request buffer, retbuf = buffer to peek on the result of the DAP operation
  *    Return Value:    TRUE - Success, FALSE - Error
@@ -59,6 +73,10 @@ BOOL DAP_queue_execute_buf(DAP_queue * queue, const uint8_t *reqbuf, int len, ui
 {
     uint32_t rsize;
     if (queue->free_count > 0) {
+        if (!DAP_no_activity(reqbuf)) {
+            main_blink_hid_led(MAIN_LED_FLASH);
+        }
+
         if (len > DAP_PACKET_SIZE) {
             len = DAP_PACKET_SIZE;
         }
