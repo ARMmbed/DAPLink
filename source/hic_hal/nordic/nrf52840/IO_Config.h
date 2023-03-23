@@ -77,6 +77,25 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52840);
 #define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 15) // I2C SCL
 #define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 8)  // I2C SDA
 
+#elif defined(NRF52840_DK)
+
+#define GPIO_LED_ACTIVE_STATE 0
+#define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 17) // SWDCLK (Output)
+#define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 19) // SWDIO (Input/Output)
+#define PIN_nRESET        NRF_GPIO_PIN_MAP(1, 9)  // nRESET Pin
+#undef LED_RUNNING                                // Target Running LED (Output)
+#undef LED_CONNECTED                              // Connected LED (Output)
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 13) // HID LED (LED1)
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 14) // MSC LED (LED2)
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 15) // CDC LED (LED3)
+#define LED_PWR           NRF_GPIO_PIN_MAP(0, 16) // POWER LED (LED4)
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(0, 11) // Reset button (Button 1)
+#define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 21) // UART TX
+#define UART_RX_PIN       NRF_GPIO_PIN_MAP(0, 23) // UART RX
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 20) // I2C
+#define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 22) // I2C
+
 #else
 
 #define GPIO_LED_ACTIVE_STATE 0
@@ -84,16 +103,16 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52840);
 #define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 13) // SWDCLK (Output)
 #define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 17) // SWDIO (Input/Output)
 #define PIN_nRESET        NRF_GPIO_PIN_MAP(0, 9)  // nRESET Pin
-#undef LED_RUNNING                                // Target Running LED (Output)
-#undef LED_CONNECTED                              // Connected LED (Output)
-#define LED_HID           NRF_GPIO_PIN_MAP(0, 6)  // HID LED
-#define LED_MSC           NRF_GPIO_PIN_MAP(0, 8)  // MSC LED
-#define LED_CDC           NRF_GPIO_PIN_MAP(0, 12) // CDC LED
+#undef LED_RUNNING                                // Target Running LED
+#undef LED_CONNECTED                              // Connected LED
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 6)  // HID LED (LED1 Green)
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 8)  // MSC LED (LED2 Red)
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 12) // CDC LED (LED2 Blue)
 #undef LED_PWR                                    // POWER LED
-#define RESET_BUTTON      NRF_GPIO_PIN_MAP(1, 6)  // Reset button (SW_RESET)
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(1, 6)  // Reset button (SW1)
 #define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 24) // UART TX
 #define UART_RX_PIN       NRF_GPIO_PIN_MAP(1, 0)  // UART RX
-#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(1, 25) // I2C
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(1, 15) // I2C
 #define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 2)  // I2C
 
 #endif

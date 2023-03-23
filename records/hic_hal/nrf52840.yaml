@@ -9,9 +9,10 @@ common:
         - DAPLINK_HIC_ID=0x6E052840  # DAPLINK_HIC_ID_NRF52840
         - OS_CLOCK=64000000
         - __DAPLINK
-        ## Uncomment one of the following defines to use alternate pinmap
-        # - SSCI_ISP1807
+        ## Uncomment one of the following defines to use alternate pinmap:
+        # - NRF52840_DK
         # - SEEEDSTUDIO_XIAO_BLE
+        # - SSCI_ISP1807
     includes:
         - source/hic_hal/nordic/nrf52840
         - source/hic_hal/nordic/nrfx
