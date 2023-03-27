@@ -10,6 +10,7 @@ common:
         - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
         - FLASH_DRIVER_IS_FLASH_RESIDENT=1
         - DAPLINK_NO_ASSERT_FILENAMES
+        - BOOTLOADER_CONFIG
         - OS_CLOCK=48000000
     includes:
         - source/hic_hal/freescale/kl27z
