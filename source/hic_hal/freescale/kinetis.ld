@@ -34,8 +34,12 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : DAPLINK_STACK_SIZE;
 MEMORY
 {
 #if defined(DAPLINK_BL)
+#if defined(BOOTLOADER_CONFIG)
   m_interrupts          (RX)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x3C0
   m_bootloader_config   (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x3C0, LENGTH = 0x40
+#else
+  m_interrupts          (RX)  : ORIGIN = DAPLINK_ROM_APP_START, LENGTH = 0x400
+#endif
   m_flash_config        (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x400, LENGTH = 0x10
   m_text                (RX)  : ORIGIN = DAPLINK_ROM_APP_START + 0x410, LENGTH = DAPLINK_ROM_APP_SIZE - 0x410
 #else
@@ -61,12 +65,14 @@ SECTIONS
   } > m_interrupts
 
 #if defined(DAPLINK_BL)
+#if defined(BOOTLOADER_CONFIG)
   .bootloader_config :
   {
     . = ALIGN(4);
     KEEP(*(.BootloaderConfig)) /* Bootloader Configuration Area (BCA) */
     . = ALIGN(4);
   } > m_bootloader_config
+#endif
 
   .flash_config :
   {
@@ -245,4 +251,3 @@ SECTIONS
 
   ASSERT(__StackLimit >= __HeapLimit, "region overflowed with stack and heap")
 }
-
