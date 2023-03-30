@@ -1,0 +1,6 @@
+common:
+    macros:
+        - THINGY91
+    sources:
+        board:
+            - source/board/thingy91.c

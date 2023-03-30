@@ -1,0 +1,3 @@
+common:
+    macros:
+        - NRF52840DONGLE
