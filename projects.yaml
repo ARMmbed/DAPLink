@@ -629,6 +629,14 @@ projects:
         - *module_if
         - *module_hic_nrf52820
         - records/board/microbitv2_nrf52820.yaml
+    nrf52840_dongle_if:
+        - *module_if
+        - *module_hic_nrf52840
+        - records/board/nrf52840_dongle.yaml
+    nrf52840_thingy91_if:
+        - *module_if
+        - *module_hic_nrf52840
+        - records/board/thingy91.yaml
     sam3u2c_mkit_dk_dongle_nrf5x_if:
         - *module_if
         - *module_hic_sam3u2c

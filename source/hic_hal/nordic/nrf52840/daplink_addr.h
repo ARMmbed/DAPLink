@@ -30,6 +30,30 @@
 
 /* ROM sizes */
 
+#if defined(THINGY91)
+
+#define DAPLINK_ROM_BL_START            0x00000000
+#define DAPLINK_ROM_BL_SIZE             0x00013000
+
+#define DAPLINK_ROM_IF_START            0x00013000
+#define DAPLINK_ROM_IF_SIZE             0x0002D000
+
+#define DAPLINK_ROM_CONFIG_USER_START   0x000FE000
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00002000
+
+#elif defined(NRF52840DONGLE)
+
+#define DAPLINK_ROM_BL_START            0x00000000
+#define DAPLINK_ROM_BL_SIZE             0x00001000
+
+#define DAPLINK_ROM_IF_START            0x00001000
+#define DAPLINK_ROM_IF_SIZE             0x0003E000
+
+#define DAPLINK_ROM_CONFIG_USER_START   0x0003F000
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00001000
+
+#else
+
 #define DAPLINK_ROM_BL_START            0x00000000
 #define DAPLINK_ROM_BL_SIZE             0x00010000 // 64 KiB bootloader
 
@@ -38,6 +62,8 @@
 
 #define DAPLINK_ROM_CONFIG_USER_START   0x0003F000
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00001000
+
+#endif
 
 /* RAM sizes */
 
