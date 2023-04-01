@@ -626,3 +626,9 @@ projects:
         - *module_hic_lpc55s69
         - records/board/lpc55s69_nrf52840dk.yaml
         - records/board/mcu_link.yaml
+
+    sam3u2c_bulk_test_if:
+        - *module_no_msc_if
+        - *module_hic_sam3u2c
+        - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
