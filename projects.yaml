@@ -37,6 +37,22 @@ module:
         - records/daplink/interface.yaml
         - records/daplink/target_family.yaml
         - records/daplink/target_board.yaml
+    # this is exactly the same as if without usb-msc
+    # intended use is HICs that do not have enough USB endpoints to have MSC and BULK at the same time
+    no_msc_if: &module_no_msc_if
+        - *module_tools
+        - records/usb/usb-core.yaml
+        - records/usb/usb-cdc.yaml
+        - records/usb/usb-webusb.yaml
+        - records/usb/usb-winusb.yaml
+        - records/daplink/cmsis-dap.yaml
+        - records/daplink/drag-n-drop.yaml
+        - records/daplink/usb2uart.yaml
+        - records/daplink/settings.yaml
+        - records/daplink/settings_rom.yaml
+        - records/daplink/interface.yaml
+        - records/daplink/target_family.yaml
+        - records/daplink/target_board.yaml
     # HICs
     hic_k20dx: &module_hic_k20dx
         - records/rtos/rtos-cm3.yaml
