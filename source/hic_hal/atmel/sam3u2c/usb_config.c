@@ -395,9 +395,21 @@
 #else
 #define BULK_ENDPOINT 1
 #endif
-#define USBD_BULK_ENABLE             BULK_ENDPOINT //no endpts left
-#define USBD_BULK_EP_BULKIN          7
-#define USBD_BULK_EP_BULKOUT         8
+#define USBD_BULK_ENABLE             BULK_ENDPOINT
+// We don't have enough endpoints for BULK unless MSC or CDC are disabled.
+// MSC is the best choice, since this is only useful in the fixed target IF config and we can still upload firmware via DAP.
+// We'll still want MSC for the BL though, but in that case BULK isn't useful anyway.
+#if USBD_MSC_ENABLE == 0
+#define USBD_BULK_EP_BULKIN          1 // Use the MSC endpoints for BULK
+#define USBD_BULK_EP_BULKOUT         2
+#elif USBD_CDC_ACM_ENABLE == 0
+#define USBD_BULK_EP_BULKIN          5 // Use the CDC endpoints for BULK
+#define USBD_BULK_EP_BULKOUT         6
+#else
+#define USBD_BULK_EP_BULKIN          7 // Use non-existent endpoints to force an error
+#define USBD_BULK_EP_BULKOUT         8 // if BULK is enabled but MSC + CDC are still enabled
+#endif
+
 #define USBD_BULK_WMAXPACKETSIZE     64
 #define USBD_BULK_HS_ENABLE          1
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
