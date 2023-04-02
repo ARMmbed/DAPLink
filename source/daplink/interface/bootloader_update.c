@@ -19,7 +19,8 @@
  * limitations under the License.
  */
 
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <stdbool.h>
 #include <string.h>
 #include "flash_manager.h"

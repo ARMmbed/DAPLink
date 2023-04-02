@@ -40,7 +40,7 @@
 #include "target_family.h"
 #include "target_board.h"
 
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
 #include "vfs_manager.h"
 #include "flash_intf.h"
 #include "flash_manager.h"
@@ -156,7 +156,7 @@ __WEAK void handle_reset_button(void)
 
     // handle reset button without eventing
     if (!reset_pressed && gpio_get_reset_btn_fwrd()) {
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
         if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
 #endif
         {
@@ -314,7 +314,7 @@ void main_task(void * arg)
         swd_set_reset_connect(CONNECT_UNDER_RESET);
     }
     if (g_board_info.flags & kEnablePageErase) {
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
         flash_manager_set_page_erase(true);
 #endif
     }
@@ -325,7 +325,7 @@ void main_task(void * arg)
     bootloader_check_and_update();
     // USB
     usbd_init();
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
     vfs_mngr_fs_enable((config_ram_get_disable_msd()==0));
 #endif
     usbd_connect(0);
@@ -396,7 +396,7 @@ void main_task(void * arg)
 
         if (flags & FLAGS_MAIN_90MS) {
             // Update USB busy status
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
             vfs_mngr_periodic(90); // FLAGS_MAIN_90MS
 #endif
             // Update USB connect status

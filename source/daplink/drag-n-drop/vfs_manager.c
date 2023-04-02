@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <ctype.h>
 
 #include "daplink.h"
@@ -845,3 +847,5 @@ static void transfer_update_state(error_t status)
         vfs_mngr_fs_remount();
     }
 }
+
+#endif

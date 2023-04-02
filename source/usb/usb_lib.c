@@ -3616,7 +3616,7 @@ void usbd_class_init(void)
 
 #if (USBD_MSC_ENABLE)
 
-#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)
+#if !(defined(DAPLINK_BL)) && defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
     //change descriptors here
     if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0 ){
         usbd_if_num -= USBD_MSC_ENABLE;

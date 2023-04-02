@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <string.h>
 
 #include "virtual_fs.h"
@@ -741,3 +743,5 @@ static bool filename_character_valid(char character)
     // All of the checks have passed so this is a valid file name character
     return true;
 }
+
+#endif

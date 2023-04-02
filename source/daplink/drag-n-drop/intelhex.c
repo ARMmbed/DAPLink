@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <string.h>
 
 #include "intelhex.h"
@@ -275,4 +277,6 @@ hex_parser_exit:
 #pragma pop
 #elif defined(__GNUC__) && !defined(__ARMCC_VERSION)
 #pragma GCC pop_options
+#endif
+
 #endif

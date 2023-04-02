@@ -4,7 +4,7 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -20,6 +20,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
 
 #include "flash_manager.h"
 #include "util.h"
@@ -348,3 +350,4 @@ static error_t setup_next_sector(uint32_t addr)
                          current_write_block_size, current_sector_size, min_prog_size);
     return ERROR_SUCCESS;
 }
+#endif

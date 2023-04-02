@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include "target_config.h"
 #include "target_family.h"
-#include "virtual_fs.h"
+#include "../drag-n-drop/virtual_fs.h"
 
 //! @brief Current board info version.
 //!

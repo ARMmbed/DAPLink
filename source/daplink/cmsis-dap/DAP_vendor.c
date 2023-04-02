@@ -37,12 +37,12 @@
 #include "uart.h"
 #include "settings.h"
 #include "target_family.h"
-#include "flash_manager.h"
 #include <string.h>
 #include "daplink_vendor_commands.h"
 
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
 #include "file_stream.h"
+#include "flash_manager.h"
 #endif
 
 //**************************************************************************************************
@@ -147,7 +147,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += 1;
         break;
     }
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
     case ID_DAP_MSD_Open: {
         // open mass storage device stream
         *response = stream_open((stream_type_t)(*request));
@@ -169,7 +169,6 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += ((write_len + 1) << 16) | 1;
         break;
     }
-#endif
     case ID_DAP_SelectEraseMode: {
         // switching between chip erase and page erase
         //              COMMAND(OUT Packet)
@@ -189,6 +188,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (1U << 16) | 1U; // increment request and response count each by 1
         break;
     }
+#endif
     case ID_DAP_Vendor14: break;
     case ID_DAP_Vendor15: break;
     case ID_DAP_Vendor16: break;
