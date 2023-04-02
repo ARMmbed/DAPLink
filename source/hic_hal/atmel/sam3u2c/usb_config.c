@@ -87,6 +87,46 @@
 #endif
 #endif
 
+#if (BULK_ENDPOINT)
+/* SAM3UC only has 7 endpoints, and as a consequence BULK_ENDPOINT cannot
+ * be enabled at the same time as CDC_ENDPOINT and MSC_ENDPOINT.
+ */
+#if (CDC_ENDPOINT && MSC_ENDPOINT)
+#error "SAM3U2C does not have enough endpoints to support this configuration"
+#endif
+#if (CDC_ENDPOINT)
+#define USBD_HID_EP_INTOUT          0
+#define USBD_BULK_EP_BULKIN         1
+#define USBD_BULK_EP_BULKOUT        2
+#define USBD_HID_EP_INTIN           3
+#define USBD_CDC_ACM_EP_INTIN       4
+#define USBD_CDC_ACM_EP_BULKOUT     5
+#define USBD_CDC_ACM_EP_BULKIN      6
+#define USBD_MSC_EP_BULKIN          7 /* Unused */
+#define USBD_MSC_EP_BULKOUT         7 /* Unused */
+#else // !(CDC_ENDPOINT)
+#define USBD_MSC_EP_BULKIN          1
+#define USBD_MSC_EP_BULKOUT         2
+#define USBD_HID_EP_INTIN           3
+#define USBD_HID_EP_INTOUT          4
+#define USBD_BULK_EP_BULKOUT        5
+#define USBD_BULK_EP_BULKIN         6
+#define USBD_CDC_ACM_EP_INTIN       7 /* Unused */
+#define USBD_CDC_ACM_EP_BULKIN      7 /* Unused */
+#define USBD_CDC_ACM_EP_BULKOUT     7 /* Unused */
+#endif
+#else // !(BULK_ENDPOINT)
+#define USBD_HID_EP_INTOUT          0
+#define USBD_MSC_EP_BULKIN          1
+#define USBD_MSC_EP_BULKOUT         2
+#define USBD_HID_EP_INTIN           3
+#define USBD_CDC_ACM_EP_INTIN       4
+#define USBD_CDC_ACM_EP_BULKOUT     5
+#define USBD_CDC_ACM_EP_BULKIN      6
+#define USBD_BULK_EP_BULKIN         7 /* Unused */
+#define USBD_BULK_EP_BULKOUT        7 /* Unused */
+#endif
+
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
@@ -209,9 +249,7 @@
 //     </e>
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
-#define USBD_HID_EP_INTIN           3
 #define USBD_HID_EP_INTIN_STACK     0
-#define USBD_HID_EP_INTOUT          0
 #define USBD_HID_EP_INTOUT_STACK    0
 #define USBD_HID_WMAXPACKETSIZE     64
 #define USBD_HID_BINTERVAL          1
@@ -258,9 +296,7 @@
 //     </e>
 
 #define USBD_MSC_ENABLE             MSC_ENDPOINT
-#define USBD_MSC_EP_BULKIN          1
 #define USBD_MSC_EP_BULKIN_STACK    0
-#define USBD_MSC_EP_BULKOUT         2
 #define USBD_MSC_EP_BULKOUT_STACK   0
 #define USBD_MSC_WMAXPACKETSIZE     64
 #define USBD_MSC_HS_ENABLE          1
@@ -374,16 +410,13 @@
 //     </e>
 
 #define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
-#define USBD_CDC_ACM_EP_INTIN           4
 #define USBD_CDC_ACM_EP_INTIN_STACK     0
 #define USBD_CDC_ACM_WMAXPACKETSIZE     16
 #define USBD_CDC_ACM_BINTERVAL          32
 #define USBD_CDC_ACM_HS_ENABLE          1
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE  64
 #define USBD_CDC_ACM_HS_BINTERVAL       2
-#define USBD_CDC_ACM_EP_BULKIN          6
 #define USBD_CDC_ACM_EP_BULKIN_STACK    0
-#define USBD_CDC_ACM_EP_BULKOUT         5
 #define USBD_CDC_ACM_EP_BULKOUT_STACK   0
 #define USBD_CDC_ACM_WMAXPACKETSIZE1    64
 #define USBD_CDC_ACM_HS_ENABLE1         1
@@ -431,20 +464,6 @@
 // </e>
 
 #define USBD_BULK_ENABLE             BULK_ENDPOINT
-// We don't have enough endpoints for BULK unless MSC or CDC are disabled.
-// MSC is the best choice, since this is only useful in the fixed target IF config and we can still upload firmware via DAP.
-// We'll still want MSC for the BL though, but in that case BULK isn't useful anyway.
-#if USBD_MSC_ENABLE == 0
-#define USBD_BULK_EP_BULKIN          1 // Use the MSC endpoints for BULK
-#define USBD_BULK_EP_BULKOUT         2
-#elif USBD_CDC_ACM_ENABLE == 0
-#define USBD_BULK_EP_BULKIN          5 // Use the CDC endpoints for BULK
-#define USBD_BULK_EP_BULKOUT         6
-#else
-#define USBD_BULK_EP_BULKIN          7 // Use non-existent endpoints to force an error
-#define USBD_BULK_EP_BULKOUT         8 // if BULK is enabled but MSC + CDC are still enabled
-#endif
-
 #define USBD_BULK_WMAXPACKETSIZE     64
 #define USBD_BULK_HS_ENABLE          1
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
