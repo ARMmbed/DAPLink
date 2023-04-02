@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(CDC_ENDPOINT) && !defined(CDC_ENDPOINT_DISABLE)
+
 #include "cmsis_os2.h"
 #include "rl_usb.h"
 #include "daplink.h"
@@ -202,4 +204,5 @@ void cdc_process_event(void)
     main_cdc_send_event();
 }
 
+#endif
 #endif

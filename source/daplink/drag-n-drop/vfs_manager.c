@@ -116,7 +116,7 @@ static const file_transfer_state_t default_transfer_state = {
 };
 
 //Compile option not to include MSC at all, these will be dummy variables
-#ifndef MSC_ENDPOINT
+#if !defined(MSC_ENDPOINT) || defined(MSC_ENDPOINT_DISABLE)
 BOOL USBD_MSC_MediaReady = __FALSE;
 BOOL USBD_MSC_ReadOnly = __FALSE;
 U32 USBD_MSC_MemorySize;

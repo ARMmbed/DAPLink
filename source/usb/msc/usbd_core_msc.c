@@ -19,11 +19,12 @@
  * limitations under the License.
  */
 
+#if defined(MSC_ENDPOINT) && !defined(MSC_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
 #include "usb_for_lib.h"
-
 
 /*
  *  Clear Feature USB Device Request - MSC specific handling
@@ -74,3 +75,5 @@ __WEAK BOOL USBD_EndPoint0_Setup_MSC_ReqToIF(void)
 
     return (__FALSE);
 }
+
+#endif
