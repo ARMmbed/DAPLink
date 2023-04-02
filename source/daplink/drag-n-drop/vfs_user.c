@@ -21,6 +21,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
@@ -700,3 +702,5 @@ static void erase_target(void)
     flash_intf_target->erase_chip();
     flash_intf_target->uninit();
 }
+
+#endif

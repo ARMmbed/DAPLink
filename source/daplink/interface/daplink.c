@@ -21,7 +21,7 @@
 
 #include "daplink.h"
 
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
 
 #include "virtual_fs.h"
 #include "compiler.h"

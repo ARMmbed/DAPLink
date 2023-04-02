@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <string.h>
 
 #include "flash_decoder.h"
@@ -292,7 +294,7 @@ error_t flash_decoder_write(uint32_t addr, const uint8_t *data, uint32_t size)
                 state = DECODER_STATE_ERROR;
                 return status;
             }
-            
+
             // Validate incompatible target image file
             if (config_get_detect_incompatible_target()){
                 status = flash_decoder_validate_target_image(flash_type, flash_buf, flash_buf_pos);
@@ -423,3 +425,5 @@ static bool flash_decoder_is_at_end(uint32_t addr, const uint8_t *data, uint32_t
         return false;
     }
 }
+
+#endif

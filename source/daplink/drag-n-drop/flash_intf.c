@@ -19,9 +19,13 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include "flash_intf.h"
 #include "compiler.h"
 
 __WEAK const flash_intf_t *const flash_intf_iap_protected = 0;
 __WEAK const flash_intf_t *const flash_intf_target = 0;
 __WEAK const flash_intf_t *const flash_intf_target_custom = 0;
+
+#endif

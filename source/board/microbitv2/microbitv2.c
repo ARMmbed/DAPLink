@@ -44,7 +44,7 @@
 #include "gpio_extra.h"
 #include "board_id.h"
 
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
 #include "flash_intf.h"
 #endif
 
@@ -155,7 +155,7 @@ static void reset_power_led_state()
 // Handle the reset button behavior, this function is called in the main task every 30ms
 void handle_reset_button()
 {
-#ifdef DRAG_N_DROP_SUPPORT
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
     if (!flash_intf_target->flash_busy()) //added checking if flashing on target is in progress
 #endif
     {

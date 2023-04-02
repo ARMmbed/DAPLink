@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <string.h>
 
 #include "daplink.h"
@@ -505,3 +507,5 @@ static error_t critical_erase_and_program(uint32_t addr, const uint8_t *data, ui
 static uint8_t target_flash_busy(void){
     return (state == STATE_OPEN);
 }
+
+#endif

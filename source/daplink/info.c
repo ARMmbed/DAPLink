@@ -136,7 +136,8 @@ static void setup_basics(void)
     //Family ID
     string_family_id[idx++] = hex_to_ascii(((family_id >> 12) & 0xF));
     string_family_id[idx++] = hex_to_ascii(((family_id >> 8) & 0xF));
-#if !(defined(DAPLINK_BL)) &&  defined(DRAG_N_DROP_SUPPORT)   //need to change the unique id when the msd is disabled
+#if !(defined(DAPLINK_BL)) && defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+    // Need to change the unique id when the msd is disabled
     #if defined(MSC_ENDPOINT)
     if (config_ram_get_disable_msd() == 1 || flash_algo_valid()==0){
         string_family_id[idx++] = hex_to_ascii((((family_id >> 4) | 0x08) & 0xF));
@@ -321,4 +322,3 @@ uint32_t info_get_interface_version(void)
 
     return info_if->version;
 }
-

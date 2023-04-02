@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(DRAG_N_DROP_SUPPORT) && !defined(DRAG_N_DROP_DISABLE)
+
 #include <string.h>
 
 #include "file_stream.h"
@@ -364,3 +366,5 @@ static error_t close_hex(void *state)
     status = flash_decoder_close();
     return status;
 }
+
+#endif
