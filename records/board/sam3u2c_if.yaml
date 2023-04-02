@@ -1,0 +1,5 @@
+common:
+    macros:
+        - HID_ENDPOINT_DISABLE
+        - MSC_ENDPOINT_DISABLE
+        - DRAG_N_DROP_DISABLE

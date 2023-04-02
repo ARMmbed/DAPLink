@@ -215,6 +215,8 @@ projects:
     sam3u2c_if:
         - *module_if
         - *module_hic_sam3u2c
+        - records/usb/usb-bulk.yaml
+        - records/board/sam3u2c_if.yaml
         - records/family/all_family.yaml
     stm32f072x8_if:
         - *module_if
