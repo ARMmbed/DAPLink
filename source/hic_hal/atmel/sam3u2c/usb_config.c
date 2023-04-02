@@ -21,6 +21,72 @@
 
 #include "util.h"
 
+#ifdef HID_ENDPOINT_DISABLE
+#undef HID_ENDPOINT
+#define HID_ENDPOINT 0
+#else
+#ifndef HID_ENDPOINT
+#define HID_ENDPOINT 0
+#else
+#define HID_ENDPOINT 1
+#endif
+#endif
+
+#ifdef MSC_ENDPOINT_DISABLE
+#undef MSC_ENDPOINT
+#define MSC_ENDPOINT 0
+#else
+#ifndef MSC_ENDPOINT
+#define MSC_ENDPOINT 0
+#else
+#define MSC_ENDPOINT 1
+#endif
+#endif
+
+#ifdef CDC_ENDPOINT_DISABLE
+#undef CDC_ENDPOINT
+#define CDC_ENDPOINT 0
+#else
+#ifndef CDC_ENDPOINT
+#define CDC_ENDPOINT 0
+#else
+#define CDC_ENDPOINT 1
+#endif
+#endif
+
+#ifdef BULK_ENDPOINT_DISABLE
+#undef BULK_ENDPOINT
+#define BULK_ENDPOINT 0
+#else
+#ifndef BULK_ENDPOINT
+#define BULK_ENDPOINT 0
+#else
+#define BULK_ENDPOINT 1
+#endif
+#endif
+
+#ifdef WEBUSB_INTERFACE_DISABLE
+#undef WEBUSB_INTERFACE
+#define WEBUSB_INTERFACE 0
+#else
+#ifndef WEBUSB_INTERFACE
+#define WEBUSB_INTERFACE 0
+#else
+#define WEBUSB_INTERFACE 1
+#endif
+#endif
+
+#ifdef WINUSB_INTERFACE_DISABLE
+#undef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#ifndef WINUSB_INTERFACE
+#define WINUSB_INTERFACE 0
+#else
+#define WINUSB_INTERFACE 1
+#endif
+#endif
+
 // <e> USB Device
 //   <i> Enable the USB Device functionality
 #define USBD_ENABLE                 1
@@ -141,23 +207,6 @@
 //         <o12.0..15> Maximum Feature Report Size (in bytes) <1-65535>
 //       </h>
 //     </e>
-#ifndef HID_ENDPOINT
-#define HID_ENDPOINT 0
-#else
-#define HID_ENDPOINT 1
-#endif
-
-#ifndef WEBUSB_INTERFACE
-#define WEBUSB_INTERFACE 0
-#else
-#define WEBUSB_INTERFACE 1
-#endif
-
-#ifndef WINUSB_INTERFACE
-#define WINUSB_INTERFACE 0
-#else
-#define WINUSB_INTERFACE 1
-#endif
 
 #define USBD_HID_ENABLE             HID_ENDPOINT
 #define USBD_HID_EP_INTIN           3
@@ -207,11 +256,7 @@
 //         </h>
 //       </h>
 //     </e>
-#ifndef MSC_ENDPOINT
-#define MSC_ENDPOINT 0
-#else
-#define MSC_ENDPOINT 1
-#endif
+
 #define USBD_MSC_ENABLE             MSC_ENDPOINT
 #define USBD_MSC_EP_BULKIN          1
 #define USBD_MSC_EP_BULKIN_STACK    0
@@ -328,11 +373,6 @@
 //       </h>
 //     </e>
 
-#ifndef CDC_ENDPOINT
-#define CDC_ENDPOINT 0
-#else
-#define CDC_ENDPOINT 1
-#endif
 #define USBD_CDC_ACM_ENABLE             CDC_ENDPOINT
 #define USBD_CDC_ACM_EP_INTIN           4
 #define USBD_CDC_ACM_EP_INTIN_STACK     0
@@ -390,11 +430,6 @@
 //   </e>
 // </e>
 
-#ifndef BULK_ENDPOINT
-#define BULK_ENDPOINT 0
-#else
-#define BULK_ENDPOINT 1
-#endif
 #define USBD_BULK_ENABLE             BULK_ENDPOINT //no endpts left
 #define USBD_BULK_EP_BULKIN          7
 #define USBD_BULK_EP_BULKOUT         8
@@ -418,7 +453,7 @@
 #define USBD_EP_NUM_CALC6           MAX(USBD_EP_NUM_CALC4, USBD_EP_NUM_CALC5)
 #define USBD_EP_NUM_CALC7           MAX((USBD_BULK_ENABLE*(USBD_BULK_EP_BULKIN)), (USBD_BULK_ENABLE*(USBD_BULK_EP_BULKOUT)))
 #define USBD_EP_NUM                 MAX(USBD_EP_NUM_CALC6, USBD_EP_NUM_CALC7)
- 
+
 #if (USBD_EP_NUM > 6)
 #error "SAM3U only have 7 endpoints including EP0!"
 #endif
