@@ -76,6 +76,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += (len + 1); // increment response count by ID length + length byte
         break;
     }
+#if defined(CDC_ENDPOINT) && !defined(CDC_ENDPOINT_DISABLE)
     case ID_DAP_UART_GetLineCoding: {
         // get line coding
         int32_t read_len = sizeof(CDC_LINE_CODING);
@@ -121,6 +122,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
         num += ((write_len + 1) << 16) | 1;
         break;
     }
+#endif
     case ID_DAP_Vendor5:  break;
     case ID_DAP_Vendor6:  break;
     case ID_DAP_Vendor7:  break;

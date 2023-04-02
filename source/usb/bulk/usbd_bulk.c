@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(BULK_ENDPOINT) && !defined(BULK_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
@@ -108,3 +110,5 @@ void USBD_BULK_EP_BULK_Event(U32 event)
         USBD_BULK_EP_BULKIN_Event(0);
     }
 }
+
+#endif

@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(CDC_ENDPOINT) && !defined(CDC_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
@@ -1160,4 +1162,4 @@ void USBD_RTX_CDC_ACM_3_EP_BULK_Event(void)
 #endif
 
 #endif
-
+#endif

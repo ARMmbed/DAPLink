@@ -384,10 +384,12 @@ void main_task(void * arg)
             target_set_state(NO_DEBUG);
         }
 
+#if defined(CDC_ENDPOINT) && !defined(CDC_ENDPOINT_DISABLE)
         if (flags & FLAGS_MAIN_CDC_EVENT) {
             cdc_process_event();
         }
-        
+#endif
+
         if (flags & FLAGS_BOARD_EVENT) {
             board_custom_event();
         }

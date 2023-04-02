@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(CDC_ENDPOINT) && !defined(CDC_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
@@ -150,3 +152,5 @@ __WEAK BOOL USBD_EndPoint0_Out_CDC_ReqToIF(void)
 
     return (__FALSE);
 }
+
+#endif

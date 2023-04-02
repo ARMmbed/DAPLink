@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(HID_ENDPOINT) && !defined(HID_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
@@ -172,3 +174,5 @@ __WEAK BOOL USBD_EndPoint0_Out_HID_ReqToIF(void)
 
     return (__FALSE);
 }
+
+#endif

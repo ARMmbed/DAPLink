@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(HID_ENDPOINT) && !defined(HID_ENDPOINT_DISABLE)
+
 #include <string.h>
 #include "rl_usb.h"
 #include "usb.h"
@@ -126,4 +128,4 @@ void usbd_hid_set_report(U8 rtype, U8 rid, U8 *buf, int len, U8 req)
     }
 }
 
-
+#endif

@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(HID_ENDPOINT) && !defined(HID_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
@@ -555,3 +557,5 @@ BOOL usbd_hid_get_report_trigger(U8 rid, U8 *buf, int len)
 
     return (__FALSE);
 }
+
+#endif

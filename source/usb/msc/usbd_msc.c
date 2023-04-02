@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+#if defined(MSC_ENDPOINT) && !defined(MSC_ENDPOINT_DISABLE)
+
 #include <string.h>
 
 #include "rl_usb.h"
@@ -1213,4 +1215,6 @@ __task void USBD_RTX_MSC_EP_BULK_Event(void)
         USBD_MSC_EP_BULK_Event(usbd_os_evt_get());
     }
 }
+
+#endif
 #endif
