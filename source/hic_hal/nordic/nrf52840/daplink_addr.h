@@ -30,40 +30,37 @@
 
 /* ROM sizes */
 
-#if defined(THINGY91)
+
 
 #define DAPLINK_ROM_BL_START            0x00000000
-#define DAPLINK_ROM_BL_SIZE             0x00013000
 
-#define DAPLINK_ROM_IF_START            0x00013000
-#define DAPLINK_ROM_IF_SIZE             0x0002D000
+#if !defined(NRF_SECURE_BOOTLOADER)
 
-#define DAPLINK_ROM_CONFIG_USER_START   0x000FE000
-#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00002000
-
-#elif defined(NRF52840DONGLE)
-
-#define DAPLINK_ROM_BL_START            0x00000000
-#define DAPLINK_ROM_BL_SIZE             0x00001000
-
+#if !defined(NRF_OPEN_BOOTLOADER)
+#define DAPLINK_ROM_BL_SIZE             0x00010000 // 64 KiB DAPLink bootloader
+#define DAPLINK_ROM_IF_START            0x00010000
+#define DAPLINK_ROM_IF_SIZE             0x0002F000
+#else // NRF_OPEN_BOOTLOADER
+#define DAPLINK_ROM_BL_SIZE             0x00001000 // 4 KiB MBR
 #define DAPLINK_ROM_IF_START            0x00001000
 #define DAPLINK_ROM_IF_SIZE             0x0003E000
+#endif
 
 #define DAPLINK_ROM_CONFIG_USER_START   0x0003F000
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00001000
 
-#else
+#else // NRF_SECURE_BOOTLOADER
 
-#define DAPLINK_ROM_BL_START            0x00000000
-#define DAPLINK_ROM_BL_SIZE             0x00010000 // 64 KiB bootloader
+#define DAPLINK_ROM_BL_SIZE             0x00013000 // 76 KiB MCUBOOT
+#define DAPLINK_ROM_IF_START            0x00013000
+#define DAPLINK_ROM_IF_SIZE             0x0002C000
 
-#define DAPLINK_ROM_IF_START            0x00010000
-#define DAPLINK_ROM_IF_SIZE             0x0002F000
-
-#define DAPLINK_ROM_CONFIG_USER_START   0x0003F000
+#define NON_CONTIGUOUS_USER_CONFIG
+#define DAPLINK_ROM_CONFIG_USER_START   0x000F7000
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00001000
 
 #endif
+
 
 /* RAM sizes */
 
@@ -82,6 +79,10 @@
 
 #if defined(DAPLINK_BL)
 
+#if defined(NRF_SECURE_BOOTLOADER) || defined(NRF_OPEN_BOOTLOADER)
+#error ""
+#endif
+
 #define DAPLINK_ROM_APP_START            DAPLINK_ROM_BL_START
 #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_BL_SIZE
 #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_IF_START
@@ -92,7 +93,11 @@
 #define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
 #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
 #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
+#if !defined(NRF_SECURE_BOOTLOADER) && !defined(NRF_OPEN_BOOTLOADER)
 #define DAPLINK_ROM_UPDATE_SIZE          DAPLINK_ROM_BL_SIZE
+#else
+#define DAPLINK_ROM_UPDATE_SIZE          0 // Disable update
+#endif
 
 #else
 
