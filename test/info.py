@@ -259,7 +259,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'nrf52820_if',                              None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'nrf52840_if',                              None,               None                                    ),
-    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'nrf52840dongle_if',                        None,               None                                    ),
+    (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'nrf52840_dongle_if',                       None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Nordic', 4),      'nrf52840_thingy91_if',                     None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'sam3u2c_if',                               None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_if',                           None,               None                                    ),

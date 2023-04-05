@@ -1,6 +1,6 @@
 common:
     macros:
-        - THINGY91
+        - NRF_SECURE_BOOTLOADER
     sources:
         board:
             - source/board/thingy91.c
