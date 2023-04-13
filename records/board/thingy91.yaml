@@ -1,6 +1,8 @@
 common:
     macros:
+        - THINGY91
         - NRF_SECURE_BOOTLOADER
+        - NRF_SECURE_BOOTLOADER_OFFSET=0x12200
     sources:
         board:
             - source/board/thingy91.c
