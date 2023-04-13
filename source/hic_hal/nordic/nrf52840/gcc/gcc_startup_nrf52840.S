@@ -197,6 +197,13 @@ Reset_Handler:
 .L_loop1_done:
 #endif
 
+#ifdef NRF_SECURE_BOOTLOADER
+    movs r3, #0
+    msr	CONTROL, r3
+    msr	PSP, r3
+    msr	PRIMASK, r3
+#endif
+
 /* This part of work usually is done in C library startup code. Otherwise,
  * define __STARTUP_CLEAR_BSS to enable it in this startup. This section
  * clears the RAM where BSS data is located.
