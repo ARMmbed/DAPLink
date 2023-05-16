@@ -515,6 +515,7 @@ void vfs_read(uint32_t requested_sector, uint8_t *buf, uint32_t num_sectors)
             // Update requested sector
             requested_sector += sectors_to_write;
             num_sectors -= sectors_to_write;
+            buf += sectors_to_write * VFS_SECTOR_SIZE;
         }
 
         // If there is no more data to be read then break
@@ -548,6 +549,7 @@ void vfs_write(uint32_t requested_sector, const uint8_t *buf, uint32_t num_secto
             // Update requested sector
             requested_sector += sectors_to_read;
             num_sectors -= sectors_to_read;
+            buf += sectors_to_read * VFS_SECTOR_SIZE;
         }
 
         // If there is no more data to be read then break
