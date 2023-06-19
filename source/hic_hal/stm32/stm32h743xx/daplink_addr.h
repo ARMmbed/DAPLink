@@ -25,7 +25,7 @@
 /* Device sizes */
 
 #define DAPLINK_ROM_START               0x08000000
-#define DAPLINK_ROM_SIZE                0x00100000 // has to be a multiple of the sector size, only bank 1 is used, the datasheet says under table 7 in the notes section that the memory boundary is limited to this on each bank
+#define DAPLINK_ROM_SIZE                0x000A0000 // has to be a multiple of the sector size, only bank 1 is used, the datasheet says under table 7 in the notes section that the memory boundary is limited to this on each bank
 
 #define DAPLINK_RAM_START               0x24000000 // Execute from AXI SRAM, because it's powered on by default and the app is quite large due to the sector_buf static variable that is used to hold one sector (128Kb)
 #define DAPLINK_RAM_SIZE                0x00080000 // divisible by DAPLINK_MIN_WRITE_SIZE
@@ -44,9 +44,9 @@
 #define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00020000 // 1 sector
 
 #define DAPLINK_ROM_IF_START            0x08040000
-#define DAPLINK_ROM_IF_SIZE             0x000A0000 // 5 sectors
+#define DAPLINK_ROM_IF_SIZE             0x00040000 // 2 sectors
 
-#define DAPLINK_ROM_CONFIG_USER_START   0x080E0000
+#define DAPLINK_ROM_CONFIG_USER_START   0x08080000
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00020000 // 1 sector
 
 /* RAM sizes */
