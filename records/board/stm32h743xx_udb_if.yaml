@@ -6,6 +6,7 @@ common:
         - ASSERT_BUF_SIZE=65
         - USB_CDC_ACM_EP_COUNT=3
         - OVERRIDE_USB2UART
+        - DISABLE_DRAG_N_DROP
         # Add UDB config macros below
         - UDB
         - SUPPORT_CMD_HISTORY

@@ -358,7 +358,7 @@ static void sync_init(void)
 
 static void sync_assert_usb_thread(void)
 {
-#ifndef UDB
+#ifndef DISABLE_DRAG_N_DROP
     // TODO (https://github.com/ARMmbed/DAPLink/issues/963) Due to issues with the MSC,
     // the UDB HIC disables MSC, and also needs to remove this assert.
     util_assert(osThreadGetId() == sync_thread);
