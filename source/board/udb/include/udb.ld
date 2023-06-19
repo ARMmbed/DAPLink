@@ -18,4 +18,4 @@ SECTIONS
     } > m_cfgrom_bl
 }
 
-#include "daplink.ld"
+#include "stm32h743xx.ld"

@@ -27,8 +27,16 @@
 #define DAPLINK_ROM_START               0x08000000
 #define DAPLINK_ROM_SIZE                0x000A0000 // has to be a multiple of the sector size, only bank 1 is used, the datasheet says under table 7 in the notes section that the memory boundary is limited to this on each bank
 
-#define DAPLINK_RAM_START               0x24000000 // Execute from AXI SRAM, because it's powered on by default and the app is quite large due to the sector_buf static variable that is used to hold one sector (128Kb)
-#define DAPLINK_RAM_SIZE                0x00080000 // divisible by DAPLINK_MIN_WRITE_SIZE
+#define DAPLINK_STM32H743_DTCM_START    0x20000000
+#define DAPLINK_STM32H743_DTCM_SIZE     0x00020000
+
+#define DAPLINK_STM32H743_AXISRAM_START 0x24000000
+#define DAPLINK_STM32H743_AXISRAM_SIZE  0x00060000
+
+#define DAPLINK_RAM_START               (DAPLINK_STM32H743_DTCM_START)
+
+#define DAPLINK_RAM_SECTOR_BUFFER_START (DAPLINK_STM32H743_AXISRAM_START) // sector_buf static variable is too big for DTCM (128kB), so let's put it into AXI-SRAM
+#define DAPLINK_RAM_SECTOR_BUFFER_SIZE  0x00020000
 
 /* Flash Programming Info */
 
@@ -51,11 +59,11 @@
 
 /* RAM sizes */
 
-#define DAPLINK_RAM_APP_START           DAPLINK_RAM_START
-#define DAPLINK_RAM_APP_SIZE            (DAPLINK_RAM_SIZE - DAPLINK_MIN_WRITE_SIZE) // leave space for RAM_SHARED
+#define DAPLINK_RAM_APP_START           DAPLINK_STM32H743_DTCM_START // Execute app from DTCM
+#define DAPLINK_RAM_APP_SIZE            (DAPLINK_STM32H743_DTCM_SIZE - DAPLINK_MIN_WRITE_SIZE) // leave space for RAM_SHARED
 
 #define DAPLINK_RAM_SHARED_START        (DAPLINK_RAM_APP_START + DAPLINK_RAM_APP_SIZE)
-#define DAPLINK_RAM_SHARED_SIZE         (DAPLINK_RAM_SIZE - DAPLINK_RAM_APP_SIZE) // fill the rest of RAM
+#define DAPLINK_RAM_SHARED_SIZE         (DAPLINK_STM32H743_DTCM_SIZE - DAPLINK_RAM_APP_SIZE)
 
 /* Current build */
 

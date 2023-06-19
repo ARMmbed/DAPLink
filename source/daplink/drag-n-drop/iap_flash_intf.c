@@ -87,7 +87,12 @@ static bool current_page_set;
 static uint32_t current_page;
 static uint32_t current_page_write_size;
 static uint32_t crc;
+
+#ifdef DAPLINK_RELOCATE_SECTOR_BUF
+static uint8_t sector_buf[DAPLINK_SECTOR_SIZE] __attribute__((section("sector_buf_section")));
+#else
 static uint8_t sector_buf[DAPLINK_SECTOR_SIZE];
+#endif
 
 static error_t init()
 {

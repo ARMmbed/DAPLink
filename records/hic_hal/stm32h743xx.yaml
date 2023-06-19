@@ -12,7 +12,8 @@ common:
         - DAPLINK_NO_ASSERT_FILENAMES
         - OS_CLOCK=240000000
         - OS_ROBIN_ENABLE=1
-        - SECTOR_BUFFER_SIZE=32
+        - SECTOR_BUFFER_SIZE=32 # this is a small write buffer used in settings_rom.c
+        - DAPLINK_RELOCATE_SECTOR_BUF # this is relocating another sector buffer in iap_flash_intf.c which has to hold an entire sector and doesn't fit into our default DTCM RAM
     includes:
         - source/hic_hal/stm32/hal/STM32H7xx_HAL_Driver
         - source/hic_hal/stm32/hal/STM32H7xx_HAL_Driver/Inc
@@ -39,7 +40,7 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32h743xx/armcc
-    make_armcc:
+    armcc:
         misc:
             ld_flags:
                 - --predefine="-Isource/hic_hal/stm32/stm32h743xx"
@@ -52,7 +53,7 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32h743xx/armcc
-    make_gcc_arm:
+    gcc_arm:
         misc:
             ld_flags:
                 # for some reason GCC links in the non-thumb version,
@@ -61,3 +62,5 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/stm32/stm32h743xx/gccarm
+        linker_file:
+            - source/hic_hal/stm32/stm32h743xx/stm32h743xx.ld
