@@ -31,7 +31,7 @@
 #endif // defined(UDB_VERSION_BASE) && defined(UDB_BUILD_NUMBER)
 
 #define UDB_BOOTLOADER_VERSION                  UDB_BUILD_VERSION
-#define UDB_BOOTLOADER_VERSION_SECTION_ADDR     DAPLINK_ROM_CONFIG_ADMIN_START
+#define UDB_BOOTLOADER_VERSION_SECTION_ADDR     DAPLINK_ROM_UDB_BL_VERSION_START
 #define BOOTLOADER_CFG_MAGIC_KEY                (0x5a5a5a5a)
 #define BOOTLOADER_MAX_VERSION_LENGTH           UDB_VERSION_MAX_LENGTH
 
@@ -63,7 +63,7 @@ COMPILER_ASSERT(sizeof(UDB_BOOTLOADER_VERSION) < BOOTLOADER_MAX_VERSION_LENGTH);
 COMPILER_ASSERT(sizeof(bootloader_version_t) < DAPLINK_SECTOR_SIZE);
 
 #ifdef DAPLINK_BL
-static volatile bootloader_version_t config_rom_bl __attribute__((section("cfgrom_bl"))) =
+static volatile bootloader_version_t udb_bl_version __attribute__((section("udb_bl_version_rom"))) =
 {
     .magic_key = BOOTLOADER_CFG_MAGIC_KEY,
     .version = UDB_BOOTLOADER_VERSION,

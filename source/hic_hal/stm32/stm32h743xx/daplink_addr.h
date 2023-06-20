@@ -24,8 +24,6 @@
 
 /* Device sizes */
 
-#define DAPLINK_ROM_START               0x08000000
-#define DAPLINK_ROM_SIZE                0x000A0000 // has to be a multiple of the sector size, only bank 1 is used, the datasheet says under table 7 in the notes section that the memory boundary is limited to this on each bank
 
 #define DAPLINK_STM32H743_DTCM_START    0x20000000
 #define DAPLINK_STM32H743_DTCM_SIZE     0x00020000
@@ -45,17 +43,30 @@
 
 /* ROM sizes */
 
+#define DAPLINK_ROM_START               0x08000000
 #define DAPLINK_ROM_BL_START            0x08000000
 #define DAPLINK_ROM_BL_SIZE             0x00020000 // 128 kB bootloader -- 1 sector
 
-#define DAPLINK_ROM_CONFIG_ADMIN_START  0x08020000
-#define DAPLINK_ROM_CONFIG_ADMIN_SIZE   0x00020000 // 1 sector
+#ifdef UDB
+#define DAPLINK_ROM_SIZE                0x000A0000 // has to be a multiple of the sector size, only bank 1 is used
+
+#define DAPLINK_ROM_UDB_BL_VERSION_START 0x08020000
+#define DAPLINK_ROM_UDB_BL_VERSION_SIZE  0x00020000 // 1 sector to keep everything else sector aligned
 
 #define DAPLINK_ROM_IF_START            0x08040000
 #define DAPLINK_ROM_IF_SIZE             0x00040000 // 2 sectors
 
 #define DAPLINK_ROM_CONFIG_USER_START   0x08080000
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00020000 // 1 sector
+#else
+#define DAPLINK_ROM_SIZE                0x00080000 // has to be a multiple of the sector size, only bank 1 is used
+
+#define DAPLINK_ROM_IF_START            0x08020000
+#define DAPLINK_ROM_IF_SIZE             0x00040000 // 2 sectors
+
+#define DAPLINK_ROM_CONFIG_USER_START   0x08060000
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00020000 // 1 sector
+#endif
 
 /* RAM sizes */
 
@@ -79,7 +90,7 @@
 #define DAPLINK_ROM_APP_START            DAPLINK_ROM_IF_START
 #define DAPLINK_ROM_APP_SIZE             DAPLINK_ROM_IF_SIZE
 #define DAPLINK_ROM_UPDATE_START         DAPLINK_ROM_BL_START
-#define DAPLINK_ROM_UPDATE_SIZE          (DAPLINK_ROM_BL_SIZE + DAPLINK_ROM_CONFIG_ADMIN_SIZE)
+#define DAPLINK_ROM_UPDATE_SIZE          (DAPLINK_ROM_BL_SIZE + DAPLINK_ROM_UDB_BL_VERSION_SIZE)
 
 #else
 

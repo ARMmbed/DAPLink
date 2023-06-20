@@ -1,4 +1,6 @@
 common:
+    macros:
+        - UDB
     includes:
         - source/board/udb/include/udb_version.h
     sources:

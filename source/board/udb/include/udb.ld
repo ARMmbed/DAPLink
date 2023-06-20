@@ -2,20 +2,20 @@
 
 MEMORY
 {
-    m_cfgrom_bl           (RW)  : ORIGIN = DAPLINK_ROM_CONFIG_ADMIN_START, LENGTH = DAPLINK_ROM_CONFIG_ADMIN_SIZE
+    m_udb_bl_version_rom           (RW)  : ORIGIN = DAPLINK_ROM_UDB_BL_VERSION_START, LENGTH = DAPLINK_ROM_UDB_BL_VERSION_SIZE
 }
 
 SECTIONS
 {
-    .cfgrom_bl :
+    .udb_bl_version_rom :
     {
-        KEEP(*(cfgrom_bl))
+        KEEP(*(udb_bl_version_rom))
         FILL(0xffffffff)
-        . = ORIGIN(m_cfgrom_bl) + LENGTH(m_cfgrom_bl) - 4;
+        . = ORIGIN(m_udb_bl_version_rom) + LENGTH(m_udb_bl_version_rom) - 4;
         /* Need some contents in this section or it won't be copied to bin or hex. The CRC will
         * be placed here by post_build_script.py. */
         LONG(0x55555555)
-    } > m_cfgrom_bl
+    } > m_udb_bl_version_rom
 }
 
 #include "stm32h743xx.ld"
