@@ -27,6 +27,9 @@
 
 #define GPIO_INIT_STABILIZATION_DELAY_MS    (100)
 
+#define GPIO_OUTPUT_TYPE                    (0x00000010U)
+#define GPIO_MODE                           (0x00000003U)
+
 static const dut_pin_group_t s_dut_pin_group[DUT_PIN_GROUP_ID_COUNT] =
 {
     [DUT_PIN_GROUP_ID_UDC0_RST_L] =
@@ -422,4 +425,62 @@ void gpio_write_dut_pin(dut_pin_group_id_t dut_pin_group_id, GPIO_PinState pin_s
 bool gpio_dut_pin_group_is_active_high(dut_pin_group_id_t dut_pin_group_id)
 {
     return s_dut_pin_group[dut_pin_group_id].active_high;
+}
+
+// The fastest way to compute trailing zeros is using a lookup table
+// For the source and more background pls see:
+// https://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup
+static uint8_t count_trailing_zeros_optimized(uint32_t input)
+{
+    static const uint32_t s_multiply_debruijn_bit_position[32] =
+    {
+        0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
+        31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
+    };
+    return s_multiply_debruijn_bit_position[((uint32_t)((input & -input) * 0x077CB531U)) >> 27];
+}
+
+void HAL_GPIO_Init_Optimized(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
+{
+    uint32_t temp;
+    uint32_t position = count_trailing_zeros_optimized(GPIO_Init->Pin);
+
+    /* Check the parameters */
+    util_assert(IS_GPIO_ALL_INSTANCE(GPIOx));
+    util_assert(IS_GPIO_PIN(GPIO_Init->Pin));
+    util_assert(IS_GPIO_MODE(GPIO_Init->Mode));
+    util_assert(IS_GPIO_PULL(GPIO_Init->Pull));
+    util_assert((GPIO_Init->Mode != GPIO_MODE_AF_PP) || (GPIO_Init->Mode != GPIO_MODE_AF_OD));
+    util_assert((GPIO_Init->Pin & ~(1 << position)) == 0);
+
+    /*--------------------- GPIO Mode Configuration ------------------------*/
+    /* Configure IO Direction mode (Input, Output, Alternate or Analog) */
+    temp = GPIOx->MODER;
+    temp &= ~(GPIO_MODER_MODE0 << (position * 2U));
+    temp |= ((GPIO_Init->Mode & GPIO_MODE) << (position * 2U));
+    GPIOx->MODER = temp;
+
+    /* In case of Output or Alternate function mode selection */
+    if ((GPIO_Init->Mode == GPIO_MODE_OUTPUT_PP) || (GPIO_Init->Mode == GPIO_MODE_OUTPUT_OD))
+    {
+        /* Check the Speed parameter */
+        util_assert(IS_GPIO_SPEED(GPIO_Init->Speed));
+        /* Configure the IO Speed */
+        temp = GPIOx->OSPEEDR;
+        temp &= ~(GPIO_OSPEEDR_OSPEED0 << (position * 2U));
+        temp |= (GPIO_Init->Speed << (position * 2U));
+        GPIOx->OSPEEDR = temp;
+
+        /* Configure the IO Output Type */
+        temp = GPIOx->OTYPER;
+        temp &= ~(GPIO_OTYPER_OT0 << position) ;
+        temp |= (((GPIO_Init->Mode & GPIO_OUTPUT_TYPE) >> 4U) << position);
+        GPIOx->OTYPER = temp;
+    }
+
+    /* Activate the Pull-up or Pull down resistor for the current IO */
+    temp = GPIOx->PUPDR;
+    temp &= ~(GPIO_PUPDR_PUPD0 << (position * 2U));
+    temp |= ((GPIO_Init->Pull) << (position * 2U));
+    GPIOx->PUPDR = temp;
 }

@@ -175,6 +175,14 @@ of the same I/O port. The following SWDIO I/O Pin functions are provided:
 
 // Configure DAP I/O pins ------------------------------
 
+/** Fast functions to init GPIOs.
+The original HAL implementation cycles through all the pins because it allows
+configuring multiple pins in the same call. We don't need this feature and
+would rather just speed up the execution for faster DAP communication by removing
+the internal loop.
+ */
+void HAL_GPIO_Init_Optimized(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init);
+
 /** Setup JTAG I/O pins: TCK, TMS, TDI, TDO, nTRST, and nRESET.
 Configures the DAP Hardware I/O pins for JTAG mode:
  - TCK, TMS, TDI, nTRST, nRESET to output mode and set to high level.
@@ -202,13 +210,13 @@ __STATIC_INLINE void PORT_SWD_SETUP(void)
 
     // Set SWCLK HIGH
     gpio_init.Pin = g_swd_dut_configs[g_cur_swd_dut].swclk.pin;
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].swclk.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].swclk.port, &gpio_init);
     HAL_GPIO_WritePin(g_swd_dut_configs[g_cur_swd_dut].swclk.port,
                       g_swd_dut_configs[g_cur_swd_dut].swclk.pin, GPIO_PIN_SET);
 
     // Set SWDIO HIGH
     gpio_init.Pin = g_swd_dut_configs[g_cur_swd_dut].swdio.pin;
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].swdio.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].swdio.port, &gpio_init);
     HAL_GPIO_WritePin(g_swd_dut_configs[g_cur_swd_dut].swdio.port,
                       g_swd_dut_configs[g_cur_swd_dut].swdio.pin, GPIO_PIN_SET);
 
@@ -216,7 +224,7 @@ __STATIC_INLINE void PORT_SWD_SETUP(void)
     gpio_init.Pin = g_swd_dut_configs[g_cur_swd_dut].nreset.pin;
     gpio_init.Mode = GPIO_MODE_INPUT;
     gpio_init.Pull = GPIO_PULLDOWN;
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].nreset.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].nreset.port, &gpio_init);
 
     if (g_cur_swd_dut == SWD_DUT0)
     {
@@ -252,10 +260,10 @@ __STATIC_INLINE void PORT_OFF(void)
     };
 
     gpio_init.Pin = g_swd_dut_configs[g_cur_swd_dut].swclk.pin;
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].swclk.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].swclk.port, &gpio_init);
 
     gpio_init.Pin = g_swd_dut_configs[g_cur_swd_dut].swdio.pin;
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].swclk.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].swclk.port, &gpio_init);
 
     HAL_GPIO_WritePin(g_swd_dut_configs[g_cur_swd_dut].swd_en_buf.port,
                       g_swd_dut_configs[g_cur_swd_dut].swd_en_buf.pin,
@@ -343,7 +351,7 @@ __STATIC_FORCEINLINE void PIN_SWDIO_OUT_ENABLE(void)
         .Mode = GPIO_MODE_OUTPUT_PP,
         .Speed = GPIO_SPEED_FREQ_VERY_HIGH,
     };
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].swdio.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].swdio.port, &gpio_init);
     g_swd_dut_configs[g_cur_swd_dut].swdio.port->BSRR = (g_swd_dut_configs[g_cur_swd_dut].swdio.pin << 16);
 }
 
@@ -359,7 +367,7 @@ __STATIC_FORCEINLINE void PIN_SWDIO_OUT_DISABLE(void)
         .Mode = GPIO_MODE_INPUT,
         .Pull = GPIO_PULLUP,
     };
-    HAL_GPIO_Init(g_swd_dut_configs[g_cur_swd_dut].swdio.port, &gpio_init);
+    HAL_GPIO_Init_Optimized(g_swd_dut_configs[g_cur_swd_dut].swdio.port, &gpio_init);
     g_swd_dut_configs[g_cur_swd_dut].swdio.port->BSRR = g_swd_dut_configs[g_cur_swd_dut].swdio.pin;
 }
 
@@ -555,7 +563,7 @@ __STATIC_INLINE void DAP_SETUP(void)
 
     PORT_SWD_SETUP();
 
-    HAL_GPIO_Init(CONNECTED_LED_PORT, &gpio_init);
+    HAL_GPIO_Init_Optimized(CONNECTED_LED_PORT, &gpio_init);
     HAL_GPIO_WritePin(CONNECTED_LED_PORT, CONNECTED_LED_PIN, GPIO_PIN_SET);
 }
 
