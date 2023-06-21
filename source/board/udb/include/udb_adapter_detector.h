@@ -10,7 +10,7 @@ typedef enum
     ADAPTER_UDB_6_FLEX      = 2,
     ADAPTER_UDB_17_FLEX     = 3,
     ADAPTER_UDB_12_FLEX     = 4,
-    ADAPTER_TYPE_5          = 5,
+    ADAPTER_JOKER_FLEX_V2   = 5,
     ADAPTER_TYPE_6          = 6,
     ADAPTER_TYPE_7          = 7,
     ADAPTER_TYPE_8          = 8,

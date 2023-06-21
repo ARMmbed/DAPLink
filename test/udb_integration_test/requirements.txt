@@ -1,2 +1,3 @@
 pyOCD==0.34.*
 pexpect
+pyserial

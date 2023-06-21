@@ -43,7 +43,6 @@ enum {
     HW_VERSION_PIN_1,
     HW_VERSION_PIN_2,
     HW_VERSION_PIN_3,
-    HW_VERSION_PIN_4,
     HW_VERSION_PIN_COUNT,
 };
 
@@ -82,20 +81,15 @@ static const hw_version_pin_type_t s_hw_version_pins[HW_VERSION_PIN_COUNT] =
     },
     [HW_VERSION_PIN_1] =
     {
-        .port = GPIOD,
-        .pin  = GPIO_PIN_7,
-    },
-    [HW_VERSION_PIN_2] =
-    {
         .port = GPIOB,
         .pin  = GPIO_PIN_2,
     },
-    [HW_VERSION_PIN_3] =
+    [HW_VERSION_PIN_2] =
     {
         .port = GPIOD,
         .pin  = GPIO_PIN_8,
     },
-    [HW_VERSION_PIN_4] =
+    [HW_VERSION_PIN_3] =
     {
         .port = GPIOD,
         .pin  = GPIO_PIN_5,
