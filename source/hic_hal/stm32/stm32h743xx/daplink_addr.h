@@ -61,6 +61,8 @@
 #else
 #define DAPLINK_ROM_SIZE                0x00080000 // has to be a multiple of the sector size, only bank 1 is used
 
+#define DAPLINK_ROM_UDB_BL_VERSION_SIZE 0x00000000
+
 #define DAPLINK_ROM_IF_START            0x08020000
 #define DAPLINK_ROM_IF_SIZE             0x00040000 // 2 sectors
 
