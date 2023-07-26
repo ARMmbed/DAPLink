@@ -52,6 +52,7 @@ PROJECT_RELEASE_INFO = [
     ("k20dx_frdmkl27z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl28z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
+    ("k20dx_twrkv58f220m_if",                       False,      0x8000,     "bin"       ),
     ("k20dx_frdmkl43z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl82z_if",                          True,       0x5000,     "bin"       ),
@@ -65,6 +66,7 @@ PROJECT_RELEASE_INFO = [
     ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
     ('k20dx_ep_kairos_if',                          True,       0x0000,     "bin"       ),
     ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
+    ("k26f_frdmk32l3a6_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
@@ -160,6 +162,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0230,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x0231,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
     (   0x0236,     VENDOR_TO_FAMILY('NXP', 0),         'lpc4322_lpc55s69xpresso_if',               'lpc4322_bl',       'LPCXpresso55S69'                       ),
+    (   0x0237,     VENDOR_TO_FAMILY('NXP', 5),         'k26f_frdmk32l3a6_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32L3A6' when mbed-os supports this
     (   0x0240,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
     (   0x0244,     VENDOR_TO_FAMILY('NXP', 3),         'lpc4322_mimxrt1170_evk_qspi_if',           'lpc4322_bl',       'MIMXRT1170'                            ),
     (   0x0250,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmkw24d_if',                       'k20dx_bl',         'FRDM-KW24D512'                         ),
@@ -167,6 +170,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0261,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
     (   0x0262,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
     (   0x0311,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
+    (   0x0330,     VENDOR_TO_FAMILY('NXP', 7),         'k20dx_twrkv58f220m_if',                    'k20dx_bl',         None                                    ),
     (   0x0350,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
     (   0x0360,     VENDOR_TO_FAMILY('NXP', 1),         'lpc4322_hani_iot_if',                      'lpc4322_bl',       'HANI-IOT'                              ),
     (   0x0409,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32630fthr_if',                 'max32625_bl',      'MAX32630'                              ),
