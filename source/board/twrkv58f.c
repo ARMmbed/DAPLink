@@ -23,9 +23,14 @@
 #include "target_family.h"
 
 const board_info_t g_board_info = {
-    .info_version = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0330",
     .family_id = kNXP_KinetisV_FamilyID,
     .flags = kEnablePageErase,
+    .daplink_url_name =   "PRODINFOHTM",
+    .daplink_drive_name = "KV58F220M",
+    .daplink_target_url = "http://www.nxp.com/twr-kv58f220m",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "TWR-KV58F220M",
 };

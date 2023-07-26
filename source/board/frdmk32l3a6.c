@@ -23,7 +23,7 @@
 #include "target_family.h"
 
 const board_info_t g_board_info = {
-    .info_version = 0x0,
+    .info_version = kBoardInfoVersion,
     .board_id = "0237",
     .family_id = kNXP_KinetisK32_FamilyID,
     .flags = kEnablePageErase,
@@ -31,4 +31,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = "K32L3A6",
     .daplink_target_url = "http://www.nxp.com/frdm-k32l3a6",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-K32L3A6",
 };
