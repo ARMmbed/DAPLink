@@ -31,4 +31,6 @@ const board_info_t g_board_info = {
     .daplink_drive_name = "K32W042",
     .daplink_target_url = "http://www.nxp.com/frdm-k32w042",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-K32W042",
 };

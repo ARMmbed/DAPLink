@@ -1,6 +1,6 @@
 /**
  * @file    target.c
- * @brief   Target information for the k32w042
+ * @brief   Target information for the k32l3a6
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -26,6 +26,7 @@
 
 // target information
 target_cfg_t target_device = {
+    .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
     .flash_regions[0].start         = 0,
@@ -38,4 +39,6 @@ target_cfg_t target_device = {
     .flash_regions[1].flash_algo    = (program_target_t *) &secondary_flash,
     .ram_regions[0].start           = 0x20000000, // M4 DTCM
     .ram_regions[0].end             = 0x20030000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "K32L3A60VPJ1A",
 };
