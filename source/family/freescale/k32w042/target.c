@@ -33,6 +33,10 @@ target_cfg_t target_device = {
     .flash_regions[0].end           = KB(1024),
     .flash_regions[0].flags         = kRegionIsDefault,
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
+	.flash_regions[1].start         = flash_m0p_start,
+    .flash_regions[1].end           = flash_m0p_start + flash_m0p_size,
+    .flash_regions[1].flags         = 0,
+    .flash_regions[1].flash_algo    = (program_target_t *) &m0p_flash,
     .ram_regions[0].start           = 0x20000000, // M4 DTCM
     .ram_regions[0].end             = 0x20030000,
 };
