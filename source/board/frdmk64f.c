@@ -28,6 +28,9 @@ const board_info_t g_board_info = {
     .family_id = kNXP_KinetisK_FamilyID,
     .flags = kEnablePageErase,
     .target_cfg = &target_device,
+    .daplink_url_name =   "PRODINFOHTM",
+    .daplink_drive_name = "FRDM-K64FD",
+    .daplink_target_url = "http://www.nxp.com/frdm-k64f",
     .board_vendor = "NXP",
     .board_name = "FRDM-K64F",
 };
