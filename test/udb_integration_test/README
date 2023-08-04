@@ -1,0 +1,12 @@
+## How to run the tests?
+All test are stadalone with no additional hardware setup required. Run these quick tests before committing changes.
+
+Setup using: `python3 -m pip install -r "{path_to_test_folder}/requirements.txt"`.
+Then run: `python udb_test_main.py --test_bin_path {path-to-binary-running-on-device-that-you-want-test} --dummy_bin_path {path-to-binary-that-has-a-different-version-from-the-test-image} --serial_port_path {path-to-serial-port}`
+Example with full paths: `python source/hic_hal/stm32/stm32h743ii/extended_features/test/udb_test_main.py --test_bin_path ~/Downloads/test_0.12_local_stm32h743ii_udb_if_crc.bin --dummy_bin_path ~/Downloads/old_0.11_udb_stm32h743ii_if_crc.bin --serial_port_path /dev/serial/by-id/usb-Arm_DAPLink*-if04`
+You can additionally add -d for detailed logs and --run-all to run tests that require special attention.
+
+## How to add new tests?
+The test suite uses the standard python unittest library with the same standards. Add your tests to the test/udb_integration_test/tests folder. Each test needs to extend the TestCase class or a subclass of it. You can use any of the udb devices that are implemented to make it easier to talk to UDB through DAP, serial or the file system.
+
+Before submitting your changes run mypy on the tests for type checking. Some libaries might have errors, but the test suite should have none.

@@ -29,16 +29,36 @@ extern void USBD_CDC_ACM_Reset_Event(void);
 
 extern void USBD_CDC_ACM_SOF_Event(void);
 
-extern void USBD_CDC_ACM_EP_INTIN_Event(U32 event);
-extern void USBD_CDC_ACM_EP_BULKIN_Event(U32 event);
-extern void USBD_CDC_ACM_EP_BULKOUT_Event(U32 event);
-extern void USBD_CDC_ACM_EP_BULK_Event(U32 event);
+extern void USBD_CDC_ACM_1_EP_INTIN_Event(U32 event);
+extern void USBD_CDC_ACM_1_EP_BULKIN_Event(U32 event);
+extern void USBD_CDC_ACM_1_EP_BULKOUT_Event(U32 event);
+extern void USBD_CDC_ACM_1_EP_BULK_Event(U32 event);
+
+extern void USBD_CDC_ACM_2_EP_INTIN_Event(U32 event);
+extern void USBD_CDC_ACM_2_EP_BULKIN_Event(U32 event);
+extern void USBD_CDC_ACM_2_EP_BULKOUT_Event(U32 event);
+extern void USBD_CDC_ACM_2_EP_BULK_Event(U32 event);
+
+extern void USBD_CDC_ACM_3_EP_INTIN_Event(U32 event);
+extern void USBD_CDC_ACM_3_EP_BULKIN_Event(U32 event);
+extern void USBD_CDC_ACM_3_EP_BULKOUT_Event(U32 event);
+extern void USBD_CDC_ACM_3_EP_BULK_Event(U32 event);
 
 #ifdef __RTX
-extern void USBD_RTX_CDC_ACM_EP_INTIN_Event(void);
-extern void USBD_RTX_CDC_ACM_EP_BULKIN_Event(void);
-extern void USBD_RTX_CDC_ACM_EP_BULKOUT_Event(void);
-extern void USBD_RTX_CDC_ACM_EP_BULK_Event(void);
+extern void USBD_RTX_CDC_ACM_1_EP_INTIN_Event(void);
+extern void USBD_RTX_CDC_ACM_1_EP_BULKIN_Event(void);
+extern void USBD_RTX_CDC_ACM_1_EP_BULKOUT_Event(void);
+extern void USBD_RTX_CDC_ACM_1_EP_BULK_Event(void);
+
+extern void USBD_RTX_CDC_ACM_2_EP_INTIN_Event(void);
+extern void USBD_RTX_CDC_ACM_2_EP_BULKIN_Event(void);
+extern void USBD_RTX_CDC_ACM_2_EP_BULKOUT_Event(void);
+extern void USBD_RTX_CDC_ACM_2_EP_BULK_Event(void);
+
+extern void USBD_RTX_CDC_ACM_3_EP_INTIN_Event(void);
+extern void USBD_RTX_CDC_ACM_3_EP_BULKIN_Event(void);
+extern void USBD_RTX_CDC_ACM_3_EP_BULKOUT_Event(void);
+extern void USBD_RTX_CDC_ACM_3_EP_BULK_Event(void);
 #endif
 
 #endif  /* __USBD_CDC_ACM_H__ */

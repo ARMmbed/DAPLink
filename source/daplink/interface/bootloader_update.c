@@ -59,6 +59,7 @@ static bool interface_image_valid()
     }
 
     computed_crc = info_get_crc_interface();
+
     return computed_crc == stored_crc;
 }
 

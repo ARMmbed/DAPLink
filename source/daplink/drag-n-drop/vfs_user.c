@@ -100,7 +100,12 @@ static const magic_file_info_t s_magic_file_info[] = {
         { "PAGE_OFFACT", kChipEraseActionFile       },
     };
 
-static char assert_buf[64 + 1];
+#ifndef ASSERT_BUF_SIZE
+#define ASSERT_BUF_SIZE   (64 + 1)
+#endif
+
+static char assert_buf[ASSERT_BUF_SIZE];
+
 static uint16_t assert_line;
 static assert_source_t assert_source;
 static uint32_t remount_count;

@@ -47,7 +47,7 @@ uint32_t daplink_debug(uint8_t *buf, uint32_t size)
     uint32_t total_free;
     uint32_t write_free;
     uint32_t error_len = strlen(error_msg);
-    total_free = USBD_CDC_ACM_DataFree();
+    total_free = USBD_CDC_ACM_DataFree(USB_CDC_ACM_NUM_1_USB2UART);
 
     if (total_free < error_len) {
         // No space
@@ -57,10 +57,10 @@ uint32_t daplink_debug(uint8_t *buf, uint32_t size)
     // Size available for writing
     write_free = total_free - error_len;
     size = MIN(write_free, size);
-    USBD_CDC_ACM_DataSend(buf, size);
+    USBD_CDC_ACM_DataSend(USB_CDC_ACM_NUM_1_USB2UART, buf, size);
 
     if (write_free == size) {
-        USBD_CDC_ACM_DataSend((uint8_t *)error_msg, error_len);
+        USBD_CDC_ACM_DataSend(USB_CDC_ACM_NUM_1_USB2UART, (uint8_t *)error_msg, error_len);
     }
 
     return size;

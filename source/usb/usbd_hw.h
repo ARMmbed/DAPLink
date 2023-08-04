@@ -22,7 +22,6 @@
 #ifndef __USBD_HW_H__
 #define __USBD_HW_H__
 
-
 /* USB Hardware Functions */
 extern void USBD_Init(void);
 extern void USBD_Connect(BOOL con);
