@@ -13,17 +13,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        gcc: ['10.3-2021.10']
 
     steps:
-    - name: Cache Embedded Arm Toolchain
-      id:   cache-arm-gcc
-      uses: actions/cache@v2
-      env:
-        cache-name: arm-gcc-10.3-2021-07
+    - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
       with:
-        path: ${{ runner.temp }}/arm-gcc
-        key:  ${{ runner.os }}-${{ env.cache-name }}
-        restore-keys: ${{ runner.os }}-${{ env.cache-name }}
+        release: ${{ matrix.gcc }}
+        path-env-var: ARM_NONE_EABI_GCC_PATH
 
     - name: Cache Python modules
       id: cache-python
@@ -42,15 +41,6 @@ jobs:
     - name: Install Python module
       run:  |
         pip3 install --user -r requirements.txt
-
-    - name: Install Embedded Arm Toolchain
-      if:   steps.cache-arm-gcc.outputs.cache-hit != 'true'
-      run:  |
-        curl -O -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2
-        md5sum gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2
-        echo Installing  in ${{ runner.temp }}/arm-gcc
-        mkdir -p ${{ runner.temp }}/arm-gcc
-        tar jvxf gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 -C ${{ runner.temp }}/arm-gcc --strip-components 1
 
     - name: Install dependencies
       run:  |
