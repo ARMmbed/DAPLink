@@ -81,7 +81,7 @@ jobs:
         cp projectfiles/make_gcc_arm/*_bl/build/*_crc.{bin,hex} bootloaders
 
     - name: Upload test artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: firmware-dev-${{github.run_number}}
         path: |
