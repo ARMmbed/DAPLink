@@ -45,30 +45,33 @@ jobs:
     - name: Install dependencies
       run:  |
         sudo apt install -y ccache ninja-build
-        export PATH=/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH
-        for i in ${{ runner.temp }}/arm-gcc/bin/* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
-        ccache --set-config=cache_dir="$GITHUB_WORKSPACE"
-        ccache --set-config=cache_dir="$GITHUB_WORKSPACE/.ccache"
-        ccache --set-config=max_size=2Gi
-        ccache -z -s
+        export PATH="/usr/lib/ccache:$ARM_NONE_EABI_GCC_PATH:/home/runner/.local/bin:$PATH"
+        for i in "$ARM_NONE_EABI_GCC_PATH/"* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
         arm-none-eabi-gcc -v | tee log.txt
-        (git status; git log -1 )>> log.txt
+        (git status; git log -1)>> log.txt
 
     - name: Cache CCache
       id:   ccache
       uses: actions/cache@v3
       with:
         path: .ccache
-        key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
-        restore-keys: ${{ runner.os }}-ccache-
+        key: ${{ runner.os }}-gcc-${{ matrix.gcc }}-${{ hashFiles('log.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-gcc-${{ matrix.gcc }}-
+
+    - name: Configure CCache
+      run:  |
+        ccache --set-config=cache_dir="$GITHUB_WORKSPACE/.ccache"
+        ccache --set-config=max_size=2Gi
+        ccache -z -s
 
     - name: Compile
       run:  |
-        export PATH="/usr/lib/ccache:${{ runner.temp }}/arm-gcc/bin/:/home/runner/.local/bin:$PATH"
+        export PATH="/usr/lib/ccache:$ARM_NONE_EABI_GCC_PATH:/home/runner/.local/bin:$PATH"
         python tools/progen_compile.py --release --parallel -v
-        (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
         mkdir bootloaders
         cp projectfiles/make_gcc_arm/*_bl/build/*_crc.{bin,hex} bootloaders
+        (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
 
     - name: Upload test artifacts
       uses: actions/upload-artifact@v3
