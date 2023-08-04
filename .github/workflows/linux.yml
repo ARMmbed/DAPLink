@@ -26,7 +26,8 @@ jobs:
         restore-keys: ${{ runner.os }}-${{ env.cache-name }}
 
     - name: Cache Python modules
-      uses: actions/cache@v2
+      id: cache-python
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -65,7 +66,7 @@ jobs:
 
     - name: Cache CCache
       id:   ccache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: .ccache
         key: ${{ runner.os }}-ccache-${{ hashFiles('log.txt') }}
