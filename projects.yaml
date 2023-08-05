@@ -318,14 +318,18 @@ projects:
         - *module_if
         - *module_hic_k20dx
         - records/board/twrkl28z72m.yaml
+    k20dx_twrkv58f220m_if:
+        - *module_if
+        - *module_hic_k20dx
+        - records/board/twrkv58f220m.yaml
     k20dx_xdot_l151_if:
         - *module_if
         - *module_hic_k20dx
         - records/board/xDot-L151.yaml
-    k26f_frdmk32w042_if:
+    k26f_frdmk32l3a6_if:
         - *module_if
         - *module_hic_k26f
-        - records/board/frdmk32w042.yaml
+        - records/board/frdmk32l3a6.yaml
     kl26z_artemis_dk_if:
         - *module_if
         - *module_hic_kl26z

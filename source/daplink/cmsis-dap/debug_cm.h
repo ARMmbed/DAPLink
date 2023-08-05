@@ -94,6 +94,7 @@
 #define CSW_MSTRCORE   0x00000000  // Master Type: Core
 #define CSW_MSTRDBG    0x20000000  // Master Type: Debug
 #define CSW_RESERVED   0x01000000  // Reserved Value
+#define CSW_SPROT      0x40000000  // SProt
 
 // Core Debug Register Address Offsets
 #define DBG_OFS        0x0DF0      // Debug Register Offset inside NVIC

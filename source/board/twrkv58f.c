@@ -1,6 +1,6 @@
 /**
- * @file    frdmk64f.c
- * @brief   board ID for the NXP FRDM-K64F board
+ * @file    twrkv58f.c
+ * @brief   board ID for the NXP TWR-KV58F220M board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
@@ -24,13 +24,13 @@
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0240",
-    .family_id = kNXP_KinetisK_FamilyID,
+    .board_id = "0330",
+    .family_id = kNXP_KinetisV_FamilyID,
     .flags = kEnablePageErase,
-    .target_cfg = &target_device,
     .daplink_url_name =   "PRODINFOHTM",
-    .daplink_drive_name = "FRDM-K64FD",
-    .daplink_target_url = "http://www.nxp.com/frdm-k64f",
+    .daplink_drive_name = "KV58F220M",
+    .daplink_target_url = "http://www.nxp.com/twr-kv58f220m",
+    .target_cfg = &target_device,
     .board_vendor = "NXP",
-    .board_name = "FRDM-K64F",
+    .board_name = "TWR-KV58F220M",
 };

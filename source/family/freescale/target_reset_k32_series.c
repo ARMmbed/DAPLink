@@ -141,8 +141,8 @@ uint8_t target_unlock_sequence(void)
     return 1;
 }
 
-const target_family_descriptor_t g_nxp_kinetis_k32w_series = {
-    .family_id = kNXP_KinetisK32W_FamilyID,
+const target_family_descriptor_t g_nxp_kinetis_k32_series = {
+    .family_id = kNXP_KinetisK32_FamilyID,
     .default_reset_type = kHardwareReset,
     .target_before_init_debug = target_before_init_debug,
     .target_unlock_sequence = target_unlock_sequence,

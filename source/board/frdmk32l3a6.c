@@ -1,6 +1,6 @@
 /**
- * @file    frdmk32w042.c
- * @brief   board ID for the NXP FRDM-K32W042 board
+ * @file    frdmk32l3a6.c
+ * @brief   board ID for the NXP FRDM-K32L3A6 board
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
@@ -24,11 +24,13 @@
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0225",
-    .family_id = kNXP_KinetisK32W_FamilyID,
+    .board_id = "0237",
+    .family_id = kNXP_KinetisK32_FamilyID,
     .flags = kEnablePageErase,
     .daplink_url_name =   "PRODINFOHTM",
-    .daplink_drive_name = "K32W042",
-    .daplink_target_url = "http://www.nxp.com/frdm-k32w042",
+    .daplink_drive_name = "K32L3A6",
+    .daplink_target_url = "http://www.nxp.com/frdm-k32l3a6",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-K32L3A6",
 };

@@ -1,9 +1,9 @@
 /**
  * @file    target.c
- * @brief   Target information for the k32w042
+ * @brief   Target information for the KV58F
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -29,10 +29,12 @@ target_cfg_t target_device = {
     .version                        = kTargetConfigVersion,
     .sectors_info                   = sectors_info,
     .sector_info_length             = (sizeof(sectors_info))/(sizeof(sector_info_t)),
-    .flash_regions[0].start         = 0,
-    .flash_regions[0].end           = KB(1024),
+    .flash_regions[0].start         = 0x10000000,
+    .flash_regions[0].end           = 0x10100000,
     .flash_regions[0].flags         = kRegionIsDefault,
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
-    .ram_regions[0].start           = 0x20000000, // M4 DTCM
-    .ram_regions[0].end             = 0x20030000,
+    .ram_regions[0].start           = 0x20000000,
+    .ram_regions[0].end             = 0x20002000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "MKV58F1M0VLL24",
 };
