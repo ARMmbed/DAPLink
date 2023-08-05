@@ -1,6 +1,6 @@
-name: Build DAPLink (Linux)
+name: Build DAPLink PR (Linux)
 on:
-  push:
+  pull_request:
     branches:
       - main
       - develop
@@ -41,8 +41,6 @@ jobs:
     - name: Install dependencies
       run:  |
         sudo apt install -y ccache ninja-build
-        export PATH="/usr/lib/ccache:$ARM_NONE_EABI_GCC_PATH:/home/runner/.local/bin:$PATH"
-        for i in "$ARM_NONE_EABI_GCC_PATH/"* ; do sudo ln -s /usr/bin/ccache /usr/lib/ccache/$(basename $i); done
         arm-none-eabi-gcc -v | tee log.txt
         (git status; git log -1)>> log.txt
 
@@ -59,21 +57,12 @@ jobs:
       run:  |
         ccache --set-config=cache_dir="$GITHUB_WORKSPACE/.ccache"
         ccache --set-config=max_size=2Gi
-        ccache -z -s
+        ccache -s -z
 
     - name: Compile
       run:  |
         export PATH="/usr/lib/ccache:$ARM_NONE_EABI_GCC_PATH:/home/runner/.local/bin:$PATH"
-        python tools/progen_compile.py --release --parallel -v
-        mkdir bootloaders
-        cp projectfiles/make_gcc_arm/*_bl/build/*_crc.{bin,hex} bootloaders
-        (ls -lR firmware_*; ccache -s; arm-none-eabi-gcc -v) | tee log.txt
-
-    - name: Upload test artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: firmware-dev-${{github.run_number}}
-        path: |
-          bootloaders/*
-          firmware*/*
-          !firmware*/*.zip
+        progen generate -t cmake_gcc_arm global_workspace
+        cmake -DCMAKE_C_COMPILER_LAUNCHER=ccache -GNinja -S projectfiles/cmake_gcc_arm -B projectfiles/cmake_gcc_arm
+        ninja -C projectfiles/cmake_gcc_arm
+        ccache -s
