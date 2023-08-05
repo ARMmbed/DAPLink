@@ -30,6 +30,7 @@ tool_specific:
                 - -Wl,-fatal-warnings
                 - -Wl,--gc-sections
                 - -Wl,--no-wchar-size-warning
+                - -Wl,--no-warn-rwx-segment
                 - -Wl,--print-memory-usage
             pre_build_script:
                 - tools/pre_build_script.py
