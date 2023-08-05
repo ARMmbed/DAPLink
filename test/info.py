@@ -65,7 +65,6 @@ PROJECT_RELEASE_INFO = [
     ("lpc4322_mimxrt1170_evk_qspi_if",              False,      0x10000,    "bin"       ),
     ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
     ('k20dx_ep_kairos_if',                          True,       0x0000,     "bin"       ),
-    ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
     ("k26f_frdmk32l3a6_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
@@ -154,7 +153,6 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0218,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x0220,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
     (   0x0224,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F'
-    (   0x0225,     VENDOR_TO_FAMILY('NXP', 5),         'k26f_frdmk32w042_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32W042'
     (   0x0226,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1020_evk_qspi_if',             'k20dx_bl',         'MIMXRT1020'                            ),
     (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         'MIMXRT1050'                            ),
     (   0x0228,     VENDOR_TO_FAMILY('NXP', 4),         'k20dx_rapid_iot_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'Rapid-IoT'
@@ -290,7 +288,6 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0213,  # FRDM-KE15Z
     0x0216,  # HVP-KE18F
     0x0217,  # FRDM-K82F
-    0x0225,  # FRDM-K32W042
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
     0x0218,  # FRDM-KL82Z
@@ -299,7 +296,6 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
 
 BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0214,  # HEXIWEAR
-    0x0225,  # FRDM-K32W042
     0x0226,  # MIMXRT1020 EVK
     0x0227,  # MIMXRT1050 EVK
     0x0228,  # k20dx_rapid_iot_if

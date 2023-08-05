@@ -330,10 +330,6 @@ projects:
         - *module_if
         - *module_hic_k26f
         - records/board/frdmk32l3a6.yaml
-    k26f_frdmk32w042_if:
-        - *module_if
-        - *module_hic_k26f
-        - records/board/frdmk32w042.yaml
     kl26z_artemis_dk_if:
         - *module_if
         - *module_hic_kl26z
