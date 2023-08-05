@@ -1,9 +1,9 @@
 /**
- * @file    sdk_stub.c
+ * @file    stubs.c
  * @brief
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2017-2017, ARM Limited, All Rights Reserved
+ * Copyright (c) 2017, 2023, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -25,3 +25,21 @@ __WEAK void sdk_init()
 {
     // Do nothing
 }
+
+/*
+ * Work-around for a link-time issue with Arm GNU Toolchain
+ * in version 11.3 and later.
+ */
+#ifdef __GNUC__
+#if ((__GNUC__ > 11) || \
+     ((__GNUC__ == 11) && (__GNUC_MINOR__ >= 3)))
+__WEAK void _close() {}
+__WEAK void _fstat() {}
+__WEAK void _getpid() {}
+__WEAK void _isatty() {}
+__WEAK void _kill() {}
+__WEAK void _lseek() {}
+__WEAK void _read() {}
+__WEAK void _write() {}
+#endif
+#endif
