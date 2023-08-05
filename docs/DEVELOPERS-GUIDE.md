@@ -6,10 +6,10 @@ DAPLink sources are compiled using `progen` (from [project-generator](https://gi
 
 Install the necessary tools listed below. Skip any step where a compatible tool already exists.
 
-* Install [Python 3](https://www.python.org/downloads/) . Add to PATH.
-* Install [Git](https://git-scm.com/downloads) . Add to PATH.
+* Install [Python 3](https://www.python.org/downloads/). Add to PATH.
+* Install [Git](https://git-scm.com/downloads). Add to PATH.
 * Install a compiler:
-    * [Arm GNU Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain) for AArch32 bare-metal target. This compiler will be identified as `gcc_arm`.
+    * [Arm GNU Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain) for AArch32 bare-metal targets. This compiler will be identified as `gcc_arm`. It is recommended to use version `12.2.Rel1` or later. Support for building with versions 11.2 and earlier of GCC (GNU Arm Embedded Toolchain / `arm-none-eabi-gcc`) was some removed in [#1043](https://github.com/ARMmbed/DAPLink/pull/1043) because of incompatibilities.
     * [Arm Compiler 6](https://developer.arm.com/tools-and-software/embedded/arm-compiler) . This compiler will be identified as `armclang`. Only supported on Linux and Windows.
     * [Keil MDK](https://developer.arm.com/tools-and-software/embedded/keil-mdk) or [Arm Compiler 5](https://developer.arm.com/tools-and-software/embedded/arm-compiler/downloads/legacy-compilers#arm-compiler-5). This compiler will be identified as `armcc`. Only supported on Linux and Windows.
 * Install `make` (tested with [GNU Make](https://www.gnu.org/software/make)). [CMake](https://cmake.org) can alternatively be used in conjunction with different implementations of `make` as well as [ninja](https://ninja-build.org).
