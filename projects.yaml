@@ -518,6 +518,10 @@ projects:
         - *module_if
         - *module_hic_max32620
         - records/board/max32625mbed.yaml
+    max32625_max32625pico_if:
+        - *module_if
+        - *module_hic_max32625
+        - records/board/max32625pico.yaml
     max32625_max32620fthr_if:
         - *module_if
         - *module_hic_max32625
