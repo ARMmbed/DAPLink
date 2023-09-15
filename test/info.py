@@ -1,6 +1,7 @@
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+# Portions Copyright (c) 2023 Analog Devices, Inc.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -92,6 +93,7 @@ PROJECT_RELEASE_INFO = [
     ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_eflash_if',                  False,      0x0000,     "bin"       ),
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max32625pico_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32660evsys_if',                   False,      0x0000,     "bin"       ),
@@ -173,6 +175,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0360,     VENDOR_TO_FAMILY('NXP', 6),         'lpc4322_hani_iot_if',                      'lpc4322_bl',       'HANI-IOT'                              ),
     (   0x0409,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32630fthr_if',                 'max32625_bl',      'MAX32630'                              ),
     (   0x0415,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
+    (   0x0416,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32625pico_if',                 'max32625_bl',      'MAX32625'                              ),
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
@@ -305,6 +308,7 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0311,  # K66F
     0x0409,  # MAX32630FTHR
     0x0415,  # MAX32625MBED
+    0x0416,  # MAX32625PICO
     0x0418,  # MAX32620FTHR
     0x0421,  # MAX32660EVSYS
     0x0422,  # MAX32666FTHR
