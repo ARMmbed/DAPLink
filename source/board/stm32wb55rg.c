@@ -1,9 +1,9 @@
 /**
  * @file    stm32wb55rg.c
- * @brief   board ID for the STM32WB55 board
+ * @brief   board ID for the NUCLEO-WB55 board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2023, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -27,4 +27,6 @@ const board_info_t g_board_info = {
     .board_id = "0839",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,
+    .board_vendor = "STMicroelectronics",
+    .board_name = "NUCLEO-WB55",
 };

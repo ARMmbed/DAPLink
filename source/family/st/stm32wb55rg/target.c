@@ -31,8 +31,10 @@ target_cfg_t target_device = {
     .flash_regions[0].start         = 0x08000000,
     .flash_regions[0].end           = 0x08100000,
     .flash_regions[0].flags         = kRegionIsDefault,
-    .flash_regions[0].flash_algo    = (program_target_t *) &flash,    
+    .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x20000000,
     .ram_regions[0].end             = 0x20030000,
     .erase_reset                    = 1,
+    .target_vendor                  = "STMicroelectronics",
+    .target_part_number             = "STM32WB55RGVx",
 };
