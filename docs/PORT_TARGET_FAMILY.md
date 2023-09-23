@@ -7,7 +7,7 @@ Adding new target family support requires creating a flash algo blob and the imp
  * @brief   Target reset for the new target
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2023, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -70,7 +70,7 @@ const target_family_descriptor_t g_target_family = {
 
 The target family api is located in `source/target/target_family.h` and target_reset file can customize the function apis according to the family specification. Family id is a combination of vendor id and an incrementing id. There are predefined family id stubs that can be used for generic reset types; `kStub_HWReset_FamilyID`, `kStub_SWVectReset_FamilyID`, and `kStub_SWSysReset_FamilyID`.
 
-A flash algorithm blob is needed to program the target MCUs internal (or external) flash memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [FlashAlgo project.](https://github.com/pyocd/FlashAlgo). An example blob is shown below and would be added to `source/family/<mfg>/<targetname>/flash_blob.c`
+A flash algorithm blob is needed to program the target MCUs internal (or external) flash memory. This blob contains position independent functions for erasing, reading and writing to the flash controller. Flash algorithm blobs are created from the [FlashAlgo project.](https://github.com/pyocd/FlashAlgo). Use the `tools/generate_flash_algo.py` script to generate the `flash_blob.c` source file for the target (use the `--pack-path` if the flash algo originates from a CMSIS Pack). An example blob is shown below and would be added to `source/family/<mfg>/<targetname>/flash_blob.c`:
 
 ```c
 /**
@@ -78,7 +78,7 @@ A flash algorithm blob is needed to program the target MCUs internal (or externa
  * @brief   Flash algorithm for the new target MCU
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2023, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -144,7 +144,7 @@ The last required file is the target MCU description file `source/family/<mfg>/<
  * @brief   Target information for the target MCU
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2016, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2023, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -175,6 +175,8 @@ target_cfg_t target_device = {
     .flash_regions[0].flash_algo    = (program_target_t *) &flash,
     .ram_regions[0].start           = 0x1fff0000,
     .ram_regions[0].end             = 0x20030000,
+    .target_vendor                  = "NXP",
+    .target_part_number             = "MK66FN2M0VMD18",
 };
 ```
 
