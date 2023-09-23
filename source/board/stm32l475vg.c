@@ -1,9 +1,9 @@
 /**
- * @file    stm32f103rb.c
- * @brief   board ID for the STM32 NUCLEO-F103RB board
+ * @file    stm32l475vg.c
+ * @brief   board ID for the B-L475E-IOT01A board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2009-2023, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -26,6 +26,8 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0764",
     .family_id = kStub_HWReset_FamilyID,
-	.daplink_drive_name = 		"DIS_L4IOT  ",
+    .daplink_drive_name = "DIS_L4IOT  ",
     .target_cfg = &target_device,
+    .board_vendor = "STMicroelectronics",
+    .board_name = "B-L475E-IOT01A", // DISCO-L475VG-IOT01A
 };
