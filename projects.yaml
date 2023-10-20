@@ -565,18 +565,22 @@ projects:
         - *module_if
         - *module_hic_max32620
         - records/board/max32625mbed.yaml
-    max32625_max32625pico_if:
-        - *module_if
-        - *module_hic_max32625
-        - records/board/max32625pico.yaml
     max32625_max32620fthr_if:
         - *module_if
         - *module_hic_max32625
         - records/board/max32620fthr.yaml
+    max32625_max32625pico_if:
+        - *module_if
+        - *module_hic_max32625
+        - records/board/max32625pico.yaml
     max32625_max32630fthr_if:
         - *module_if
         - *module_hic_max32625
         - records/board/max32630fthr.yaml
+    max32625_max32650fthr_if:
+        - *module_if
+        - *module_hic_max32625
+        - records/board/max32650fthr.yaml
     max32625_max32660evsys_if:
         - *module_if
         - *module_hic_max32625
@@ -585,22 +589,18 @@ projects:
         - *module_if
         - *module_hic_max32625
         - records/board/max32666fthr.yaml
-    max32625_max78000fthr_if:
-        - *module_if
-        - *module_hic_max32625
-        - records/board/max78000fthr.yaml
     max32625_max32670evkit_if:
         - *module_if
         - *module_hic_max32625
         - records/board/max32670evkit.yaml
-    max32625_max32650fthr_if:
-        - *module_if
-        - *module_hic_max32625
-        - records/board/max32650fthr.yaml
     max32625_max32690evkit_if:
         - *module_if
         - *module_hic_max32625
         - records/board/max32690evkit.yaml
+    max32625_max78000fthr_if:
+        - *module_if
+        - *module_hic_max32625
+        - records/board/max78000fthr.yaml
     nrf52820_microbit_bl:
         - *module_bl
         - records/hic_hal/nrf52820.yaml
