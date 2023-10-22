@@ -494,6 +494,14 @@ projects:
         - *module_if
         - *module_hic_lpc55s69
         - records/board/mcu_link.yaml
+    lpc55s69_nm180410_bl:
+        - *module_bl
+        - records/hic_hal/lpc55s69.yaml
+        - records/board/lpc55s69_nm180410_bl.yaml
+    lpc55s69_nm180410_if:
+        - *module_if
+        - *module_hic_lpc55s69
+        - records/board/nm180410.yaml
     m48ssidae_numaker_iot_m263a_if:
         - *module_if
         - *module_hic_m48ssidae

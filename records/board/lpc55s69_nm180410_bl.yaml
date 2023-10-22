@@ -1,0 +1,7 @@
+common:
+    macros:
+        - USB_PROD_STR="NM180410 DAPLink Bootloader"
+    sources:
+        board:
+            - source/board/lpc55s69_bl.c
+            - source/board/nm180410_bl.c
