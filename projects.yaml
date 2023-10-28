@@ -71,6 +71,11 @@ module:
         - records/hic_hal/lpc4322.yaml
         - records/usb/usb-bulk.yaml
         - records/usb/usb-hid.yaml
+    hic_lpc5516: &module_hic_lpc5516
+        - records/rtos/rtos-cm33.yaml
+        - records/hic_hal/lpc5516.yaml
+        - records/usb/usb-bulk.yaml
+        - records/usb/usb-hid.yaml
     hic_lpc55s69: &module_hic_lpc55s69
         - records/rtos/rtos-cm33.yaml
         - records/hic_hal/lpc55s69.yaml
@@ -148,6 +153,10 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/family/all_family.yaml
+    lpc5516_bl:
+        - *module_bl
+        - records/hic_hal/lpc5516.yaml
+        - records/board/lpc5516_bl.yaml
     lpc55s69_bl:
         - *module_bl
         - records/hic_hal/lpc55s69.yaml
@@ -485,6 +494,14 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/mimxrt1170_evk_qspi.yaml
+    lpc5516_nm180410_bl:
+        - *module_bl
+        - records/hic_hal/lpc5516.yaml
+        - records/board/lpc5516_nm180410_bl.yaml
+    lpc5516_nm180410_if:
+        - *module_if
+        - *module_hic_lpc5516
+        - records/board/nm180410.yaml
     lpc55s69_mculink_bl:
         - *module_bl
         - records/hic_hal/lpc55s69.yaml
@@ -494,14 +511,6 @@ projects:
         - *module_if
         - *module_hic_lpc55s69
         - records/board/mcu_link.yaml
-    lpc55s69_nm180410_bl:
-        - *module_bl
-        - records/hic_hal/lpc55s69.yaml
-        - records/board/lpc55s69_nm180410_bl.yaml
-    lpc55s69_nm180410_if:
-        - *module_if
-        - *module_hic_lpc55s69
-        - records/board/nm180410.yaml
     m48ssidae_numaker_iot_m263a_if:
         - *module_if
         - *module_hic_m48ssidae
