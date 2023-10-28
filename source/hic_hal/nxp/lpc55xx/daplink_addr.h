@@ -19,20 +19,53 @@
 #ifndef DAPLINK_ADDR_H
 #define DAPLINK_ADDR_H
 
-// Flash layout:
+#if defined(CPU_LPC55S69JBD64_cm33_core0)
+
+// Flash layout for 640kB variants:
 //
 //  [ 0x0000_0000 - 0x0000_FFFF ]:  64 kB - bootloader
-//  [ 0x0001_0000 - 0x0003_81FF ]: 160 kB - interface
-//  [ 0x0003_8200 - 0x0003_85FF ]:   1 kB - persistent config (cfgrom)
+//  [ 0x0001_0000 - 0x0003_FBFF ]: 191 kB - interface
+//  [ 0x0003_FC00 - 0x0003_FFFF ]:   1 kB - persistent config (cfgrom)
 //
 // Notes:
 // 1. The interface does not extend to the end of flash because that makes the binary
 //    firmware image large and slow to program.
 // 2. Attempting to program flash starting at 0x96000 fails for some reason, even though
 //    the UM states that 630 kB is available for the user (0x9d800).
-// 3. For variants with only 256 kB of flash such as the LPC55S26 or LPC55S28, attempts
-//    to erase or program flash beyond 0x38600 (225kB) fails for unknown reason.  This is
-//    similar to the above (LPC55S69 for example) where the last 30kB is not usable.
+
+/* Device sizes */
+
+#define DAPLINK_ROM_START               0x00000000 // NS alias
+#define DAPLINK_ROM_SIZE                0x00040000 // 64 kB BL + 191 kB IF + 1 kB config
+
+#define DAPLINK_RAM_START               0x20000000 // NS alias
+#define DAPLINK_RAM_SIZE                0x00018000 // SRAM 0-1
+
+/* ROM sizes */
+
+#define DAPLINK_ROM_BL_START            0x00000000
+#define DAPLINK_ROM_BL_SIZE             0x00010000 // 64 kB bootloader
+
+#define DAPLINK_ROM_IF_START            0x00010000
+#define DAPLINK_ROM_IF_SIZE             0x0002FC00 // 191 kB interface
+
+#define DAPLINK_ROM_CONFIG_USER_START   0x0003FC00
+#define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000400 // 1 kB config
+
+#elif defined(CPU_LPC5516JBD64_cm33_core0)
+
+// Flash layout for 256kB variants:
+//
+//  [ 0x0000_0000 - 0x0000_FFFF ]:  64 kB - bootloader
+//  [ 0x0001_0000 - 0x0003_81FF ]: 160 kB - interface
+//  [ 0x0003_8200 - 0x0003_85FF ]:   1 kB - persistent config (cfgrom)
+//
+// Notes:
+// 1. According to AN12949 Chapter 3 Section 3.2: "special caution needs to be taken
+//    when you operate the last few pages near PFR.  Do not perform a sector erase
+//    (erase 32KB) of the last flash sector."
+// 2. Even if the PFR does not take up the entire sector, we cannot perform a sector
+//    erase.  This is the reason why DAPLINK_ROM_IF_SIZE is 160 kB instead of 190 kB.
 
 /* Device sizes */
 
@@ -52,6 +85,12 @@
 
 #define DAPLINK_ROM_CONFIG_USER_START   0x00038200
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000400 // 1 kB config
+
+#else
+
+#error "Missing LPC55xx varaint definition"
+
+#endif
 
 /* RAM sizes */
 
