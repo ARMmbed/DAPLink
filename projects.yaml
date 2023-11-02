@@ -71,9 +71,9 @@ module:
         - records/hic_hal/lpc4322.yaml
         - records/usb/usb-bulk.yaml
         - records/usb/usb-hid.yaml
-    hic_lpc5516: &module_hic_lpc5516
+    hic_lpc55s26: &module_hic_lpc55s26
         - records/rtos/rtos-cm33.yaml
-        - records/hic_hal/lpc5516.yaml
+        - records/hic_hal/lpc55s26.yaml
         - records/usb/usb-bulk.yaml
         - records/usb/usb-hid.yaml
     hic_lpc55s69: &module_hic_lpc55s69
@@ -153,10 +153,10 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/family/all_family.yaml
-    lpc5516_bl:
+    lpc55s26_bl:
         - *module_bl
-        - records/hic_hal/lpc5516.yaml
-        - records/board/lpc5516_bl.yaml
+        - records/hic_hal/lpc55s26.yaml
+        - records/board/lpc55s26_bl.yaml
     lpc55s69_bl:
         - *module_bl
         - records/hic_hal/lpc55s69.yaml
@@ -494,13 +494,13 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/mimxrt1170_evk_qspi.yaml
-    lpc5516_nm180410_bl:
+    lpc55s26_nm180410_bl:
         - *module_bl
-        - records/hic_hal/lpc5516.yaml
-        - records/board/lpc5516_nm180410_bl.yaml
-    lpc5516_nm180410_if:
+        - records/hic_hal/lpc55s26.yaml
+        - records/board/lpc55s26_nm180410_bl.yaml
+    lpc55s26_nm180410_if:
         - *module_if
-        - *module_hic_lpc5516
+        - *module_hic_lpc55s26
         - records/board/nm180410.yaml
     lpc55s69_mculink_bl:
         - *module_bl

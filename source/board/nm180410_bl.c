@@ -41,7 +41,12 @@ uint8_t gpio_get_reset_btn_no_fwrd(void)
 
     for (i = 0; i < 500000; i++)
     {
-        __asm volatile("nop");
+        // if the reset pin floats high, then we can 
+        // exit the loop early.
+        if (PIN_nRESET_IN())
+        {
+            return 0;
+        }
     }
 
     return PIN_nRESET_IN() ? 0 : 1;

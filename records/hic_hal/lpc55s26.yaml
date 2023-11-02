@@ -5,18 +5,18 @@ common:
         - Cortex-M33
     macros:
         - INTERFACE_LPC55XX
-        - CPU_LPC5516JBD64_cm33_core0
-        - DAPLINK_HIC_ID=0x4C509955  # DAPLINK_HIC_ID_LPC55XX
+        - CPU_LPC55S26JBD64
+        - DAPLINK_HIC_ID=0x4C504355  # DAPLINK_HIC_ID_LPC55XX
         - OS_CLOCK=96000000
     includes:
         - source/hic_hal/nxp/lpc55xx
         - source/hic_hal/nxp/lpc55xx/drivers
-        - source/hic_hal/nxp/lpc55xx/LPC5516
+        - source/hic_hal/nxp/lpc55xx/LPC55S26
     sources:
         hic_hal:
             - source/hic_hal/nxp/lpc55xx
             - source/hic_hal/nxp/lpc55xx/drivers
-            - source/hic_hal/nxp/lpc55xx/LPC5516
+            - source/hic_hal/nxp/lpc55xx/LPC55S26
 
 tool_specific:
     uvision:
@@ -35,7 +35,7 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc55xx/armcc
-                - source/hic_hal/nxp/lpc55xx/LPC5516/armcc/keil_lib_power_cm33_core0.lib
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power_cm33_core0.lib
     armcc:
         misc:
             ld_flags:
@@ -52,7 +52,7 @@ tool_specific:
         sources:
             hic_hal:
                 - source/hic_hal/nxp/lpc55xx/armcc
-                - source/hic_hal/nxp/lpc55xx/LPC5516/armcc/keil_lib_power_cm33_core0.lib
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power_cm33_core0.lib
     gcc_arm:
         misc:
             c_flags:
@@ -70,5 +70,5 @@ tool_specific:
             - source/hic_hal/nxp/lpc55xx/gcc
         sources:
             hic_hal:
-                - source/hic_hal/nxp/lpc55xx/gcc
-                - source/hic_hal/nxp/lpc55xx/LPC5516/gcc/libpower_hardabi.a
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/gcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/gcc/libpower_hardabi.a

@@ -52,7 +52,7 @@
 #define DAPLINK_ROM_CONFIG_USER_START   0x0003FC00
 #define DAPLINK_ROM_CONFIG_USER_SIZE    0x00000400 // 1 kB config
 
-#elif defined(CPU_LPC5516JBD64_cm33_core0)
+#elif defined(CPU_LPC55S26JBD64)
 
 // Flash layout for 256kB variants:
 //

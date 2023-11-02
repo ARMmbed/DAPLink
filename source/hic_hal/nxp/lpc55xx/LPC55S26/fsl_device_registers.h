@@ -15,26 +15,17 @@
  *
  * The CPU macro should be declared in the project or makefile.
  */
-#if (defined(CPU_LPC5516JBD100_cm33_core0) || defined(CPU_LPC5516JBD64_cm33_core0) || defined(CPU_LPC5516JEV98_cm33_core0))
+#if (defined(CPU_LPC55S26JBD100) || defined(CPU_LPC55S26JBD64) || defined(CPU_LPC55S26JEV98))
 
-#define LPC55S69_cm33_core0_SERIES
-
-/* CMSIS-style register definitions */
-#include "LPC55S69_cm33_core0.h"
-/* CPU specific feature definitions */
-#include "LPC55S69_cm33_core0_features.h"
-
-#elif (defined(CPU_LPC5516JBD100_cm33_core1) || defined(CPU_LPC5516JBD64_cm33_core1) || defined(CPU_LPC5516JEV98_cm33_core1))
-
-#define LPC55S69_cm33_core1_SERIES
+#define LPC55S26_SERIES
 
 /* CMSIS-style register definitions */
-#include "LPC55S69_cm33_core1.h"
+#include "LPC55S26.h"
 /* CPU specific feature definitions */
-#include "LPC55S69_cm33_core1_features.h"
+#include "LPC55S26_features.h"
 
 #else
-    #error "No valid CPU defined!"
+#error "No valid CPU defined!"
 #endif
 
 #endif /* __FSL_DEVICE_REGISTERS_H__ */
