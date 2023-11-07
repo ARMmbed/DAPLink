@@ -34,8 +34,8 @@ tool_specific:
             - projectfiles/uvision/lpc55xx_bl/build
         sources:
             hic_hal:
-                - source/hic_hal/nxp/lpc55xx/armcc
-                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power_cm33_core0.lib
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power.lib
     armcc:
         misc:
             ld_flags:
@@ -51,8 +51,8 @@ tool_specific:
             - projectfiles/make_armcc/lpc55xx_bl/build
         sources:
             hic_hal:
-                - source/hic_hal/nxp/lpc55xx/armcc
-                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power_cm33_core0.lib
+                - source/hic_hal/nxp/lpc55x/LPC55S26/armcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power.lib
     gcc_arm:
         misc:
             c_flags:
