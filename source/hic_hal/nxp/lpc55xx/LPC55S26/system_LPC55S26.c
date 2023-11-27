@@ -256,8 +256,8 @@ __attribute__ ((weak)) void SystemInit (void) {
     extern void(*const g_pfnVectors[]) (void);
     SCB->VTOR = (uint32_t) &g_pfnVectors;
 #else
-    extern void *__Vectors;
-    SCB->VTOR = (uint32_t) &__Vectors;
+    extern void *__isr_vector;
+    SCB->VTOR = (uint32_t) &__isr_vector;
 #endif
     SYSCON->TRACECLKDIV = 0;
 /* Optionally enable RAM banks that may be off by default at reset */

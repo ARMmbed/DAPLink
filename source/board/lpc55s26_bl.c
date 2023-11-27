@@ -1,6 +1,6 @@
 /**
- * @file    lpc5516_bl.c
- * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on the NXP LPC5516
+ * @file    lpc5526_bl.c
+ * @brief   board ID and meta-data for the hardware interface circuit (HIC) based on the NXP LPC5526
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2019-2020, Arm Limited, All Rights Reserved

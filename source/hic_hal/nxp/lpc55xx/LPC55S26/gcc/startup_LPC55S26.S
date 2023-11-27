@@ -21,8 +21,8 @@
 
     .section .isr_vector, "a"
     .align 2
-    .globl __Vectors
-__Vectors:
+    .globl __isr_vector
+__isr_vector:
     .long   __StackTop                                      /* Top of Stack */
     .long   Reset_Handler                                   /* Reset Handler */
     .long   NMI_Handler                                     /* NMI Handler*/
@@ -31,12 +31,12 @@ __Vectors:
     .long   BusFault_Handler                                /* Bus Fault Handler*/
     .long   UsageFault_Handler                              /* Usage Fault Handler*/
     .long   SecureFault_Handler                             /* Secure Fault Handler*/
-    .long   0                                               /* Reserved*/
-    .long   0                                               /* Reserved*/
-    .long   0                                               /* Reserved*/
+    .long   DAPLINK_BUILD_KEY                               /* DAPLINK: Build type (BL/IF)*/               
+    .long   DAPLINK_HIC_ID                                  /* DAPLINK: Compatibility*/             
+    .long   DAPLINK_VERSION                                 /* DAPLINK: Version*/            
     .long   SVC_Handler                                     /* SVCall Handler*/
     .long   DebugMon_Handler                                /* Debug Monitor Handler*/
-    .long   0                                               /* Reserved*/
+    .long   g_board_info                                    /* DAPLINK: Pointer to board/family/target info*/
     .long   PendSV_Handler                                  /* PendSV Handler*/
     .long   SysTick_Handler                                 /* SysTick Handler*/
 
@@ -102,7 +102,7 @@ __Vectors:
     .long   DMA1_IRQHandler  /* DMA1 interrupt */
     .long   FLEXCOMM8_IRQHandler  /* Flexcomm Interface 8 (SPI, , FLEXCOMM) */
 
-    .size   __Vectors, . - __Vectors
+    .size   __isr_vector, . - __isr_vector
 
     .text
     .thumb
@@ -117,7 +117,7 @@ Reset_Handler:
     cpsid   i               /* Mask interrupts */
     .equ    VTOR, 0xE000ED08
     ldr     r0, =VTOR
-    ldr     r1, =__Vectors
+    ldr     r1, =__isr_vector
     str     r1, [r0]
     ldr     r2, [r1]
     msr     msp, r2

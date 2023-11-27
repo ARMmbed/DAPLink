@@ -19,40 +19,6 @@ common:
             - source/hic_hal/nxp/lpc55xx/LPC55S26
 
 tool_specific:
-    uvision:
-        misc:
-            ld_flags:
-                - --predefine="-I../../../source/hic_hal/nxp/lpc55xx"
-            c_flags:
-                - --no_unaligned_access
-                - --diag_suppress=66 # disable warning about enums not fitting in signed 32-bit
-            cxx_flags:
-                - --no_unaligned_access
-            asm_flags:
-                - --no_unaligned_access
-        includes:
-            - projectfiles/uvision/lpc55xx_bl/build
-        sources:
-            hic_hal:
-                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc
-                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power.lib
-    armcc:
-        misc:
-            ld_flags:
-                - --predefine="-Isource/hic_hal/nxp/lpc55xx"
-            c_flags:
-                - --no_unaligned_access
-                - --diag_suppress=66 # disable warning about enums not fitting in signed 32-bit
-            cxx_flags:
-                - --no_unaligned_access
-            asm_flags:
-                - --no_unaligned_access
-        includes:
-            - projectfiles/make_armcc/lpc55xx_bl/build
-        sources:
-            hic_hal:
-                - source/hic_hal/nxp/lpc55x/LPC55S26/armcc
-                - source/hic_hal/nxp/lpc55xx/LPC55S26/armcc/keil_lib_power.lib
     gcc_arm:
         misc:
             c_flags:
