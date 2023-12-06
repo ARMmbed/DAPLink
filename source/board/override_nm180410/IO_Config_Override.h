@@ -25,7 +25,8 @@
 #include "daplink.h"
 
 // This GPIO configuration is only valid for the LPC55XX HIC
-COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC55XX);
+COMPILER_ASSERT((DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC55XX) ||
+                (DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC552X));
 
 // All pins are PIO0.
 #define PIN_PIO_PORT            (0U)
