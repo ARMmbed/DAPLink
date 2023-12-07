@@ -10,13 +10,13 @@ common:
         - OS_CLOCK=96000000
     includes:
         - source/hic_hal/nxp/lpc55xx
+        - source/hic_hal/nxp/lpc55xx/drivers
         - source/hic_hal/nxp/lpc55xx/LPC55S69
-        - source/hic_hal/nxp/lpc55xx/LPC55S69/drivers
     sources:
         hic_hal:
             - source/hic_hal/nxp/lpc55xx
+            - source/hic_hal/nxp/lpc55xx/drivers
             - source/hic_hal/nxp/lpc55xx/LPC55S69
-            - source/hic_hal/nxp/lpc55xx/LPC55S69/drivers
 
 tool_specific:
     uvision:
@@ -51,7 +51,7 @@ tool_specific:
             - projectfiles/make_armcc/lpc55xx_bl/build
         sources:
             hic_hal:
-                - source/hic_hal/nxp/lpc55xx/armcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S69/armcc
                 - source/hic_hal/nxp/lpc55xx/LPC55S69/armcc/keil_lib_power_cm33_core0.lib
     gcc_arm:
         misc:
@@ -70,5 +70,5 @@ tool_specific:
             - source/hic_hal/nxp/lpc55xx/gcc
         sources:
             hic_hal:
-                - source/hic_hal/nxp/lpc55xx/gcc
+                - source/hic_hal/nxp/lpc55xx/LPC55S69/gcc
                 - source/hic_hal/nxp/lpc55xx/LPC55S69/gcc/libpower_hardabi.a
