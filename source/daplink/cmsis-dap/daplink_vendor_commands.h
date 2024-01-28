@@ -29,6 +29,7 @@
 #define ID_DAP_UART_SetConfiguration    ID_DAP_Vendor2
 #define ID_DAP_UART_Read                ID_DAP_Vendor3
 #define ID_DAP_UART_Write               ID_DAP_Vendor4
+#define ID_DAP_GetInterfaceCapabilities ID_DAP_Vendor5
 #define ID_DAP_SetUSBTestMode           ID_DAP_Vendor8
 #define ID_DAP_ResetTargetIfNoAutoReset ID_DAP_Vendor9
 #define ID_DAP_MSD_Open                 ID_DAP_Vendor10
@@ -37,3 +38,21 @@
 #define ID_DAP_SelectEraseMode          ID_DAP_Vendor13
 //@}
 
+//! @brief DAP_GetInterfaceCapabilities capability definitions.
+enum _interface_capabilities_definitions {
+    //! Supports binary file programming.
+    kCapability_FileFormatBinary = (1 << 0),
+    //! Supports Intel hex file programming.
+    kCapability_FileFormatIntelHex = (1 << 1),
+};
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+// Return the interface firmware's capabilities vector.
+uint32_t get_interface_capabilities(void);
+
+#if defined(__cplusplus)
+}
+#endif
