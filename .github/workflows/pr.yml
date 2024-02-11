@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        gcc: ['12.3.Rel1']
+        gcc: ['13.2.Rel1']
 
     steps:
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
