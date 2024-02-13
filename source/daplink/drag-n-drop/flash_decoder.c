@@ -121,57 +121,57 @@ error_t flash_decoder_get_flash(flash_decoder_type_t type, uint32_t addr, bool a
     flash_start_local = 0;
     flash_intf_local = 0;
 
-    if (daplink_is_bootloader()) {
-        if (FLASH_DECODER_TYPE_INTERFACE == type) {
-            if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
-                // Address is wrong so display error message
-                status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
-            } else {
-                // Setup for update
-                flash_start_local = DAPLINK_ROM_IF_START;
-                flash_intf_local = flash_intf_iap_protected;
-            }
-        } else if (FLASH_DECODER_TYPE_TARGET == type) {
-            if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
-                // Address is wrong so display error message
-                status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
-            } else {
-                // "Target" update in this case would be a 3rd party interface application
-                flash_start_local = DAPLINK_ROM_IF_START;
-                flash_intf_local = flash_intf_iap_protected;
-            }
+#if defined(DAPLINK_BL)
+    if (FLASH_DECODER_TYPE_INTERFACE == type) {
+        if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
+            // Address is wrong so display error message
+            status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
         } else {
-            status = ERROR_FD_UNSUPPORTED_UPDATE;
+            // Setup for update
+            flash_start_local = DAPLINK_ROM_IF_START;
+            flash_intf_local = flash_intf_iap_protected;
         }
-    } else if (daplink_is_interface()) {
-        if (FLASH_DECODER_TYPE_BOOTLOADER == type) {
-            if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
-                // Address is wrong so display error message
-                status = ERROR_FD_BL_UPDT_ADDR_WRONG;
-            } else {
-                // Setup for update
-                flash_start_local = DAPLINK_ROM_BL_START;
-                flash_intf_local = flash_intf_iap_protected;
-            }
-        } else if (FLASH_DECODER_TYPE_TARGET == type) {
-            if (g_board_info.target_cfg) {
-                region_info_t * region = g_board_info.target_cfg->flash_regions;
-                for (; region->start != 0 || region->end != 0; ++region) {
-                    if (kRegionIsDefault == region->flags) {
-                        flash_start_local = region->start;
-                        break;
-                    }
+    } else if (FLASH_DECODER_TYPE_TARGET == type) {
+        if (addr_valid && (DAPLINK_ROM_IF_START != addr)) {
+            // Address is wrong so display error message
+            status = ERROR_FD_INTF_UPDT_ADDR_WRONG;
+        } else {
+            // "Target" update in this case would be a 3rd party interface application
+            flash_start_local = DAPLINK_ROM_IF_START;
+            flash_intf_local = flash_intf_iap_protected;
+        }
+    } else {
+        status = ERROR_FD_UNSUPPORTED_UPDATE;
+    }
+#elif defined(DAPLINK_IF)
+    if (FLASH_DECODER_TYPE_BOOTLOADER == type) {
+        if (addr_valid && (DAPLINK_ROM_BL_START != addr)) {
+            // Address is wrong so display error message
+            status = ERROR_FD_BL_UPDT_ADDR_WRONG;
+        } else {
+            // Setup for update
+            flash_start_local = DAPLINK_ROM_BL_START;
+            flash_intf_local = flash_intf_iap_protected;
+        }
+    } else if (FLASH_DECODER_TYPE_TARGET == type) {
+        if (g_board_info.target_cfg) {
+            region_info_t * region = g_board_info.target_cfg->flash_regions;
+            for (; region->start != 0 || region->end != 0; ++region) {
+                if (kRegionIsDefault == region->flags) {
+                    flash_start_local = region->start;
+                    break;
                 }
-                flash_intf_local = flash_intf_target;
-            } else {
-                status = ERROR_FD_UNSUPPORTED_UPDATE;
             }
+            flash_intf_local = flash_intf_target;
         } else {
             status = ERROR_FD_UNSUPPORTED_UPDATE;
         }
     } else {
         status = ERROR_FD_UNSUPPORTED_UPDATE;
     }
+#else
+#error "Build must be either bootloader or interface"
+#endif
 
     // Don't allow bootloader updates unless automation is allowed
     if (!config_get_automation_allowed() && (FLASH_DECODER_TYPE_BOOTLOADER == type)) {

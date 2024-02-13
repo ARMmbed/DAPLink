@@ -32,6 +32,8 @@
 #include "crc.h"
 #include "info.h"
 
+#if ((DAPLINK_ROM_UPDATE_SIZE != 0) || defined(DAPLINK_BOOTLOADER_UPDATE))
+
 // Application start must be aligned to page write
 COMPILER_ASSERT(DAPLINK_ROM_APP_START % DAPLINK_MIN_WRITE_SIZE == 0);
 // Application size must be a multiple of write size
@@ -507,5 +509,5 @@ static error_t critical_erase_and_program(uint32_t addr, const uint8_t *data, ui
 static uint8_t target_flash_busy(void){
     return (state == STATE_OPEN);
 }
-
+#endif
 #endif

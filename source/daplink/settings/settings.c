@@ -4,7 +4,7 @@
  *
  * DAPLink Interface Firmware
  * Copyright (c) 2009-2020, ARM Limited, All Rights Reserved
- * Copyright 2019, Cypress Semiconductor Corporation 
+ * Copyright 2019, Cypress Semiconductor Corporation
  * or a subsidiary of Cypress Semiconductor Corporation.
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -74,16 +74,18 @@ static cfg_ram_t config_ram __attribute__((section("cfgram"), zero_init));
 static cfg_ram_t config_ram __attribute__((section("cfgram")));
 #endif
 
-// Ram copy of RAM config
-static cfg_ram_t config_ram_copy;
+uint8_t initial_hold_in_bl;
 
 void config_init()
 {
+    cfg_ram_t config_ram_copy;
     uint32_t new_size;
     // Initialize RAM copy
     memset(&config_ram_copy, 0, sizeof(config_ram_copy));
     // Read settings from RAM if the key is valid
     new_size = sizeof(config_ram);
+
+    initial_hold_in_bl = config_ram.hold_in_bl;
 
     if (CFG_KEY == config_ram.key) {
         uint32_t size = MIN(config_ram.size, sizeof(config_ram));
@@ -159,7 +161,7 @@ bool config_ram_get_hold_in_bl()
 
 bool config_ram_get_initial_hold_in_bl()
 {
-    return config_ram_copy.hold_in_bl;
+    return initial_hold_in_bl;
 }
 
 bool config_ram_get_assert(char *buf, uint16_t buf_size, uint16_t *line, assert_source_t *source)

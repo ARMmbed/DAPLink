@@ -122,27 +122,54 @@ static bool filename_character_valid(char character);
 COMPILER_ASSERT(0x0200 == VFS_SECTOR_SIZE);
 // If root directory size changes update max_root_dir_entries
 COMPILER_ASSERT(0x0020 == sizeof(root_dir_t) / sizeof(FatDirectoryEntry_t));
-static const mbr_t mbr_tmpl = {
+
+#define MBR_BYTES_PER_SECTOR                 0x0200
+#define MBR_SECTORS_PER_CLUSTER              0x08
+#define TOTAL_SECTORS                        ((VFS_DISK_SIZE + KB(64)) / MBR_BYTES_PER_SECTOR)
+#if (TOTAL_SECTORS < (FAT_CLUSTERS_MIN * MBR_SECTORS_PER_CLUSTER))
+// #warning "MBR Total Sector resulting in smaller number of FAT clusters than expected"
+#define MBR_TOTAL_SECTORS                    (FAT_CLUSTERS_MIN * MBR_SECTORS_PER_CLUSTER)
+#elif (TOTAL_SECTORS > (FAT_CLUSTERS_MAX * MBR_SECTORS_PER_CLUSTER))
+// #warning "MBR Total Sector resulting in larger number of FAT clusters than expected"
+#define MBR_TOTAL_SECTORS                    (FAT_CLUSTERS_MAX * MBR_SECTORS_PER_CLUSTER)
+#else
+#define MBR_TOTAL_SECTORS                    TOTAL_SECTORS
+#endif
+
+#if (MBR_TOTAL_SECTORS >= 0x10000)
+#define MBR_TOTAL_LOGICAL_SECTORS            0
+#define MBR_BIG_SECTORS_ON_DRIVE             MBR_TOTAL_SECTORS
+#else
+#define MBR_TOTAL_LOGICAL_SECTORS            MBR_TOTAL_SECTORS
+#define MBR_BIG_SECTORS_ON_DRIVE             0
+#endif
+
+// FAT table will likely be larger than needed, but this is allowed by the
+// fat specification
+#define MBR_NUMBER_OF_CLUSTERS               (MBR_TOTAL_SECTORS / MBR_SECTORS_PER_CLUSTER)
+#define MBR_LOGICAL_SECTORS_PER_FAT          ((MBR_NUMBER_OF_CLUSTERS * 2 + VFS_SECTOR_SIZE - 1) / VFS_SECTOR_SIZE)
+
+const mbr_t mbr = {
     /*uint8_t[11]*/.boot_sector = {
         0xEB, 0x3C, 0x90,
         'M', 'S', 'D', '0', 'S', '4', '.', '1' // OEM Name in text (8 chars max)
     },
-    /*uint16_t*/.bytes_per_sector           = 0x0200,       // 512 bytes per sector
-    /*uint8_t */.sectors_per_cluster        = 0x08,         // 4k cluser
-    /*uint16_t*/.reserved_logical_sectors   = 0x0001,       // mbr is 1 sector
-    /*uint8_t */.num_fats                   = 0x02,         // 2 FATs
-    /*uint16_t*/.max_root_dir_entries       = 0x0020,       // 32 dir entries (max)
-    /*uint16_t*/.total_logical_sectors      = 0x1f50,       // sector size * # of sectors = drive size
-    /*uint8_t */.media_descriptor           = 0xf8,         // fixed disc = F8, removable = F0
-    /*uint16_t*/.logical_sectors_per_fat    = 0x0001,       // FAT is 1k - ToDO:need to edit this
-    /*uint16_t*/.physical_sectors_per_track = 0x0001,       // flat
-    /*uint16_t*/.heads                      = 0x0001,       // flat
-    /*uint32_t*/.hidden_sectors             = 0x00000000,   // before mbt, 0
-    /*uint32_t*/.big_sectors_on_drive       = 0x00000000,   // 4k sector. not using large clusters
+    /*uint16_t*/.bytes_per_sector           = MBR_BYTES_PER_SECTOR,        // 512 bytes per sector
+    /*uint8_t */.sectors_per_cluster        = MBR_SECTORS_PER_CLUSTER,     // 4k cluser
+    /*uint16_t*/.reserved_logical_sectors   = 0x0001,                      // mbr is 1 sector
+    /*uint8_t */.num_fats                   = 0x02,                        // 2 FATs
+    /*uint16_t*/.max_root_dir_entries       = 0x0020,                      // 32 dir entries (max)
+    /*uint16_t*/.total_logical_sectors      = MBR_TOTAL_LOGICAL_SECTORS,   // sector size * # of sectors = drive size
+    /*uint8_t */.media_descriptor           = 0xf8,                        // fixed disc = F8, removable = F0
+    /*uint16_t*/.logical_sectors_per_fat    = MBR_LOGICAL_SECTORS_PER_FAT, // FAT is 1k - ToDO:need to edit this
+    /*uint16_t*/.physical_sectors_per_track = 0x0001,                      // flat
+    /*uint16_t*/.heads                      = 0x0001,                      // flat
+    /*uint32_t*/.hidden_sectors             = 0x00000000,                  // before mbt, 0
+    /*uint32_t*/.big_sectors_on_drive       = MBR_BIG_SECTORS_ON_DRIVE,    // 4k sector. not using large clusters
     /*uint8_t */.physical_drive_number      = 0x00,
-    /*uint8_t */.not_used                   = 0x00,         // Current head. Linux tries to set this to 0x1
-    /*uint8_t */.boot_record_signature      = 0x29,         // signature is present
-    /*uint32_t*/.volume_id                  = 0x27021974,   // serial number
+    /*uint8_t */.not_used                   = 0x00,                        // Current head. Linux tries to set this to 0x1
+    /*uint8_t */.boot_record_signature      = 0x29,                        // signature is present
+    /*uint32_t*/.volume_id                  = 0x27021974,                  // serial number
     // needs to match the root dir label
     /*char[11]*/.volume_label               = {'D', 'A', 'P', 'L', 'I', 'N', 'K', '-', 'D', 'N', 'D'},
     // unused by msft - just a label (FAT, FAT12, FAT16)
@@ -289,7 +316,6 @@ static const FatDirectoryEntry_t dir_entry_tmpl = {
     /*uint32_t*/ .filesize = 0x00000000
 };
 
-mbr_t mbr;
 file_allocation_table_t fat;
 virtual_media_t virtual_media[16];
 root_dir_t dir_current;
@@ -320,13 +346,11 @@ static void write_fat(file_allocation_table_t *fat, uint32_t idx, uint16_t val)
     fat->f[high_idx] = (val >> 8) & 0xFF;
 }
 
-void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
+void vfs_init(const vfs_filename_t drive_name)
 {
     uint32_t i;
-    uint32_t num_clusters;
-    uint32_t total_sectors;
+
     // Clear everything
-    memset(&mbr, 0, sizeof(mbr));
     memset(&fat, 0, sizeof(fat));
     fat_idx = 0;
     memset(&virtual_media, 0, sizeof(virtual_media));
@@ -336,28 +360,7 @@ void vfs_init(const vfs_filename_t drive_name, uint32_t disk_size)
     file_change_cb = file_change_cb_stub;
     virtual_media_idx = 0;
     data_start = 0;
-    // Initialize MBR
-    memcpy(&mbr, &mbr_tmpl, sizeof(mbr_t));
-    total_sectors = ((disk_size + KB(64)) / mbr.bytes_per_sector);
-    // Make sure this is the right size for a FAT16 volume
-    if (total_sectors < FAT_CLUSTERS_MIN * mbr.sectors_per_cluster) {
-        util_assert(0);
-        total_sectors = FAT_CLUSTERS_MIN * mbr.sectors_per_cluster;
-    } else if (total_sectors > FAT_CLUSTERS_MAX * mbr.sectors_per_cluster) {
-        util_assert(0);
-        total_sectors = FAT_CLUSTERS_MAX * mbr.sectors_per_cluster;
-    }
-    if (total_sectors >= 0x10000) {
-        mbr.total_logical_sectors = 0;
-        mbr.big_sectors_on_drive  = total_sectors;
-    } else {
-        mbr.total_logical_sectors = total_sectors;
-        mbr.big_sectors_on_drive  = 0;
-    }
-    // FAT table will likely be larger than needed, but this is allowed by the
-    // fat specification
-    num_clusters = total_sectors / mbr.sectors_per_cluster;
-    mbr.logical_sectors_per_fat = (num_clusters * 2 + VFS_SECTOR_SIZE - 1) / VFS_SECTOR_SIZE;
+
     // Initailize virtual media
     memcpy(&virtual_media, &virtual_media_tmpl, sizeof(virtual_media_tmpl));
     virtual_media[MEDIA_IDX_FAT1].length = VFS_SECTOR_SIZE * mbr.logical_sectors_per_fat;

@@ -459,17 +459,14 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/musca_a.yaml
-        - records/tools/gcc_arm_lto.yaml
     lpc11u35_musca_b_eflash_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/musca_b_eflash.yaml
-        - records/tools/gcc_arm_lto.yaml
     lpc11u35_musca_b_if:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/musca_b.yaml
-        - records/tools/gcc_arm_lto.yaml
     lpc11u35_nz32_sc151_if:
         - *module_if
         - *module_hic_lpc11u35
