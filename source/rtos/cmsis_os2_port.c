@@ -23,11 +23,11 @@
 #include "RTL.h"
 #include "cortex_m.h"
 
-#define MAIN_TASK_PRIORITY      (10)
-#define MAIN_TASK_STACK         (800)
+#include "interface/tasks.h"
+
 static uint64_t stk_main_task [MAIN_TASK_STACK / sizeof(uint64_t)];
 
-#define TIMER_TASK_30_PRIORITY  (11)
+#define TIMER_TASK_30_PRIORITY  (MAIN_TASK_PRIORITY + 1)
 #define TIMER_TASK_STACK        (136)
 static uint64_t stk_timer_task[TIMER_TASK_STACK / sizeof(uint64_t)];
 

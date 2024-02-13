@@ -27,7 +27,7 @@ This assumes there is already target support present in the codebase. If adding 
  * @brief   board_info api for my board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2021, Arm Limited, All Rights Reserved
+ * Copyright (c) 2009-2023, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -49,10 +49,13 @@ This assumes there is already target support present in the codebase. If adding 
 extern target_cfg_t target_device_nrf51822_16;
 
 const board_info_t g_board_info = {
-    .board_id = "0x240",
-    .family_id = kStub_HWReset_FamilyID,
+    .info_version = kBoardInfoVersion,
+    .board_id = "9999",
+    .family_id = kNordic_Nrf51_FamilyID,
     .flags = kEnablePageErase|kEnableUnderResetConnect,
     .target_cfg = &target_device_nrf51822_16,
+    .board_vendor = "Vendor Name",
+    .board_name = "My Board Name",
 };
 ```
 The complete fields of board_info api with description is in `source/target/target_board.h`.
