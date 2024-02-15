@@ -222,6 +222,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x2600,     VENDOR_TO_FAMILY('Nordic', 2),      'k20dx_ep_agora_if',                        None,               None                                    ),
     (   0x2601,     VENDOR_TO_FAMILY('NXP', 0),         'k20dx_ep_kairos_if',                       None,               None                                    ),
     (   0x4337,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc4337xpresso_if',                'lpc4322_bl',       'LPCXpresso4337'                        ),
+    (   0x4367,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc4367xpresso_if',                'lpc4322_bl',       'LPCXpresso4367'                        ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
     (   0x5006,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_a_if',                      None,               'ARM_MUSCA_A1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
