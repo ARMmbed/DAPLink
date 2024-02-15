@@ -503,6 +503,10 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/hani_iot.yaml
+    lpc4322_lpc4337xpresso_if:
+        - *module_if
+        - *module_hic_lpc4322
+        - records/board/lpc4337xpresso.yaml
     lpc4322_lpc54114xpresso_if:
         - *module_if
         - *module_hic_lpc4322
