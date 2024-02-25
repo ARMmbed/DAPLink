@@ -89,6 +89,11 @@ void gpio_init(void)
     X_DIR_IN(SWO);
 #endif
 
+#ifdef SWDP_SGPIO
+    extern void sgpio_init(void);
+    sgpio_init();
+#endif
+
     busy_wait(10000);
 }
 

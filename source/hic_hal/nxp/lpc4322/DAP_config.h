@@ -300,11 +300,13 @@ __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT(uint32_t bit)
 {
+#ifndef SWDP_SGPIO
     if (bit & 0x1) {
         X_SET(SWDIO);
     } else {
         X_CLR(SWDIO);
     }
+#endif
 }
 
 /** SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
@@ -313,8 +315,10 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE(void)
 {
+#ifndef SWDP_SGPIO
     X_SET(SWDIO_TXE);
     X_DIR_OUT(SWDIO);
+#endif
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -323,8 +327,10 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE(void)
 {
+#ifndef SWDP_SGPIO
     X_DIR_IN(SWDIO);
     X_CLR(SWDIO_TXE);
+#endif
 }
 
 
@@ -506,11 +512,36 @@ __STATIC_INLINE void DAP_SETUP(void)
 
     while (!(LPC_CCU1->CLK_M4_GPIO_STAT & CCU_CLK_STAT_RUN));
 
+#ifdef SWDP_SGPIO
+    // Normal-drive and high-speed pins support a programmable slew rate (bit EHS).
+    // The typical frequencies supported are 50 MHz/80 MHz for normal-drive pins
+    // and 75 MHz/204 MHz for high-speed pins.
+    // See "Programmable slew rate" and "Pin configuration registers for normal-drive pins" UM10503.
+    //
+    // The clock pins CLK0 to CLK3 and P3_3 support a programmable high-speed
+    // output with typical frequencies of 75 MHz or 204 MHz depending on the slew rate setting
+    // See "High-speed pins" and "Pin configuration registers for high-speed pins" UM10503.
+    //
+    // High-drive pins support the programmable glitch filter
+    // but not the programmable slew rate.
+    // See "High-drive pins" and "Pin configuration registers for high-drive pins" UM10503.
+
+    // SWCLK/TCK: SGPIO11. P1_17 is a High-drive pin.
+    // FILTER_DISABLE: The filter has to be disabled for frequencies greater than 30 MHz.
+    scu_pinmux(1, 17, PUP_DISABLE | PDN_DISABLE | INBUF_ENABLE | FILTER_DISABLE | DRIVE_20MA, FUNC6);
+
+    // SWDIO/TMS: SGPIO14. P1_6 is a Normal-drive pin.
+    scu_pinmux(1,  6, PUP_DISABLE | PDN_DISABLE | INBUF_ENABLE | FILTER_DISABLE | SLEWRATE_FAST, FUNC6);
+
+    // SWDIO/TXEN: SGPIO15. P1_5 is a Normal-drive pin.
+    scu_pinmux(1,  5, PUP_DISABLE | PDN_DISABLE | INBUF_ENABLE | FILTER_DISABLE | SLEWRATE_FAST, FUNC6);
+#else
     /* Configure I/O pins: function number, input buffer enabled,    */
     /*                     no pull-up/down                           */
     scu_pinmux(1, 17, GPIO_NOPULL, FUNC0);   /* SWCLK/TCK: GPIO0[12] */
     scu_pinmux(1,  6, GPIO_NOPULL, FUNC0);   /* SWDIO/TMS: GPIO1[9]  */
     scu_pinmux(1,  5, GPIO_NOPULL, FUNC0);   /* SWDIO_OE:  GPIO1[8]  */
+#endif
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.
