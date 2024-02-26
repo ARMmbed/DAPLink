@@ -17,6 +17,7 @@ common:
             - source/hic_hal/nxp/lpc55xx
             - source/hic_hal/nxp/lpc55xx/drivers
             - source/hic_hal/nxp/lpc55xx/LPC55S69
+            - source/hic_hal/cmsis-driver/uart
 
 tool_specific:
     uvision:

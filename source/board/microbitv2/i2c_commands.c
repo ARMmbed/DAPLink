@@ -29,6 +29,7 @@
 #include "storage.h"
 #include "gpio_extra.h"
 #include "microbitv2.h"
+#include "util.h"
 
 
 extern uint16_t board_id_hex;

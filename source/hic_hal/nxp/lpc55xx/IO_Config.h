@@ -116,6 +116,11 @@ COMPILER_ASSERT((DAPLINK_HIC_ID == DAPLINK_HIC_ID_LPC55XX) ||
 #define PIN_UART_TX             (25U)
 #define PIN_UART_TX_MASK        (1U << PIN_UART_TX)
 
+// cmsis-driver/uart/uart.c configuration
+#include "fsl_usart_cmsis.h"
+#define CMSIS_UART_INSTANCE     (Driver_USART0)
+#define CMSIS_UART_IRQ          (FLEXCOMM0_IRQn)
+
 
 // Debug Unit LEDs
 
