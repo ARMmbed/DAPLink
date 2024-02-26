@@ -260,7 +260,7 @@ __STATIC_INLINE void PORT_SWD_SETUP(void)
 
     pin_in_init(SWDIO_IN_PIN_PORT, SWDIO_IN_PIN_Bit, 1);
     // Set RESET HIGH
-    pin_out_od_init(nRESET_PIN_PORT, nRESET_PIN_Bit);//TODO - fix reset logic
+    pin_in_init(nRESET_PIN_PORT, nRESET_PIN_Bit, 1);  // input with pullup
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
 }
 
@@ -436,10 +436,13 @@ __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 
 __STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
 {
-    if (bit & 1)
+    if (bit & 1) {  // set to input pullup mode, since open-drain doesn't support pullup
+        pin_in_init(nRESET_PIN_PORT, nRESET_PIN_Bit, 1);
         nRESET_PIN_PORT->BSRR = nRESET_PIN;
-    else
+    } else {  // set to open-drain mode
+        pin_out_od_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
         nRESET_PIN_PORT->BRR = nRESET_PIN;
+    }
 }
 
 //**************************************************************************************************
@@ -536,7 +539,7 @@ __STATIC_INLINE void DAP_SETUP(void)
 
     pin_in_init(SWDIO_IN_PIN_PORT, SWDIO_IN_PIN_Bit, 1);
 
-    pin_out_od_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
+    pin_in_init(nRESET_PIN_PORT, nRESET_PIN_Bit, 1);  // input with pullup
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
 
     pin_out_init(CONNECTED_LED_PORT, CONNECTED_LED_PIN_Bit);
