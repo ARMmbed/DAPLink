@@ -433,15 +433,20 @@ __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
            - 1: release device hardware reset.
 */
 // TODO - sw specific implementation should be created
-
-__STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
+extern uint8_t swd_init_debug(void);
+extern uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size);
+__STATIC_FORCEINLINE void PIN_nRESET_OUT(uint32_t bit)
 {
-    if (bit & 1)
+	if (bit & 1)
         nRESET_PIN_PORT->BSRR = nRESET_PIN;
     else
         nRESET_PIN_PORT->BRR = nRESET_PIN;
-}
 
+		swd_init_debug();
+		uint32_t swd_mem_write_data = 0x05FA0000 | 0x4;
+		swd_write_memory(0xE000ED0C, (uint8_t *)&swd_mem_write_data, 4);
+	}
+}
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_LEDs_gr CMSIS-DAP Hardware Status LEDs
