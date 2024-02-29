@@ -1,0 +1,3 @@
+common:
+    macros:
+        - NRF_OPEN_BOOTLOADER
