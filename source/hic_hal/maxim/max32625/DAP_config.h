@@ -236,15 +236,10 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF (void)
 {
-    // Disable weak pullup in high-z output mode
-    MXC_GPIO_CLRBIT(swclk_port, swclk_pin);
-    MXC_GPIO_CLRBIT(swdio_port, swdio_pin);
-    MXC_GPIO_CLRBIT(nreset_port, nreset_pin);
-
     // High-z output mode
-    MXC_GPIO_SETMODE(swclk_port, swclk_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
-    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
-    MXC_GPIO_SETMODE(nreset_port, nreset_pin, MXC_V_GPIO_OUT_MODE_HIGH_Z_WEAK_PULLUP);
+    MXC_GPIO_SETMODE(swclk_port, swclk_pin, MXC_V_GPIO_OUT_MODE_NORMAL_HIGH_Z);
+    MXC_GPIO_SETMODE(swdio_port, swdio_pin, MXC_V_GPIO_OUT_MODE_NORMAL_HIGH_Z);
+    MXC_GPIO_SETMODE(nreset_port, nreset_pin, MXC_V_GPIO_OUT_MODE_NORMAL_HIGH_Z);
 }
 
 // SWCLK/TCK I/O pin -------------------------------------
