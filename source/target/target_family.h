@@ -100,6 +100,8 @@ typedef enum _family_id {
     kNXP_KinetisV_FamilyID = CREATE_FAMILY_ID(kNXP_VendorID, 7),
     kNordic_Nrf51_FamilyID = CREATE_FAMILY_ID(kNordic_VendorID, 1),
     kNordic_Nrf52_FamilyID = CREATE_FAMILY_ID(kNordic_VendorID, 2),
+    kNordic_Nrf53_FamilyID = CREATE_FAMILY_ID(kNordic_VendorID, 3),
+    kNordic_Nrf91_FamilyID = CREATE_FAMILY_ID(kNordic_VendorID, 4),
     kRealtek_Rtl8195am_FamilyID = CREATE_FAMILY_ID(kRealtek_VendorID, 1),
     kTI_Cc3220sf_FamilyID = CREATE_FAMILY_ID(kTI_VendorID, 1),
     kToshiba_Tz_FamilyID = CREATE_FAMILY_ID(kToshiba_VendorID, 1),
