@@ -1,9 +1,9 @@
 /**
  * @file    uart.c
- * @brief   UART Function for nrf52820 HIC
+ * @brief   UART Function for HIC using CMSIS-Driver
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2021, Arm Limited, All Rights Reserved
+ * Copyright (c) 2020 Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -20,17 +20,13 @@
  */
 
 #include "string.h"
-#include "Driver_USART.h"
 #include "uart.h"
 #include "util.h"
 #include "cortex_m.h"
 #include "circ_buf.h"
 #include "settings.h" // for config_get_overflow_detect
-
-#define USART_INSTANCE (Driver_USART0)
-#define USART_IRQ      (UARTE0_UART0_IRQn)
-
-extern ARM_DRIVER_USART USART_INSTANCE;
+#include "Driver_USART.h"
+#include "IO_Config.h"
 
 static void clear_buffers(void);
 
@@ -52,7 +48,6 @@ struct {
     volatile uint32_t tx_size;
 
     uint8_t rx;
-    uint8_t tx;
 } cb_buf;
 
 void uart_handler(uint32_t event);
@@ -67,8 +62,8 @@ int32_t uart_initialize(void)
 {
     clear_buffers();
     cb_buf.tx_size = 0;
-    USART_INSTANCE.Initialize(uart_handler);
-    USART_INSTANCE.PowerControl(ARM_POWER_FULL);
+    CMSIS_UART_INSTANCE.Initialize(uart_handler);
+    CMSIS_UART_INSTANCE.PowerControl(ARM_POWER_FULL);
     cur_line_state = 0;
     cur_control = 0;
     cur_baud = 0;
@@ -78,10 +73,10 @@ int32_t uart_initialize(void)
 
 int32_t uart_uninitialize(void)
 {
-    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
-    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
-    USART_INSTANCE.PowerControl(ARM_POWER_OFF);
-    USART_INSTANCE.Uninitialize();
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+    CMSIS_UART_INSTANCE.PowerControl(ARM_POWER_OFF);
+    CMSIS_UART_INSTANCE.Uninitialize();
     clear_buffers();
     cb_buf.tx_size = 0;
 
@@ -91,10 +86,14 @@ int32_t uart_uninitialize(void)
 int32_t uart_reset(void)
 {
     // disable interrupt
-    NVIC_DisableIRQ(USART_IRQ);
+    NVIC_DisableIRQ(CMSIS_UART_IRQ);
     clear_buffers();
+    if (cb_buf.tx_size != 0) {
+        CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
+        cb_buf.tx_size = 0;
+    }
     // enable interrupt
-    NVIC_EnableIRQ(USART_IRQ);
+    NVIC_EnableIRQ(CMSIS_UART_IRQ);
 
     return 1;
 }
@@ -169,23 +168,27 @@ int32_t uart_set_configuration(UART_Configuration *config)
     cur_control = control;
     cur_baud = config->Baudrate;
 
-    NVIC_DisableIRQ(USART_IRQ);
+    NVIC_DisableIRQ(CMSIS_UART_IRQ);
     clear_buffers();
+    if (cb_buf.tx_size != 0) {
+        CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_SEND, 0U);
+        cb_buf.tx_size = 0;
+    }
 
     // If there was no Receive() call in progress aborting it is harmless.
-    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
-    USART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_RX, 0U);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_ABORT_RECEIVE, 0U);
 
-    uint32_t r = USART_INSTANCE.Control(control, config->Baudrate);
+    uint32_t r = CMSIS_UART_INSTANCE.Control(control, config->Baudrate);
     if (r != ARM_DRIVER_OK) {
         return 0;
     }
-    USART_INSTANCE.Control(ARM_USART_CONTROL_TX, 1);
-    USART_INSTANCE.Control(ARM_USART_CONTROL_RX, 1);
-    USART_INSTANCE.Receive(&(cb_buf.rx), 1);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_TX, 1);
+    CMSIS_UART_INSTANCE.Control(ARM_USART_CONTROL_RX, 1);
+    CMSIS_UART_INSTANCE.Receive(&(cb_buf.rx), 1);
 
-    NVIC_ClearPendingIRQ(USART_IRQ);
-    NVIC_EnableIRQ(USART_IRQ);
+    NVIC_ClearPendingIRQ(CMSIS_UART_IRQ);
+    NVIC_EnableIRQ(CMSIS_UART_IRQ);
 
     uart_reset();
 
@@ -210,23 +213,41 @@ int32_t uart_write_free(void)
     return circ_buf_count_free(&write_buffer);
 }
 
+// Start a new TX transfer if there are bytes pending to be transferred on the
+// write_buffer buffer. The transferred bytes are not removed from the circular
+// by this function, only the event handler will remove them once the transfer
+// is done.
+static void uart_start_tx_transfer() {
+    uint32_t tx_size = 0;
+    const uint8_t* buf = circ_buf_peek(&write_buffer, &tx_size);
+    if (tx_size > BUFFER_SIZE / 4) {
+        // The bytes being transferred remain on the circular buffer memory
+        // until the transfer is done. Limiting the UART transfer size
+        // allows the uart_handler to clear those bytes earlier.
+        tx_size = BUFFER_SIZE / 4;
+    }
+    cb_buf.tx_size = tx_size;
+    if (tx_size) {
+        CMSIS_UART_INSTANCE.Send(buf, tx_size);
+    }
+}
+
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
     if (size == 0) {
         return 0;
     }
 
-    // Disable interrupts to prevent the uart_handler from modifying the
-    // circular buffer at the same time.
-    NVIC_DisableIRQ(USART_IRQ);
     uint32_t cnt = circ_buf_write(&write_buffer, data, size);
-    if (cb_buf.tx_size == 0 && circ_buf_count_used(&write_buffer) > 0) {
-        // There's no pending transfer, so we need to start the process.
-        cb_buf.tx = circ_buf_pop(&write_buffer);
-        USART_INSTANCE.Send(&(cb_buf.tx), 1);
-        cb_buf.tx_size = 1;
+    if (cb_buf.tx_size == 0) {
+        // There's no pending transfer and the value of cb_buf.tx_size will not
+        // change to non-zero by the event handler once it is zero. Note that it
+        // is entirely possible that we transferred all the bytes we added to
+        // the circular buffer in this function by the time we are in this
+        // branch, in that case uart_start_tx_transfer() would not schedule any
+        // transfer.
+        uart_start_tx_transfer();
     }
-    NVIC_EnableIRQ(USART_IRQ);
 
     return cnt;
 }
@@ -246,17 +267,11 @@ void uart_handler(uint32_t event) {
         } else {
             // Drop character
         }
-        USART_INSTANCE.Receive(&(cb_buf.rx), 1);
+        CMSIS_UART_INSTANCE.Receive(&(cb_buf.rx), 1);
     }
 
     if (event & ARM_USART_EVENT_SEND_COMPLETE) {
-        if (circ_buf_count_used(&write_buffer) > 0) {
-            cb_buf.tx = circ_buf_pop(&write_buffer);
-            USART_INSTANCE.Send(&(cb_buf.tx), 1);
-        } else {
-            // Signals that next call to uart_write_data() should start a
-            // transfer.
-            cb_buf.tx_size = 0;
-        }
+        circ_buf_pop_n(&write_buffer, cb_buf.tx_size);
+        uart_start_tx_transfer();
     }
 }
