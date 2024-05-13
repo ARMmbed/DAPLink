@@ -13,7 +13,7 @@ tool_specific:
                 - -O2
                 - -Ospace
                 - --gnu
-                - --c99
+                - --c11
                 - --asm
                 - --split_sections
                 - --interleave
@@ -37,7 +37,7 @@ tool_specific:
             c_flags:
                 # uvision.uvproj.tmpl specifies:
                 # - O2, space
-                # - C99
+                # - C11
                 # - split sections
                 - --gnu
                 - --asm
