@@ -1,0 +1,16 @@
+common:
+    macros:
+        - USB_PROD_STR='"NM180411 DAPLink CMSIS-DAP"'
+        - IO_CONFIG_OVERRIDE
+        - SWO_UART=1
+        - HID_LED_DEF=GPIO_LED_OFF
+        - CDC_LED_DEF=GPIO_LED_OFF
+        - MSC_LED_DEF=GPIO_LED_OFF
+    includes:
+        - source/board/override_nm180410
+    sources:
+        board:
+            - source/board/nm180411.c
+        family:
+            - source/family/ambiq/ama3b2kk/target.c
+            - source/family/ambiq/ama3b2kk/target_reset.c
