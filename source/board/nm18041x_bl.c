@@ -1,5 +1,5 @@
 /**
- * @file    nm180410_bl.c
+ * @file    nm18041x_bl.c
  * @brief   additional configuration for Northern Mechatronics NM180410
  *          LPC55S69 HIC 
  *

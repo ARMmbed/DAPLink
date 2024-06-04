@@ -531,18 +531,14 @@ projects:
         - *module_if
         - *module_hic_lpc4322
         - records/board/mimxrt1170_evk_qspi.yaml
-    lpc55s26_nm180410_bl:
+    lpc55s26_nm18041x_bl:
         - *module_bl
         - records/hic_hal/lpc55s26.yaml
-        - records/board/lpc55s26_nm180410_bl.yaml
+        - records/board/lpc55s26_nm18041x_bl.yaml
     lpc55s26_nm180410_if:
         - *module_if
         - *module_hic_lpc55s26
         - records/board/nm180410.yaml
-    lpc55s26_nm180411_bl:
-        - *module_bl
-        - records/hic_hal/lpc55s26.yaml
-        - records/board/lpc55s26_bl.yaml
     lpc55s26_nm180411_if:
         - *module_if
         - *module_hic_lpc55s26

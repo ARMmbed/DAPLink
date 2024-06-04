@@ -7,7 +7,7 @@ common:
         - CDC_LED_DEF=GPIO_LED_OFF
         - MSC_LED_DEF=GPIO_LED_OFF
     includes:
-        - source/board/override_nm180410
+        - source/board/override_nm18041x
     sources:
         board:
             - source/board/nm180410.c
