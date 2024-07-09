@@ -1,15 +1,5 @@
 // -*- Mode: C++; tab-width: 4 indent-tabs-mode: nil -*-
 //
-//    Copyright (c) 2013 Nest Labs, Inc.
-//    All rights reserved.
-//
-//    This document is the property of Nest. It is considered
-//    confidential and proprietary information.
-//
-//    This document may not be reproduced or transmitted in any form,
-//    in whole or in part, without the express written permission of
-//    Nest.
-//
 //    Description:
 //      This file implements the nlbacktrace() function.
 //      It's used to retrieve the backtrace after a crash without prior knowledge
