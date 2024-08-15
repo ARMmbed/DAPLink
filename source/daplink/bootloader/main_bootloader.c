@@ -274,7 +274,7 @@ int main(void)
 
     // check for invalid app image or rst button press. Should be checksum or CRC but NVIC validation is better than nothing.
     // If the interface has set the hold in bootloader setting don't jump to app
-    if (!reset_button_pressed()
+    if ((config_ram_get_force_enter_if() || !reset_button_pressed())
             && g_board_info.target_cfg
             && validate_bin_nvic((uint8_t *)g_board_info.target_cfg->flash_regions[0].start)
             && !config_ram_get_initial_hold_in_bl()) {
