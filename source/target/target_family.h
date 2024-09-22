@@ -104,8 +104,7 @@ typedef enum _family_id {
     kTI_Cc3220sf_FamilyID = CREATE_FAMILY_ID(kTI_VendorID, 1),
     kToshiba_Tz_FamilyID = CREATE_FAMILY_ID(kToshiba_VendorID, 1),
     kRenesas_FamilyID = CREATE_FAMILY_ID(kRenesas_VendorID, 1),
-    kAmbiq_ama3b1kk_FamilyID = CREATE_FAMILY_ID(kAmbiq_VendorID, 1),
-    kAmbiq_ama3b2kk_FamilyID = CREATE_FAMILY_ID(kAmbiq_VendorID, 2),
+    kAmbiq_ama3bxkk_FamilyID = CREATE_FAMILY_ID(kAmbiq_VendorID, 1),
     kMaxim_MAX3262X_FamilyID = CREATE_FAMILY_ID(kMaxim_VendorID, 1),
     kMaxim_MAX3266X_FamilyID = CREATE_FAMILY_ID(kMaxim_VendorID, 2),
 } family_id_t;

@@ -56,7 +56,7 @@ __WEAK const target_family_descriptor_t g_nordic_nrf52 = {0};
 __WEAK const target_family_descriptor_t g_realtek_rtl8195am = {0};
 __WEAK const target_family_descriptor_t g_renesas_family = {0};
 __WEAK const target_family_descriptor_t g_toshiba_tz_family = {0};
-__WEAK const target_family_descriptor_t g_ambiq_ama3b1kk = {0};
+__WEAK const target_family_descriptor_t g_ambiq_ama3bx_family = {0};
 __WEAK const target_family_descriptor_t g_maxim_max3262x_family = {0};
 __WEAK const target_family_descriptor_t g_maxim_max3266x_family = {0};
 
@@ -89,7 +89,7 @@ const target_family_descriptor_t * const g_families[] = {
     &g_realtek_rtl8195am,
     &g_renesas_family,
     &g_toshiba_tz_family,
-    &g_ambiq_ama3b1kk,
+    &g_ambiq_ama3bx_family,
     &g_maxim_max3262x_family,
     &g_maxim_max3266x_family,
     FAMILY_LIST_TERMINATOR // list terminator

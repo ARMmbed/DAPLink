@@ -13,4 +13,4 @@ common:
             - source/board/nm180411.c
         family:
             - source/family/ambiq/ama3b2kk/target.c
-            - source/family/ambiq/ama3b2kk/target_reset.c
+            - source/family/ambiq/target_reset_ama3bx.c

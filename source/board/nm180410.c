@@ -28,7 +28,7 @@
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .family_id = kAmbiq_ama3b1kk_FamilyID,
+    .family_id = kAmbiq_ama3bxkk_FamilyID,
     .target_cfg = &target_device,
     .daplink_url_name = "NMI     HTM",
     .daplink_drive_name = "NMI        ",
