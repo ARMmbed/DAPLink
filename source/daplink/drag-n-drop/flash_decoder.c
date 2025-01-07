@@ -374,6 +374,9 @@ error_t flash_decoder_close(void)
     if ((DECODER_STATE_DONE != prev_state) &&
             (flash_type != FLASH_DECODER_TYPE_TARGET) &&
             (status == ERROR_SUCCESS)) {
+        flash_decoder_printf("    error: update incomplete\r\n");
+        flash_decoder_printf("    prev_state=%d; flash_type=%d; status=%d\r\n",
+                             prev_state, flash_type, status);
         status = ERROR_IAP_UPDT_INCOMPLETE;
     }
 
