@@ -401,9 +401,13 @@ void main_task(void * arg)
             switch (usb_state) {
                 case USB_DISCONNECTING:
                     usb_state = USB_DISCONNECTED;
-                    // Disable board power before USB is disconnected.
+                    // Disable target power as USB was disconnected.
                     gpio_set_board_power(false);
-                    usbd_connect(0);
+                    // Clear the DAP queue buffers
+#if (USBD_HID_ENABLE)
+                    usbd_bulk_init();
+                    usbd_hid_init();
+#endif
                     break;
 
                 case USB_CONNECTING:
@@ -435,12 +439,16 @@ void main_task(void * arg)
                     break;
 
                 case USB_CONNECTED:
+                    if (!usbd_configured()) {
+                        usb_state = USB_DISCONNECTING;
+                    }
+                    break;
+
                 case USB_DISCONNECTED:
                     if (usbd_configured()) {
                         usb_state = USB_CONNECTED;
                     }
                     else {
-                        usb_state = USB_DISCONNECTED;
                         usb_state_count = USB_CONNECT_DELAY;
                         usb_no_config_count = USB_CONFIGURE_TIMEOUT;
                     }
