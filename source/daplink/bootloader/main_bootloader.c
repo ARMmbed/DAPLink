@@ -80,8 +80,6 @@ void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 #define FLAGS_LED_BLINK_30MS    (1 << 6)
 
 // Timing constants (in 90mS ticks)
-// USB busy time
-#define USB_BUSY_TIME           (33)
 // Delay before a USB device connect may occur
 #define USB_CONNECT_DELAY       (11)
 // Decrement to zero
