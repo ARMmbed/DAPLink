@@ -71,7 +71,7 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0000",
     .daplink_url_name =   "HELP_FAQHTM",
-    .daplink_drive_name = "BOOTLOADER",
+    .daplink_drive_name = "BOOTLOADER ",
     .daplink_target_url = "https://daplink.io",
     .target_cfg = &target_device,
 };
