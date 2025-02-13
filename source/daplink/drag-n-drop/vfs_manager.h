@@ -32,9 +32,6 @@
 extern "C" {
 #endif
 
-
-extern const vfs_filename_t daplink_mode_file_name;
-
 /* Callable from anywhere */
 
 // Enable or disable the virtual filesystem
