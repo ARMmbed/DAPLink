@@ -75,8 +75,46 @@ COMPILER_ASSERT(DAPLINK_RAM_SHARED_START + DAPLINK_RAM_SHARED_SIZE == DAPLINK_RA
 // Macro with the name of the main application header file.
 #if defined(DAPLINK_BL)
 #define DAPLINK_MAIN_HEADER "main_bootloader.h"
+
+#include "virtual_fs.h"
+
+COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_BL);
+
+// daplink_mode_file_name, daplink_url_name and
+// daplink_drive_name strings must be 11 characters
+// excluding the null terminated character
+static const char daplink_mode_file_name[11] = "START_IFACT";
+
+__STATIC_FORCEINLINE bool daplink_is_bootloader()
+{
+    return true;
+}
+
+__STATIC_FORCEINLINE bool daplink_is_interface()
+{
+    return false;
+}
+
 #elif defined(DAPLINK_IF)
 #define DAPLINK_MAIN_HEADER "main_interface.h"
+
+#ifdef DRAG_N_DROP_SUPPORT
+#include "virtual_fs.h"
+COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
+
+static const vfs_filename_t daplink_mode_file_name = "START_BLACT";
+#endif //DRAG_N_DROP_SUPPORT
+
+__STATIC_FORCEINLINE bool daplink_is_bootloader()
+{
+    return false;
+}
+
+__STATIC_FORCEINLINE bool daplink_is_interface()
+{
+    return true;
+}
+
 #else
 #error "Neither DAPLINK_BL nor DAPLINK_IF are defined!"
 #endif
@@ -86,9 +124,6 @@ typedef struct {
     uint32_t hic_id;
     uint32_t version;
 } daplink_info_t;
-
-bool daplink_is_bootloader(void);
-bool daplink_is_interface(void);
 
 #ifdef __cplusplus
 }
