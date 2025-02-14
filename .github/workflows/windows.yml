@@ -16,7 +16,7 @@ jobs:
         release: ${{ matrix.gcc }}
 
     - name: Cache Python modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~\AppData\Local\pip\Cache
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -24,7 +24,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Checkout source files
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -39,7 +39,7 @@ jobs:
       shell: cmd
 
     - name: Upload test artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: firmware-dev-${{github.run_number}}
         path: |

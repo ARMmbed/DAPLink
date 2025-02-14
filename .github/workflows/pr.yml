@@ -22,7 +22,7 @@ jobs:
 
     - name: Cache Python modules
       id: cache-python
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -30,7 +30,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Checkout source files
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -46,7 +46,7 @@ jobs:
 
     - name: Cache CCache
       id:   ccache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .ccache
         key: ${{ runner.os }}-gcc-${{ matrix.gcc }}-${{ hashFiles('log.txt') }}
