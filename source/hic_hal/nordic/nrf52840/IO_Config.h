@@ -114,6 +114,24 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_NRF52840);
 #define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 15)  // UART From IMCU to target
 #define UART_RX_PIN       NRF_GPIO_PIN_MAP(0, 11)  // UART From target to IMCU
 
+#elif defined(MAKERDIARY_MDK_DONGLE)
+
+#define RESET_BUTTON_PULL NRF_GPIO_PIN_PULLUP
+#define PIN_SWCLK         NRF_GPIO_PIN_MAP(0, 5)   // SWDCLK (Output)
+#define PIN_SWDIO         NRF_GPIO_PIN_MAP(0, 6)   // SWDIO (Input/Output)
+#define PIN_nRESET        NRF_GPIO_PIN_MAP(0, 4)   // nRESET Pin
+#undef LED_RUNNING
+#undef LED_CONNECTED
+#define LED_HID           NRF_GPIO_PIN_MAP(0, 23)  // HID LED (LED0: Red)
+#define LED_MSC           NRF_GPIO_PIN_MAP(0, 24)  // MSC LED (LED1: Greem)
+#define LED_CDC           NRF_GPIO_PIN_MAP(0, 25)  // CDC LED (LED2: Blue)
+#undef LED_PWR
+#define RESET_BUTTON      NRF_GPIO_PIN_MAP(0, 18)  // Reset button (SW_RESET)
+#define UART_TX_PIN       NRF_GPIO_PIN_MAP(0, 20)  // UART TX
+#define UART_RX_PIN       NRF_GPIO_PIN_MAP(0, 21)  // UART RX
+#define I2C_SCL_PIN       NRF_GPIO_PIN_MAP(0, 7)   // I2C
+#define I2C_SDA_PIN       NRF_GPIO_PIN_MAP(0, 8)   // I2C
+
 #else
 
 #define GPIO_LED_ACTIVE_STATE 0

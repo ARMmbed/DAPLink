@@ -10,6 +10,7 @@ common:
         - OS_CLOCK=64000000
         - __DAPLINK
         ## Uncomment one of the following defines to use alternate pinmap:
+        # - MAKERDIARY_MDK_DONGLE
         # - NRF52840_DK
         # - SEEEDSTUDIO_XIAO_BLE
         # - SSCI_ISP1807
