@@ -8,10 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        gcc: ['13.2.Rel1']
+        gcc: ['14.2.Rel1']
 
     steps:
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
