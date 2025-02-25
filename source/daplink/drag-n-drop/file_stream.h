@@ -36,10 +36,14 @@ typedef enum {
 
     STREAM_TYPE_BIN = STREAM_TYPE_START,
     STREAM_TYPE_HEX,
+    STREAM_TYPE_UHEX_BLOCKS,
 
     // Add new stream types here
 
     STREAM_TYPE_COUNT,
+
+    // Needed as both formats share the same .hex extension
+    STREAM_TYPE_HEX_OR_UHEX,
 
     STREAM_TYPE_NONE
 } stream_type_t;
@@ -49,6 +53,12 @@ stream_type_t stream_start_identify(const uint8_t *data, uint32_t size);
 
 // Stateless function to identify a filestream by its name
 stream_type_t stream_type_from_name(const vfs_filename_t filename);
+
+// Stateless function to identify if two streams are compatible
+bool stream_compatible(stream_type_t type_left, stream_type_t type_right);
+
+// Stateless function to identify if a stream can take blocks out of order
+bool stream_self_contained_block(stream_type_t type, const uint8_t *data, uint32_t size);
 
 error_t stream_open(stream_type_t stream_type);
 

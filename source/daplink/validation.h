@@ -30,6 +30,7 @@ extern "C" {
 
 uint8_t validate_bin_nvic(const uint8_t *buf);
 uint8_t validate_hexfile(const uint8_t *buf);
+uint8_t validate_uhex_block(const uint8_t *buf, uint32_t size);
 
 /*!
  * @brief Baseline implementation of NVIC validator.
