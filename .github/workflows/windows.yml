@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-2019
     strategy:
       matrix:
-        gcc: ['13.2.Rel1']
+        gcc: ['14.2.Rel1']
 
     steps:
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
