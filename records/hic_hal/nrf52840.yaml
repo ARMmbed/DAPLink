@@ -4,14 +4,18 @@ common:
     core:
         - Cortex-M4
     macros:
-        - INTERFACE_NRF52820
-        - NRF52820_XXAA
-        - DAPLINK_HIC_ID=0x6E052820  # DAPLINK_HIC_ID_NRF52820
+        - INTERFACE_NRF52840
+        - NRF52840_XXAA
+        - DAPLINK_HIC_ID=0x6E052840  # DAPLINK_HIC_ID_NRF52840
         - OS_CLOCK=64000000
         - __DAPLINK
+        ## Uncomment one of the following defines to use alternate pinmap:
+        # - MAKERDIARY_MDK_DONGLE
+        # - NRF52840_DK
+        # - SEEEDSTUDIO_XIAO_BLE
+        # - SSCI_ISP1807
     includes:
-        - source/hic_hal/nordic/nrf52820
-        - source/hic_hal/nordic/nrf52820/cmsis
+        - source/hic_hal/nordic/nrf52840
         - source/hic_hal/nordic/nrfx
         - source/hic_hal/nordic/nrfx/drivers
         - source/hic_hal/nordic/nrfx/hal
@@ -19,7 +23,7 @@ common:
         - source/hic_hal/nordic/shared/nrf52
     sources:
         hic_hal:
-            - source/hic_hal/nordic/nrf52820
+            - source/hic_hal/nordic/nrf52840
             - source/hic_hal/nordic/nrf52820/cmsis
             - source/hic_hal/nordic/nrfx/drivers
             - source/hic_hal/nordic/shared
@@ -29,22 +33,22 @@ tool_specific:
     uvision:
         misc:
             ld_flags:
-                - --predefine="-I..\..\..\source\hic_hal\nordic\nrf52820"
+                - --predefine="-I..\..\..\source\hic_hal\nordic\nrf52840"
         sources:
             hic_hal:
-                - source/hic_hal/nordic/nrf52820/armcc
+                - source/hic_hal/nordic/nrf52840/arm
     armcc:
         sources:
             hic_hal:
-                - source/hic_hal/nordic/nrf52820/armcc
+                - source/hic_hal/nordic/nrf52840/arm
     armclang:
         misc:
             common_flags:
                 - -mfpu=none
         sources:
             hic_hal:
-                - source/hic_hal/nordic/nrf52820/armcc
+                - source/hic_hal/nordic/nrf52840/arm
     gcc_arm:
         sources:
             hic_hal:
-                - source/hic_hal/nordic/nrf52820/gcc
+                - source/hic_hal/nordic/nrf52840/gcc
