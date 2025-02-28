@@ -82,5 +82,9 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 #define PIN_MSC_LED                  GPIO_PIN_9
 #define PIN_MSC_LED_Bit              9
 
+#include "Driver_USART.h"
+extern ARM_DRIVER_USART Driver_USART2;
+#define CMSIS_UART_INSTANCE          (Driver_USART2)
+#define CMSIS_UART_IRQ               (USART2_IRQn)
 
 #endif
