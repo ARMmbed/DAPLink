@@ -35,5 +35,6 @@
 #define ID_DAP_MSD_Close                ID_DAP_Vendor11
 #define ID_DAP_MSD_Write                ID_DAP_Vendor12
 #define ID_DAP_SelectEraseMode          ID_DAP_Vendor13
+#define ID_DAP_SWDConfigurePins         ID_DAP_Vendor23
 //@}
 

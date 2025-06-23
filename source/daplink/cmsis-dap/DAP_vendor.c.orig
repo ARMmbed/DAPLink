@@ -41,7 +41,6 @@
 #include "util.h"
 #include <string.h>
 #include "daplink_vendor_commands.h"
-#include "daplink_swd_dynamic_pins.h"
 
 #ifdef DRAG_N_DROP_SUPPORT
 #include "file_stream.h"
@@ -234,19 +233,7 @@ uint32_t DAP_ProcessVendorCommand(const uint8_t *request, uint8_t *response) {
     case ID_DAP_Vendor20: break;
     case ID_DAP_Vendor21: break;
     case ID_DAP_Vendor22: break;
-    case ID_DAP_SWDConfigurePins: {
-        // Select SWD output port configuration.
-        const int pin_set_as_int = (int)*request;
-        if (pin_set_as_int > (int)SWD_PIN_SET_MAX_ALLOWED) {
-            // Report invalid selection with 0xFF.
-            *response = 0xFF;
-        } else {
-            *response =
-                (uint8_t)swd_configure_pins((swd_pin_set_t)pin_set_as_int);
-        }
-        num += (1 << 16) | 1;
-        break;
-    }
+    case ID_DAP_Vendor23: break;
     case ID_DAP_Vendor24: break;
     case ID_DAP_Vendor25: break;
     case ID_DAP_Vendor26: break;
