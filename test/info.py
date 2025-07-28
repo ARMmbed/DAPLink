@@ -1,6 +1,7 @@
 #
 # DAPLink Interface Firmware
 # Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+# Portions Copyright (c) 2023 Analog Devices, Inc.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -52,6 +53,7 @@ PROJECT_RELEASE_INFO = [
     ("k20dx_frdmkl27z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl28z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_twrkl28z72m_if",                        True,       0x8000,     "bin"       ),
+    ("k20dx_twrkv58f220m_if",                       False,      0x8000,     "bin"       ),
     ("k20dx_frdmkl43z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl46z_if",                          True,       0x8000,     "bin"       ),
     ("k20dx_frdmkl82z_if",                          True,       0x5000,     "bin"       ),
@@ -64,7 +66,7 @@ PROJECT_RELEASE_INFO = [
     ("lpc4322_mimxrt1170_evk_qspi_if",              False,      0x10000,    "bin"       ),
     ('k20dx_ep_agora_if',                           True,      	0x0000,     "bin"       ),
     ('k20dx_ep_kairos_if',                          True,       0x0000,     "bin"       ),
-    ("k26f_frdmk32w042_if",                         False,      0x8000,     "bin"       ),
+    ("k26f_frdmk32l3a6_if",                         False,      0x8000,     "bin"       ),
     ("lpc11u35_archble_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archpro_if",                         False,      0x0000,     "bin"       ),
     ("lpc11u35_archmax_if",                         False,      0x0000,     "bin"       ),
@@ -91,6 +93,7 @@ PROJECT_RELEASE_INFO = [
     ('lpc11u35_musca_b_if',                         False,      0x0000,     "bin"       ),
     ('lpc11u35_musca_b_eflash_if',                  False,      0x0000,     "bin"       ),
     ('max32620_max32625mbed_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max32625pico_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32620fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32630fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32660evsys_if',                   False,      0x0000,     "bin"       ),
@@ -98,6 +101,7 @@ PROJECT_RELEASE_INFO = [
     ('max32625_max78000fthr_if',                    False,      0x0000,     "bin"       ),
     ('max32625_max32670evkit_if',                   False,      0x0000,     "bin"       ),
     ('max32625_max32650fthr_if',                    False,      0x0000,     "bin"       ),
+    ('max32625_max32690evkit_if',                   False,      0x0000,     "bin"       ),
     ('kl26z_if',                                    False,      0x0000,     "bin"       ),
     ('k20dx_if',                                    False,      0x0000,     "bin"       ),
     ('k26f_if',                                     False,      0x0000,     "bin"       ),
@@ -151,15 +155,15 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0217,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk82f_if',                        'k20dx_bl',         'FRDM-K82F'                             ),
     (   0x0218,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl82z_if',                       'k20dx_bl',         'FRDM-KL82Z'                            ),
     (   0x0220,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl46z_if',                       'k20dx_bl',         'FRDM-KL46Z'                            ),
-    (   0x0224,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F' when mbed-os supports this
-    (   0x0225,     VENDOR_TO_FAMILY('NXP', 1),         'k26f_frdmk32w042_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32W042' when mbed-os supports this
+    (   0x0224,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk28f_if',                        'k20dx_bl',         None                                    ), # TODO - set target to 'FRDM-K28F'
     (   0x0226,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1020_evk_qspi_if',             'k20dx_bl',         'MIMXRT1020'                            ),
     (   0x0227,     VENDOR_TO_FAMILY('NXP', 3),         'k20dx_mimxrt1050_evk_hyper_if',            'k20dx_bl',         'MIMXRT1050'                            ),
-    (   0x0228,     VENDOR_TO_FAMILY('NXP', 4),         'k20dx_rapid_iot_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'Rapid-IoT' when mbed-os supports this
+    (   0x0228,     VENDOR_TO_FAMILY('NXP', 4),         'k20dx_rapid_iot_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'Rapid-IoT'
     (   0x0229,     VENDOR_TO_FAMILY('NXP', 3),         'lpc4322_mimxrt1060_evk_qspi_if',           'lpc4322_bl',       'MIMXRT1060'                            ),
     (   0x0230,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk20dx_if',                       'k20dx_bl',         'FRDM-K20D50M'                          ),
     (   0x0231,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk22f_if',                        'k20dx_bl',         'FRDM-K22F'                             ),
-    (   0x0236,     VENDOR_TO_FAMILY('NXP', 0),         'lpc4322_lpc55s69xpresso_if',               'lpc4322_bl',       'LPCXpresso55S69'                       ),
+    (   0x0236,     VENDOR_TO_FAMILY('NXP', 6),         'lpc4322_lpc55s69xpresso_if',               'lpc4322_bl',       'LPCXpresso55S69'                       ),
+    (   0x0237,     VENDOR_TO_FAMILY('NXP', 5),         'k26f_frdmk32l3a6_if',                      'k26f_bl',          None                                    ), # TODO - set target to 'FRDM-K32L3A6'
     (   0x0240,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk64f_if',                        'k20dx_bl',         'FRDM-K64F'                             ),
     (   0x0244,     VENDOR_TO_FAMILY('NXP', 3),         'lpc4322_mimxrt1170_evk_qspi_if',           'lpc4322_bl',       'MIMXRT1170'                            ),
     (   0x0250,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmkw24d_if',                       'k20dx_bl',         'FRDM-KW24D512'                         ),
@@ -167,16 +171,19 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x0261,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl27z_if',                       'k20dx_bl',         'FRDM-KL27Z'                            ),
     (   0x0262,     VENDOR_TO_FAMILY('NXP', 2),         'k20dx_frdmkl43z_if',                       'k20dx_bl',         'FRDM-KL43Z'                            ),
     (   0x0311,     VENDOR_TO_FAMILY('NXP', 1),         'k20dx_frdmk66f_if',                        'k20dx_bl',         'FRDM-K66F'                             ),
-    (   0x0350,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC' when mbed-os supports this
-    (   0x0360,     VENDOR_TO_FAMILY('NXP', 1),         'lpc4322_hani_iot_if',                      'lpc4322_bl',       'HANI-IOT'                              ),
+    (   0x0330,     VENDOR_TO_FAMILY('NXP', 7),         'k20dx_twrkv58f220m_if',                    'k20dx_bl',         None                                    ),
+    (   0x0350,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_xdot_l151_if',                       'k20dx_bl',         None                                    ), # TODO - set target to 'MTS-xDot-L151CC'
+    (   0x0360,     VENDOR_TO_FAMILY('NXP', 6),         'lpc4322_hani_iot_if',                      'lpc4322_bl',       'HANI-IOT'                              ),
     (   0x0409,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32630fthr_if',                 'max32625_bl',      'MAX32630'                              ),
     (   0x0415,     VENDOR_TO_FAMILY('Stub', 1),        'max32620_max32625mbed_if',                 'max32620_bl',      'MAX32625'                              ),
+    (   0x0416,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32625pico_if',                 'max32625_bl',      'MAX32625'                              ),
     (   0x0418,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32620fthr_if',                 'max32625_bl',      'MAX32620'                              ),
     (   0x0421,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32660evsys_if',                'max32625_bl',      'MAX32660'                              ),
     (   0x0422,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32666fthr_if',                 'max32625_bl',      'MAX32666'                              ),
     (   0x0423,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max78000fthr_if',                 'max32625_bl',      'MAX78000'                              ),
     (   0x0424,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32670evkit_if',                'max32625_bl',      'MAX32670'                              ),
     (   0x0425,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32650fthr_if',                 'max32625_bl',      'MAX32650'                              ),
+    (   0x0426,     VENDOR_TO_FAMILY('Stub', 1),        'max32625_max32690evkit_if',                'max32625_bl',      'MAX32690'                              ),
     (   0x0700,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f103rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F103RB'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f401re_if',               'stm32f103xb_bl',   'ST-Nucleo-F401RE'                      ),
     (   0x0720,     VENDOR_TO_FAMILY('Stub', 1),        'stm32f103xb_stm32f072rb_if',               'stm32f103xb_bl',   'ST-Nucleo-F072RB'                      ),
@@ -190,7 +197,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1017,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_hrm1017_if',                      None,               'mbed-HRM1017'                          ),
     (   0x1018,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ssci824_if',                      None,               'Switch-Science-mbed-LPC824'            ),
     (   0x1019,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_sscity_if',                       None,               'Switch-Science-mbed-TY51822r3'         ),
-    (   0x1021,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT' when mbed-os supports this
+    (   0x1021,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_ssci_chibi_if',                   None,               None                                    ), # TODO - set target to 'SSCI-MBIT'
     (   0x1028,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_pitaya_link_if',                  None,               None                                    ),
     (   0x1050,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_lpc812xpresso_if',                None,               'NXP-LPC800-MAX'                        ),
     (   0x1054,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc54114xpresso_if',               'lpc4322_bl',       'LPCXpresso54114'                       ),
@@ -213,22 +220,24 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x1313,     VENDOR_TO_FAMILY('Stub', 3),        'm48ssidae_numaker_iot_m467_if',            'm48ssidae_bl',     None                                    ),
     (   0x2600,     VENDOR_TO_FAMILY('Nordic', 2),      'k20dx_ep_agora_if',                        None,               None                                    ),
     (   0x2601,     VENDOR_TO_FAMILY('NXP', 0),         'k20dx_ep_kairos_if',                       None,               None                                    ),
+    (   0x4337,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc4337xpresso_if',                'lpc4322_bl',       'LPCXpresso4337'                        ),
+    (   0x4367,     VENDOR_TO_FAMILY('Stub', 1),        'lpc4322_lpc4367xpresso_if',                'lpc4322_bl',       'LPCXpresso4367'                        ),
     (   0x4600,     VENDOR_TO_FAMILY('Realtek', 1),     'lpc11u35_rtl8195am_if',                    None,               'REALTEK-RTL8195AM'                     ),
     (   0x5006,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_a_if',                      None,               'ARM_MUSCA_A1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_if',                      None,               'ARM_MUSCA_B1'                          ),
     (   0x5007,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_musca_b_eflash_if',               None,               'ARM_MUSCA_B1'                          ),
-    (   0x5500,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - Set to 'Renesas-GR-PEACH' once this target builds
-    (   0x5501,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - Set to 'Renesas-GR-LYCHEE' once this target builds
-    (   0x6660,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_nz32_sc151_if',                   None,               None                                    ), # TODO - set target to 'NZ32-SC151' when mbed-os supports this
-    (   0x7010,     VENDOR_TO_FAMILY('Toshiba', 1),     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja-CDP-TZ01B' when mbed-os supports this
-    (   0x8080,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705' when mbed-os supports this
-    (   0x8081,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX' when mbed-os supports this
+    (   0x5500,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_peach_if',                     None,               None                                    ), # TODO - set target to 'Renesas-GR-PEACH'
+    (   0x5501,     VENDOR_TO_FAMILY('Renesas', 1),     'lpc11u35_gr_lychee_if',                    None,               None                                    ), # TODO - set target to 'Renesas-GR-LYCHEE'
+    (   0x6660,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_nz32_sc151_if',                   None,               None                                    ), # TODO - set target to 'NZ32-SC151'
+    (   0x7010,     VENDOR_TO_FAMILY('Toshiba', 1),     'lpc11u35_blueninja_if',                    None,               None                                    ), # TODO - set target to 'BlueNinja-CDP-TZ01B'
+    (   0x8080,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff1705_l151_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF1705'
+    (   0x8081,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_ff_lpc546xx_if',                  None,               None                                    ), # TODO - set target to 'L-TEK-FF-LPC546XX'
     (   0x9004,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_archpro_if',                      None,               'Seeeduino-Arch-Pro'                    ),
     (   0x9009,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_archble_if',                      None,               'Seeed-Arch-BLE'                        ),
     (   0x9011,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_archmax_if',                      None,               'Seeed-Arch-Max'                        ),
     (   0x9012,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_tiny_if',                         None,               'Seeed-Tiny-BLE'                        ),
     (   0x9013,     VENDOR_TO_FAMILY('Nordic', 1),      'lpc11u35_archlink_if',                     None,               'Seeed-Arch-Link'                       ),
-    (   0x9016,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen' when mbed-os supports this
+    (   0x9016,     VENDOR_TO_FAMILY('Nordic', 2),      'lpc11u35_96b_nitrogen_if',                 None,               None                                    ), # TODO - set target to 'Seeed-96Boards-Nitrogen'
     (   0x9900,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9901,     VENDOR_TO_FAMILY('Nordic', 1),      'kl26z_microbit_if',                        'kl26z_bl',         'Microbit'                              ),
     (   0x9903,     VENDOR_TO_FAMILY('Nordic', 2),      'kl27z_microbit_if',                        'kl27z_bl',         'Microbitv2'                            ),
@@ -286,7 +295,6 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
     0x0213,  # FRDM-KE15Z
     0x0216,  # HVP-KE18F
     0x0217,  # FRDM-K82F
-    0x0225,  # FRDM-K32W042
     0x0261,  # FRDM-KL27Z
     0x0262,  # FRDM-KL43Z
     0x0218,  # FRDM-KL82Z
@@ -295,7 +303,6 @@ BOARD_ID_LOCKED_WHEN_ERASED = set([
 
 BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0214,  # HEXIWEAR
-    0x0225,  # FRDM-K32W042
     0x0226,  # MIMXRT1020 EVK
     0x0227,  # MIMXRT1050 EVK
     0x0228,  # k20dx_rapid_iot_if
@@ -305,12 +312,14 @@ BOARD_ID_SUPPORTING_PAGE_ERASE = set([
     0x0311,  # K66F
     0x0409,  # MAX32630FTHR
     0x0415,  # MAX32625MBED
+    0x0416,  # MAX32625PICO
     0x0418,  # MAX32620FTHR
     0x0421,  # MAX32660EVSYS
     0x0422,  # MAX32666FTHR
     0x0423,  # MAX78000FTHR
     0x0424,  # MAX32670EVKIT
     0x0425,  # MAX32650FTHR
+    0x0426,  # MAX32690EVKIT
     0x0460,  # WISE-1570
     0x1101,  # Nordic-nRF52-DK
     0x1102,  # Nordic-nRF52840-DK
@@ -348,7 +357,8 @@ TARGET_WITH_BAD_VECTOR_TABLE_LIST = [
     'SSCI-MBIT',
     'BlueNinja',
     'U-BLOX-EVK-NINA-B1',
-    'REALTEK-RTL8195AM']
+    'REALTEK-RTL8195AM'
+]
 
 BOARD_ID_TO_BUILD_TARGET = {config[0]: config[4] for config in
                             SUPPORTED_CONFIGURATIONS}

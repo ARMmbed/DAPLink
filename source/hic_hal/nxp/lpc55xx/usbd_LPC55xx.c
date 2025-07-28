@@ -640,7 +640,7 @@ uint32_t USBD_ReadEP(uint32_t EPNum, uint8_t *pData, uint32_t size)
             s_read_ctrl_out_next = 0;
             if (USBHSD->DEVCMDSTAT & USBHSD_DEVCMDSTAT_SETUP_MASK)  {
                 // A setup packet is still pending so trigger another interrupt
-                USBHSD->INTSETSTAT |= USBHSD_INTSETSTAT_EP_SET_INT(0);
+                USBHSD->INTSETSTAT |= USBHSD_INTSETSTAT_EP_SET_INT(1 << 0);
             }
         }
     }

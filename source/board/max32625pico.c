@@ -1,9 +1,9 @@
 /**
- * @file    frdmk32w042.c
- * @brief   board ID for the NXP FRDM-K32W042 board
+ * @file    max32625pico.c
+ * @brief   board ID for the Analog Devices's MAX32625PICO
  *
- * DAPLink Interface Firmware
- * Copyright (c) 2017-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2023 Analog Devices, Inc.
+ * 
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,16 +19,17 @@
  * limitations under the License.
  */
 
-#include "target_board.h"
 #include "target_family.h"
+#include "target_board.h"
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0225",
-    .family_id = kNXP_KinetisK32W_FamilyID,
+    .board_id = "0416",
+    .family_id = kMaxim_MAX3262X_FamilyID,
     .flags = kEnablePageErase,
-    .daplink_url_name =   "PRODINFOHTM",
-    .daplink_drive_name = "K32W042",
-    .daplink_target_url = "http://www.nxp.com/frdm-k32w042",
     .target_cfg = &target_device,
+    .daplink_url_name = "MAX32625HTM",
+    .daplink_target_url = "http://www.analog.com/max32625pico",
+    .board_vendor = "Analog Devices",
+    .board_name = "MAX32625PICO",
 };

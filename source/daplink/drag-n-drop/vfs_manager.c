@@ -126,7 +126,7 @@ U32 USBD_MSC_BlockCount;
 U8 *USBD_MSC_BlockBuf;
 #endif
 
-static uint32_t usb_buffer[VFS_SECTOR_SIZE / sizeof(uint32_t)];
+uint32_t usb_buffer[VFS_SECTOR_SIZE / sizeof(uint32_t)];
 static error_t fail_reason = ERROR_SUCCESS;
 static file_transfer_state_t file_transfer_state;
 

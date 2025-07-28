@@ -5,6 +5,7 @@ common:
             - source/family/freescale/target_reset_Lseries.c
             - source/family/freescale/target_reset_mimxrt.c
             - source/family/freescale/target_reset_rapid_iot.c
+            - source/family/freescale/target_reset_k32_series.c
             - source/family/nordic/target_reset_nrf51.c
             - source/family/nordic/target_reset_nrf52.c
             - source/family/realtek/target_reset_realtek_rtl8195am.c

@@ -1,9 +1,9 @@
 /**
- * @file    daplink.c
- * @brief   Implementation of daplink.h
+ * @file    lpc4367xpresso.c
+ * @brief   board ID for the NXP LPC4367Xpresso board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2022, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,25 +19,17 @@
  * limitations under the License.
  */
 
-#include "daplink.h"
+#include "target_family.h"
+#include "target_board.h"
 
-#ifdef DRAG_N_DROP_SUPPORT
-
-#include "virtual_fs.h"
-#include "compiler.h"
-
-COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_IF);
-
-const vfs_filename_t daplink_mode_file_name = "START_BLACT";
-
-#endif //DRAG_N_DROP_SUPPORT
-
-bool daplink_is_bootloader()
-{
-    return false;
-}
-
-bool daplink_is_interface()
-{
-    return true;
-}
+const board_info_t g_board_info = {
+    .info_version = kBoardInfoVersion,
+    .board_id = "4367",
+    .family_id = kStub_HWReset_FamilyID,
+    .daplink_url_name = "PRODINFOHTM",
+    .daplink_drive_name = "LPC4367    ",
+    .daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso4337",
+    .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "LPC4367Xpresso",
+};

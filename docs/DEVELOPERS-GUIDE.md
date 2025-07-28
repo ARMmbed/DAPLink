@@ -9,7 +9,7 @@ Install the necessary tools listed below. Skip any step where a compatible tool 
 * Install [Python 3](https://www.python.org/downloads/) . Add to PATH.
 * Install [Git](https://git-scm.com/downloads) . Add to PATH.
 * Install a compiler:
-    * [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) . This compiler will be identified as `gcc_arm`.
+    * [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) . This compiler will be identified as `gcc_arm`. It is recommended to use version `10.3-2021.10`. Versions 11.3 and later of GCC (Arm GNU Toolchain / `arm-none-eabi-gcc`) are known to require some changes to build (see [#1043](https://github.com/ARMmbed/DAPLink/pull/1043)).
     * [Arm Compiler 6](https://developer.arm.com/tools-and-software/embedded/arm-compiler) . This compiler will be identified as `armclang`. Only supported on Linux and Windows.
     * [Keil MDK](https://developer.arm.com/tools-and-software/embedded/keil-mdk) or [Arm Compiler 5](https://developer.arm.com/tools-and-software/embedded/arm-compiler/downloads/legacy-compilers#arm-compiler-5). This compiler will be identified as `armcc`. Only supported on Linux and Windows.
 * Install `make` (tested with [GNU Make](https://www.gnu.org/software/make)). [CMake](https://cmake.org) can alternatively be used in conjunction with different implementations of `make` as well as [ninja](https://ninja-build.org).

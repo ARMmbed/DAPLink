@@ -46,7 +46,8 @@ const target_family_descriptor_t g_sw_sysresetreq_family = {
 // Weak references to family definitions.
 __WEAK const target_family_descriptor_t g_nxp_kinetis_kseries = {0};
 __WEAK const target_family_descriptor_t g_nxp_kinetis_lseries = {0};
-__WEAK const target_family_descriptor_t g_nxp_kinetis_k32w_series = {0};
+__WEAK const target_family_descriptor_t g_nxp_kinetis_vseries = {0};
+__WEAK const target_family_descriptor_t g_nxp_kinetis_k32_series = {0};
 __WEAK const target_family_descriptor_t g_nxp_mimxrt = {0};
 __WEAK const target_family_descriptor_t g_nxp_rapid_iot = {0};
 __WEAK const target_family_descriptor_t g_nxp_lpc55xx_series = {0};
@@ -78,7 +79,8 @@ const target_family_descriptor_t *g_families[] = {
     &g_sw_sysresetreq_family,
     &g_nxp_kinetis_kseries,
     &g_nxp_kinetis_lseries,
-    &g_nxp_kinetis_k32w_series,
+    &g_nxp_kinetis_vseries,
+    &g_nxp_kinetis_k32_series,
     &g_nxp_lpc55xx_series,
     &g_nxp_mimxrt,
     &g_nxp_rapid_iot,
@@ -139,6 +141,8 @@ uint8_t target_set_state(target_state_t state)
                     swd_set_soft_reset(g_board_info.soft_reset_type);
                 } else if (g_target_family->soft_reset_type) {
                     swd_set_soft_reset(g_target_family->soft_reset_type);
+                } else {
+                    swd_set_soft_reset(SYSRESETREQ);
                 }
                 return swd_set_target_state_sw(state);
             } else {

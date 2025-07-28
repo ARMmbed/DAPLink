@@ -472,7 +472,7 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .family_id = kNordic_Nrf52_FamilyID,
     .daplink_url_name = "MICROBITHTM",
-    .daplink_drive_name = "MICROBIT",
+    .daplink_drive_name = "MICROBIT   ",
     .daplink_target_url = "https://microbit.org/device/?id=@B&v=@V",
     .prerun_board_config = prerun_board_config,
     .target_cfg = &target_device_nrf52833,

@@ -4,3 +4,4 @@ common:
             - source/board/max32625mbed.c
         family:
             - source/family/maxim/max32625/target.c
+            - source/family/maxim/target_reset_max32xxx.c

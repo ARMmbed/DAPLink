@@ -1,0 +1,6 @@
+common:
+    sources:
+        board:
+            - source/board/lpc4367xpresso.c
+        family:
+            - source/family/nxp/lpc43xx/target_lpc4367.c

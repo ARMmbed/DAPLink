@@ -1,9 +1,9 @@
 /**
- * @file    daplink.c
- * @brief   Implementation of daplink.h for the bootloader application
+ * @file    lpc4337xpresso.c
+ * @brief   board ID for the NXP LPC4337Xpresso board
  *
  * DAPLink Interface Firmware
- * Copyright (c) 2009-2019, ARM Limited, All Rights Reserved
+ * Copyright (c) 2022, Arm Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,23 +19,17 @@
  * limitations under the License.
  */
 
-#include "daplink.h"
-#include "virtual_fs.h"
-#include "compiler.h"
+#include "target_family.h"
+#include "target_board.h"
 
-COMPILER_ASSERT(DAPLINK_BUILD_KEY == DAPLINK_BUILD_KEY_BL);
-
-// daplink_mode_file_name, daplink_url_name and
-// daplink_drive_name strings must be 11 characters
-// excluding the null terminated character
-const char daplink_mode_file_name[11] = "START_IFACT";
-
-bool daplink_is_bootloader()
-{
-    return true;
-}
-
-bool daplink_is_interface()
-{
-    return false;
-}
+const board_info_t g_board_info = {
+    .info_version = kBoardInfoVersion,
+    .board_id = "4337",
+    .family_id = kStub_HWReset_FamilyID,
+    .daplink_url_name = "PRODINFOHTM",
+    .daplink_drive_name = "LPC4337    ",
+    .daplink_target_url = "https://os.mbed.com/platforms/LPCXpresso4337/",
+    .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "LPC4337Xpresso",
+};

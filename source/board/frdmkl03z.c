@@ -26,5 +26,10 @@ const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
     .board_id = "0207",
     .family_id = kNXP_KinetisL_FamilyID,
+    .daplink_url_name =   "PRODINFOHTM",
+    .daplink_drive_name = "FRDM-KL03ZD",
+    .daplink_target_url = "http://www.nxp.com/frdm-kl03z",
     .target_cfg = &target_device,
+    .board_vendor = "NXP",
+    .board_name = "FRDM-KL03Z",
 };

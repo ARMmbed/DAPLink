@@ -83,8 +83,6 @@ void __libc_init_array (void) {}
 #define FLAGS_LED_BLINK_30MS    (1 << 6)
 
 // Timing constants (in 90mS ticks)
-// USB busy time (~3 sec)
-#define USB_BUSY_TIME           (33)
 // Delay before a USB device connect may occur (~1 sec)
 #define USB_CONNECT_DELAY       (11)
 // Timeout for USB being configured (~2 sec)
@@ -272,7 +270,7 @@ void main_task(void * arg)
     gpio_led_state_t cdc_led_value = CDC_LED_DEF;
     gpio_led_state_t msc_led_value = MSC_LED_DEF;
     // USB
-    uint32_t usb_state_count = USB_BUSY_TIME;
+    uint32_t usb_state_count = USB_CONNECT_DELAY;
     uint32_t usb_no_config_count = USB_CONFIGURE_TIMEOUT;
 #ifdef PBON_BUTTON
     uint8_t power_on = 1;
@@ -330,7 +328,6 @@ void main_task(void * arg)
 #endif
     usbd_connect(0);
     usb_state = USB_CONNECTING;
-    usb_state_count = USB_CONNECT_DELAY;
 
     // Start timer tasks
 #ifndef USE_LEGACY_CMSIS_RTOS

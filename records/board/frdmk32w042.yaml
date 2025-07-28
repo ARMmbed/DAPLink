@@ -1,7 +1,0 @@
-common:
-    sources:
-        board:
-            - source/board/frdmk32w042.c
-        family:
-            - source/family/freescale/k32w042/target.c
-            - source/family/freescale/target_reset_k32w_series.c

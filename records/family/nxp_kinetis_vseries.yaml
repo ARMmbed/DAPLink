@@ -1,0 +1,4 @@
+common:
+    sources:
+        target:
+            - source/target/freescale/target_reset_Vseries.c

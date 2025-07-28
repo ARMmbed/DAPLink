@@ -1,0 +1,7 @@
+common:
+    sources:
+        board:
+            - source/board/frdmk32l3a6.c
+        family:
+            - source/family/freescale/k32l3a6/target.c
+            - source/family/freescale/target_reset_k32_series.c
