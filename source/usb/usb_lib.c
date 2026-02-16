@@ -136,8 +136,6 @@ U8 USBD_CDC_ACM_NotifyBuf[10];
 #if    (USBD_WEBUSB_ENABLE)
 U8 usbd_webusb_if_num; //assigned during runtime init
 const U8 usbd_webusb_vendor_code = USBD_WEBUSB_VENDOR_CODE;
-#else
-const U8 usbd_webusb_vendor_code;
 #endif
 
 #if    (USBD_WINUSB_ENABLE)
