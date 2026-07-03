@@ -30,7 +30,7 @@
 #define EPNUM_MASK  (~USB_ENDPOINT_DIRECTION_MASK)
 
 #define INIT_INTS     (MXC_F_USB_DEV_INTEN_BRST | MXC_F_USB_DEV_INTFL_BRST_DN | MXC_F_USB_DEV_INTEN_VBUS | MXC_F_USB_DEV_INTFL_NO_VBUS)
-#define CONNECT_INTS  (MXC_F_USB_DEV_INTEN_SETUP | MXC_F_USB_DEV_INTEN_EP_IN | MXC_F_USB_DEV_INTEN_EP_OUT | MXC_F_USB_DEV_INTEN_DMA_ERR)
+#define CONNECT_INTS  (MXC_F_USB_DEV_INTEN_SETUP | MXC_F_USB_DEV_INTEN_EP_IN | MXC_F_USB_DEV_INTEN_EP_OUT | MXC_F_USB_DEV_INTEN_DMA_ERR | MXC_F_USB_DEV_INTEN_BUF_OVR)
 
 typedef struct {
     volatile uint32_t buf0_desc;
@@ -69,14 +69,18 @@ static volatile int ep0_expect_zlp;
  * of Maxim's microcontrollers does not provide and SOF interrupt. A periodic
  * timer interrupt is used instead.
  */
+extern void main_board_event(void);
+
 /******************************************************************************/
 void TMR0_IRQHandler(void)
 {
     MXC_TMR0->intfl = MXC_TMR0->intfl;
+    main_board_event();  /* Signal main task, don't process in ISR */
+}
 
-    if (usbd_configured()) {
-        USBD_CDC_ACM_SOF_Event();
-    }
+void board_custom_event(void)
+{
+    USBD_CDC_ACM_SOF_Event();
 }
 #endif
 
@@ -176,6 +180,9 @@ void USBD_Init (void)
 
     /* enable some interrupts */
     MXC_USB->dev_inten = INIT_INTS;
+
+    /* Set USB to higher priority than UART/Timer to ensure USB completes transfers */
+    NVIC_SetPriority(USB_IRQn, 0);      /* Highest priority */
     NVIC_EnableIRQ(USB_IRQn);
 }
 
@@ -241,6 +248,7 @@ void USBD_Configure (BOOL cfg)
 
         // Enable the interrupt
         MXC_TMR0->intfl = MXC_TMR0->intfl;
+        NVIC_SetPriority(TMR0_0_IRQn, 2);  /* Lower priority than USB */
         NVIC_EnableIRQ(TMR0_0_IRQn);
         MXC_TMR0->inten = MXC_F_TMR_INTEN_TIMER0;
 
@@ -493,6 +501,86 @@ void USB_IRQHandler (void)
     USBD_SignalHandler();
 }
 
+uint32_t USBD_Handler_MSC(uint32_t ep_int_in, uint32_t ep_int_out)
+{
+    uint32_t ret = 0;
+    uint32_t mask = 1;
+
+    mask = 1 << USBD_MSC_EP_BULKIN;
+    if (ep_int_in & mask) {
+        if (USBD_P_EP[USBD_MSC_EP_BULKIN]) {
+            USBD_P_EP[USBD_MSC_EP_BULKIN](USBD_EVT_IN);
+            ret |= (mask << 16);
+        }
+    }
+
+    mask = 1 << USBD_MSC_EP_BULKOUT;
+    if (ep_int_out & mask) {
+        if (USBD_P_EP[USBD_MSC_EP_BULKOUT]) {
+            USBD_P_EP[USBD_MSC_EP_BULKOUT](USBD_EVT_OUT);
+            ret |= mask;
+        }
+    }
+
+    return ret;
+}
+
+uint32_t USBD_Handler_CDC(uint32_t ep_int_in, uint32_t ep_int_out)
+{
+    uint32_t ret = 0;
+    uint32_t mask = 1;
+    
+    mask = 1 << USBD_CDC_ACM_EP_INTIN;
+    if (ep_int_in & mask) {
+        if (USBD_P_EP[USBD_CDC_ACM_EP_INTIN]) {
+            USBD_P_EP[USBD_CDC_ACM_EP_INTIN](USBD_EVT_IN);
+            ret |= (mask << 16);
+        }
+    }
+
+    mask = 1 << USBD_CDC_ACM_EP_BULKIN;
+    if (ep_int_in & mask) {
+        if (USBD_P_EP[USBD_CDC_ACM_EP_BULKIN]) {
+            USBD_P_EP[USBD_CDC_ACM_EP_BULKIN](USBD_EVT_IN);
+            ret |= (mask << 16);
+        }
+    }
+
+    mask = 1 << USBD_CDC_ACM_EP_BULKOUT;
+    if (ep_int_out & mask) {
+        if (USBD_P_EP[USBD_CDC_ACM_EP_BULKOUT]) {
+            USBD_P_EP[USBD_CDC_ACM_EP_BULKOUT](USBD_EVT_OUT);
+            ret |= mask;
+        }
+    }
+
+    return ret;
+}
+
+uint32_t USBD_Handler_HID(uint32_t ep_int_in, uint32_t ep_int_out)
+{
+    uint32_t ret = 0;
+    uint32_t mask = 1;
+
+    mask = 1 << USBD_HID_EP_INTIN;
+    if (ep_int_in & mask) {
+        if (USBD_P_EP[USBD_HID_EP_INTIN]) {
+            USBD_P_EP[USBD_HID_EP_INTIN](USBD_EVT_IN);
+            ret |= (mask << 16);
+        }
+    }
+
+    mask = 1 << USBD_HID_EP_INTOUT;
+    if (ep_int_out & mask) {
+        if (USBD_P_EP[USBD_HID_EP_INTOUT]) {
+            USBD_P_EP[USBD_HID_EP_INTOUT](USBD_EVT_OUT);
+            ret |= mask;
+        }
+    }
+
+    return ret;
+}
+
 void USBD_Handler(void)
 {
     uint32_t irq_flags;
@@ -589,52 +677,29 @@ void USBD_Handler(void)
 #endif
     }
 
-    if (irq_flags & MXC_F_USB_DEV_INTFL_EP_IN) {
+    if (irq_flags & MXC_F_USB_DEV_INTFL_EP_IN || irq_flags & MXC_F_USB_DEV_INTFL_EP_OUT) {
+        uint32_t ep_in_int = MXC_USB->in_int;
+        uint32_t ep_out_int = MXC_USB->out_int;
+
+        MXC_USB->in_int = ep_in_int;
+        MXC_USB->out_int = ep_out_int;
+
+        if (ep_in_int & 1) {
+            USBD_P_EP[0](USBD_EVT_IN);
+        }
+
+        USBD_Handler_HID(ep_in_int, 0);
+        USBD_Handler_MSC(ep_in_int, 0);
+
+
+        if (ep_out_int & 1) {
+            USBD_P_EP[0](USBD_EVT_OUT);
+        }
 
         // Read and clear endpoint interrupts
-        ep_int = MXC_USB->in_int;
-        MXC_USB->in_int = ep_int;
-
-        mask = 1;
-        for (ep = 0; ep < MXC_USB_NUM_EP; ep++) {
-            if (ep_int & mask) {
-#ifdef __RTX
-                if (USBD_RTX_EPTask[ep]) {
-                    isr_evt_set(USBD_EVT_IN,  USBD_RTX_EPTask[ep]);
-                }
-#else
-                if (USBD_P_EP[ep]) {
-                    USBD_P_EP[ep](USBD_EVT_IN);
-                }
-#endif
-            }
-
-            mask <<= 1;
-        }
-    }
-
-    if (irq_flags & MXC_F_USB_DEV_INTFL_EP_OUT) {
-
-        // Read and clear endpoint interrupts
-        ep_int = MXC_USB->out_int;
-        MXC_USB->out_int = ep_int;
-
-        mask = 1;
-        for (ep = 0; ep < MXC_USB_NUM_EP; ep++) {
-            if (ep_int & mask) {
-#ifdef __RTX
-                if (USBD_RTX_EPTask[ep]) {
-                    isr_evt_set(USBD_EVT_OUT, USBD_RTX_EPTask[ep]);
-                }
-#else
-                if (USBD_P_EP[ep]) {
-                    USBD_P_EP[ep](USBD_EVT_OUT);
-                }
-#endif
-            }
-
-            mask <<= 1;
-        }
+        USBD_Handler_HID(0, ep_out_int);
+        USBD_Handler_MSC(0, ep_out_int);
+        USBD_Handler_CDC(ep_in_int, ep_out_int);
     }
 
     if (irq_flags & MXC_F_USB_DEV_INTFL_DMA_ERR) {

@@ -30,6 +30,7 @@
 
 // Track bit rate to avoid calculation from bus clock, clock scaler and baud divisor values
 static uint32_t baudrate;
+static uint8_t is_reset = 0;
 
 static mxc_uart_regs_t *CdcAcmUart = NULL;
 static mxc_uart_fifo_regs_t *CdcAcmUartFifo = NULL;
@@ -51,6 +52,10 @@ static void set_bitrate(uint32_t target_baud)
     uint32_t baud, diff_baud;
     uint32_t baud_1, diff_baud_1;
 
+    if (is_reset) {
+        is_reset = 0;
+        return; // Do not change the baudrate if the UART is in reset state since host does not reconfigure the baudrate.
+    }
     // Setup system clock divider for given bit rate
     clk_scale = 0;
     do {
@@ -185,6 +190,7 @@ int32_t uart_initialize(void)
     // Enable receive and transmit fifos
     CdcAcmUart->ctrl |= (MXC_F_UART_CTRL_RX_FIFO_EN | MXC_F_UART_CTRL_TX_FIFO_EN);
 
+    NVIC_SetPriority(CdcAcmUartIrqNumber, 3);
     NVIC_EnableIRQ(CdcAcmUartIrqNumber);
 
     // Set transmit almost empty level to three-quarters of the fifo size
@@ -230,7 +236,7 @@ int32_t uart_reset(void)
 {
     circ_buf_init(&write_buffer, write_buffer_data, sizeof(write_buffer_data));
     circ_buf_init(&read_buffer, read_buffer_data, sizeof(read_buffer_data));
-
+    is_reset = 1;
     return 1;
 }
 
@@ -328,35 +334,77 @@ int32_t uart_get_configuration(UART_Configuration *config)
 /******************************************************************************/
 int32_t uart_write_free(void)
 {
-    return circ_buf_count_free(&write_buffer);
+    uint32_t cnt;
+
+    /* Disable UART IRQ to get consistent view of head/tail */
+    NVIC_DisableIRQ(CdcAcmUartIrqNumber);
+
+    if (write_buffer.tail >= write_buffer.head) {
+        cnt = write_buffer.size - (write_buffer.tail - write_buffer.head) - 1;
+    } else {
+        cnt = write_buffer.head - write_buffer.tail - 1;
+    }
+
+    NVIC_EnableIRQ(CdcAcmUartIrqNumber);
+    return cnt;
 }
 
 /******************************************************************************/
 int32_t uart_write_data(uint8_t *data, uint16_t size)
 {
     uint16_t xfer_count = size;
+    uint16_t written = 0;
 
+    NVIC_DisableIRQ(CdcAcmUartIrqNumber);
     // Prioritize writes to TX FIFO, then to write_buffer
-    if (circ_buf_count_used(&write_buffer) == 0) {
+    if (write_buffer.head == write_buffer.tail) {
         while ((((CdcAcmUart->tx_fifo_ctrl & MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY) >> MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY_POS) < MXC_UART_FIFO_DEPTH) &&
                 (xfer_count > 0)) {
-            NVIC_DisableIRQ(CdcAcmUartIrqNumber);
             CdcAcmUart->intfl = MXC_F_UART_INTFL_TX_FIFO_AE;
             CdcAcmUartFifo->tx = *data++;
             xfer_count--;
-            NVIC_EnableIRQ(CdcAcmUartIrqNumber);
+            written++;
         }
     }
 
-    xfer_count = circ_buf_write(&write_buffer, data, xfer_count);
-
-    return size - xfer_count;
+    while (xfer_count > 0) {
+        uint32_t next_tail = write_buffer.tail + 1;
+        if (next_tail >= write_buffer.size) {
+            next_tail = 0;
+        }
+        if (next_tail == write_buffer.head) {
+            break;  // Buffer full
+        }
+        write_buffer.buf[write_buffer.tail] = *data++;
+        write_buffer.tail = next_tail;
+        xfer_count--;
+        written++;
+    }
+    NVIC_EnableIRQ(CdcAcmUartIrqNumber);
+    
+    return written;
 }
 
 /******************************************************************************/
 int32_t uart_read_data(uint8_t *data, uint16_t size)
 {
-    return circ_buf_read(&read_buffer, data, size);
+    uint16_t read_count = 0;
+
+    /* Disable UART IRQ to protect buffer state from concurrent ISR access.
+     * We read read_buffer.tail (written by ISR) so need protection. */
+    NVIC_DisableIRQ(CdcAcmUartIrqNumber);
+
+    while ((read_count < size) && (read_buffer.head != read_buffer.tail)) {
+        data[read_count++] = read_buffer.buf[read_buffer.head];
+        uint32_t next_head = read_buffer.head + 1;
+        if (next_head >= read_buffer.size) {
+            next_head = 0;
+        }
+        read_buffer.head = next_head;
+    }
+
+    NVIC_EnableIRQ(CdcAcmUartIrqNumber);
+    return read_count;
 }
 
 /******************************************************************************/
@@ -374,11 +422,18 @@ void UART_IRQHandler(void)
     }
 
     if (intfl & MXC_F_UART_INTFL_RX_FIFO_NOT_EMPTY) {
-        while ((CdcAcmUart->rx_fifo_ctrl & MXC_F_UART_RX_FIFO_CTRL_FIFO_ENTRY) &&
-                circ_buf_count_free(&read_buffer)) {
-            circ_buf_push(&read_buffer, CdcAcmUartFifo->rx);
-            CdcAcmUart->intfl = MXC_F_UART_INTFL_RX_FIFO_NOT_EMPTY;
-        }
+        while (CdcAcmUart->rx_fifo_ctrl & MXC_F_UART_RX_FIFO_CTRL_FIFO_ENTRY) {
+            uint32_t next_tail = read_buffer.tail + 1;
+            if (next_tail >= read_buffer.size) {
+                next_tail = 0;
+            }
+            if (next_tail == read_buffer.head) {
+                break;  /* Buffer full */
+            }
+            read_buffer.buf[read_buffer.tail] = CdcAcmUartFifo->rx;
+            read_buffer.tail = next_tail;
+             CdcAcmUart->intfl = MXC_F_UART_INTFL_RX_FIFO_NOT_EMPTY;
+         }
     }
 
     if (intfl & MXC_F_UART_INTFL_TX_FIFO_AE) {
@@ -387,9 +442,13 @@ void UART_IRQHandler(void)
         	a) write buffer contains data and
         	b) transmit FIFO is not full
         */
-        while (circ_buf_count_used(&write_buffer) &&
-                (((CdcAcmUart->tx_fifo_ctrl & MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY) >> MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY_POS) < MXC_UART_FIFO_DEPTH)) {
-            CdcAcmUartFifo->tx = circ_buf_pop(&write_buffer);
+        while (write_buffer.head != write_buffer.tail &&
+                 (((CdcAcmUart->tx_fifo_ctrl & MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY) >> MXC_F_UART_TX_FIFO_CTRL_FIFO_ENTRY_POS) < MXC_UART_FIFO_DEPTH)) {
+            CdcAcmUartFifo->tx = write_buffer.buf[write_buffer.head];
+            write_buffer.head++;
+            if (write_buffer.head >= write_buffer.size) {
+                write_buffer.head = 0;
+            }
         }
     }
 }
