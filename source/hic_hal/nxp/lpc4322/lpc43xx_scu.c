@@ -80,7 +80,7 @@
  * 					- FUNC7		:Function 7
  * @return		None
  **********************************************************************/
-void scu_pinmux(uint8_t port, uint8_t pin, uint8_t mode, uint8_t func)
+void scu_pinmux(uint8_t port, uint8_t pin, uint16_t mode, uint8_t func)
 {
     uint32_t *scu_base = (uint32_t *)(LPC_SCU_BASE);
     scu_base[(PORT_OFFSET * port + PIN_OFFSET * pin) / 4] = mode + func;
