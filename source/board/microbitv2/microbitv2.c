@@ -446,13 +446,16 @@ static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32
     return VFS_SECTOR_SIZE;
 }
 
-uint8_t board_detect_incompatible_image(const uint8_t *data, uint32_t size)
+uint8_t board_detect_incompatible_image(uint32_t addr, const uint8_t *data, uint32_t size)
 {
-    uint8_t result = 0;
+    // We can only check image compatibility on the first block of flash data
+    if (addr != 0) {
+        return 0;
+    }
 
     // Check difference in vectors (mem fault, bus fault, usage fault)
     // If these vectors are 0, we assume it's an M0 image (not compatible)
-    result = memcmp(data + M0_RESERVED_VECT_OFFSET, (uint8_t[M0_RESERVED_VECT_SIZE]){0}, M0_RESERVED_VECT_SIZE);
+    uint8_t result = memcmp(data + M0_RESERVED_VECT_OFFSET, (uint8_t[M0_RESERVED_VECT_SIZE]){0}, M0_RESERVED_VECT_SIZE);
 
     return result == 0;
 }
