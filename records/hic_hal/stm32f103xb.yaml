@@ -7,6 +7,7 @@ common:
         - INTERFACE_STM32F103XB
         - USE_HAL_DRIVER
         - STM32F103xB
+        - STM32F10X_MD
         - DAPLINK_HIC_ID=0x97969908  # DAPLINK_HIC_ID_STM32F103XB
         - __packed=__packed          # Prevent redefinition of __packed with ARMCC
         - DAPLINK_NO_ASSERT_FILENAMES
@@ -21,6 +22,7 @@ common:
             - source/hic_hal/stm32/stm32f103xb
             - source/hic_hal/stm32/stm32f103xb/cmsis
             - source/hic_hal/stm32/stm32f103xb/STM32F1xx_HAL_Driver/Src
+            - source/hic_hal/cmsis-driver/uart/uart.c
 
 tool_specific:
     uvision:

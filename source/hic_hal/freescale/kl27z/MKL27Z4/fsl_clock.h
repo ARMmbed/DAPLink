@@ -40,13 +40,9 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief CLOCK driver version 2.2.0. */
-#define FSL_CLOCK_DRIVER_VERSION (MAKE_VERSION(2, 2, 0))
+/*! @brief CLOCK driver version 2.3.1. */
+#define FSL_CLOCK_DRIVER_VERSION (MAKE_VERSION(2, 3, 1))
 /*@}*/
-
-#ifndef SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY
-#define SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY 48000000
-#endif
 
 /*! @brief External XTAL0 (OSC0) clock frequency.
  *
@@ -54,8 +50,8 @@
  * function CLOCK_SetXtal0Freq to set the value in the clock driver. For example,
  * if XTAL0 is 8 MHz:
  * @code
- * CLOCK_InitOsc0(...); // Set up the OSC0
- * CLOCK_SetXtal0Freq(80000000); // Set the XTAL0 value to clock driver.
+ * CLOCK_InitOsc0(...);
+ * CLOCK_SetXtal0Freq(80000000);
  * @endcode
  *
  * This is important for the multicore platforms where one core needs to set up the
@@ -75,6 +71,10 @@ extern volatile uint32_t g_xtal0Freq;
  */
 extern volatile uint32_t g_xtal32Freq;
 
+/* Definition for delay API in clock driver, users can redefine it to the real application. */
+#ifndef SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY
+#define SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY (48000000UL)
+#endif
 /*! @brief Clock ip name array for DMAMUX. */
 #define DMAMUX_CLOCKS  \
     {                  \
@@ -97,12 +97,6 @@ extern volatile uint32_t g_xtal32Freq;
 #define SPI_CLOCKS               \
     {                            \
         kCLOCK_Spi0, kCLOCK_Spi1 \
-    }
-
-/*! @brief Clock ip name array for SLCD. */
-#define SLCD_CLOCKS  \
-    {                \
-        kCLOCK_Slcd0 \
     }
 
 /*! @brief Clock ip name array for PIT. */
@@ -291,7 +285,6 @@ typedef enum _clock_ip_name
     kCLOCK_PortC   = CLK_GATE_DEFINE(0x1038U, 11U),
     kCLOCK_PortD   = CLK_GATE_DEFINE(0x1038U, 12U),
     kCLOCK_PortE   = CLK_GATE_DEFINE(0x1038U, 13U),
-    kCLOCK_Slcd0   = CLK_GATE_DEFINE(0x1038U, 19U),
     kCLOCK_Lpuart0 = CLK_GATE_DEFINE(0x1038U, 20U),
     kCLOCK_Lpuart1 = CLK_GATE_DEFINE(0x1038U, 21U),
     kCLOCK_Flexio0 = CLK_GATE_DEFINE(0x1038U, 31U),
@@ -438,7 +431,7 @@ extern "C" {
 static inline void CLOCK_EnableClock(clock_ip_name_t name)
 {
     uint32_t regAddr = SIM_BASE + CLK_GATE_ABSTRACT_REG_OFFSET((uint32_t)name);
-    (*(volatile uint32_t *)regAddr) |= (1U << CLK_GATE_ABSTRACT_BITS_SHIFT((uint32_t)name));
+    (*(volatile uint32_t *)regAddr) |= (1UL << CLK_GATE_ABSTRACT_BITS_SHIFT((uint32_t)name));
 }
 
 /*!
@@ -449,7 +442,7 @@ static inline void CLOCK_EnableClock(clock_ip_name_t name)
 static inline void CLOCK_DisableClock(clock_ip_name_t name)
 {
     uint32_t regAddr = SIM_BASE + CLK_GATE_ABSTRACT_REG_OFFSET((uint32_t)name);
-    (*(volatile uint32_t *)regAddr) &= ~(1U << CLK_GATE_ABSTRACT_BITS_SHIFT((uint32_t)name));
+    (*(volatile uint32_t *)regAddr) &= ~(1UL << CLK_GATE_ABSTRACT_BITS_SHIFT((uint32_t)name));
 }
 
 /*!
@@ -630,7 +623,7 @@ void CLOCK_SetSimConfig(sim_clock_config_t const *config);
  */
 static inline void CLOCK_SetSimSafeDivs(void)
 {
-    SIM->CLKDIV1 = 0x10030000U;
+    SIM->CLKDIV1 = 0x10070000U;
 }
 
 /*!
@@ -726,7 +719,7 @@ static inline void OSC_SetExtRefClkConfig(OSC_Type *base, oscer_config_t const *
 {
     uint8_t reg = base->CR;
 
-    reg &= ~(OSC_CR_ERCLKEN_MASK | OSC_CR_EREFSTEN_MASK);
+    reg &= (uint8_t)(~(OSC_CR_ERCLKEN_MASK | OSC_CR_EREFSTEN_MASK));
     reg |= config->enableMode;
 
     base->CR = reg;
@@ -744,7 +737,6 @@ static inline void OSC_SetExtRefClkConfig(OSC_Type *base, oscer_config_t const *
  *
  * Example:
    @code
-   // To enable only 2 pF and 8 pF capacitor load, please use like this.
    OSC_SetCapLoad(OSC, kOSC_Cap2P | kOSC_Cap8P);
    @endcode
  */
@@ -753,7 +745,7 @@ static inline void OSC_SetCapLoad(OSC_Type *base, uint8_t capLoad)
 {
     uint8_t reg = base->CR;
 
-    reg &= ~(OSC_CR_SC2P_MASK | OSC_CR_SC4P_MASK | OSC_CR_SC8P_MASK | OSC_CR_SC16P_MASK);
+    reg &= (uint8_t)(~(OSC_CR_SC2P_MASK | OSC_CR_SC4P_MASK | OSC_CR_SC8P_MASK | OSC_CR_SC16P_MASK));
     reg |= capLoad;
 
     base->CR = reg;
@@ -802,16 +794,6 @@ static inline void CLOCK_SetXtal32Freq(uint32_t freq)
     g_xtal32Freq = freq;
 }
 /* @} */
-
-/*!
- * @brief Delay at least for several microseconds.
- *  Please note that, this API will calculate the microsecond period with the maximum
- *  supported CPU frequency, so this API will only delay for at least the given microseconds, if precise
- *  delay count was needed, please implement a new timer count to achieve this function.
- *
- * @param delay_us  Delay time in unit of microsecond.
- */
-void SDK_DelayAtLeastUs(uint32_t delay_us);
 
 #if defined(__cplusplus)
 }
