@@ -90,16 +90,16 @@
 //     </e>
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
-#define USBD_STRDESC_MAN            L"Arm"
+#define USBD_STRDESC_MAN            u"Arm"
 #ifndef USB_PROD_STR
-#define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
+#define USBD_STRDESC_PROD           u"DAPLink CMSIS-DAP"
 #else
-#define _TOWIDE(x)                   L ## #x
+#define _TOWIDE(x)                   u ## #x
 #define TOWIDE(x)                   _TOWIDE(x)
 #define USBD_STRDESC_PROD           TOWIDE(USB_PROD_STR)
 #endif
 #define USBD_STRDESC_SER_ENABLE     1
-#define USBD_STRDESC_SER            L"0001A0000000"
+#define USBD_STRDESC_SER            u"0001A0000000"
 
 //   <e0> Class Support
 //     <i> Enables USB Device Class specific Requests
@@ -173,8 +173,8 @@
 #define USBD_HID_HS_ENABLE          0
 #define USBD_HID_HS_WMAXPACKETSIZE  64
 #define USBD_HID_HS_BINTERVAL       6
-#define USBD_HID_STRDESC            L"CMSIS-DAP v1"
-#define USBD_WEBUSB_STRDESC         L"WebUSB: CMSIS-DAP"
+#define USBD_HID_STRDESC            u"CMSIS-DAP v1"
+#define USBD_WEBUSB_STRDESC         u"WebUSB: CMSIS-DAP"
 #define USBD_HID_INREPORT_NUM       1
 #define USBD_HID_OUTREPORT_NUM      1
 #define USBD_HID_INREPORT_MAX_SZ    64
@@ -224,7 +224,7 @@
 #define USBD_MSC_HS_ENABLE          0
 #define USBD_MSC_HS_WMAXPACKETSIZE  512
 #define USBD_MSC_HS_BINTERVAL       0
-#define USBD_MSC_STRDESC            L"USB_MSC"
+#define USBD_MSC_STRDESC            u"USB_MSC"
 #define USBD_MSC_INQUIRY_DATA       "MBED    "         \
                                     "VFS             " \
                                     "0.1"
@@ -267,9 +267,9 @@
 #define USBD_ADC_BINTERVAL          1
 #define USBD_ADC_HS_ENABLE          0
 #define USBD_ADC_HS_WMAXPACKETSIZE  64
-#define USBD_ADC_CIF_STRDESC        L"USB_ADC"
-#define USBD_ADC_SIF1_STRDESC       L"USB_ADC1"
-#define USBD_ADC_SIF2_STRDESC       L"USB_ADC2"
+#define USBD_ADC_CIF_STRDESC        u"USB_ADC"
+#define USBD_ADC_SIF1_STRDESC       u"USB_ADC1"
+#define USBD_ADC_SIF2_STRDESC       u"USB_ADC2"
 #define USBD_ADC_BSUBFRAMESIZE      2
 #define USBD_ADC_BBITRESOLUTION     16
 #define USBD_ADC_TSAMFREQ           32000
@@ -349,8 +349,8 @@
 #define USBD_CDC_ACM_HS_ENABLE1         0
 #define USBD_CDC_ACM_HS_WMAXPACKETSIZE1 64
 #define USBD_CDC_ACM_HS_BINTERVAL1      0
-#define USBD_CDC_ACM_CIF_STRDESC        L"mbed Serial Port"
-#define USBD_CDC_ACM_DIF_STRDESC        L"mbed Serial Port"
+#define USBD_CDC_ACM_CIF_STRDESC        u"mbed Serial Port"
+#define USBD_CDC_ACM_DIF_STRDESC        u"mbed Serial Port"
 #define USBD_CDC_ACM_SENDBUF_SIZE       64
 #define USBD_CDC_ACM_RECEIVEBUF_SIZE    64
 #if (((USBD_CDC_ACM_HS_ENABLE1) && (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_HS_WMAXPACKETSIZE1)) || (USBD_CDC_ACM_SENDBUF_SIZE    < USBD_CDC_ACM_WMAXPACKETSIZE1))
@@ -402,7 +402,7 @@
 #define USBD_BULK_WMAXPACKETSIZE     64
 #define USBD_BULK_HS_ENABLE          0
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
-#define USBD_BULK_STRDESC            L"CMSIS-DAP v2"
+#define USBD_BULK_STRDESC            u"CMSIS-DAP v2"
 
 
 /* USB Device Calculations ---------------------------------------------------*/

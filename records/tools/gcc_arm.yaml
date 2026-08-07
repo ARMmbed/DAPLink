@@ -17,8 +17,7 @@ tool_specific:
                 - -Werror
                 - -ffunction-sections
                 - -fdata-sections
-                - -std=gnu99
-                - -fshort-wchar
+                - -std=gnu11
                 - -fno-common
                 - -ffreestanding
                 - -fverbose-asm
