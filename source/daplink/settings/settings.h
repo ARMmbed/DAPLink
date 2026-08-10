@@ -61,6 +61,8 @@ void config_ram_set_disable_msd(bool disable_msd);
 uint8_t config_ram_get_disable_msd(void);
 void config_ram_set_page_erase(bool page_erase_enable);
 bool config_ram_get_page_erase(void);
+void config_ram_set_force_enter_if(bool force_enter);
+bool config_ram_get_force_enter_if(void);
 
 // Private - should only be called from settings.c
 void config_rom_init(void);

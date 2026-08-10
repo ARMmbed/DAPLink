@@ -218,7 +218,8 @@ void vfs_user_file_change_handler(const vfs_filename_t filename, vfs_file_change
                         if (daplink_is_interface()) {
                             config_ram_set_hold_in_bl(true);
                         } else {
-                            // Do nothing - bootloader will go to interface by default
+                            // Force enter the interface mode regardless of the state of the RESET pin
+                            config_ram_set_force_enter_if(true);
                         }
                         break;
                     case kTestAssertActionFile:

@@ -58,8 +58,13 @@ typedef struct __attribute__((__packed__)) cfg_ram {
     // Disable msd support
     uint8_t disable_msd;
 
-    //Add new entries from here
+    // Enable page erase
     uint8_t page_erase_enable;
+
+    // Force enter interface firmware (no checks for RESETn)
+    uint8_t force_enter_if;
+
+    //Add new entries from here
 } cfg_ram_t;
 
 // Ensure hexdump field is word aligned.
@@ -104,6 +109,7 @@ void config_init()
     memcpy(config_ram.hexdump, config_ram_copy.hexdump, sizeof(config_ram_copy.hexdump[0]) * config_ram_copy.valid_dumps);
     config_ram.disable_msd = config_ram_copy.disable_msd;
     config_ram.page_erase_enable = config_ram_copy.page_erase_enable;
+    config_ram.force_enter_if = config_ram_copy.force_enter_if;
     config_rom_init();
 }
 
@@ -252,4 +258,14 @@ void config_ram_set_page_erase(bool page_erase_enable)
 bool config_ram_get_page_erase(void)
 {
     return config_ram.page_erase_enable;
+}
+
+void config_ram_set_force_enter_if(bool force_enter)
+{
+    config_ram.force_enter_if = force_enter;
+}
+
+bool config_ram_get_force_enter_if(void)
+{
+    return config_ram.force_enter_if;
 }
