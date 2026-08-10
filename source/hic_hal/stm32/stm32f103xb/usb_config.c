@@ -90,12 +90,16 @@
 //     </e>
 //   </h>
 #define USBD_STRDESC_LANGID         0x0409
+#define _TOWIDE(x)                   L ## #x
+#define TOWIDE(x)                   _TOWIDE(x)
+#ifndef USB_MAN_STR
 #define USBD_STRDESC_MAN            L"Arm"
+#else
+#define USBD_STRDESC_MAN            TOWIDE(USB_MAN_STR)
+#endif
 #ifndef USB_PROD_STR
 #define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
 #else
-#define _TOWIDE(x)                   L ## #x
-#define TOWIDE(x)                   _TOWIDE(x)
 #define USBD_STRDESC_PROD           TOWIDE(USB_PROD_STR)
 #endif
 #define USBD_STRDESC_SER_ENABLE     1
