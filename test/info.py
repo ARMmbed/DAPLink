@@ -247,6 +247,7 @@ SUPPORTED_CONFIGURATIONS = [
     (   0x9906,     VENDOR_TO_FAMILY('Nordic', 2),      'nrf52820_microbit_if',                     'nrf52820_bl',      'Microbitv2'                            ),
     (   0xA127,     VENDOR_TO_FAMILY('Ambiq', 1),       'kl26z_artemis_dk_if',                      'kl26z_bl',         'ARTMBED'                               ),
     (   0xD000,     VENDOR_TO_FAMILY('Ambiq', 1),       'lpc55s69_nm180410_if',                     None,               'NM180410'                              ),
+    (   0xD002,     VENDOR_TO_FAMILY('Stub', 1),        'lpc11u35_lpc845breakout_if',               None,               'LPC845BREAKOUT'                        ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'kl26z_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k20dx_if',                                 None,               None                                    ),
     (   0x0000,     VENDOR_TO_FAMILY('Stub', 1),        'k26f_if',                                  None,               None                                    ),
