@@ -160,8 +160,20 @@ SECTIONS
 
   __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
 
-  /* unlike the other HICs, the LPC11U35 doesn't need to have the firmware image filled
-   * out to the end of memory since it doesn't use the DAPLink bootloader */
+  /* Fill .text out to the end of the app region. The LPC11U35 has no DAPLink bootloader,
+   * so the only way to program it is the on-chip ROM ISP MSC drive (CRP DISABLD), which
+   * maps a fixed-size firmware.bin 1:1 onto the whole app region. A short image would
+   * leave stale bytes from the previous firmware in the tail, corrupting the image. It
+   * also keeps the build-time CRC at the same offset info_crc_compute() checksums. */
+  .fill __DATA_END :
+  {
+    FILL(0xffffffff)
+    . = ALIGN(4);
+    . += DAPLINK_ROM_APP_START + DAPLINK_ROM_APP_SIZE - __DATA_END - 4;
+    /* Need some contents in this section or it won't be copied to bin or hex. The CRC will
+     * be placed here by post_build_script.py. */
+    LONG(0x55555555)
+  } > m_text
 
   text_end = ORIGIN(m_text) + LENGTH(m_text);
   ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
