@@ -1,0 +1,6 @@
+common:
+    sources:
+        board:
+            - source/board/lpc845breakout.c
+        family:
+            - source/family/nxp/lpc845/target.c
