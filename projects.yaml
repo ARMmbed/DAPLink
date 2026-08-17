@@ -410,6 +410,10 @@ projects:
         - *module_if
         - *module_hic_lpc11u35
         - records/board/lpc824xpresso.yaml
+    lpc11u35_lpc845breakout_if:
+        - *module_if
+        - *module_hic_lpc11u35
+        - records/board/lpc845breakout.yaml
     lpc11u35_mini_iot_lpc54018_if:
         - *module_if
         - *module_hic_lpc11u35
