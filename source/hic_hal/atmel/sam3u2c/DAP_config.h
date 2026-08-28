@@ -23,6 +23,7 @@
 #define __DAP_CONFIG_H__
 
 #include "IO_Config.h"
+#include "daplink_swd_dynamic_pins.h"
 
 //**************************************************************************************************
 /**
@@ -198,23 +199,49 @@ __STATIC_INLINE void PORT_SWD_SETUP(void)
 {
     PMC->PMC_PCER0 = (1 << 10) | (1 << 11) | (1 << 12);  // Enable clock for all PIOs
 
-    PIN_nRESET_PORT->PIO_MDDR = PIN_nRESET; // Disable multi drive
-    PIN_nRESET_PORT->PIO_PUER = PIN_nRESET; // pull-up enable
-    PIN_nRESET_PORT->PIO_SODR = PIN_nRESET; // HIGH
-    PIN_nRESET_PORT->PIO_OER  = PIN_nRESET; // output
-    PIN_nRESET_PORT->PIO_PER  = PIN_nRESET; // GPIO control
+    swd_configure_latch_pins();
 
-    PIN_SWCLK_PORT->PIO_MDDR = PIN_SWCLK; // Disable multi drive
-    PIN_SWCLK_PORT->PIO_PUER = PIN_SWCLK; // pull-up enable
-    PIN_SWCLK_PORT->PIO_SODR = PIN_SWCLK; // HIGH
-    PIN_SWCLK_PORT->PIO_OER  = PIN_SWCLK; // output
-    PIN_SWCLK_PORT->PIO_PER  = PIN_SWCLK; // GPIO control
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_nRESET_PORT_ALT_1->PIO_MDER = PIN_nRESET_ALT_1; // Enable multi drive (open-drain on nRST)
+            PIN_nRESET_PORT_ALT_1->PIO_PUER = PIN_nRESET_ALT_1; // pull-up enable
+            PIN_nRESET_PORT_ALT_1->PIO_SODR = PIN_nRESET_ALT_1; // HIGH
+            PIN_nRESET_PORT_ALT_1->PIO_OER  = PIN_nRESET_ALT_1; // output
+            PIN_nRESET_PORT_ALT_1->PIO_PER  = PIN_nRESET_ALT_1; // GPIO control
 
-    PIN_SWDIO_PORT->PIO_MDDR = PIN_SWDIO; // Disable multi drive
-    PIN_SWDIO_PORT->PIO_PUER = PIN_SWDIO; // pull-up enable
-    PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO; // HIGH
-    PIN_SWDIO_PORT->PIO_OER  = PIN_SWDIO; // output
-    PIN_SWDIO_PORT->PIO_PER  = PIN_SWDIO; // GPIO control
+            PIN_SWCLK_PORT_ALT_1->PIO_MDDR = PIN_SWCLK_ALT_1; // Disable multi drive
+            PIN_SWCLK_PORT_ALT_1->PIO_PUER = PIN_SWCLK_ALT_1; // pull-up enable
+            PIN_SWCLK_PORT_ALT_1->PIO_SODR = PIN_SWCLK_ALT_1; // HIGH
+            PIN_SWCLK_PORT_ALT_1->PIO_OER  = PIN_SWCLK_ALT_1; // output
+            PIN_SWCLK_PORT_ALT_1->PIO_PER  = PIN_SWCLK_ALT_1; // GPIO control
+
+            PIN_SWDIO_PORT_ALT_1->PIO_MDDR = PIN_SWDIO_ALT_1; // Disable multi drive
+            PIN_SWDIO_PORT_ALT_1->PIO_PUER = PIN_SWDIO_ALT_1; // pull-up enable
+            PIN_SWDIO_PORT_ALT_1->PIO_SODR = PIN_SWDIO_ALT_1; // HIGH
+            PIN_SWDIO_PORT_ALT_1->PIO_OER  = PIN_SWDIO_ALT_1; // output
+            PIN_SWDIO_PORT_ALT_1->PIO_PER  = PIN_SWDIO_ALT_1; // GPIO control
+            break;
+
+        default:
+            PIN_nRESET_PORT_DEFAULT->PIO_MDER = PIN_nRESET_DEFAULT; // Enable multi drive (open-drain on nRST)
+            PIN_nRESET_PORT_DEFAULT->PIO_PUER = PIN_nRESET_DEFAULT; // pull-up enable
+            PIN_nRESET_PORT_DEFAULT->PIO_SODR = PIN_nRESET_DEFAULT; // HIGH
+            PIN_nRESET_PORT_DEFAULT->PIO_OER  = PIN_nRESET_DEFAULT; // output
+            PIN_nRESET_PORT_DEFAULT->PIO_PER  = PIN_nRESET_DEFAULT; // GPIO control
+
+            PIN_SWCLK_PORT_DEFAULT->PIO_MDDR = PIN_SWCLK_DEFAULT; // Disable multi drive
+            PIN_SWCLK_PORT_DEFAULT->PIO_PUER = PIN_SWCLK_DEFAULT; // pull-up enable
+            PIN_SWCLK_PORT_DEFAULT->PIO_SODR = PIN_SWCLK_DEFAULT; // HIGH
+            PIN_SWCLK_PORT_DEFAULT->PIO_OER  = PIN_SWCLK_DEFAULT; // output
+            PIN_SWCLK_PORT_DEFAULT->PIO_PER  = PIN_SWCLK_DEFAULT; // GPIO control
+
+            PIN_SWDIO_PORT_DEFAULT->PIO_MDDR = PIN_SWDIO_DEFAULT; // Disable multi drive
+            PIN_SWDIO_PORT_DEFAULT->PIO_PUER = PIN_SWDIO_DEFAULT; // pull-up enable
+            PIN_SWDIO_PORT_DEFAULT->PIO_SODR = PIN_SWDIO_DEFAULT; // HIGH
+            PIN_SWDIO_PORT_DEFAULT->PIO_OER  = PIN_SWDIO_DEFAULT; // output
+            PIN_SWDIO_PORT_DEFAULT->PIO_PER  = PIN_SWDIO_DEFAULT; // GPIO control
+            break;
+    }
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -223,18 +250,34 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF(void)
 {
-    PIN_nRESET_PORT->PIO_PUER = PIN_nRESET; // pull-up enable
-    PIN_nRESET_PORT->PIO_ODR  = PIN_nRESET; // input
-    PIN_nRESET_PORT->PIO_PER  = PIN_nRESET; // GPIO control
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_nRESET_PORT_ALT_1->PIO_PUER = PIN_nRESET_ALT_1; // pull-up enable
+            PIN_nRESET_PORT_ALT_1->PIO_ODR  = PIN_nRESET_ALT_1; // input
+            PIN_nRESET_PORT_ALT_1->PIO_PER  = PIN_nRESET_ALT_1; // GPIO control
 
-    PIN_SWCLK_PORT->PIO_PUER = PIN_SWCLK; // pull-up enable
-    PIN_SWCLK_PORT->PIO_ODR  = PIN_SWCLK; // input
-    PIN_SWCLK_PORT->PIO_PER  = PIN_SWCLK; // GPIO control
+            PIN_SWCLK_PORT_ALT_1->PIO_PUER = PIN_SWCLK_ALT_1; // pull-up enable
+            PIN_SWCLK_PORT_ALT_1->PIO_ODR  = PIN_SWCLK_ALT_1; // input
+            PIN_SWCLK_PORT_ALT_1->PIO_PER  = PIN_SWCLK_ALT_1; // GPIO control
 
-    PIN_SWDIO_PORT->PIO_PUER = PIN_SWDIO; // pull-up enable
-    PIN_SWDIO_PORT->PIO_ODR  = PIN_SWDIO; // input
-    PIN_SWDIO_PORT->PIO_PER  = PIN_SWDIO; // GPIO control
+            PIN_SWDIO_PORT_ALT_1->PIO_PUER = PIN_SWDIO_ALT_1; // pull-up enable
+            PIN_SWDIO_PORT_ALT_1->PIO_ODR  = PIN_SWDIO_ALT_1; // input
+            PIN_SWDIO_PORT_ALT_1->PIO_PER  = PIN_SWDIO_ALT_1; // GPIO control
+            break;
+        default:
+            PIN_nRESET_PORT_DEFAULT->PIO_PUER = PIN_nRESET_DEFAULT; // pull-up enable
+            PIN_nRESET_PORT_DEFAULT->PIO_ODR  = PIN_nRESET_DEFAULT; // input
+            PIN_nRESET_PORT_DEFAULT->PIO_PER  = PIN_nRESET_DEFAULT; // GPIO control
 
+            PIN_SWCLK_PORT_DEFAULT->PIO_PUER = PIN_SWCLK_DEFAULT; // pull-up enable
+            PIN_SWCLK_PORT_DEFAULT->PIO_ODR  = PIN_SWCLK_DEFAULT; // input
+            PIN_SWCLK_PORT_DEFAULT->PIO_PER  = PIN_SWCLK_DEFAULT; // GPIO control
+
+            PIN_SWDIO_PORT_DEFAULT->PIO_PUER = PIN_SWDIO_DEFAULT; // pull-up enable
+            PIN_SWDIO_PORT_DEFAULT->PIO_ODR  = PIN_SWDIO_DEFAULT; // input
+            PIN_SWDIO_PORT_DEFAULT->PIO_PER  = PIN_SWDIO_DEFAULT; // GPIO control
+            break;
+    }
 }
 
 // SWCLK/TCK I/O pin -------------------------------------
@@ -244,7 +287,12 @@ __STATIC_INLINE void PORT_OFF(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN(void)
 {
-    return ((PIN_SWCLK_PORT->PIO_PDSR >> PIN_SWCLK_BIT) & 1);
+    switch(swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            return (PIN_SWCLK_PORT_ALT_1->PIO_PDSR >> PIN_SWCLK_BIT_ALT_1) & 1;
+        default:
+            return (PIN_SWCLK_PORT_DEFAULT->PIO_PDSR >> PIN_SWCLK_BIT_DEFAULT) & 1;
+    }
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
@@ -252,7 +300,14 @@ Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_SET(void)
 {
-    PIN_SWCLK_PORT->PIO_SODR = PIN_SWCLK;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_SWCLK_PORT_ALT_1->PIO_SODR = PIN_SWCLK_ALT_1;
+            break;
+        default:
+            PIN_SWCLK_PORT_DEFAULT->PIO_SODR = PIN_SWCLK_DEFAULT;
+            break;
+    }
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
@@ -260,7 +315,14 @@ Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR(void)
 {
-    PIN_SWCLK_PORT->PIO_CODR = PIN_SWCLK;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_SWCLK_PORT_ALT_1->PIO_CODR = PIN_SWCLK_ALT_1;
+            break;
+        default:
+            PIN_SWCLK_PORT_DEFAULT->PIO_CODR = PIN_SWCLK_DEFAULT;
+            break;
+    }
 }
 
 // SWDIO/TMS Pin I/O --------------------------------------
@@ -270,7 +332,12 @@ __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN(void)
 {
-    return ((PIN_SWDIO_PORT->PIO_PDSR >> PIN_SWDIO_BIT) & 1);
+    switch(swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            return (PIN_SWDIO_PORT_ALT_1->PIO_PDSR >> PIN_SWDIO_BIT_ALT_1) & 1;
+        default:
+            return (PIN_SWDIO_PORT_DEFAULT->PIO_PDSR >> PIN_SWDIO_BIT_DEFAULT) & 1;
+    }
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
@@ -278,7 +345,14 @@ Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_SET(void)
 {
-    PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_SWDIO_PORT_ALT_1->PIO_SODR = PIN_SWDIO_ALT_1;
+            break;
+        default:
+            PIN_SWDIO_PORT_DEFAULT->PIO_SODR = PIN_SWDIO_DEFAULT;
+            break;
+    }
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
@@ -286,7 +360,14 @@ Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR(void)
 {
-    PIN_SWDIO_PORT->PIO_CODR = PIN_SWDIO;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_SWDIO_PORT_ALT_1->PIO_CODR = PIN_SWDIO_ALT_1;
+            break;
+        default:
+            PIN_SWDIO_PORT_DEFAULT->PIO_CODR = PIN_SWDIO_DEFAULT;
+            break;
+    }
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
@@ -294,7 +375,12 @@ __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 {
-    return ((PIN_SWDIO_PORT->PIO_PDSR >> PIN_SWDIO_BIT) & 1);
+    switch(swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            return (PIN_SWDIO_PORT_ALT_1->PIO_PDSR >> PIN_SWDIO_BIT_ALT_1) & 1;
+        default:
+            return (PIN_SWDIO_PORT_DEFAULT->PIO_PDSR >> PIN_SWDIO_BIT_DEFAULT) & 1;
+    }
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
@@ -302,11 +388,21 @@ __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT(uint32_t bit)
 {
-    if (bit & 1) {
-        PIN_SWDIO_PORT->PIO_SODR = PIN_SWDIO;
-
-    } else {
-        PIN_SWDIO_PORT->PIO_CODR = PIN_SWDIO;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            if (bit & 1) {
+                PIN_SWDIO_PORT_ALT_1->PIO_SODR = PIN_SWDIO_ALT_1;
+            } else {
+                PIN_SWDIO_PORT_ALT_1->PIO_CODR = PIN_SWDIO_ALT_1;
+            }
+            break;
+        default:
+            if (bit & 1) {
+                PIN_SWDIO_PORT_DEFAULT->PIO_SODR = PIN_SWDIO_DEFAULT;
+            } else {
+                PIN_SWDIO_PORT_DEFAULT->PIO_CODR = PIN_SWDIO_DEFAULT;
+            }
+            break;
     }
 }
 
@@ -316,7 +412,14 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_ENABLE(void)
 {
-    PIN_SWDIO_PORT->PIO_OER = PIN_SWDIO;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_SWDIO_PORT_ALT_1->PIO_OER = PIN_SWDIO_ALT_1;
+            break;
+        default:
+            PIN_SWDIO_PORT_DEFAULT->PIO_OER = PIN_SWDIO_DEFAULT;
+            break;
+    }
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -325,7 +428,14 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_OUT_DISABLE(void)
 {
-    PIN_SWDIO_PORT->PIO_ODR = PIN_SWDIO;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            PIN_SWDIO_PORT_ALT_1->PIO_ODR = PIN_SWDIO_ALT_1;
+            break;
+        default:
+            PIN_SWDIO_PORT_DEFAULT->PIO_ODR = PIN_SWDIO_DEFAULT;
+            break;
+    }
 }
 
 
@@ -386,7 +496,12 @@ __STATIC_FORCEINLINE void     PIN_nTRST_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 {
-    return ((PIN_nRESET_PORT->PIO_PDSR >> PIN_nRESET_BIT) & 1);
+    switch(swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            return (PIN_nRESET_PORT_ALT_1->PIO_PDSR >> PIN_nRESET_BIT_ALT_1) & 1;
+        default:
+            return (PIN_nRESET_PORT_DEFAULT->PIO_PDSR >> PIN_nRESET_BIT_DEFAULT) & 1;
+    }
 }
 
 /** nRESET I/O pin: Set Output.
@@ -428,15 +543,26 @@ __STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
         PIN_SWCLK_PORT->PIO_CODR = PIN_SWCLK;
         osDelay(1);
     }
+#error "NLK: Not using nRF51822AA"
 }
 #else
 __STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
 {
-    if (bit & 1) {
-        PIN_nRESET_PORT->PIO_SODR = PIN_nRESET;
-
-    } else {
-        PIN_nRESET_PORT->PIO_CODR = PIN_nRESET;
+    switch (swd_get_configured_pins()) {
+        case SWD_PIN_SET_ALT_1:
+            if (bit & 1) {
+                PIN_nRESET_PORT_ALT_1->PIO_SODR = PIN_nRESET_ALT_1;
+            } else {
+                PIN_nRESET_PORT_ALT_1->PIO_CODR = PIN_nRESET_ALT_1;
+            }
+            break;
+        default:
+            if (bit & 1) {
+                PIN_nRESET_PORT_DEFAULT->PIO_SODR = PIN_nRESET_DEFAULT;
+            } else {
+                PIN_nRESET_PORT_DEFAULT->PIO_CODR = PIN_nRESET_DEFAULT;
+            }
+            break;
     }
 }
 #endif
