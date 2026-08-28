@@ -260,7 +260,7 @@ __STATIC_INLINE void PORT_SWD_SETUP(void)
 
     pin_in_init(SWDIO_IN_PIN_PORT, SWDIO_IN_PIN_Bit, 1);
     // Set RESET HIGH
-    pin_out_od_init(nRESET_PIN_PORT, nRESET_PIN_Bit);//TODO - fix reset logic
+    pin_out_od_init(nRESET_PIN_PORT, nRESET_PIN_Bit);
     nRESET_PIN_PORT->BSRR = nRESET_PIN;
 }
 
