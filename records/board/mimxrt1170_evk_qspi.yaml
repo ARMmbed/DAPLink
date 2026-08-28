@@ -3,6 +3,7 @@ common:
         - DAPLINK_MIMXRT_TARGET
         - SOFT_RESET=VECTRESET
         - SWO_UART=1
+        - SWDP_SGPIO=1
     sources:
         board:
             - source/board/mimxrt1170_evk.c
