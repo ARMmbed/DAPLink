@@ -106,7 +106,7 @@ void PORTCD_IRQHandler(void)
             USBD_Reset();
             usbd_reset_core();
             usb_pc_connected = false;
-            usb_state = USB_DISCONNECTED;
+            usb_state = USB_DISCONNECTING;
         }
         else {
             // Cable inserted
