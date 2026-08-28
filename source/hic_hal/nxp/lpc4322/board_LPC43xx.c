@@ -20,24 +20,7 @@
  */
 
 #include "sdk.h"
-#include "lpc43xx_cgu.h"
 
 void sdk_init(void)
 {
-    /* Set core clock to 120MHz */
-    CGU_Init(120000000);
-    /* Set up USB0 clock */
-    /* Disable PLL first */
-    CGU_EnableEntity(CGU_CLKSRC_PLL0, DISABLE);
-
-    /* the usb core require output clock = 480MHz */
-    if (CGU_SetPLL0() != CGU_ERROR_SUCCESS) {
-        while (1);
-    }
-
-    CGU_EntityConnect(CGU_CLKSRC_XTAL_OSC, CGU_CLKSRC_PLL0);
-    /* Enable PLL after all setting is done */
-    CGU_EnableEntity(CGU_CLKSRC_PLL0, ENABLE);
-    /* Turn on the USB0PHY */
-    LPC_CREG->CREG0 &= ~(1 << 5);
 }

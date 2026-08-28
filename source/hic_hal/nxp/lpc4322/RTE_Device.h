@@ -1010,12 +1010,12 @@
 // </e> I2C1 (Inter-integrated Circuit Interface 1) [Driver_I2C1]
 
 // <e> USART0 (Universal synchronous asynchronous receiver transmitter) [Driver_USART0]
-#define   RTE_USART0                    0
+#define   RTE_USART0                    1
 
 //   <h> Pin Configuration
 //     <o> TX <0=>Not used <1=>P2_0 <2=>P6_4 <3=>P9_5 <4=>PF_10
 //     <i> USART0 Serial Output pin
-#define   RTE_USART0_TX_ID              0
+#define   RTE_USART0_TX_ID              1
 #if      (RTE_USART0_TX_ID == 0)
   #define RTE_USART0_TX_PIN_EN          0
 #elif    (RTE_USART0_TX_ID == 1)
@@ -1042,7 +1042,7 @@
 #endif
 //     <o> RX <0=>Not used <1=>P2_1 <2=>P6_5 <3=>P9_6 <4=>PF_11
 //     <i> USART0 Serial Input pin
-#define   RTE_USART0_RX_ID              0
+#define   RTE_USART0_RX_ID              1
 #if      (RTE_USART0_RX_ID == 0)
   #define RTE_USART0_RX_PIN_EN          0
 #elif    (RTE_USART0_RX_ID == 1)
