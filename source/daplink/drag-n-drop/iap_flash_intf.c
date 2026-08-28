@@ -34,6 +34,7 @@
 
 #if ((DAPLINK_ROM_UPDATE_SIZE != 0) || defined(DAPLINK_BOOTLOADER_UPDATE))
 
+#if !defined(DISABLE_FLASH_INTF_CHECKS)
 // Application start must be aligned to page write
 COMPILER_ASSERT(DAPLINK_ROM_APP_START % DAPLINK_MIN_WRITE_SIZE == 0);
 // Application size must be a multiple of write size
@@ -46,6 +47,7 @@ COMPILER_ASSERT(DAPLINK_ROM_APP_START % DAPLINK_SECTOR_SIZE == 0);
 COMPILER_ASSERT(DAPLINK_ROM_UPDATE_START % DAPLINK_SECTOR_SIZE == 0);
 // Update size must be a multiple of sector size
 COMPILER_ASSERT(DAPLINK_ROM_UPDATE_SIZE % DAPLINK_SECTOR_SIZE == 0);
+#endif
 
 typedef enum {
     STATE_CLOSED,
