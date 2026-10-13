@@ -13,3 +13,4 @@ pyelftools
 fuzzywuzzy
 jsonschema
 pyyaml>=6.0,<7.0
+setuptools<=80.10.2
