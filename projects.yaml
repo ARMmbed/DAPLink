@@ -215,8 +215,25 @@ projects:
     stm32f411xe_if:
         - *module_if
         - *module_hic_stm32f411xe
-        - records/family/all_family.yaml
+        #- records/family/all_family.yaml
+        - records/board/stm32f103rb.yaml
         - records/usb/usb-bulk.yaml
+    stm32f411xe_cdc_dap:
+    - *module_tools
+    - records/usb/usb-core.yaml
+    - records/usb/usb-cdc.yaml
+    - records/usb/usb-webusb.yaml
+    - records/usb/usb-winusb.yaml
+    - records/daplink/cmsis-dap.yaml
+    - records/daplink/drag-n-drop.yaml
+    - records/daplink/usb2uart.yaml
+    - records/daplink/settings.yaml
+    - records/daplink/settings_rom.yaml
+    - records/daplink/interface.yaml
+    - records/daplink/target_family.yaml
+    - records/daplink/target_board.yaml
+    - *module_hic_stm32f411xe
+    - records/board/stm32f411re.yaml
 
     # Other projects
     k20dx_ep_agora_if:
