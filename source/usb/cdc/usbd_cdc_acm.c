@@ -452,7 +452,8 @@ int32_t USBD_CDC_ACM_DataAvailable(void)
 
 int32_t USBD_CDC_ACM_Notify(uint16_t stat)
 {
-    if (USBD_Configuration) {
+    /* Without a notification endpoint (usbd_cdc_acm_ep_intin == 0) nothing can be sent */
+    if (USBD_Configuration && usbd_cdc_acm_ep_intin) {
         USBD_CDC_ACM_NotifyBuf[0] = 0xA1;   /* bmRequestType                      */
         USBD_CDC_ACM_NotifyBuf[1] = CDC_NOTIFICATION_SERIAL_STATE;/* bNotification
                                           (SERIAL_STATE)                      */

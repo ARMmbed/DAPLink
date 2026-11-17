@@ -1,0 +1,4 @@
+common:
+    sources:
+        board:
+            - source/board/stm32f411xe_bl.c

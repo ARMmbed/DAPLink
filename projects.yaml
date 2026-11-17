@@ -101,6 +101,10 @@ module:
         - records/rtos/rtos-cm3.yaml
         - records/hic_hal/stm32f103xb.yaml
         - records/usb/usb-hid.yaml
+    hic_stm32f411xe: &module_hic_stm32f411xe
+        - records/rtos/rtos-cm4.yaml
+        - records/hic_hal/stm32f411xe.yaml
+        - records/usb/usb-hid.yaml
 
 projects:
     # HIC bootloaders and all target interfaces
@@ -202,6 +206,15 @@ projects:
     stm32f103xb_if:
         - *module_if
         - *module_hic_stm32f103xb
+        - records/family/all_family.yaml
+        - records/usb/usb-bulk.yaml
+    stm32f411xe_bl:
+        - *module_bl
+        - records/hic_hal/stm32f411xe.yaml
+        - records/board/stm32f411xe_bl.yaml
+    stm32f411xe_if:
+        - *module_if
+        - *module_hic_stm32f411xe
         - records/family/all_family.yaml
         - records/usb/usb-bulk.yaml
 
