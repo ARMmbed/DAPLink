@@ -1584,7 +1584,7 @@ void USBD_RTX_TaskInit(void)
 #define USBD_CDC_ACM_DESC_LEN             (USBD_MULTI_IF * USB_INTERFACE_ASSOC_DESC_SIZE                                                        + \
                                            /* CDC Interface 1 */                                                                                  \
                                            USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE                                 + \
-                                           CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE + CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE                       + \
+                                           CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE + CDC_UNION_SIZE + ((USBD_CDC_ACM_EP_INTIN != 0) * USB_ENDPOINT_DESC_SIZE)                       + \
                                            /* CDC Interface 2 */                                                                                  \
                                            USB_INTERFACE_DESC_SIZE + USB_ENDPOINT_DESC_SIZE + USB_ENDPOINT_DESC_SIZE)
 #define USBD_HID_DESC_LEN                 (USB_INTERFACE_DESC_SIZE + USB_HID_DESC_SIZE                                                          + \
@@ -2234,7 +2234,7 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   USB_INTERFACE_DESCRIPTOR_TYPE,        /* bDescriptorType */                                               \
   0x00,                                 /* bInterfaceNumber: Number of Interface USBD_CDC_ACM_CIF_NUM*/    \
   0x00,                                 /* bAlternateSetting: Alternate setting */                          \
-  0x01,                                 /* bNumEndpoints: One endpoint used */                              \
+  (USBD_CDC_ACM_EP_INTIN != 0),         /* bNumEndpoints: 1 (notification) or 0 (no notification EP) */                              \
   CDC_COMMUNICATION_INTERFACE_CLASS,    /* bInterfaceClass: Communication Interface Class */                \
   CDC_ABSTRACT_CONTROL_MODEL,           /* bInterfaceSubClass: Abstract Control Model */                    \
   0x01,                                 /* bInterfaceProtocol: no protocol used */                          \
@@ -2263,6 +2263,7 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   0x00,                                 /* bMasterInterface: Communication class interface is master USBD_CDC_ACM_CIF_NUM*/ \
   0x00,                                 /* bSlaveInterface0: Data class interface is slave 0 USBD_CDC_ACM_DIF_NUM*/
 
+#if (USBD_CDC_ACM_EP_INTIN != 0)
 #define CDC_ACM_EP_IF0                  /* CDC Endpoints for Interface 0 for Low-speed/Full-speed */        \
 /* Endpoint, EP Interrupt IN */         /* event notification (optional) */                                 \
   USB_ENDPOINT_DESC_SIZE,               /* bLength */                                                       \
@@ -2280,6 +2281,11 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = { 0 };
   USB_ENDPOINT_TYPE_INTERRUPT,          /* bmAttributes */                                                  \
   WBVAL(USBD_CDC_ACM_HS_WMAXPACKETSIZE),/* wMaxPacketSize */                                                \
   USBD_CDC_ACM_HS_BINTERVAL,            /* bInterval */
+#else
+/* No CDC notification endpoint (not enough endpoints on this HIC) */
+#define CDC_ACM_EP_IF0
+#define CDC_ACM_EP_IF0_HS
+#endif
 
 #define CDC_ACM_DESC_IF1                                                                                        \
 /* Interface, Alternate Setting 0, Data class interface descriptor*/                                        \
@@ -2559,7 +2565,7 @@ static U16 acm_cdc_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
     pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bMasterInterface = if_num;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bSlaveInterface0 = if_num + 1;
-    pD += CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE;
+    pD += CDC_UNION_SIZE + ((USBD_CDC_ACM_EP_INTIN != 0) * USB_ENDPOINT_DESC_SIZE);
     ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num + 1;
 
 #if (USBD_HS_ENABLE == 1)
@@ -2584,7 +2590,7 @@ static U16 acm_cdc_desc_fill(U8 * config_desc, U8 * config_desc_hs, U8 if_num) {
     pD += USB_INTERFACE_DESC_SIZE + CDC_HEADER_SIZE + CDC_CALL_MANAGEMENT_SIZE + CDC_ABSTRACT_CONTROL_MANAGEMENT_SIZE;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bMasterInterface = if_num;
     ((UNION_FUNCTIONAL_DESCRIPTOR*)pD)->bSlaveInterface0 = if_num + 1;
-    pD += CDC_UNION_SIZE + USB_ENDPOINT_DESC_SIZE;
+    pD += CDC_UNION_SIZE + ((USBD_CDC_ACM_EP_INTIN != 0) * USB_ENDPOINT_DESC_SIZE);
     ((USB_INTERFACE_DESCRIPTOR *)pD)->bInterfaceNumber = if_num +1 ;
 #endif  //(USBD_HS_ENABLE == 1)
     return sizeof(cdc_desc);

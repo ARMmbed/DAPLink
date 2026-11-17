@@ -1,0 +1,55 @@
+common:
+    target:
+        - Cortex-M4
+    core:
+        - Cortex-M4
+    macros:
+        - INTERFACE_STM32F411XE
+        - USE_HAL_DRIVER
+        - STM32F411xE
+        - DAPLINK_HIC_ID=0x9796990E  # DAPLINK_HIC_ID_STM32F411xe
+        - __packed=__packed          # Prevent redefinition of __packed with ARMCC
+        - DAPLINK_NO_ASSERT_FILENAMES
+        - OS_CLOCK=96000000
+    includes:
+        - source/hic_hal/stm32/stm32f411xe
+        - source/hic_hal/stm32/stm32f411xe/cmsis
+        - source/hic_hal/stm32/stm32f411xe/STM32F4xx_HAL_Driver
+        - source/hic_hal/stm32/stm32f411xe/STM32F4xx_HAL_Driver/Inc
+    sources:
+        hic_hal:
+            - source/hic_hal/stm32/stm32f411xe/flash.c
+            - source/hic_hal/stm32/stm32f411xe/gpio.c
+            - source/hic_hal/stm32/stm32f411xe/read_uid.c
+            - source/hic_hal/stm32/stm32f411xe/sdk.c
+            - source/hic_hal/stm32/stm32f411xe/uart.c
+            - source/hic_hal/stm32/stm32f411xe/usb_config.c
+            - source/hic_hal/stm32/stm32f411xe/usbd_STM32F411.c
+            - source/hic_hal/stm32/stm32f411xe/cmsis
+            - source/hic_hal/stm32/stm32f411xe/STM32F4xx_HAL_Driver/Src
+
+tool_specific:
+    uvision:
+        misc:
+            ld_flags:
+                - --predefine="-I..\..\..\source\hic_hal\stm32\stm32f411xe"
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f411xe/armcc
+    armcc:
+        misc:
+            asm_flags:
+                - --no_unaligned_access
+            c_flags:
+                - --no_unaligned_access
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f411xe/armcc
+    armclang:
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f411xe/armcc
+    gcc_arm:
+        sources:
+            hic_hal:
+                - source/hic_hal/stm32/stm32f411xe/gcc
