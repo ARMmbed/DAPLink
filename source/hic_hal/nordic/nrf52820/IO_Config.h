@@ -85,6 +85,12 @@ extern uint32_t i2c_sda_pin;
 #define UART_TX_PIN       uart_tx_pin
 #define UART_RX_PIN       uart_rx_pin
 
+// cmsis-driver/uart/uart.c configuration
+#include "Driver_USART.h"
+extern ARM_DRIVER_USART Driver_USART0;
+#define CMSIS_UART_INSTANCE (Driver_USART0)
+#define CMSIS_UART_IRQ      (UARTE0_UART0_IRQn)
+
 // I2C
 #define I2C_SCL_PIN       i2c_scl_pin
 #define I2C_SDA_PIN       i2c_sda_pin

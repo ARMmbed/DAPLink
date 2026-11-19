@@ -92,21 +92,21 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_KL27Z);
 #define SW_RESET_NOT_PRESSED    (1)
 
 // UART
-#define UART_PORT               PORTA
-#define UART_NUM                (1)
-// RX PTA18
-#define PIN_UART_RX_GPIO        PTA
+
+// UART RX PTA18
+#define PIN_UART_RX_PORT        PORTA
 #define PIN_UART_RX_BIT         (18)
 #define PIN_UART_RX             (1<<PIN_UART_RX_BIT)
 #define PIN_UART_RX_MUX_ALT     (3)
-// TX PTA19
-#define PIN_UART_TX_GPIO        PTA
+// UART TX PTA19
+#define PIN_UART_TX_PORT        PORTA
 #define PIN_UART_TX_BIT         (19)
 #define PIN_UART_TX             (1<<PIN_UART_TX_BIT)
 #define PIN_UART_TX_MUX_ALT     (3)
 
-#define UART                    LPUART1
-#define UART_RX_TX_IRQn         LPUART1_IRQn
-#define UART_RX_TX_IRQHandler   LPUART1_IRQHandler
+// cmsis-driver/uart/uart.c configuration
+#include "fsl_lpuart_cmsis.h"
+#define CMSIS_UART_INSTANCE     (Driver_USART1)
+#define CMSIS_UART_IRQ          (LPUART1_IRQn)
 
 #endif

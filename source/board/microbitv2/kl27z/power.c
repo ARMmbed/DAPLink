@@ -214,14 +214,14 @@ static void power_pre_switch_hook(smc_power_state_t originPowerState, app_power_
     // and consider waiting for the write buffer to empty too, but as this is our only call to uart_uninitialize()
     // and we never get here with USB connected it may be unnecessary.
     /* Wait for debug console output finished. */
-    while (!(LPUART_STAT_TC_MASK & UART->STAT))
+    while (!(LPUART_STAT_TC_MASK & LPUART1->STAT))
     {
     }
     uart_uninitialize();
 
     /* Disable pins to lower current leakage */
-    PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, kPORT_PinDisabledOrAnalog);
-    PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, kPORT_PinDisabledOrAnalog);
+    PORT_SetPinMux(PIN_UART_RX_PORT, PIN_UART_RX_BIT, kPORT_PinDisabledOrAnalog);
+    PORT_SetPinMux(PIN_UART_TX_PORT, PIN_UART_TX_BIT, kPORT_PinDisabledOrAnalog);
     PORT_SetPinMux(PIN_HID_LED_PORT, PIN_HID_LED_BIT, kPORT_PinDisabledOrAnalog);
     
     /* Disable I/O pin SWCLK */
@@ -254,8 +254,8 @@ static void power_post_switch_hook(smc_power_state_t originPowerState, app_power
                                          PORT_PCR_PS_MASK;   /* Pull-up */
     
     /* re-configure pinmux of disabled pins */
-    PORT_SetPinMux(UART_PORT, PIN_UART_RX_BIT, (port_mux_t)PIN_UART_RX_MUX_ALT);
-    PORT_SetPinMux(UART_PORT, PIN_UART_TX_BIT, (port_mux_t)PIN_UART_TX_MUX_ALT);
+    PORT_SetPinMux(PIN_UART_RX_PORT, PIN_UART_RX_BIT, PIN_UART_RX_MUX_ALT);
+    PORT_SetPinMux(PIN_UART_TX_PORT, PIN_UART_TX_BIT, PIN_UART_TX_MUX_ALT);
 
     uart_initialize();
     // TODO: Check if this is necessary, when we have time to test. This has always been in the V2 code.
