@@ -43,7 +43,7 @@ static const sector_info_t sectors_info[] = {
     {DAPLINK_ROM_IF_START, 1024},
  };
 
-// kl26z128 target information
+// kl27z target information
 target_cfg_t target_device = {
     .version                    = kTargetConfigVersion,
     .sectors_info               = sectors_info,
