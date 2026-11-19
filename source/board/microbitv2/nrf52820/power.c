@@ -247,7 +247,7 @@ void GPIOTE_IRQHandler(void)
                 USBD_Reset();
                 usbd_reset_core();
                 usb_pc_connected = false;
-                usb_state = USB_DISCONNECTED;
+                usb_state = USB_DISCONNECTING;
             } else {
                 // Cable inserted
                 wake_from_usb = 1;
@@ -272,7 +272,7 @@ void POWER_CLOCK_IRQHandler(void)
         USBD_Reset();
         usbd_reset_core();
         usb_pc_connected = false;
-        usb_state = USB_DISCONNECTED;
+        usb_state = USB_DISCONNECTING;
     }
 }
 #endif // POWER_IRQ_USBDETECTED
