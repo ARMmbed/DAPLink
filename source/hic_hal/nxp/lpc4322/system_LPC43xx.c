@@ -319,6 +319,91 @@ uint32_t GetClockFreq (uint32_t clk_src);
 uint32_t SystemCoreClock = 120000000U; /* System Clock Frequency (Core Clock) */
 
 
+/*----------------------------------------------------------------------------
+  Approximate delay function (must be used after SystemCoreClockUpdate() call)
+ *----------------------------------------------------------------------------*/
+static void WaitUs(uint32_t us, uint32_t clock_hz)
+{
+    us *= (clock_hz / 1000000) / 3;
+
+    while (us--);
+}
+
+
+#define PLL0_NSEL_MAX (1<<8)
+/* pre-divider: compute ndec from nsel */
+static unsigned ndec_new(unsigned nsel)
+{
+    unsigned x=0x80, in;
+    switch (nsel)
+    {
+        case 0: return 0xFFFFFFFF;
+        case 1: return 0x302;
+        case 2: return 0x202;
+        default:
+                for (in = nsel; in <= PLL0_NSEL_MAX; in++)
+                    x = ((x ^ x>>2 ^ x>>3 ^ x>>4) & 1) << 7 | x>>1 & 0xFF;
+                return x;
+    }
+}
+
+#define PLL0_PSEL_MAX (1<<5)
+/* post-divider: compute pdec from psel */
+static unsigned pdec_new(unsigned psel)
+{
+    unsigned x=0x10, ip;
+    switch (psel)
+    {
+        case 0: return 0xFFFFFFFF;
+        case 1: return 0x62;
+        case 2: return 0x42;
+        default:
+                for (ip = psel; ip <= PLL0_PSEL_MAX; ip++)
+                    x = ((x ^ x>>2) & 1) << 4 | x>>1 & 0x3F;
+                return x;
+    }
+}
+
+#define PLL0_MSEL_MAX (1<<15)
+/* multiplier: compute mdec from msel */
+static unsigned mdec_new (unsigned msel)
+{
+    unsigned x=0x4000, im;
+    switch (msel)
+    {
+        case 0: return 0xFFFFFFFF;
+        case 1: return 0x18003;
+        case 2: return 0x10003;
+        default:
+                for (im = msel; im <= PLL0_MSEL_MAX; im++)
+                    x = (((x ^ (x >> 1)) & 1) << 14) | ((x >> 1) & 0xFFFF);
+                return x;
+    }
+}
+
+/* bandwidth: compute seli from msel */
+unsigned anadeci_new(unsigned msel)
+{
+    unsigned tmp;
+    if (msel > 16384) return 1;
+    if (msel > 8192) return 2;
+    if (msel > 2048) return 4;
+    if (msel >= 501) return 8;
+    if (msel >= 60)
+    {
+        tmp=1024/(msel+9);
+        return ( 1024 == ( tmp*(msel+9)) ) == 0 ? tmp*4 : (tmp+1)*4 ;
+    }
+    return (msel & 0x3c) + 4;
+}
+
+/* bandwidth: compute selp from msel */
+unsigned anadecp_new(unsigned msel)
+{
+    if (msel < 60) return (msel>>1) + 1;
+    return 31;
+}
+
 /******************************************************************************
  * SetClock
  ******************************************************************************/
@@ -343,7 +428,7 @@ static void SetClock (void) {
                            (0 << 2) ;   /* Low-frequency mode                 */
 
   /* Wait ~250us @ 12MHz */
-  for (i = 1500; i; i--);
+  WaitUs(250, CLK_XTAL);
 
 #ifdef USE_SPIFI
 /* configure SPIFI clk to IRC via IDIVA (later IDIVA is configured to PLL1/3) */
@@ -380,10 +465,10 @@ static void SetClock (void) {
 
   /* CPU base clock is in the mid frequency range before final clock set      */
   LPC_CGU->BASE_M4_CLK     = (0x01 << 11) |  /* Autoblock En                  */
-                             (0x09 << 24) ;  /* Clock source: PLL1            */
+                             (CLK_SRC_PLL1 << 24) ;  /* Clock source: PLL1    */
 
-  /* Max. BASE_M4_CLK frequency here is 102MHz, wait at least 20us */
-  for (i = 1050; i; i--);                    /* Wait minimum 2100 cycles      */
+  /* Wait 20us */
+  WaitUs(20, (CLK_XTAL * (PLL1_MSEL + 1)) / ((PLL1_NSEL + 1) * 2));
 #endif
   /* Configure PLL1                                                           */
   LPC_CGU->PLL1_CTRL = (0            << 0) | /* PLL1 Enabled                  */
@@ -415,63 +500,20 @@ static void SetClock (void) {
   LPC_CGU->PLL0USB_CTRL  |= 1;
 
   /* M divider                                                                */
-  x = 0x00004000;
-  switch (PLL0USB_M) {
-    case 0:  x = 0xFFFFFFFF;
-      break;
-    case 1:  x = 0x00018003;
-      break;
-    case 2:  x = 0x00010003;
-      break;
-    default:
-      for (i = PLL0USB_M; i <= 0x8000; i++) {
-        x = (((x ^ (x >> 1)) & 1) << 14) | ((x >> 1) & 0x3FFF);
-      }
-  }
+  x = mdec_new(PLL0USB_M);
 
-  if (PLL0USB_M < 60) selp = (PLL0USB_M >> 1) + 1;
-  else        selp = 31;
-
-  if      (PLL0USB_M > 16384) seli = 1;
-  else if (PLL0USB_M >  8192) seli = 2;
-  else if (PLL0USB_M >  2048) seli = 4;
-  else if (PLL0USB_M >=  501) seli = 8;
-  else if (PLL0USB_M >=   60) seli = 4 * (1024 / (PLL0USB_M + 9));
-  else                        seli = (PLL0USB_M & 0x3C) + 4;
+  selp = anadecp_new(PLL0USB_M);
+  seli = anadeci_new(PLL0USB_M);
   LPC_CGU->PLL0USB_MDIV   =  (selp   << 17) |
                              (seli   << 22) |
                              (x      <<  0);
 
   /* N divider                                                                */
-  x = 0x80;
-  switch (PLL0USB_N) {
-    case 0:  x = 0xFFFFFFFF;
-      break;
-    case 1:  x = 0x00000302;
-      break;
-    case 2:  x = 0x00000202;
-      break;
-    default:
-      for (i = PLL0USB_N; i <= 0x0100; i++) {
-        x =(((x ^ (x >> 2) ^ (x >> 3) ^ (x >> 4)) & 1) << 7) | ((x >> 1) & 0x7F);
-      }
-  }
+  x = ndec_new(PLL0USB_N);
   LPC_CGU->PLL0USB_NP_DIV = (x << 12);
 
   /* P divider                                                                */
-  x = 0x10;
-  switch (PLL0USB_P) {
-    case 0:  x = 0xFFFFFFFF;
-      break;
-    case 1:  x = 0x00000062;
-      break;
-    case 2:  x = 0x00000042;
-      break;
-    default:
-      for (i = PLL0USB_P; i <= 0x200; i++) {
-        x = (((x ^ (x >> 2)) & 1) << 4) | ((x >> 1) &0x0F);
-      }
-  }
+  x = pdec_new(PLL0USB_P);
   LPC_CGU->PLL0USB_NP_DIV |= x;
 
   LPC_CGU->PLL0USB_CTRL  = (PLL0USB_CLK_SEL   << 24) | /* Clock source sel    */
@@ -481,6 +523,7 @@ static void SetClock (void) {
                            (PLL0USB_DIRECTI   << 2 ) | /* Direct input        */
                            (PLL0USB_BYPASS    << 1 ) | /* PLL bypass          */
                            (0                 << 0 ) ; /* PLL0USB Enabled     */
+  LPC_CREG->CREG0 &= ~(1 << 5);                        // Enable USB0 PHY power.
   while (!(LPC_CGU->PLL0USB_STAT & 1));
 
 
@@ -517,17 +560,6 @@ static void SetClock (void) {
 
 
 /*----------------------------------------------------------------------------
-  Approximate delay function (must be used after SystemCoreClockUpdate() call)
- *----------------------------------------------------------------------------*/
-#define CPU_NANOSEC(x) (((uint64_t)(x) * SystemCoreClock)/1000000000)
-
-static void WaitUs (uint32_t us) {
-  uint32_t cyc = us * CPU_NANOSEC(1000)/4;
-  while(cyc--);
-}
-
-
-/*----------------------------------------------------------------------------
   Measure frequency using frequency monitor
  *----------------------------------------------------------------------------*/
 uint32_t MeasureFreq (uint32_t clk_sel) {
@@ -545,7 +577,7 @@ uint32_t MeasureFreq (uint32_t clk_sel) {
     }
   }
   fcnt = (LPC_CGU->FREQ_MON >> 9) & 0x3FFF;
-  fout = fcnt * (12000000U/511U);                 /* FCNT * (IRC_CLK / RCNT)  */
+  fout = fcnt * (CLK_IRC/511U);                 /* FCNT * (IRC_CLK / RCNT)  */
 
   return (fout);
 }
