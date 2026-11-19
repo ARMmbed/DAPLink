@@ -58,20 +58,43 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_SAM3U2C);
 #define PIN_RESET_IN_FWRD_BIT   25
 #define PIN_RESET_IN_FWRD       (1UL << PIN_RESET_IN_FWRD_BIT)
 
+//
+// PIN CONFIGURATIONS FOR SWD
+//
+
+// DEFAULT CONFIG
+//
 // nRESET OUT Pin
-#define PIN_nRESET_PORT         PIOA
-#define PIN_nRESET_BIT          4
-#define PIN_nRESET              (1UL << PIN_nRESET_BIT)
+#define PIN_nRESET_PORT_DEFAULT PIOA
+#define PIN_nRESET_BIT_DEFAULT  4
+#define PIN_nRESET_DEFAULT      (1UL << PIN_nRESET_BIT_DEFAULT)
 
 // SWCLK/TCK Pin
-#define PIN_SWCLK_PORT          PIOA
-#define PIN_SWCLK_BIT           17
-#define PIN_SWCLK               (1UL << PIN_SWCLK_BIT)
+#define PIN_SWCLK_PORT_DEFAULT  PIOA
+#define PIN_SWCLK_BIT_DEFAULT   17
+#define PIN_SWCLK_DEFAULT       (1UL << PIN_SWCLK_BIT_DEFAULT)
 
 // SWDIO/TMS In/Out Pin
-#define PIN_SWDIO_PORT          PIOA
-#define PIN_SWDIO_BIT           18
-#define PIN_SWDIO               (1UL << PIN_SWDIO_BIT)
+#define PIN_SWDIO_PORT_DEFAULT  PIOA
+#define PIN_SWDIO_BIT_DEFAULT   18
+#define PIN_SWDIO_DEFAULT       (1UL << PIN_SWDIO_BIT_DEFAULT)
+
+// ALT_1 CONFIG
+//
+// nRESET OUT Pin
+#define PIN_nRESET_PORT_ALT_1 PIOA
+#define PIN_nRESET_BIT_ALT_1  3
+#define PIN_nRESET_ALT_1      (1UL << PIN_nRESET_BIT_ALT_1)
+
+// SWCLK/TCK Pin
+#define PIN_SWCLK_PORT_ALT_1  PIOA
+#define PIN_SWCLK_BIT_ALT_1   22
+#define PIN_SWCLK_ALT_1       (1UL << PIN_SWCLK_BIT_ALT_1)
+
+// SWDIO/TMS In/Out Pin
+#define PIN_SWDIO_PORT_ALT_1  PIOA
+#define PIN_SWDIO_BIT_ALT_1   15
+#define PIN_SWDIO_ALT_1       (1UL << PIN_SWDIO_BIT_ALT_1)
 
 // TDI Pin - Not used
 
